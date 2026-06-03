@@ -836,6 +836,14 @@
 
 /* Hero két-oszlop @ desktop — több hely a szövegnek, kisebb kép picivel jobbra */
 @media (min-width: 980px) {
+  /* a hero töltse ki a nézetet a proofbar magasságát leszámítva → a fekete
+     proofbar a látványvonal aljára esik (viewport-független, nem pixel-tuning) */
+  .gm-hero {
+    min-height: calc(100vh - 112px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
   .gm-hero__inner {
     display: grid;
     grid-template-columns: 1fr minmax(0, 460px);
