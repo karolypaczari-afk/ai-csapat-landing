@@ -131,6 +131,7 @@
   border: 1.5px solid transparent;
   cursor: pointer;
   text-align: center;
+  color: var(--gm-white);
   min-height: 48px;
   transition: transform 0.18s var(--gm-ease), box-shadow 0.22s var(--gm-ease), background 0.22s var(--gm-ease), opacity 0.2s;
   will-change: transform;
@@ -174,6 +175,16 @@
   color: var(--gm-white);
 }
 .gm-btn--ghost-light:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+
+/* Tömör, jól látható világos-szekciós gomb (pl. a Képzés-kártyán) */
+.gm-btn--solid-light {
+  background: var(--gm-violet-600);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 26px rgba(64, 0, 153, 0.28);
+}
+.gm-btn--solid-light:hover { background: var(--gm-violet); transform: translateY(-2px); box-shadow: 0 16px 36px rgba(64, 0, 153, 0.38); }
+.gm-btn--solid-light:active { transform: translateY(0) scale(0.98); }
 
 .gm-btn:focus-visible { outline: 3px solid var(--gm-cyan); outline-offset: 3px; }
 
@@ -538,6 +549,7 @@
   border: 1px solid var(--gm-line);
 }
 .gm-stack__total span { display: block; color: var(--gm-grey); font-size: 1rem; margin-bottom: 0.3rem; }
+.gm-stack__total .gm-stack__fineprint { font-size: 0.82rem; opacity: 0.85; margin: 0.6rem 0 0; }
 .gm-stack__total strong { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 900; letter-spacing: -0.02em; }
 
 /* ============================================================
@@ -745,6 +757,8 @@
 .gm-faq__item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
 .gm-faq__a { padding: 0 1.3rem 1.2rem; }
 .gm-faq__a p { margin: 0; color: var(--gm-grey); }
+.gm-faq__a p + p { margin-top: 0.7rem; }
+.gm-faq__ul { margin: 0.6rem 0; padding-left: 1.2rem; color: var(--gm-grey); display: flex; flex-direction: column; gap: 0.4rem; }
 .gm-faq__more { text-align: center; margin: 1.6rem 0 0; }
 .gm-faq__more a { color: var(--gm-violet); font-weight: 700; }
 .gm-faq__more a:hover { text-decoration: underline; }
@@ -841,6 +855,19 @@
 }
 .gm-fud li { display: inline-flex; align-items: center; gap: 0.45em; }
 .gm-fud li::before { content: "✓"; color: var(--gm-cyan); font-weight: 800; }
+
+/* Kompatibilitás-csík (hero): Claude · ChatGPT · Claude Code */
+.gm-compat {
+  list-style: none; padding: 0; margin: 1rem 0 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+}
+.gm-compat__lead { font-size: 0.88rem; font-weight: 600; color: #C9C8DF; margin-right: 0.15rem; }
+.gm-compat li:not(.gm-compat__lead) {
+  font-weight: 800; font-size: 0.9rem; color: var(--gm-white);
+  padding: 0.34em 0.85em; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.45);
+}
 
 /* ============================================================
    SOCIAL-PROOF SÁV
@@ -1017,10 +1044,12 @@
   padding-block: 0.55rem;
   min-height: 44px;
   font-weight: 800;
-  color: var(--gm-violet);
+  color: var(--gm-purple-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
   transition: gap 0.2s var(--gm-ease), color 0.2s var(--gm-ease);
 }
-.gm-uc__cta:hover { gap: 0.7em; color: var(--gm-cyan-700); }
+.gm-uc__cta:hover { gap: 0.7em; color: var(--gm-violet-600); }
 .gm-uc__media { margin: 0; position: relative; }
 .gm-uc__media--img { border-radius: var(--gm-r-lg); overflow: hidden; box-shadow: var(--gm-shadow-lg); }
 .gm-uc__media--img img { width: 100%; display: block; }

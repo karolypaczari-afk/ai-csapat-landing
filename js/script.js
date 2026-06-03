@@ -192,10 +192,18 @@
   function wireCtas() {
     var nodes = document.querySelectorAll("[data-gm-cta]");
     Array.prototype.forEach.call(nodes, function (el) {
+      var checkoutKey = el.getAttribute("data-gm-checkout");
+
+      // Checkout-gomboknál a valódi fizetési URL-t tegyük href-be (a CHECKOUT
+      // marad az egyetlen cserehely), hogy a böngésző hover-előnézete és a
+      // jobbklikk → "link másolása" is a helyes linket mutassa - ne "#"-et.
+      if (checkoutKey && CHECKOUT[checkoutKey]) {
+        el.setAttribute("href", CHECKOUT[checkoutKey]);
+      }
+
       el.addEventListener("click", function (ev) {
         var pkg = el.getAttribute("data-gm-package") || "basic";
         var ctaId = el.getAttribute("data-gm-cta");
-        var checkoutKey = el.getAttribute("data-gm-checkout");
 
         track(pkg, ctaId);
 
