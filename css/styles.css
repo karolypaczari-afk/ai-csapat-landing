@@ -843,8 +843,6 @@
     gap: clamp(1.5rem, 3vw, 3rem);
   }
   .gm-hero__copy { max-width: none; }
-  /* nagyobb kép mellett is 3 sor maradjon a címsor (a "25 AI kollégával" <br>-rel külön sor) */
-  .gm-hero__title { font-size: clamp(2rem, 2.55vw + 0.65rem, 3rem); }
   .gm-hero__media { justify-self: end; max-width: 460px; margin: 0; width: 100%; }
   .gm-hero__visual { display: block; margin: 0; max-width: none; }
   .gm-hero__badge { display: block; }
