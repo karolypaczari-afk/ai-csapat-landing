@@ -862,15 +862,15 @@
 
 /* Kompatibilitás (hero, a kép alatt): "Működik vele:" + Claude · ChatGPT logók */
 .gm-compat {
-  padding: 0; margin: 1.1rem 0 0;
-  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
-  gap: 0.3rem 0.95rem; text-align: center;
+  padding: 0; margin: 2.2rem 0 0;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 0.35rem 0.9rem; text-align: center;
 }
 .gm-compat__lead { font-size: 0.9rem; font-weight: 600; color: #C9C8DF; }
-.gm-compat__logo {
-  font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em;
-  color: #C9C8DF;
-}
+/* magasabb specificitás kell a globális ".gm-lp img { height:auto }" reset fölé */
+.gm-compat img.gm-compat__logo { width: auto; display: inline-block; }
+.gm-compat img.gm-compat__logo--claude { height: 18px; }
+.gm-compat img.gm-compat__logo--chatgpt { height: 24px; }
 
 /* ============================================================
    SOCIAL-PROOF SÁV
