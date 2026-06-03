@@ -344,7 +344,9 @@
   gap: 0.9rem;
   margin-bottom: 0;
 }
-/* Másodlagos akció: diszkrét szöveglink a fő gomb alatt (attention ratio 1:1) */
+/* A gomb + link blokk a gomb szélességére zsugorodik → a link a gombhoz képest középre kerül */
+.gm-hero__ctawrap { width: fit-content; max-width: 100%; text-align: center; }
+/* Másodlagos akció: diszkrét szöveglink a fő gomb alatt, a gombhoz képest középen (attention ratio 1:1) */
 .gm-hero__textlink {
   display: inline-flex; align-items: center; gap: 0.4em;
   margin-top: 0.95rem;
@@ -883,15 +885,15 @@
 
 /* Kompatibilitás (hero, a kép alatt): "Működik vele:" + Claude · ChatGPT logók */
 .gm-compat {
-  padding: 0; margin: 2.2rem 0 0;
+  padding: 0; margin: 3.4rem 0 0;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
   gap: 0.35rem 0.9rem; text-align: center;
 }
-.gm-compat__lead { font-size: 0.9rem; font-weight: 600; color: #C9C8DF; }
+.gm-compat__lead { font-size: 1rem; font-weight: 600; color: #C9C8DF; }
 /* magasabb specificitás kell a globális ".gm-lp img { height:auto }" reset fölé */
 .gm-compat img.gm-compat__logo { width: auto; display: inline-block; }
-.gm-compat img.gm-compat__logo--claude { height: 18px; }
-.gm-compat img.gm-compat__logo--chatgpt { height: 24px; }
+.gm-compat img.gm-compat__logo--claude { height: 19.8px; }
+.gm-compat img.gm-compat__logo--chatgpt { height: 26.4px; }
 
 /* ============================================================
    SOCIAL-PROOF SÁV
