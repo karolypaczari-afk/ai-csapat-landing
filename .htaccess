@@ -1,0 +1,37 @@
+# ai-csapat.genmarketer.hu — PROD landoló („Az AI csapatod")
+# A Hostinger natív Git-deploy ezt szolgálja ki a karolypaczari-afk/ai-csapat-landing
+# mirror-repóból. NE szerkeszd a szerveren — a forrás a monorepo
+# landing-ai-csapatod/deploy/htaccess-prod, a sync-workflow másolja ide .htaccess-ként.
+
+Options -Indexes
+DirectoryIndex index.html
+AddDefaultCharset utf-8
+
+# --- VCS / dotfile védelem (a .git sosem szolgálható ki) ---
+RedirectMatch 404 /\.git(/|$)
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# --- Gyorsítótár: a HTML AZONNAL frissüljön (demo + gyors iteráció),
+#     a statikus assetek hosszan cache-elhetők ---
+<IfModule mod_headers.c>
+  <FilesMatch "\.html?$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|webp|png|jpe?g|svg|gif|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  Header set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- LiteSpeed: ne full-page-cache-elje a HTML-t → azonnali frissülés ---
+<IfModule LiteSpeed>
+  CacheDisable public /
+</IfModule>
+
+# --- Tömörítés ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>
