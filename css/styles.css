@@ -55,7 +55,9 @@
   overflow-x: clip;
 }
 .gm-lp img { max-width: 100%; height: auto; display: block; }
-.gm-lp a { color: inherit; text-decoration: none; }
+/* :where() → 0 specificitás, hogy a komponens-színszabályok (.gm-btn--*, .gm-uc__cta)
+   ne öröklődjenek felül (különben a fehér featured-kártyán fekete lenne a gombszöveg). */
+:where(.gm-lp) a { color: inherit; text-decoration: none; }
 .gm-lp code {
   font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.86em;
