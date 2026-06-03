@@ -834,14 +834,16 @@
   .gm-author__photo { justify-self: start; position: sticky; top: 90px; }
 }
 
-/* Hero két-oszlop @ desktop */
+/* Hero két-oszlop @ desktop — több hely a szövegnek, kisebb kép picivel jobbra */
 @media (min-width: 980px) {
   .gm-hero__inner {
     display: grid;
-    grid-template-columns: 1fr 1.04fr;
+    grid-template-columns: 1fr minmax(0, 380px);
     align-items: center;
-    gap: clamp(2rem, 4vw, 4rem);
+    gap: clamp(1.5rem, 3vw, 3rem);
   }
+  .gm-hero__copy { max-width: none; }
+  .gm-hero__media { justify-self: end; max-width: 380px; margin: 0; width: 100%; }
   .gm-hero__visual { display: block; margin: 0; max-width: none; }
   .gm-hero__badge { display: block; }
 }
@@ -858,17 +860,16 @@
 .gm-fud li { display: inline-flex; align-items: center; gap: 0.45em; }
 .gm-fud li::before { content: "✓"; color: var(--gm-cyan); font-weight: 800; }
 
-/* Kompatibilitás-csík (hero): Claude · ChatGPT · Claude Code */
+/* Kompatibilitás (hero, a kép alatt): "Működik vele:" + Claude · ChatGPT logók */
 .gm-compat {
-  list-style: none; padding: 0; margin: 1rem 0 0;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  padding: 0; margin: 1.1rem 0 0;
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+  gap: 0.3rem 0.95rem; text-align: center;
 }
-.gm-compat__lead { font-size: 0.88rem; font-weight: 600; color: #C9C8DF; margin-right: 0.15rem; }
-.gm-compat li:not(.gm-compat__lead) {
-  font-weight: 800; font-size: 0.9rem; color: var(--gm-white);
-  padding: 0.34em 0.85em; border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(0, 212, 255, 0.45);
+.gm-compat__lead { font-size: 0.9rem; font-weight: 600; color: #C9C8DF; }
+.gm-compat__logo {
+  font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em;
+  color: #C9C8DF;
 }
 
 /* ============================================================
