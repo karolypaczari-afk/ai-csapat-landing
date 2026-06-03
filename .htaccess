@@ -13,13 +13,18 @@ RedirectMatch 404 /\.git(/|$)
   Require all denied
 </FilesMatch>
 
-# --- Gyorsítótár: a HTML AZONNAL frissüljön (demo + gyors iteráció),
-#     a statikus assetek hosszan cache-elhetők ---
+# --- Gyorsítótár: a HTML és a CSS/JS AZONNAL frissüljön (gyors iteráció),
+#     a tartalom-assetek (képek, fontok) hosszan cache-elhetők ---
 <IfModule mod_headers.c>
   <FilesMatch "\.html?$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "\.(css|js|webp|png|jpe?g|svg|gif|ico|woff2?)$">
+  # CSS/JS: ETag-alapú revalidáció minden betöltésnél (304 ha nem változott) →
+  # a stílus-/script-módosítások azonnal propagálnak, verzió-bump nélkül.
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(webp|png|jpe?g|svg|gif|ico|woff2?)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
   Header set X-Content-Type-Options "nosniff"
