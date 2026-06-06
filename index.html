@@ -3,22 +3,154 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Az AI csapatod - 25 marketinges szakember egy fiókban | GENmarketer</title>
-  <meta name="description" content="Töltsd le a 25 AI-marketingest, telepítsd a Claude-odba vagy ChatGPT-be, és reggelre ott a piackutatód, a szövegíród, a hirdetéskezelőd - magyarul. Tibor Szántai, 18 év marketing. 30 napos garancia.">
+  <title>Az AI csapatod – 25 marketinges szakember | GENmarketer</title>
+  <meta name="description" content="25 AI-marketinges szakember magyarul, a Claude-odba vagy ChatGPT-be telepítve – piackutató, szövegíró, hirdetéskezelő. 30 napos pénzvisszafizetési garancia.">
   <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai-csapat.genmarketer.hu/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <!-- Élő: ai-csapat.genmarketer.hu · auto-deploy: monorepo → sync → mirror → Hostinger webhook -->
 
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GENmarketer">
+  <meta property="og:url" content="https://ai-csapat.genmarketer.hu/">
   <meta property="og:title" content="Egy ember vagy. Mostantól egy 25 fős marketingcsapat.">
   <meta property="og:description" content="25 AI-marketinges szakember, magyarul, a Claude-odba vagy ChatGPT-be telepítve. Min. 6 hónapig folyamatos frissítés, 30 napos pénzvisszafizetési garancia. Bevezető áron.">
   <meta property="og:locale" content="hu_HU">
-  <meta property="og:image" content="assets/img/og-share.webp">
+  <!-- OG-kép: JPG (a FB/LinkedIn scraper a WebP-t nem mindenhol támogatja), ABSZOLÚT URL kötelező -->
+  <meta property="og:image" content="https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Az AI csapatod – 25 AI-marketinges szakember egy fiókban">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Egy ember vagy. Mostantól egy 25 fős marketingcsapat.">
+  <meta name="twitter:description" content="25 AI-marketinges szakember, magyarul, a Claude-odba vagy ChatGPT-be telepítve. 30 napos pénzvisszafizetési garancia.">
+  <meta name="twitter:image" content="https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/styles.css?v=20260603">
+
+  <!-- GA4 — közös property a genmarketer.hu/tudastar-ral (G-1EV18K1256, docs/12);
+       a js/script.js begin_checkout eventje a window.gtag meglétére épül -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1EV18K1256"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1EV18K1256');
+  </script>
+
+  <!-- Strukturált adat: Organization + Product (2 Offer) + FAQPage (a látható 10 GYIK tükre — mismatch tilos!) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://genmarketer.hu/#org",
+        "name": "GENmarketer",
+        "url": "https://genmarketer.hu/",
+        "email": "info@genmarketer.hu",
+        "founder": { "@type": "Person", "name": "Tibor Szántai" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://ai-csapat.genmarketer.hu/",
+        "url": "https://ai-csapat.genmarketer.hu/",
+        "name": "Az AI csapatod – 25 marketinges szakember | GENmarketer",
+        "description": "25 AI-marketinges szakember magyarul, a Claude-odba vagy ChatGPT-be telepítve – piackutató, szövegíró, hirdetéskezelő. 30 napos pénzvisszafizetési garancia.",
+        "inLanguage": "hu",
+        "primaryImageOfPage": "https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg",
+        "publisher": { "@id": "https://genmarketer.hu/#org" }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://ai-csapat.genmarketer.hu/#product",
+        "name": "Az AI csapatod",
+        "description": "25 AI-marketinges szakember (piackutató, szövegíró, PPC-s, landoló-szakértő és társaik) Claude- és ChatGPT-kompatibilis formátumban, magyar tananyaggal, min. 6 hónap folyamatos frissítéssel és 30 napos pénzvisszafizetési garanciával.",
+        "image": "https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg",
+        "brand": { "@id": "https://genmarketer.hu/#org" },
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Képzés",
+            "price": "69990",
+            "priceCurrency": "HUF",
+            "availability": "https://schema.org/InStock",
+            "url": "https://tudastar.genmarketer.hu/checkout/?add-to-cart=872"
+          },
+          {
+            "@type": "Offer",
+            "name": "Képzés + Konzultáció",
+            "price": "119990",
+            "priceCurrency": "HUF",
+            "availability": "https://schema.org/InStock",
+            "url": "https://tudastar.genmarketer.hu/checkout/?add-to-cart=873"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://ai-csapat.genmarketer.hu/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Kell hozzá Claude-fiók?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Igen. A szakemberek Claude-skill formátumban érkeznek. A Claude ingyenes szintje sok feladathoz elég; komolyabb használathoz a Claude Pro vagy a Claude Code ajánlott. A Cowork és a Claude Code CLI is támogatott." }
+          },
+          {
+            "@type": "Question",
+            "name": "Claude-dal és ChatGPT-vel is működik?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Igen - a szakemberek Claude-dal és ChatGPT-vel is használhatók. Claude-ra építettük, mert ott a legjobb a szakember-élmény, de nem vagy hozzá kötve: a ChatGPT (és a Codex) magától is át tudja alakítani a szakembereinket úgy, hogy nála is működjenek. Ha ChatGPT-t vagy Codexet használsz és elakadnál, a Képzés + Konzultáció csomag keretében külön segítünk beállítani neked." }
+          },
+          {
+            "@type": "Question",
+            "name": "Mi van, ha nem tudom telepíteni?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Minden lecke kétféle útmutatót tartalmaz: egy egyszerű feltöltést a Cowork-re, és egy parancsot a Claude Code-hoz. Ha elakadsz, ott a képes leírás. A Konzultáció csomagban pedig személyesen beállítjuk veled." }
+          },
+          {
+            "@type": "Question",
+            "name": "Tényleg magyarul használom?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Igen. Minden szakember a saját AI-odban dolgozik (Claude vagy ChatGPT), ami magyarul ért és válaszol. A tananyag, a példák és az útmutatók is magyarul vannak, a magyar piacra hangolva." }
+          },
+          {
+            "@type": "Question",
+            "name": "Van magyar ügyfélszolgálat?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Igen. Ha bármiben elakadsz - telepítés, használat, számlázás -, magyarul írhatsz nekünk, és magyarul segítünk. A Képzés + Konzultáció csomagban pedig élőben, személyesen is melléd állunk az induláshoz." }
+          },
+          {
+            "@type": "Question",
+            "name": "Mibe kerül a Claude a kurzus mellé?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A Claude ingyenes szintjén korlátozott számú üzenet jár - sok feladathoz ez is elég. Többhöz a Claude Pro (kb. 7 800 Ft / hó) vagy a Claude Code ajánlott. Ezt közvetlenül az Anthropicnak fizeted, nem része a kurzus árának." }
+          },
+          {
+            "@type": "Question",
+            "name": "Meddig frissül a csapat?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Amit megveszel, az véglegesen a tiéd marad. A frissítésre konkrét ígéretet teszünk a vásárlástól számítva legalább hat hónapig, két külön vállalással: folyamatosan érkeznek az új szakemberek - automatikusan a fiókodba, felár nélkül; és a meglévő szakemberek is folyamatosan fejlődnek - a már letöltött szakembereid is egyre jobbak lesznek. Mindkettőt nagyrészt a vásárlók visszajelzései és kérései alapján priorizáljuk - vagyis te is alakítod, mi készül legközelebb. A célunk, hogy ezután is folytassuk; az első hat hónap viszont nem terv, hanem vállalás." }
+          },
+          {
+            "@type": "Question",
+            "name": "Mi a különbség a két csomag között?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A teljes csapatot mindkettő tartalmazza. A Konzultáció csomagban ezen felül 2 óra személyes konzultációt kapsz Tiborral és csapatával: együtt beállítjuk a szakembereket, megnézzük, hol hoz neked a legtöbbet az AI, és élőben válaszolunk minden kérdésedre." }
+          },
+          {
+            "@type": "Question",
+            "name": "Miért bevezető ár?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Mert a csapat folyamatosan nő. Ahogy újabb szakemberek érkeznek, az ár emelkedik. Aki most lép be, a mai áron fixálja a teljes csapatot, és min. 6 hónapig kapja a folyamatos frissítést." }
+          },
+          {
+            "@type": "Question",
+            "name": "Mi van, ha mégsem jó nekem?",
+            "acceptedAnswer": { "@type": "Answer", "text": "30 napod van kipróbálni. Ha nem találod hasznosnak, egy e-mailre visszautaljuk a teljes összeget - kérdés nélkül." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 <div class="gm-lp">
