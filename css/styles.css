@@ -815,7 +815,8 @@
 .gm-footer__nav { display: flex; gap: 1.3rem; flex-wrap: wrap; }
 .gm-footer__nav a { font-size: 0.9rem; color: #B9B8D2; }
 .gm-footer__nav a:hover { color: var(--gm-cyan); }
-.gm-footer__copy { width: 100%; font-size: 0.85rem; margin: 0.6rem 0 0; opacity: 0.7; }
+/* szolid szín, NEM opacity — a 0.7-es áttetszőség 3,91-re rontotta a kontrasztot (axe AA-bukás) */
+.gm-footer__copy { width: 100%; font-size: 0.85rem; margin: 0.6rem 0 0; color: #9A99B8; }
 
 /* ============================================================
    STICKY MOBIL CTA
