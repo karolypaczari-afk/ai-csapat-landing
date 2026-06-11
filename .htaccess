@@ -7,6 +7,10 @@ Options -Indexes
 DirectoryIndex index.html
 AddDefaultCharset utf-8
 
+# --- MIME: a videók helyes típussal menjenek (Range-kéréshez is) ---
+AddType video/mp4 .mp4
+AddType video/webm .webm
+
 # --- VCS / dotfile védelem (a .git sosem szolgálható ki) ---
 RedirectMatch 404 /\.git(/|$)
 <FilesMatch "^\.">
@@ -25,6 +29,10 @@ RedirectMatch 404 /\.git(/|$)
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(webp|png|jpe?g|svg|gif|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  # Demo-videók: nagy, ritkán változó assetek → hosszú cache
+  <FilesMatch "\.(mp4|webm)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
   Header set X-Content-Type-Options "nosniff"

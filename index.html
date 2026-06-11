@@ -31,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/styles.css?v=20260603">
+  <link rel="stylesheet" href="css/styles.css?v=20260611d">
 
   <!-- GA4 — közös property a genmarketer.hu/tudastar-ral (G-1EV18K1256, docs/12);
        a js/script.js begin_checkout eventje a window.gtag meglétére épül -->
@@ -39,8 +39,10 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-1EV18K1256');
+    if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      gtag('js', new Date());
+      gtag('config', 'G-1EV18K1256');
+    }
   </script>
 
   <!-- Strukturált adat: Organization + Product (2 Offer) + FAQPage (a látható 10 GYIK tükre — mismatch tilos!) -->
@@ -303,6 +305,7 @@
           <!-- 1 · Weboldal A-Z -->
           <article class="gm-uc gm-reveal">
             <div class="gm-uc__text">
+              <img class="gm-uc__banner gm-reveal" src="assets/img/banner-clark.webp" alt="CLARK - a landoló oldal szakértő" loading="lazy" width="1480" height="235">
               <span class="gm-uc__chip">CLARK &amp; MAXIMUS · Landoló oldal</span>
               <h3 class="gm-uc__h">Weboldal, A-tól Z-ig</h3>
               <p>A landoló oldal szakértőd 11 nemzetközi konverziós guru tudásából dolgozik, magyarra hangolva. Megtervezi a teljes oldaladat a látogatóid tudatossági szintjéhez igazítva - vagy átnézi a meglévőt, és megmondja, mit cserélj elsőként.</p>
@@ -329,6 +332,7 @@
           <!-- 2 · Szövegek -->
           <article class="gm-uc gm-uc--rev gm-reveal">
             <div class="gm-uc__text">
+              <img class="gm-uc__banner gm-reveal" src="assets/img/banner-forrest.webp" alt="FORREST - az e-mail-szakértő" loading="lazy" width="1480" height="235">
               <span class="gm-uc__chip">JORDAN, FORREST &amp; MONICA · Szövegek</span>
               <h3 class="gm-uc__h">Szövegek, amikre tényleg kattintanak</h3>
               <p>A szövegíród 42 bevált keretrendszerből válogat, és a kész szöveget magyar nyelvőrön és AI-szagtalanítón futtatja - hogy ne a spam-mappában landoljon. Hirdetés, e-mail, weboldal, SEO-cím: egy helyen.</p>
@@ -361,14 +365,21 @@
               </ul>
               <a class="gm-uc__cta" href="#arazas" data-gm-cta="usecase-kreativ" data-gm-package="basic">Ezt akarom →</a>
             </div>
-            <figure class="gm-uc__media gm-uc__media--img gm-reveal">
-              <img src="assets/img/uc-kreativ.webp" alt="Több hirdetési kreatív egy designer képernyőjén, GENmarketer brand-színekkel" loading="lazy" width="1280" height="956">
+            <figure class="gm-uc__media gm-video gm-video--click gm-reveal">
+              <div class="gm-video__frame">
+                <video preload="none" muted playsinline poster="assets/video/demo-kreativ-poster.webp" width="1280" height="720" data-gm-video="demo-kreativ" aria-label="Demó: karakter- és háttércsere egy kész hirdetéskreatívon">
+                  <source src="assets/video/demo-kreativ.mp4" type="video/mp4">
+                </video>
+                <button class="gm-video__play" type="button" aria-label="Demó lejátszása"><span class="gm-video__halo" aria-hidden="true"></span></button>
+              </div>
+              <figcaption class="gm-video__cap">38 másodperc a műhelyből: kész kreatívon cserélünk karaktert és hátteret.</figcaption>
             </figure>
           </article>
 
           <!-- 4 · Hirdetések elemzése -->
           <article class="gm-uc gm-uc--rev gm-reveal">
             <div class="gm-uc__text">
+              <img class="gm-uc__banner gm-reveal" src="assets/img/banner-neo.webp" alt="NEO - a Facebook Ads-szakértő" loading="lazy" width="1480" height="235">
               <span class="gm-uc__chip">LUCIUS &amp; NEO · Google + Facebook Ads</span>
               <h3 class="gm-uc__h">Hirdetések elemzése, érthető nyelven</h3>
               <p>A Google és a Facebook Ads szakértőd átnézi a fiókodat, és sorrendben mondja meg, mi a baj. Nem általánosságokat - konkrétan, hogy mit csinálj ma, mit a héten, és mi várhat jövő hónapra.</p>
@@ -423,6 +434,7 @@
           <!-- 6 · Videó -->
           <article class="gm-uc gm-uc--rev gm-reveal">
             <div class="gm-uc__text">
+              <img class="gm-uc__banner gm-reveal" src="assets/img/banner-ted.webp" alt="TED - a videós script-író" loading="lazy" width="1480" height="235">
               <span class="gm-uc__chip">TED, SARAH &amp; EDWARD · Videó</span>
               <h3 class="gm-uc__h">Videó: a forgatókönyvtől a kész vágásig</h3>
               <p>A videós csapatod a figyelemmegragadó forgatókönyvtől a kész, vágott tartalomig elkísér. A forgatókönyvíró, a videó-renderelő és a vágó is ott van a csapatban - kamera és stáb nélkül.</p>
@@ -433,15 +445,20 @@
               </ul>
               <a class="gm-uc__cta" href="#arazas" data-gm-cta="usecase-video" data-gm-package="basic">Ezt akarom →</a>
             </div>
-            <figure class="gm-uc__media gm-uc__media--img gm-reveal">
-              <span class="gm-uc__play" aria-hidden="true"></span>
-              <img src="assets/img/uc-video.webp" alt="Videóvágó idővonal és telefonos videó-előnézet, GENmarketer brand-színekkel" loading="lazy" width="1280" height="724">
+            <figure class="gm-uc__media gm-video gm-video--loop gm-reveal">
+              <div class="gm-video__frame">
+                <video preload="none" muted playsinline loop poster="assets/video/demo-video-ad-poster.webp" width="1280" height="720" data-gm-video="demo-video-ad" aria-label="AI-generált hirdetésvideó: futó férfi a budapesti rakparton">
+                  <source src="assets/video/demo-video-ad.mp4" type="video/mp4">
+                </video>
+              </div>
+              <figcaption class="gm-video__cap">Ez a hirdetésvideó forgatás nélkül készült - SARAH, a videó-renderelő munkája.</figcaption>
             </figure>
           </article>
 
           <!-- 7 · Szakértői tanácsadás -->
           <article class="gm-uc gm-reveal">
             <div class="gm-uc__text">
+              <img class="gm-uc__banner gm-reveal" src="assets/img/banner-john.webp" alt="JOHN - a stratégiai partner" loading="lazy" width="1480" height="235">
               <span class="gm-uc__chip">JOHN · A stratégiai partner</span>
               <h3 class="gm-uc__h">Szakértői tanácsadás, napi 24 órában</h3>
               <p>A stratégiai partnered 9 üzleti legenda - Hormozi, Brunson, Belfort és társaik - tudásából válaszol. Kérdezz bármit az üzletedről: árazás, ajánlat, pozicionálás, sales. A te helyzetedre szabva, magyarul.</p>
@@ -461,18 +478,185 @@
       </div>
     </section>
 
+    <!-- ░░░ BIZONYÍTÉK - valódi munkák a csapattól ░░░ -->
+    <section class="gm-section gm-section--dark" id="bizonyitek">
+      <div class="gm-container">
+        <div class="gm-section-head gm-text-center">
+          <p class="gm-eyebrow gm-reveal">Nem ígérgetünk - mutatjuk</p>
+          <h2 class="gm-h2 gm-reveal">Így néz ki, amit a szakembereid letesznek az asztalra</h2>
+          <p class="gm-lead gm-lead--inverse gm-reveal">Nyolc munka a csapattól, úgy, ahogy elkészült. Lapozz bele - ilyet készítenek majd neked is, a te számaidból, a te piacodon.</p>
+        </div>
+
+        <div class="gm-slider gm-reveal" data-gm-slider role="region" aria-roledescription="lapozó" aria-label="Valós munkák a csapattól">
+          <div class="gm-slider__track" data-gm-track tabindex="0">
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>TRUMAN</strong><span>UGC-videó-producer</span></div>
+              <div class="gm-slide__shot gm-slide__shot--video gm-video gm-video--loop">
+                <div class="gm-video__frame">
+                  <video preload="none" muted playsinline loop poster="assets/video/demo-ugc-poster.webp" width="720" height="720" data-gm-video="demo-ugc" aria-label="UGC-videó: nő mutatja be a terméket a fürdőszobában">
+                    <source src="assets/video/demo-ugc.mp4" type="video/mp4">
+                  </video>
+                  <button class="gm-video__mute" type="button" aria-label="Hang bekapcsolása" aria-pressed="false">
+                    <svg class="gm-mute__ico gm-mute__ico--off" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7z"/></svg>
+                    <svg class="gm-mute__ico gm-mute__ico--on" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.8-1-3.3-2.5-4v8c1.5-.7 2.5-2.2 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <figcaption class="gm-slide__cap">Ezt a UGC-videót <strong>TRUMAN</strong> egy termékfotóból és egy kétmondatos leírásból készítette - se kamera, se stáb, se influenszer.</figcaption>
+            </figure>
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>LUCIUS &amp; NEO</strong><span>Google + Facebook Ads</span></div>
+              <div class="gm-slide__shot">
+                <img src="assets/img/proof-kampany-riport.webp" alt="Kampány-összesítő riport fejléce és szekciói: pillantkép, főbb metrikák, óránkénti grafikonok, top kreatívok" loading="lazy" width="1300" height="451">
+              </div>
+              <figcaption class="gm-slide__cap">Kampány-összesítő riport: főbb metrikák, óránkénti grafikonok, a legjobb és leggyengébb kreatívok - magától áll össze.</figcaption>
+            </figure>
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>FORREST</strong><span>e-mail szakértő</span></div>
+              <div class="gm-slide__shot">
+                <img src="assets/img/proof-email-riport.webp" alt="Heti e-mail teljesítmény-riport: kampányok, nyitási és kattintási arány, vezetői összefoglaló" loading="lazy" width="777" height="680">
+              </div>
+              <figcaption class="gm-slide__cap">Heti riport: kampányonkénti nyitás, kattintás és kézbesítés - vezetői összefoglalóval, hogy egy perc alatt lásd, mi a teendő.</figcaption>
+            </figure>
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>FORREST</strong><span>e-mail szakértő</span></div>
+              <div class="gm-slide__shot">
+                <img src="assets/img/proof-stilus-guide.webp" alt="E-mail stílus-guide: a márka hangja egy mondatban, alapelvek, tegeződés" loading="lazy" width="795" height="442">
+              </div>
+              <figcaption class="gm-slide__cap">Stílus-guide ~100 korábbi kampány szövegéből desztillálva - hogy minden jövőbeli levél a bevált, saját hangodon szóljon.</figcaption>
+            </figure>
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>TYRION</strong><span>versenytárs-elemző</span></div>
+              <div class="gm-slide__shot">
+                <img src="assets/img/proof-versenytars.webp" alt="Versenytárs-hirdetések táblázata a Meta Ad Libraryből: indulás, téma, hook, funnel-szint" loading="lazy" width="934" height="703">
+              </div>
+              <figcaption class="gm-slide__cap"><strong>TYRION</strong> összeszedte egy versenytárs elmúlt 30 napjának hirdetéseit a Meta hirdetéstárából - indulás dátuma, hook, funnel-szint, mind egy táblában.</figcaption>
+            </figure>
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>TYRION</strong><span>versenytárs-elemző</span></div>
+              <div class="gm-slide__shot">
+                <img src="assets/img/proof-social.webp" alt="Organikus social média elemzés: követőszámok platformonként, profilok szerepe a tölcsérben, tartalomstílus" loading="lazy" width="1003" height="804">
+              </div>
+              <figcaption class="gm-slide__cap">Social-jelenlét átvilágítás: követőszámok platformonként, melyik profil mit csinál a tölcsérben, és mi működik a tartalomban.</figcaption>
+            </figure>
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>CLARK</strong><span>landoló-oldal szakértő</span></div>
+              <div class="gm-slide__shot">
+                <img src="assets/img/proof-landing.webp" alt="Landolóoldal-vázlat szekciónkénti jegyzetekkel a szerkesztőfelületen" loading="lazy" width="1480" height="703">
+              </div>
+              <figcaption class="gm-slide__cap"><strong>CLARK</strong> műhelyéből: landoló-vázlat szekciónkénti jegyzetekkel - hero, ajánlat, social proof, mind indokolva.</figcaption>
+            </figure>
+
+            <figure class="gm-slide">
+              <div class="gm-slide__chip"><strong>A CSAPAT</strong><span>éjszakai műszak</span></div>
+              <div class="gm-slide__shot">
+                <img src="assets/img/proof-cron.webp" alt="Időzített futások listája: a kampány-riport éjszakánként magától készül el" loading="lazy" width="1423" height="817">
+              </div>
+              <figcaption class="gm-slide__cap">Időzített futások listája: a riport minden éjjel magától készül el, és reggelre az asztalodon van. Önállóság a gyakorlatban.</figcaption>
+            </figure>
+
+          </div>
+
+          <div class="gm-slider__bar">
+            <button class="gm-slider__btn" type="button" data-gm-prev aria-label="Előző munka"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <div class="gm-slider__dots" data-gm-dots></div>
+            <span class="gm-slider__count" data-gm-count aria-hidden="true">1 / 8</span>
+            <button class="gm-slider__btn" type="button" data-gm-next aria-label="Következő munka"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <p class="gm-proof__note gm-text-center gm-reveal">A riportok kattintható HTML-oldalak, nem PDF-temetők - és mind a saját fiókodból, a saját számaidból készül.</p>
+      </div>
+    </section>
+
     <!-- ░░░ A CSAPAT (badge grid) ░░░ -->
     <section class="gm-section gm-section--light" id="csapat">
       <div class="gm-container">
         <div class="gm-section-head gm-text-center">
           <p class="gm-eyebrow gm-eyebrow--ink gm-reveal">A teljes névsor</p>
           <h2 class="gm-h2 gm-reveal">Ismerd meg mind a 25 szakembered</h2>
-          <p class="gm-lead gm-reveal">Hét terület, egy csapat. Mindegyik szakember egy konkrét tudásra épül, magyarra hangolva. <strong>Folyamatosan érkeznek az új szakemberek</strong> - min. 6 hónapig garantáltan -, és <strong>a meglévő szakemberek is folyamatosan fejlődnek</strong> a ti visszajelzéseitek alapján.</p>
+          <p class="gm-lead gm-reveal">Hét terület, egy csapat. Mindegyik szakember egy konkrét tudásra épül, magyarra hangolva. <strong>Folyamatosan érkeznek az új szakemberek</strong> - min. 6 hónapig garantáltan -, és <strong>a meglévő szakemberek is folyamatosan fejlődnek</strong> a ti visszajelzéseitek alapján. A csapat legutóbb a LinkedIn-stratégával bővült - a vásárlók automatikusan, felár nélkül kapták meg.</p>
         </div>
         <div id="gm-team" class="gm-team" aria-live="polite"></div>
         <noscript>
           <p class="gm-lead gm-text-center">25 szakember: piackutató, versenytárs-elemző, stratégiai partner, előfizetés-szakértő, landoló oldal szakértő és építő, hirdetéstervező, hirdetés-szövegíró, kreatív designer, Google&nbsp;Ads- és Facebook&nbsp;Ads-kezelő, e-mail-szakértő, Figma-tervező, -fejlesztő és -ellenőr, videós adatgyűjtő, UGC-videós, script-író, videó-renderelő és -vágó, SEO-auditor, kulcsszó-kutató, tartalom-optimalizáló, technikai és helyi SEO-szakértő.</p>
         </noscript>
+      </div>
+    </section>
+
+    <!-- ░░░ KINEK MELYIK SZAKEMBER - önkvalifikáció ░░░ -->
+    <section class="gm-section gm-section--sand" id="kinek">
+      <div class="gm-container">
+        <div class="gm-section-head gm-text-center">
+          <p class="gm-eyebrow gm-eyebrow--ink gm-reveal">Ez neked való?</p>
+          <h2 class="gm-h2 gm-reveal">Kinek melyik szakemberrel éri meg kezdeni?</h2>
+          <p class="gm-lead gm-reveal">Nem kell mind a 25-öt az első héten munkába fognod. Így áll össze a kezdőcsapat a vállalkozásod típusa szerint.</p>
+        </div>
+
+        <div class="gm-fit">
+          <article class="gm-fit__col gm-reveal">
+            <h3 class="gm-fit__h">Webáruházat viszel</h3>
+            <p class="gm-fit__label">Ezzel indulj</p>
+            <ul class="gm-check">
+              <li><strong>LUCIUS &amp; NEO</strong> - a hirdetéskezelőid: itt folyik el vagy térül meg a pénzed</li>
+              <li><strong>FORREST</strong> - az e-mail-szakértő: a visszatérő vásárlók motorja</li>
+              <li><strong>TYRION</strong> - a versenytárs-elemző: látod, mit hirdetnek a többiek</li>
+            </ul>
+            <p class="gm-fit__label gm-fit__label--plus">Ha az alapok már mennek</p>
+            <ul class="gm-fit__plus">
+              <li>COLUMBO &amp; INDIANA - SEO, az ingyenes forgalomért</li>
+              <li>PAM - kreatívok, ha sokat hirdetsz</li>
+            </ul>
+          </article>
+
+          <article class="gm-fit__col gm-reveal">
+            <h3 class="gm-fit__h">Szolgáltatsz vagy tanácsot adsz</h3>
+            <p class="gm-fit__label">Ezzel indulj</p>
+            <ul class="gm-check">
+              <li><strong>JORDAN</strong> - a hirdetés-szövegíró: a szavaidon múlik az ügyfél</li>
+              <li><strong>CLARK</strong> - a landoló oldal szakértő: ide érkezik minden érdeklődőd</li>
+              <li><strong>COLUMBO</strong> - a SEO-auditor: hogy megtaláljanak, amikor keresnek</li>
+            </ul>
+            <p class="gm-fit__label gm-fit__label--plus">Ha az alapok már mennek</p>
+            <ul class="gm-fit__plus">
+              <li>KATNISS - helyi SEO, ha a környékről jönnek az ügyfeleid</li>
+              <li>DUMBLEDORE - kampányterv, ha hirdetni kezdesz</li>
+            </ul>
+          </article>
+
+          <article class="gm-fit__col gm-reveal">
+            <h3 class="gm-fit__h">Előfizetésből, visszatérő bevételből élsz</h3>
+            <p class="gm-fit__label">Ezzel indulj</p>
+            <ul class="gm-check">
+              <li><strong>GANDALF</strong> - az előfizetések szakértője: a lemorzsolódás ellen</li>
+              <li><strong>FORREST</strong> - az e-mail-szakértő: a megtartás első embere</li>
+              <li><strong>JOHN</strong> - a stratégiai partner: árazás, ajánlat, pozicionálás</li>
+            </ul>
+            <p class="gm-fit__label gm-fit__label--plus">Ha az alapok már mennek</p>
+            <ul class="gm-fit__plus">
+              <li>JORDAN - szövegek a teljes ügyfélútra</li>
+              <li>LUCIUS &amp; NEO - ha fizetett forgalmat is hajtasz</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="gm-levels gm-reveal" aria-label="Nehézségi szintek">
+          <p class="gm-levels__lead">Mennyire nehéz elindulni velük?</p>
+          <ul class="gm-levels__list">
+            <li class="gm-level gm-level--easy"><strong>Könnyű</strong> - szövegíró, e-mail, videós script, versenytárs-elemző: telepíted, és már dolgozik is</li>
+            <li class="gm-level gm-level--mid"><strong>Közepes</strong> - SEO, landoló oldal, kampányterv, stratégia: előbb válaszolsz pár kérdésre az üzletedről</li>
+            <li class="gm-level gm-level--pro"><strong>Haladó</strong> - Google Ads- és Facebook Ads-kezelő: a fiókod összekötése kell hozzá, képes útmutatóval</li>
+          </ul>
+        </div>
+
+        <p class="gm-fit__cta gm-text-center gm-reveal">Bármelyikkel kezded, a teljes csapatot kapod. <a class="gm-uc__cta" href="#arazas" data-gm-cta="kinek" data-gm-package="basic">Megnézem a csomagokat →</a></p>
       </div>
     </section>
 
@@ -500,6 +684,39 @@
             <p>Elmondod, mire van szükséged - a szakember magyarul, kész munkával válaszol. Mintha melletted ülne.</p>
           </li>
         </ol>
+
+        <div class="gm-agent gm-reveal">
+          <h3 class="gm-agent__h">Mitől szakember - és nem csak egy okosabb chatbot?</h3>
+          <p class="gm-agent__lead">Ugyanattól a négy dologtól, amitől egy jó kolléga az, ami.</p>
+          <div class="gm-agent__table" role="table" aria-label="Az emberi munkatárs és az AI-szakember párhuzama">
+            <div class="gm-agent__row" role="row">
+              <span class="gm-agent__tag" role="rowheader">Ész</span>
+              <span class="gm-agent__human" role="cell">Az esze, a műveltsége</span>
+              <span class="gm-agent__ai" role="cell">A modell: a Claude-od vagy a ChatGPT-d - ezt hozod te</span>
+            </div>
+            <div class="gm-agent__row" role="row">
+              <span class="gm-agent__tag" role="rowheader">Eszköz</span>
+              <span class="gm-agent__human" role="cell">Belépőkártya, szoftverek, hozzáférések</span>
+              <span class="gm-agent__ai" role="cell">Kapcsolatok a fiókjaidhoz - te döntöd el, mihez fér hozzá</span>
+            </div>
+            <div class="gm-agent__row gm-agent__row--hl" role="row">
+              <span class="gm-agent__tag" role="rowheader">Szaktudás</span>
+              <span class="gm-agent__human" role="cell">Betanítás, évek tapasztalata, a szakma fogásai</span>
+              <span class="gm-agent__ai" role="cell">A 25 szakember-csomag - pontosan ezt kapod tőlünk</span>
+            </div>
+            <div class="gm-agent__row" role="row">
+              <span class="gm-agent__tag" role="rowheader">Önállóság</span>
+              <span class="gm-agent__human" role="cell">„Itt a cél, vidd végig"</span>
+              <span class="gm-agent__ai" role="cell">Kiadod a feladatot, és kész munkával jön vissza</span>
+            </div>
+          </div>
+          <p class="gm-agent__more">A szakembereid időzítve is tudnak dolgozni: reggel hétre kész a heti riport, és szólnak, ha a kampányod megtorpan.</p>
+        </div>
+
+        <blockquote class="gm-quote gm-reveal">
+          <p>„A tech-vezérigazgató barátaimmal fogadást kötöttünk, melyik lesz az első év, amikor megszületik az első egyszemélyes, milliárd dolláros cég. AI nélkül ez elképzelhetetlen lett volna - így viszont meg fog történni."</p>
+          <cite>Sam Altman · az OpenAI vezérigazgatója</cite>
+        </blockquote>
       </div>
     </section>
 
@@ -775,6 +992,6 @@
 
 </div><!-- /.gm-lp -->
 
-<script src="js/script.js?v=20260603" defer></script>
+<script src="js/script.js?v=20260611d" defer></script>
 </body>
 </html>

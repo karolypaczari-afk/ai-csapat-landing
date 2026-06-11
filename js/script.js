@@ -281,6 +281,74 @@
   }
 
   /* ----------------------------------------------------------
+     6b) DEMO-VIDEÓK (.gm-video)
+     --loop:  némított, akkor megy, amikor látszik (≥50%), kint áll;
+              hang a .gm-video__mute kapcsolóval (user-gesture → engedett)
+     --click: poszter + pulzáló play-gomb; kattintásra hang + controls + esemény
+     Reduced motion: semmi sem indul magától, natív controls.
+     ---------------------------------------------------------- */
+  function wireVideos() {
+    var figs = document.querySelectorAll(".gm-video");
+    if (!figs.length) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    Array.prototype.forEach.call(figs, function (fig) {
+      var video = fig.querySelector("video");
+      if (!video) return;
+      var btn = fig.querySelector(".gm-video__play");
+
+      if (reduce) {
+        // Semmi automatikus mozgás: a látogató indít, natív vezérlőkkel (hang is ott).
+        video.controls = true;
+        if (btn) btn.remove();
+        var mb = fig.querySelector(".gm-video__mute");
+        if (mb) mb.remove();
+        return;
+      }
+
+      if (fig.classList.contains("gm-video--loop") && "IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting && en.intersectionRatio >= 0.5) {
+              video.play().catch(function () {});
+            } else {
+              video.pause();
+            }
+          });
+        }, { threshold: [0, 0.5] });
+        io.observe(video);
+      }
+
+      if (btn) {
+        btn.addEventListener("click", function () {
+          btn.remove();
+          video.controls = true;
+          video.muted = false; // user-gesture: mehet hanggal; a natív controls-on visszanémítható
+          video.play().catch(function () {});
+          try {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+              event: "gm_video_play",
+              video_id: video.getAttribute("data-gm-video") || null
+            });
+          } catch (e) {}
+        });
+      }
+
+      var muteBtn = fig.querySelector(".gm-video__mute");
+      if (muteBtn) {
+        muteBtn.addEventListener("click", function () {
+          video.muted = !video.muted;
+          muteBtn.classList.toggle("is-on", !video.muted);
+          muteBtn.setAttribute("aria-pressed", video.muted ? "false" : "true");
+          muteBtn.setAttribute("aria-label", video.muted ? "Hang bekapcsolása" : "Hang kikapcsolása");
+          if (!video.muted && video.paused) video.play().catch(function () {});
+        });
+      }
+    });
+  }
+
+  /* ----------------------------------------------------------
      7) GYIK - egyszerre csak egy nyitva (accordion-érzet)
      ---------------------------------------------------------- */
   function wireFaq() {
@@ -296,6 +364,88 @@
   }
 
   /* ----------------------------------------------------------
+     7b) EREDMÉNY-LAPOZÓ (#bizonyitek, .gm-slider)
+     Natív scroll-snap viszi a görgetést/swipe-ot; itt csak a
+     nyilak, pöttyök, számláló és az aktív-állapot kerül rá.
+     ---------------------------------------------------------- */
+  function wireProofSlider() {
+    var root = document.querySelector("[data-gm-slider]");
+    if (!root) return;
+    var track = root.querySelector("[data-gm-track]");
+    var slides = track ? track.querySelectorAll(".gm-slide") : [];
+    if (!track || !slides.length) return;
+    var prev = root.querySelector("[data-gm-prev]");
+    var next = root.querySelector("[data-gm-next]");
+    var dotsWrap = root.querySelector("[data-gm-dots]");
+    var count = root.querySelector("[data-gm-count]");
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var behavior = reduce ? "auto" : "smooth";
+    var active = -1;
+    var dots = [];
+
+    Array.prototype.forEach.call(slides, function (slide, i) {
+      slide.setAttribute("role", "group");
+      slide.setAttribute("aria-roledescription", "munka");
+      slide.setAttribute("aria-label", (i + 1) + " / " + slides.length);
+      if (dotsWrap) {
+        var dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "gm-slider__dot";
+        dot.setAttribute("aria-label", (i + 1) + ". munka megtekintése");
+        dot.addEventListener("click", function () { goTo(i); });
+        dotsWrap.appendChild(dot);
+        dots.push(dot);
+      }
+    });
+
+    function goTo(i) {
+      // Végtelen lapozás: az utolsó után az első jön, az első előtt az utolsó.
+      i = ((i % slides.length) + slides.length) % slides.length;
+      var s = slides[i];
+      track.scrollTo({
+        left: s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2,
+        behavior: behavior
+      });
+    }
+
+    function setActive(i) {
+      if (i === active) return;
+      active = i;
+      Array.prototype.forEach.call(slides, function (s, k) {
+        s.classList.toggle("is-active", k === i);
+      });
+      dots.forEach(function (d, k) { d.classList.toggle("is-active", k === i); });
+      if (count) count.textContent = (i + 1) + " / " + slides.length;
+    }
+
+    var raf = null;
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(function () {
+        raf = null;
+        var center = track.scrollLeft + track.clientWidth / 2;
+        var best = 0, bestDist = Infinity;
+        Array.prototype.forEach.call(slides, function (s, k) {
+          var d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - center);
+          if (d < bestDist) { bestDist = d; best = k; }
+        });
+        setActive(best);
+      });
+    }
+
+    track.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    if (prev) prev.addEventListener("click", function () { goTo(active - 1); });
+    if (next) next.addEventListener("click", function () { goTo(active + 1); });
+    track.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") { e.preventDefault(); goTo(active - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); goTo(active + 1); }
+    });
+
+    setActive(0);
+  }
+
+  /* ----------------------------------------------------------
      Init
      ---------------------------------------------------------- */
   function init() {
@@ -305,6 +455,8 @@
     wireSmoothScroll();
     wireScrollState();
     wireReveal();
+    wireVideos();
+    wireProofSlider();
     wireFaq();
   }
 
