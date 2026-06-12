@@ -240,6 +240,72 @@
   background-position: 0 0;
 }
 
+/* Fejléc jobb oldali csoport: nyelvváltó + CTA */
+.gm-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* ------------------------------------------------------------
+   NYELVVÁLTÓ (HU ⇄ EN) — pill, a fejlécben (sötét) és a láblécben (világos)
+   ------------------------------------------------------------ */
+.gm-langswitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+  flex: none;
+}
+.gm-langswitch__cur,
+.gm-langswitch__alt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.34em 0.7em;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+.gm-langswitch__cur {
+  background: var(--gm-white);
+  color: var(--gm-ink, #12121f);
+}
+.gm-langswitch__alt {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition: color 0.2s var(--gm-ease), background 0.2s var(--gm-ease);
+}
+.gm-langswitch__alt:hover,
+.gm-langswitch__alt:focus-visible {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Lábléc-variáns: a lábléc SÖTÉT (--gm-navy-900) → világos szöveg, mint a fejlécben.
+   A „current" tömör lila pill fehér felirattal, az alt link tört-fehér (WCAG AA). */
+.gm-langswitch--footer {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.gm-langswitch--footer .gm-langswitch__cur {
+  background: var(--gm-violet);
+  color: #fff;
+}
+.gm-langswitch--footer .gm-langswitch__alt {
+  color: #cfcee6;
+}
+.gm-langswitch--footer .gm-langswitch__alt:hover,
+.gm-langswitch--footer .gm-langswitch__alt:focus-visible {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 /* ============================================================
    HERO
    ============================================================ */

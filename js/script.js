@@ -18,52 +18,85 @@
   var CURRENCY = "HUF";
 
   /* ----------------------------------------------------------
+     1b) NYELV  →  a <html lang> dönti el (HU a gyökéren, EN a /en/-en).
+     A LÁTHATÓ statikus szöveg a HTML-ben van (index.html / en/index.html);
+     itt csak a JS-ből renderelt vagy beírt szövegeknek kell kétnyelvűnek lenniük.
+     Egyetlen forrás mindkét oldalnak: ez a fájl. → KÉTNYELVŰSÉG-SZINKRON:
+     ha az egyik nyelv csapat-szövegén változtatsz, a másikat (…En mező) is vezesd át!
+     ---------------------------------------------------------- */
+  var LANG = (document.documentElement.getAttribute("lang") || "hu")
+    .slice(0, 2).toLowerCase() === "en" ? "en" : "hu";
+  var T = {
+    hu: {
+      specialist: function (n) { return n + " specialista"; },
+      soon: "Hamarosan",
+      muteOn: "Hang bekapcsolása",
+      muteOff: "Hang kikapcsolása",
+      pkgBasic: "Képzés",
+      pkgPro: "Képzés + Konzultáció",
+      workRole: "munka",
+      viewWork: function (n) { return n + ". munka megtekintése"; }
+    },
+    en: {
+      specialist: function (n) { return n + (n === 1 ? " specialist" : " specialists"); },
+      soon: "Coming soon",
+      muteOn: "Unmute",
+      muteOff: "Mute",
+      pkgBasic: "Training",
+      pkgPro: "Training + Consultation",
+      workRole: "work",
+      viewWork: function (n) { return "View work " + n; }
+    }
+  }[LANG];
+
+  /* ----------------------------------------------------------
      2) A CSAPAT - 25 specialista (élő GENmarketer-badge-ek)
      A WebP-bannerek a tudástár media-könyvtárából jönnek.
      status: "live" | "soon"
+     A cat/role/benefit kétnyelvű (…/…En) — a render a LANG szerint választ.
      ---------------------------------------------------------- */
   var AVATAR_BASE = "https://tudastar.genmarketer.hu/wp-content/uploads/2026/05/";
   function av(slug) { return AVATAR_BASE + "avatar-" + slug + ".webp"; }
 
   var TEAM = [
-    { cat: "Stratégia", color: "#7C3AED", members: [
-      { code: "SHERLOCK", role: "a piackutató", slug: "genmarketer-icp-researcher", status: "live", benefit: "Pontosan megmondja, kik a vevőid és mi fáj nekik - hogy ne a sötétben lövöldözz." },
-      { code: "TYRION", role: "a versenytárs-elemző", slug: "genmarketer-competitor-intel", status: "live", benefit: "Feltérképezi a versenytársaidat, hogy mindig egy lépéssel előttük járj." },
-      { code: "JOHN", role: "a stratégiai partner", slug: "genmarketer-billion-dollar-board", status: "live", benefit: "Végiggondolja veled a következő nagy lépésed - mintha lenne egy saját igazgatótanácsod." },
-      { code: "GANDALF", role: "az előfizetések szakértője", slug: "genmarketer-membership-expert", status: "live", benefit: "Felépíti neked a visszatérő bevételt, hogy ne kelljen minden hónapban nulláról indulnod." }
+    { cat: "Stratégia", catEn: "Strategy", color: "#7C3AED", members: [
+      { code: "SHERLOCK", role: "a piackutató", roleEn: "the market researcher", slug: "genmarketer-icp-researcher", status: "live", benefit: "Pontosan megmondja, kik a vevőid és mi fáj nekik - hogy ne a sötétben lövöldözz.", benefitEn: "Pinpoints exactly who your buyers are and what hurts them - so you stop shooting in the dark." },
+      { code: "TYRION", role: "a versenytárs-elemző", roleEn: "the competitor analyst", slug: "genmarketer-competitor-intel", status: "live", benefit: "Feltérképezi a versenytársaidat, hogy mindig egy lépéssel előttük járj.", benefitEn: "Maps out your competitors so you're always one step ahead." },
+      { code: "JOHN", role: "a stratégiai partner", roleEn: "the strategic partner", slug: "genmarketer-billion-dollar-board", status: "live", benefit: "Végiggondolja veled a következő nagy lépésed - mintha lenne egy saját igazgatótanácsod.", benefitEn: "Thinks through your next big move with you - like having your own board of directors." },
+      { code: "GANDALF", role: "az előfizetések szakértője", roleEn: "the membership expert", slug: "genmarketer-membership-expert", status: "live", benefit: "Felépíti neked a visszatérő bevételt, hogy ne kelljen minden hónapban nulláról indulnod.", benefitEn: "Builds your recurring revenue so you don't start from zero every month." }
     ]},
-    { cat: "Landoló oldal", color: "#06B6D4", members: [
-      { code: "CLARK", role: "a landoló oldal szakértő", slug: "genmarketer-landing-page-expert", status: "live", benefit: "Megtervezi a landoló oldaladat, amelyik a látogatóidból tényleg vevőt csinál." },
-      { code: "MAXIMUS", role: "a landoló oldal építő", slug: "genmarketer-landing-page-builder", status: "soon", benefit: "Kódba önti a kész landolódat - anélkül, hogy fejlesztőt kéne fizetned." }
+    { cat: "Landoló oldal", catEn: "Landing page", color: "#06B6D4", members: [
+      { code: "CLARK", role: "a landoló oldal szakértő", roleEn: "the landing page expert", slug: "genmarketer-landing-page-expert", status: "live", benefit: "Megtervezi a landoló oldaladat, amelyik a látogatóidból tényleg vevőt csinál.", benefitEn: "Designs a landing page that actually turns your visitors into buyers." },
+      { code: "MAXIMUS", role: "a landoló oldal építő", roleEn: "the landing page builder", slug: "genmarketer-landing-page-builder", status: "soon", benefit: "Kódba önti a kész landolódat - anélkül, hogy fejlesztőt kéne fizetned.", benefitEn: "Turns your finished landing page into code - without paying a developer." }
     ]},
-    { cat: "Hirdetés", color: "#00D4FF", members: [
-      { code: "DUMBLEDORE", role: "a hirdetéstervező", slug: "genmarketer-ad-planner", status: "live", benefit: "Kitalálja a kampányodat, amelyik megállítja a görgető ujjat a hírfolyamban." },
-      { code: "JORDAN", role: "a hirdetés-szövegíró", slug: "genmarketer-ad-copywriter", status: "live", benefit: "Megírja a hirdetésszövegeidet, amikre tényleg kattintanak - nem görgetnek tovább." },
-      { code: "PAM", role: "a kreatív designer", slug: "genmarketer-ad-creative-design", status: "live", benefit: "Megtervezi a hirdetési kreatívjaidat, amik kitűnnek a végtelen hírfolyamból." },
-      { code: "LUCIUS", role: "a Google Ads-hirdetéskezelő", slug: "genmarketer-google-ads-expert", status: "live", benefit: "Beállítja és pörgeti a Google-hirdetéseidet, hogy ne égjen el feleslegesen a kereted." },
-      { code: "NEO", role: "a Facebook Ads-szakértő", slug: "genmarketer-facebook-ad-expert", status: "live", benefit: "Úgy kezeli a Meta-kampányaidat, hogy olcsóbb leadeket és több vásárlót hozzanak." }
+    { cat: "Hirdetés", catEn: "Advertising", color: "#00D4FF", members: [
+      { code: "DUMBLEDORE", role: "a hirdetéstervező", roleEn: "the ad planner", slug: "genmarketer-ad-planner", status: "live", benefit: "Kitalálja a kampányodat, amelyik megállítja a görgető ujjat a hírfolyamban.", benefitEn: "Comes up with the campaign that stops the scrolling thumb in the feed." },
+      { code: "JORDAN", role: "a hirdetés-szövegíró", roleEn: "the ad copywriter", slug: "genmarketer-ad-copywriter", status: "live", benefit: "Megírja a hirdetésszövegeidet, amikre tényleg kattintanak - nem görgetnek tovább.", benefitEn: "Writes ad copy people actually click - instead of scrolling past." },
+      { code: "PAM", role: "a kreatív designer", roleEn: "the creative designer", slug: "genmarketer-ad-creative-design", status: "live", benefit: "Megtervezi a hirdetési kreatívjaidat, amik kitűnnek a végtelen hírfolyamból.", benefitEn: "Designs ad creatives that stand out in the endless feed." },
+      { code: "LUCIUS", role: "a Google Ads-hirdetéskezelő", roleEn: "the Google Ads manager", slug: "genmarketer-google-ads-expert", status: "live", benefit: "Beállítja és pörgeti a Google-hirdetéseidet, hogy ne égjen el feleslegesen a kereted.", benefitEn: "Sets up and runs your Google Ads so your budget doesn't burn for nothing." },
+      { code: "NEO", role: "a Facebook Ads-szakértő", roleEn: "the Facebook Ads expert", slug: "genmarketer-facebook-ad-expert", status: "live", benefit: "Úgy kezeli a Meta-kampányaidat, hogy olcsóbb leadeket és több vásárlót hozzanak.", benefitEn: "Runs your Meta campaigns to bring cheaper leads and more buyers." }
     ]},
-    { cat: "E-mail", color: "#FFC400", members: [
-      { code: "FORREST", role: "az e-mail-szakértő", slug: "genmarketer-email-marketing-expert", status: "live", benefit: "Megírja az e-mail-sorozataidat, amik eladnak helyetted - akkor is, amikor alszol." }
+    { cat: "E-mail", catEn: "Email", color: "#FFC400", members: [
+      { code: "FORREST", role: "az e-mail-szakértő", roleEn: "the email expert", slug: "genmarketer-email-marketing-expert", status: "live", benefit: "Megírja az e-mail-sorozataidat, amik eladnak helyetted - akkor is, amikor alszol.", benefitEn: "Writes your email sequences that sell for you - even while you sleep." }
     ]},
-    { cat: "Design", color: "#9B6DFF", members: [
-      { code: "MORPHEUS", role: "a Figma-tervező", slug: "figma-use", status: "soon", benefit: "Profi dizájnt tervez neked Figmában, grafikus felvétele nélkül." },
-      { code: "DOROTHY", role: "a Figma–kód híd", slug: "figma-developer-mcp", status: "live", benefit: "A dizájnodból működő kódot csinál - fejlesztő nélkül." },
-      { code: "MIYAGI", role: "a Figma QA-ellenőr", slug: "figma-qa", status: "soon", benefit: "Kiszúrja a dizájnod hibáit, mielőtt a vevőidnek szúrnának szemet." }
+    { cat: "Design", catEn: "Design", color: "#9B6DFF", members: [
+      { code: "MORPHEUS", role: "a Figma-tervező", roleEn: "the Figma designer", slug: "figma-use", status: "soon", benefit: "Profi dizájnt tervez neked Figmában, grafikus felvétele nélkül.", benefitEn: "Designs professional visuals in Figma - without hiring a graphic designer." },
+      { code: "DOROTHY", role: "a Figma–kód híd", roleEn: "the Figma-to-code bridge", slug: "figma-developer-mcp", status: "live", benefit: "A dizájnodból működő kódot csinál - fejlesztő nélkül.", benefitEn: "Turns your design into working code - without a developer." },
+      { code: "MIYAGI", role: "a Figma QA-ellenőr", roleEn: "the Figma QA reviewer", slug: "figma-qa", status: "soon", benefit: "Kiszúrja a dizájnod hibáit, mielőtt a vevőidnek szúrnának szemet.", benefitEn: "Catches the flaws in your design before your customers do." }
     ]},
-    { cat: "Videó", color: "#400099", members: [
-      { code: "Q", role: "a videós adatgyűjtő", slug: "yt-dlp", status: "live", benefit: "Összeszedi neked, mi működik a piacodon, hogy abból építkezz." },
-      { code: "TRUMAN", role: "az UGC-videó-producer", slug: "genmarketer-ugc-video", status: "live", benefit: "Elkészíti a hiteles UGC-videóidat, amik tényleg vásárlót hoznak." },
-      { code: "TED", role: "a videós script-író", slug: "genmarketer-video-script-writer", status: "live", benefit: "Megírja a videóid forgatókönyvét, ami az első másodperctől fogva tartja a néződ." },
-      { code: "SARAH", role: "a videó-renderelő", slug: "seedance-multishot-prompter", status: "live", benefit: "Legenerálja a maximálisan konvertáló hirdetési videóidat - kamera, stáb és forgatás nélkül." },
-      { code: "EDWARD", role: "a videóvágó", slug: "genmarketer-video-editor", status: "soon", benefit: "Pörgős, figyelemmegtartó videóvá vágja a nyersanyagodat." }
+    { cat: "Videó", catEn: "Video", color: "#400099", members: [
+      { code: "Q", role: "a videós adatgyűjtő", roleEn: "the video data collector", slug: "yt-dlp", status: "live", benefit: "Összeszedi neked, mi működik a piacodon, hogy abból építkezz.", benefitEn: "Gathers what's working in your market so you can build on it." },
+      { code: "TRUMAN", role: "az UGC-videó-producer", roleEn: "the UGC video producer", slug: "genmarketer-ugc-video", status: "live", benefit: "Elkészíti a hiteles UGC-videóidat, amik tényleg vásárlót hoznak.", benefitEn: "Creates authentic UGC videos that actually bring buyers." },
+      { code: "TED", role: "a videós script-író", roleEn: "the video script writer", slug: "genmarketer-video-script-writer", status: "live", benefit: "Megírja a videóid forgatókönyvét, ami az első másodperctől fogva tartja a néződ.", benefitEn: "Writes your video scripts that hold viewers from the first second." },
+      { code: "SARAH", role: "a videó-renderelő", roleEn: "the video renderer", slug: "seedance-multishot-prompter", status: "live", benefit: "Legenerálja a maximálisan konvertáló hirdetési videóidat - kamera, stáb és forgatás nélkül.", benefitEn: "Generates your high-converting ad videos - no camera, crew or shoot." },
+      { code: "EDWARD", role: "a videóvágó", roleEn: "the video editor", slug: "genmarketer-video-editor", status: "soon", benefit: "Pörgős, figyelemmegtartó videóvá vágja a nyersanyagodat.", benefitEn: "Edits your raw footage into fast-paced, attention-holding video." }
     ]},
-    { cat: "SEO", color: "#00AACC", members: [
-      { code: "COLUMBO", role: "a SEO-auditor", slug: "genmarketer-seo", status: "live", benefit: "Megmondja, miért nem talál meg a Google - és pontosan mit javíts az oldaladon." },
-      { code: "INDIANA", role: "a kulcsszó-kutató", slug: "genmarketer-seo-research", status: "live", benefit: "Megtalálja neked a kulcsszavakat, amikre a vevőid tényleg rákeresnek." },
-      { code: "MONICA", role: "a tartalom-optimalizáló", slug: "genmarketer-seo-content", status: "live", benefit: "Úgy írja át a szövegeidet, hogy a Google is és az olvasóid is szeressék." },
-      { code: "DOKI", role: "a technikai SEO-szakértő", slug: "genmarketer-seo-technical", status: "live", benefit: "Kijavítja az oldalad technikai hibáit, amik hátráltatják a rangsorolásodat." },
-      { code: "KATNISS", role: "a helyi SEO-szakértő", slug: "genmarketer-seo-local", status: "live", benefit: "Felhozza a cégedet a helyi keresésben és a Google Térképen." }
+    { cat: "SEO", catEn: "SEO", color: "#00AACC", members: [
+      { code: "COLUMBO", role: "a SEO-auditor", roleEn: "the SEO auditor", slug: "genmarketer-seo", status: "live", benefit: "Megmondja, miért nem talál meg a Google - és pontosan mit javíts az oldaladon.", benefitEn: "Tells you why Google can't find you - and exactly what to fix on your site." },
+      { code: "INDIANA", role: "a kulcsszó-kutató", roleEn: "the keyword researcher", slug: "genmarketer-seo-research", status: "live", benefit: "Megtalálja neked a kulcsszavakat, amikre a vevőid tényleg rákeresnek.", benefitEn: "Finds the keywords your buyers actually search for." },
+      { code: "MONICA", role: "a tartalom-optimalizáló", roleEn: "the content optimizer", slug: "genmarketer-seo-content", status: "live", benefit: "Úgy írja át a szövegeidet, hogy a Google is és az olvasóid is szeressék.", benefitEn: "Rewrites your content so both Google and your readers love it." },
+      { code: "DOKI", role: "a technikai SEO-szakértő", roleEn: "the technical SEO expert", slug: "genmarketer-seo-technical", status: "live", benefit: "Kijavítja az oldalad technikai hibáit, amik hátráltatják a rangsorolásodat.", benefitEn: "Fixes the technical issues on your site that hold back your rankings." },
+      { code: "KATNISS", role: "a helyi SEO-szakértő", roleEn: "the local SEO expert", slug: "genmarketer-seo-local", status: "live", benefit: "Felhozza a cégedet a helyi keresésben és a Google Térképen.", benefitEn: "Lifts your business in local search and on Google Maps." }
     ]}
   ];
 
@@ -80,22 +113,25 @@
     TEAM.forEach(function (group) {
       var live = 0;
       group.members.forEach(function (m) { if (m.status === "live") live++; });
+      var catLabel = LANG === "en" ? group.catEn : group.cat;
       html += '<div class="gm-cat gm-reveal" style="--cat:' + group.color + '">';
       html += '<div class="gm-cat__head">';
       html += '<span class="gm-cat__dot"></span>';
-      html += '<h3 class="gm-cat__title">' + esc(group.cat) + '</h3>';
-      html += '<span class="gm-cat__count">' + group.members.length + " specialista</span>";
+      html += '<h3 class="gm-cat__title">' + esc(catLabel) + '</h3>';
+      html += '<span class="gm-cat__count">' + esc(T.specialist(group.members.length)) + "</span>";
       html += "</div>";
       html += '<div class="gm-cat__grid">';
       group.members.forEach(function (m, i) {
         var soon = m.status === "soon";
+        var role = LANG === "en" ? m.roleEn : m.role;
+        var benefit = LANG === "en" ? m.benefitEn : m.benefit;
         html += '<figure class="gm-card' + (soon ? " gm-card--soon" : "") + '" style="--i:' + i + '">';
         html += '<span class="gm-card__badge-wrap">';
         html += '<img class="gm-card__av" src="' + av(m.slug) + '" alt="' +
-          esc(m.code + " - " + m.role) + '" loading="lazy" width="1484" height="236">';
-        if (soon) html += '<span class="gm-card__soon">Hamarosan</span>';
+          esc(m.code + " - " + role) + '" loading="lazy" width="1484" height="236">';
+        if (soon) html += '<span class="gm-card__soon">' + esc(T.soon) + '</span>';
         html += "</span>";
-        html += '<figcaption class="gm-card__benefit">' + esc(m.benefit) + "</figcaption>";
+        html += '<figcaption class="gm-card__benefit">' + esc(benefit) + "</figcaption>";
         html += "</figure>";
       });
       html += "</div></div>";
@@ -150,7 +186,7 @@
      ---------------------------------------------------------- */
   function track(pkg, ctaId) {
     var value = PRICE[pkg] || 0;
-    var label = pkg === "pro" ? "Képzés + Konzultáció" : "Képzés";
+    var label = pkg === "pro" ? T.pkgPro : T.pkgBasic;
 
     // GTM / GA4 dataLayer
     try {
@@ -341,7 +377,7 @@
           video.muted = !video.muted;
           muteBtn.classList.toggle("is-on", !video.muted);
           muteBtn.setAttribute("aria-pressed", video.muted ? "false" : "true");
-          muteBtn.setAttribute("aria-label", video.muted ? "Hang bekapcsolása" : "Hang kikapcsolása");
+          muteBtn.setAttribute("aria-label", video.muted ? T.muteOn : T.muteOff);
           if (!video.muted && video.paused) video.play().catch(function () {});
         });
       }
@@ -385,13 +421,13 @@
 
     Array.prototype.forEach.call(slides, function (slide, i) {
       slide.setAttribute("role", "group");
-      slide.setAttribute("aria-roledescription", "munka");
+      slide.setAttribute("aria-roledescription", T.workRole);
       slide.setAttribute("aria-label", (i + 1) + " / " + slides.length);
       if (dotsWrap) {
         var dot = document.createElement("button");
         dot.type = "button";
         dot.className = "gm-slider__dot";
-        dot.setAttribute("aria-label", (i + 1) + ". munka megtekintése");
+        dot.setAttribute("aria-label", T.viewWork(i + 1));
         dot.addEventListener("click", function () { goTo(i); });
         dotsWrap.appendChild(dot);
         dots.push(dot);

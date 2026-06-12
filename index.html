@@ -7,6 +7,11 @@
   <meta name="description" content="25 AI-marketinges szakember magyarul, a Claude-odba vagy ChatGPT-be telepítve – piackutató, szövegíró, hirdetéskezelő. 30 napos pénzvisszafizetési garancia.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ai-csapat.genmarketer.hu/">
+  <!-- Kétnyelvű: HU a gyökéren (x-default), EN a /en/-en. A reciprok alternates
+       MINDKÉT oldalon azonos kell legyen (SEO) — ld. en/index.html. -->
+  <link rel="alternate" hreflang="hu" href="https://ai-csapat.genmarketer.hu/">
+  <link rel="alternate" hreflang="en" href="https://ai-csapat.genmarketer.hu/en/">
+  <link rel="alternate" hreflang="x-default" href="https://ai-csapat.genmarketer.hu/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <!-- Élő: ai-csapat.genmarketer.hu · auto-deploy: monorepo → sync → mirror → Hostinger webhook -->
 
@@ -16,6 +21,7 @@
   <meta property="og:title" content="Egy ember vagy. Mostantól egy 25 fős marketingcsapat.">
   <meta property="og:description" content="25 AI-marketinges szakember, magyarul, a Claude-odba vagy ChatGPT-be telepítve. Min. 6 hónapig folyamatos frissítés, 30 napos pénzvisszafizetési garancia. Bevezető áron.">
   <meta property="og:locale" content="hu_HU">
+  <meta property="og:locale:alternate" content="en_US">
   <!-- OG-kép: JPG (a FB/LinkedIn scraper a WebP-t nem mindenhol támogatja), ABSZOLÚT URL kötelező -->
   <meta property="og:image" content="https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg">
   <meta property="og:image:width" content="1200">
@@ -31,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/styles.css?v=20260611d">
+  <link rel="stylesheet" href="css/styles.css?v=20260612en">
 
   <!-- GA4 — közös property a genmarketer.hu/tudastar-ral (G-1EV18K1256, docs/12);
        a js/script.js begin_checkout eventje a window.gtag meglétére épül -->
@@ -163,7 +169,13 @@
       <a class="gm-logo" href="#top" aria-label="GENmarketer">
         <span class="gm-logo__gen">GEN</span><span class="gm-logo__star">✦</span><span class="gm-logo__mkt">MARKETER</span>
       </a>
-      <a class="gm-btn gm-btn--sm gm-btn--primary" href="#arazas" data-gm-cta="header" data-gm-package="basic">Kérem a csapatom</a>
+      <div class="gm-header__actions">
+        <nav class="gm-langswitch" aria-label="Nyelv / Language">
+          <span class="gm-langswitch__cur" aria-current="true">HU</span>
+          <a class="gm-langswitch__alt" href="en/" hreflang="en" lang="en" aria-label="English version">EN</a>
+        </nav>
+        <a class="gm-btn gm-btn--sm gm-btn--primary" href="#arazas" data-gm-cta="header" data-gm-package="basic">Kérem a csapatom</a>
+      </div>
     </div>
   </header>
 
@@ -976,6 +988,10 @@
           <a href="https://genmarketer.hu/aszf/">ÁSZF</a>
           <a href="https://genmarketer.hu/adatkezeles/">Adatkezelés</a>
         </nav>
+        <nav class="gm-langswitch gm-langswitch--footer" aria-label="Nyelv / Language">
+          <span class="gm-langswitch__cur" aria-current="true">Magyar</span>
+          <a class="gm-langswitch__alt" href="en/" hreflang="en" lang="en">English</a>
+        </nav>
         <p class="gm-footer__copy">© 2026 GENmarketer · A marketing új generációja: ember és AI együtt.</p>
       </div>
     </footer>
@@ -992,6 +1008,6 @@
 
 </div><!-- /.gm-lp -->
 
-<script src="js/script.js?v=20260611d" defer></script>
+<script src="js/script.js?v=20260612en" defer></script>
 </body>
 </html>
