@@ -1,7 +1,5 @@
-# ai-csapat.genmarketer.hu — PROD landoló („Az AI csapatod")
-# A Hostinger natív Git-deploy ezt szolgálja ki a karolypaczari-afk/ai-csapat-landing
-# mirror-repóból. NE szerkeszd a szerveren — a forrás a monorepo
-# landing-ai-csapatod/deploy/htaccess-prod, a sync-workflow másolja ide .htaccess-ként.
+# ai-csapat.genmarketer.hu — PROD landoló („Az AI csapatod", MISSION CONTROL verzió)
+# Cutover-kész .htaccess. A deploy a repo-gyökérbe .htaccess-ként másolja.
 
 Options -Indexes
 DirectoryIndex index.html
@@ -10,6 +8,7 @@ AddDefaultCharset utf-8
 # --- MIME: a videók helyes típussal menjenek (Range-kéréshez is) ---
 AddType video/mp4 .mp4
 AddType video/webm .webm
+AddType image/webp .webp
 
 # --- VCS / dotfile védelem (a .git sosem szolgálható ki) ---
 RedirectMatch 404 /\.git(/|$)
@@ -17,21 +16,17 @@ RedirectMatch 404 /\.git(/|$)
   Require all denied
 </FilesMatch>
 
-# --- Gyorsítótár: a HTML és a CSS/JS AZONNAL frissüljön (gyors iteráció),
-#     a tartalom-assetek (képek, fontok) hosszan cache-elhetők ---
+# --- Gyorsítótár: HTML és CSS/JS azonnal frissüljön; assetek hosszan cache-elhetők ---
 <IfModule mod_headers.c>
   <FilesMatch "\.html?$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  # CSS/JS: ETag-alapú revalidáció minden betöltésnél (304 ha nem változott) →
-  # a stílus-/script-módosítások azonnal propagálnak, verzió-bump nélkül.
-  <FilesMatch "\.(css|js)$">
+  <FilesMatch "\.(css|js|mjs)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(webp|png|jpe?g|svg|gif|ico|woff2?)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
-  # Demo-videók: nagy, ritkán változó assetek → hosszú cache
   <FilesMatch "\.(mp4|webm)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
@@ -46,5 +41,5 @@ RedirectMatch 404 /\.git(/|$)
 
 # --- Tömörítés ---
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
