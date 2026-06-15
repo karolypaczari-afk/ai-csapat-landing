@@ -230,18 +230,8 @@
         onUpdate: function (self) { if (window.__gmHero) window.__gmHero.setScroll(self.progress); } });
     }
 
-    // pinned orchestration lépések
-    var orch = document.getElementById("gm-orch");
-    if (orch && window.innerWidth > 860) {
-      var steps = orch.querySelectorAll(".gm-orch__step");
-      if (steps.length) {
-        var tl = gsap.timeline({ scrollTrigger: { trigger: orch, start: "top top", end: "+=" + (steps.length * 60) + "%", scrub: true, pin: true } });
-        steps.forEach(function (s, i) {
-          tl.to(s, { opacity: 1, x: 0, duration: 1 }, i);
-          if (i < steps.length - 1) tl.to(s, { opacity: 0.25, duration: 1 }, i + 0.9);
-        });
-      }
-    }
+    // orchestration lépések — pin/scrub effekt ELTÁVOLÍTVA (folytonos, hagyományos görgetés).
+    // A lépések alapból teljesen láthatóak (index.html: nincs rajtuk opacity:.25).
   }
 
   /* ---- Sticky header + mobil CTA ---- */
