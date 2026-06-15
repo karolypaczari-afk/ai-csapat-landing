@@ -8,6 +8,15 @@
   var AV = "/assets/img/avatars/", BG = "/assets/img/badges/", PF = "/assets/img/proof/";
 
   window.GM_TEAM = [
+    { cat: "Csapatvezető", catEn: "Team lead", color: "#F5A623", members: [
+      { code: "JARVIS", role: "a csapatvezető", roleEn: "the team lead", slug: "genmarketer-team", status: "live",
+        benefit: "Egyszer megismeri a vállalkozásodat, és onnantól minden feladatra a megfelelő szakértőt hívja be – neked csak vele kell beszélned.",
+        benefitEn: "Gets to know your business once, then brings in the right specialist for every task – you only ever talk to one.",
+        currentTask: "a megfelelő specialistát hívja be…", currentTaskEn: "Bringing in the right specialist…",
+        metrics: [{ label: "specialista", labelEn: "specialist", target: 20 }, { label: "kampányterv", labelEn: "campaign plan", target: 6 }],
+        proof: BG + "JARVIS.webp", spec: { pipeline: "profil → irányítás → forgatókönyv", cadence: "mindig elöl", scheduler: "készen áll" },
+        specEn: { pipeline: "profile → routing → playbook", cadence: "always first", scheduler: "ready" } }
+    ]},
     { cat: "Stratégia", catEn: "Strategy", color: "#7C3AED", members: [
       { code: "SHERLOCK", role: "a piackutató", roleEn: "the market researcher", slug: "genmarketer-icp-researcher", status: "live",
         benefit: "Pontosan megmondja, kik a vevőid és mi fáj nekik – hogy ne a sötétben lövöldözz.",
