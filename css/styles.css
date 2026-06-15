@@ -152,9 +152,12 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
   background: linear-gradient(100deg, rgba(11,11,22,0.92) 0%, rgba(11,11,22,0.8) 30%, rgba(11,11,22,0.35) 52%, rgba(11,11,22,0) 70%); }
 .gm-hero__inner { position: relative; z-index: 3; width: 100%; padding-block: clamp(1.5rem, 4vh, 3rem); }
 .gm-hero__copy { max-width: 620px; }
-.gm-hero__h1 { font-size: var(--gm-h1); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 0.75em; text-shadow: 0 2px 30px rgba(0,0,0,0.6); }
-.gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 2.6rem; text-shadow: 0 1px 16px rgba(0,0,0,0.7); }
+/* .gm-hero__copy prefix kell, hogy a base reset (.gm-lp h1/p { margin:0 }, 0,1,1) fölé kerüljön */
+.gm-hero__copy .gm-hero__h1 { font-size: calc(var(--gm-h1) * 0.9); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 1.15em; text-shadow: 0 2px 30px rgba(0,0,0,0.6); }
+.gm-hero__copy .gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 3.4rem; text-shadow: 0 1px 16px rgba(0,0,0,0.7); }
 .gm-hero__cta { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+/* gomb + másodlagos link: a blokk a gomb szélességére zsugorodik → a link a gombhoz képest középre */
+.gm-hero__ctawrap { width: fit-content; max-width: 100%; text-align: center; }
 .gm-hero__textlink {
   display: inline-flex; align-items: center; gap: 0.4em; margin-top: 1.3rem;
   color: #D7D5EA; font-weight: 600; font-size: 1rem;
@@ -480,6 +483,7 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
   .gm-proofbar__item + .gm-proofbar__item::before { display: none; }
 }
 @media (max-width: 520px) {
+  .gm-hero__ctawrap { width: auto; }
   .gm-hero__cta { flex-direction: column; align-items: stretch; }
   .gm-hero__cta .gm-btn { width: 100%; }
 }
