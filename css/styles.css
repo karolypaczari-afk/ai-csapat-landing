@@ -108,11 +108,11 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 /* ---- Header ---- */
 .gm-header {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(11, 11, 22, 0.55); backdrop-filter: blur(10px);
+  background: #000;
   border-bottom: 1px solid rgba(124, 58, 237, 0.18);
   transition: background 0.3s var(--gm-ease), box-shadow 0.3s var(--gm-ease);
 }
-.gm-header.is-stuck { background: rgba(11, 11, 22, 0.9); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.gm-header.is-stuck { background: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
 .gm-header__bar { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 1rem; }
 .gm-header__actions { display: flex; align-items: center; gap: 0.9rem; }
 .gm-lang { display: flex; align-items: center; gap: 0.35rem; font-family: var(--gm-mono); font-size: 0.82rem; }
@@ -133,7 +133,7 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
    HERO — sötét parancsnoki nyitókép (Three.js réteg a hud.css-ben)
    ============================================================ */
 .gm-hero {
-  position: relative; min-height: 100svh; display: flex; align-items: center;
+  position: relative; min-height: calc(100svh - 207px); display: flex; align-items: center;
   background: radial-gradient(1200px 700px at 70% 18%, rgba(64,0,153,0.55), transparent 60%),
               radial-gradient(900px 600px at 18% 80%, rgba(6,182,212,0.28), transparent 60%),
               var(--gm-navy-950);
@@ -150,19 +150,26 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 /* olvashatóság-scrim: balról sötét, jobbra átlátszó — a szöveg mögé */
 .gm-hero__scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background: linear-gradient(100deg, rgba(11,11,22,0.92) 0%, rgba(11,11,22,0.8) 30%, rgba(11,11,22,0.35) 52%, rgba(11,11,22,0) 70%); }
-.gm-hero__inner { position: relative; z-index: 3; width: 100%; padding-block: clamp(5rem, 12vh, 9rem); }
+.gm-hero__inner { position: relative; z-index: 3; width: 100%; padding-block: clamp(1.5rem, 4vh, 3rem); }
 .gm-hero__copy { max-width: 620px; }
-.gm-hero__h1 { font-size: var(--gm-h1); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 0.5em; text-shadow: 0 2px 30px rgba(0,0,0,0.6); }
-.gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 2rem; text-shadow: 0 1px 16px rgba(0,0,0,0.7); }
+.gm-hero__h1 { font-size: var(--gm-h1); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 0.75em; text-shadow: 0 2px 30px rgba(0,0,0,0.6); }
+.gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 2.6rem; text-shadow: 0 1px 16px rgba(0,0,0,0.7); }
 .gm-hero__cta { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-.gm-hero__compat { display: flex; align-items: center; gap: 0.9rem; margin-top: 2.2rem; color: #9B98B8; font-size: 0.9rem; }
+.gm-hero__textlink {
+  display: inline-flex; align-items: center; gap: 0.4em; margin-top: 1.3rem;
+  color: #D7D5EA; font-weight: 600; font-size: 1rem;
+  text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px;
+  transition: color 0.2s var(--gm-ease);
+}
+.gm-hero__textlink:hover { color: var(--gm-cyan); }
+.gm-hero__compat { display: flex; align-items: center; gap: 0.9rem; margin-top: 2.8rem; color: #9B98B8; font-size: 0.9rem; }
 .gm-hero__compat img { height: 22px; width: auto; opacity: 0.9; filter: brightness(0) invert(1); }
 .gm-hero__fud { display: flex; flex-wrap: wrap; gap: 1.4rem; margin-top: 1.6rem; font-family: var(--gm-mono); font-size: 0.82rem; color: #8FE3F5; }
 .gm-hero__fud span { display: inline-flex; align-items: center; gap: 0.45em; }
 .gm-hero__scroll {
   position: absolute; left: 50%; bottom: 1.6rem; transform: translateX(-50%); z-index: 3;
   font-family: var(--gm-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7F91C4;
-  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  display: none; flex-direction: column; align-items: center; gap: 0.5rem;
 }
 .gm-hero__scroll::after { content: ""; width: 1px; height: 34px; background: linear-gradient(#7F91C4, transparent); animation: gm-scrollpulse 1.8s var(--gm-ease) infinite; }
 @keyframes gm-scrollpulse { 0%,100% { opacity: 0.3; transform: scaleY(0.6); } 50% { opacity: 1; transform: scaleY(1); } }
