@@ -166,14 +166,39 @@
     var cx=w/2,cy=h/2;for(var k=0;k<3;k++){var p=((t*0.5+k/3)%1);A(c,(1-p)*0.7);c.strokeStyle=col;c.lineWidth=2;c.beginPath();c.arc(cx,cy,p*Math.min(w,h)*0.4,0,TAU);c.stroke();}A(c,1);c.lineWidth=1;
     c.fillStyle=col;c.beginPath();c.arc(cx,cy-4,5,Math.PI,0);c.lineTo(cx,cy+6);c.closePath();c.fill();c.fillStyle="#0B0B16";c.beginPath();c.arc(cx,cy-4,2,0,TAU);c.fill(); }
 
+  // JERRY — LinkedIn specialista: kapcsolati háló épül a profil köré, outreach-impulzus fut a kapcsolatokon
+  function network(c,t,col,w,h,s){ var cx=w/2,cy=h/2,R=Math.min(w,h)*0.36,n=6,grow=(t*0.5)%(n+1.4);
+    var nodes=[];for(var i=0;i<n;i++){var a=i/n*TAU-Math.PI/2+Math.sin(t*0.2)*0.06;nodes.push({x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R*0.92});}
+    for(var i=0;i<n;i++){var on=grow>i;A(c,on?0.55:0.12);c.strokeStyle=on?col:GRID;c.lineWidth=on?1.3:1;c.beginPath();c.moveTo(cx,cy);c.lineTo(nodes[i].x,nodes[i].y);c.stroke();}A(c,1);c.lineWidth=1;
+    var k=Math.floor(t*0.5)%n,f=(t*0.5)%1,pn=nodes[k];if(grow>k){A(c,0.95);c.fillStyle="#fff";c.beginPath();c.arc(cx+(pn.x-cx)*f,cy+(pn.y-cy)*f,2.4,0,TAU);c.fill();A(c,1);}
+    for(var i=0;i<n;i++){var on=grow>i;A(c,on?0.9:0.4);c.fillStyle=on?col:DIM;c.beginPath();c.arc(nodes[i].x,nodes[i].y,on?3.1:1.9,0,TAU);c.fill();}A(c,1);
+    c.fillStyle=col;rr(c,cx-6,cy-6,12,12,3);c.fill();c.fillStyle="#fff";c.font="bold 8px monospace";c.textAlign="center";c.textBaseline="middle";c.fillText("in",cx,cy+0.5);c.textAlign="start";c.textBaseline="alphabetic"; }
+
+  // JARVIS — Csapatvezető: központi karmester, forgó diszpécser-sugár sorra bevonja a specialista-node-okat
+  function orchestrate(c,t,col,w,h,s){ var cx=w/2,cy=h/2,R=Math.min(w,h)*0.38,n=7,beam=(t*0.7)%TAU;
+    var nodes=[];for(var i=0;i<n;i++){var a=i/n*TAU-Math.PI/2;nodes.push({x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R*0.9,a:a});}
+    function act(a){var d=Math.abs(((a-beam+Math.PI*3)%TAU)-Math.PI);return d<0.45;}
+    for(var i=0;i<n;i++){var on=act(nodes[i].a);A(c,on?0.7:0.22);c.strokeStyle=on?col:MUT;c.lineWidth=on?1.6:1;c.beginPath();c.moveTo(cx,cy);c.lineTo(nodes[i].x,nodes[i].y);c.stroke();}A(c,1);c.lineWidth=1;
+    for(var i=0;i<n;i++){var on=act(nodes[i].a);A(c,on?1:0.6);c.fillStyle=on?col:DIM;c.beginPath();c.arc(nodes[i].x,nodes[i].y,on?3.6:2.4,0,TAU);c.fill();if(on){A(c,0.4);c.strokeStyle=col;c.beginPath();c.arc(nodes[i].x,nodes[i].y,6,0,TAU);c.stroke();}}A(c,1);
+    A(c,0.85);c.strokeStyle="#fff";c.lineWidth=1.5;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.cos(beam)*R*0.55,cy+Math.sin(beam)*R*0.5);c.stroke();c.lineWidth=1;A(c,1);
+    c.fillStyle=col;c.beginPath();c.arc(cx,cy,5,0,TAU);c.fill();c.fillStyle="#0B0B16";c.beginPath();c.arc(cx,cy,2,0,TAU);c.fill(); }
+
+  // FALLBACK — semleges „készenlét" pulzus. Csak akkor látszik, ha egy ágensnek nincs saját
+  // drawere; SZÁNDÉKOSAN nem egy másik specialista animációja (nem ad ki hamis szerepet).
+  // Élesbe ennek soha nem szabad kerülnie — a gépi kapu (tests/viz-coverage.mjs) megfogja.
+  function idle(c,t,col,w,h,s){ var cx=w/2,cy=h/2;
+    for(var k=0;k<2;k++){var p=((t*0.5+k/2)%1);A(c,(1-p)*0.5);c.strokeStyle=col;c.lineWidth=1.5;c.beginPath();c.arc(cx,cy,4+p*Math.min(w,h)*0.32,0,TAU);c.stroke();}A(c,1);c.lineWidth=1;
+    c.fillStyle=col;A(c,0.6+0.4*Math.sin(t*2));c.beginPath();c.arc(cx,cy,3,0,TAU);c.fill();A(c,1); }
+
   var DRAW = {
     scan:scan, versus:versus, tree:tree, loop:loop, wireframe:wireframe, build:build, funnel:funnel,
     typead:typead, swatch:swatch, gauge:gauge, reticle:reticle, mailseq:mailseq, artboards:artboards,
     code:code, inspect:inspect, ingest:ingest, filmstrip:filmstrip, script:script, render:render,
-    timeline:timeline, audit:audit, keywords:keywords, score:score, diagnostics:diagnostics, mappin:mappin
+    timeline:timeline, audit:audit, keywords:keywords, score:score, diagnostics:diagnostics, mappin:mappin,
+    network:network, orchestrate:orchestrate
   };
 
-  function paint(it,t){ var c=it.ctx;c.save();c.clearRect(0,0,it.w,it.h);c.globalAlpha=1;(DRAW[it.type]||scan)(c,t*(it.speed||1),it.color||"#00D4FF",it.w,it.h,it.seed);c.restore(); }
+  function paint(it,t){ var c=it.ctx;c.save();c.clearRect(0,0,it.w,it.h);c.globalAlpha=1;(DRAW[it.type]||idle)(c,t*(it.speed||1),it.color||"#00D4FF",it.w,it.h,it.seed);c.restore(); }
   function frame(now){ var t=now/1000,any=false;for(var i=0;i<items.length;i++){var it=items[i];if(!it.visible||!it.w)continue;any=true;paint(it,t);}if(any&&!document.hidden&&!REDUCE)requestAnimationFrame(frame);else running=false; }
   function kick(){ if(!running&&!REDUCE){running=true;requestAnimationFrame(frame);} }
   function drawStatic(it){ if(!it.w)fit(it);if(it.w)paint(it,it.seed+5); }
@@ -183,6 +208,8 @@
   document.addEventListener("visibilitychange",function(){if(!document.hidden)kick();});
 
   window.GM_Dashboards={
+    types:Object.keys(DRAW),   // a regisztrált, szerep-specifikus drawerek (tesztelhetőség: viz-coverage)
+    fallback:"idle",
     mount:function(canvas,type,color,seed,speed){
       var it={canvas:canvas,ctx:canvas.getContext("2d"),type:type,color:color,seed:(seed||0)+1.3,speed:speed||1,visible:false,w:0,h:0};
       canvas.__viz=it;items.push(it);

@@ -38,12 +38,16 @@
   }
 
   // Per-ágens SZEREP-SPECIFIKUS animáció + sebesség — minden szakember a saját
-  // munkáját idéző vizuált kapja (mind a 25 egyedi). A drawerek: js/dashboards.js.
+  // munkáját idéző vizuált kapja (mind egyedi). A drawerek: js/dashboards.js.
+  // ⚠️ ÚJ specialista felvételekor IDE is kell egy [drawer, sebesség] sor (relevánssal),
+  //    különben a kártya a semleges fallbackra esik — a gépi kapu: tests/viz-coverage.mjs (test:all).
   var VIZ = {
     SHERLOCK: ["scan", 1.0],   TYRION: ["versus", 1.0], JOHN: ["tree", 0.9],    GANDALF: ["loop", 1.0],
     CLARK: ["wireframe", 1.0], MAXIMUS: ["build", 1.0],
     DUMBLEDORE: ["funnel", 1.0], JORDAN: ["typead", 1.1], PAM: ["swatch", 1.0], LUCIUS: ["gauge", 0.95], NEO: ["reticle", 1.0],
     FORREST: ["mailseq", 1.0],
+    JERRY: ["network", 1.0],
+    JARVIS: ["orchestrate", 0.9],
     MORPHEUS: ["artboards", 1.0], DOROTHY: ["code", 1.1], MIYAGI: ["inspect", 1.0],
     Q: ["ingest", 1.0], TRUMAN: ["filmstrip", 1.1], TED: ["script", 1.0], SARAH: ["render", 1.0], EDWARD: ["timeline", 1.0],
     COLUMBO: ["audit", 0.9], INDIANA: ["keywords", 1.0], MONICA: ["score", 0.95], DOKI: ["diagnostics", 1.0], KATNISS: ["mappin", 1.0]
