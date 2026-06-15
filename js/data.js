@@ -100,6 +100,15 @@
         proof: PF + "proof-email-riport.webp", spec: { pipeline: "tárgysor → szekvencia → ütemezés", cadence: "automata", scheduler: "folyamatos" },
         specEn: { pipeline: "subject → sequence → schedule", cadence: "automated", scheduler: "continuous" } }
     ]},
+    { cat: "Közösségi média", catEn: "Social", color: "#0A66C2", members: [
+      { code: "JERRY", role: "a LinkedIn specialista", roleEn: "the LinkedIn specialist", slug: "genmarketer-linkedin-expert", status: "live",
+        benefit: "Felépíti a LinkedIn-jelenléted és ügyfeleket hoz – a profiltól a posztokon át a kapcsolatfelvételig.",
+        benefitEn: "Builds your LinkedIn presence and brings clients – from profile to posts to outreach.",
+        currentTask: "a LinkedIn-profilodat írja újra…", currentTaskEn: "Rewriting your LinkedIn profile…",
+        metrics: [{ label: "poszt-ötlet", labelEn: "post idea", target: 12 }, { label: "elérés", labelEn: "reach", target: 41, suffix: "%↑" }],
+        proof: BG + "JERRY.webp", spec: { pipeline: "profil → tartalom → outreach", cadence: "heti", scheduler: "folyamatos" },
+        specEn: { pipeline: "profile → content → outreach", cadence: "weekly", scheduler: "continuous" } }
+    ]},
     { cat: "Design", catEn: "Design", color: "#9B6DFF", members: [
       { code: "MORPHEUS", role: "a Figma-tervező", roleEn: "the Figma designer", slug: "figma-use", status: "soon",
         benefit: "Profi dizájnt tervez neked Figmában, grafikus felvétele nélkül.",
