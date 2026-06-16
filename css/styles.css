@@ -138,7 +138,7 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
    HERO — sötét parancsnoki nyitókép (Three.js réteg a hud.css-ben)
    ============================================================ */
 .gm-hero {
-  position: relative; min-height: calc(100svh - 207px); display: flex; align-items: center;
+  position: relative; min-height: calc(100svh - 178px); display: flex; align-items: center;
   background: radial-gradient(1200px 700px at 70% 18%, rgba(64,0,153,0.55), transparent 60%),
               radial-gradient(900px 600px at 18% 80%, rgba(6,182,212,0.28), transparent 60%),
               var(--gm-navy-950);
@@ -155,11 +155,11 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 /* olvashatóság-scrim: balról sötét, jobbra átlátszó — a szöveg mögé */
 .gm-hero__scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background: linear-gradient(100deg, rgba(11,11,22,0.92) 0%, rgba(11,11,22,0.8) 30%, rgba(11,11,22,0.35) 52%, rgba(11,11,22,0) 70%); }
-.gm-hero__inner { position: relative; z-index: 3; width: 100%; padding-block: clamp(1.5rem, 4vh, 3rem); }
+.gm-hero__inner { position: relative; z-index: 3; width: 100%; padding-top: clamp(2.5rem, 8vh, 5rem); padding-bottom: clamp(0.8rem, 2vh, 1.4rem); }
 .gm-hero__copy { max-width: 620px; }
 /* .gm-hero__copy prefix kell, hogy a base reset (.gm-lp h1/p { margin:0 }, 0,1,1) fölé kerüljön */
-.gm-hero__copy .gm-hero__h1 { font-size: calc(var(--gm-h1) * 0.9); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 0.86em; text-shadow: 0 2px 30px rgba(0,0,0,0.6); }
-.gm-hero__copy .gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 2.55rem; text-shadow: 0 1px 16px rgba(0,0,0,0.7); }
+.gm-hero__copy .gm-hero__h1 { font-size: calc(var(--gm-h1) * 0.9); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 0.72em; text-shadow: 0 2px 30px rgba(0,0,0,0.6); }
+.gm-hero__copy .gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 2.05rem; text-shadow: 0 1px 16px rgba(0,0,0,0.7); }
 .gm-hero__cta { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
 /* gomb + másodlagos link: a blokk a gomb szélességére zsugorodik → a link a gombhoz képest középre */
 .gm-hero__ctawrap { width: fit-content; max-width: 100%; text-align: center; }
@@ -185,7 +185,7 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 /* ---- Proofbar (telemetria) ---- */
 .gm-proofbar { background: var(--gm-navy-900); color: #EAE9F5; border-block: 1px solid rgba(124,58,237,0.22); }
 .gm-proofbar__row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; }
-.gm-proofbar__item { padding: clamp(1.3rem, 3vw, 2.2rem) 1rem; text-align: center; position: relative; }
+.gm-proofbar__item { padding: clamp(0.85rem, 1.8vw, 1.25rem) 1rem; text-align: center; position: relative; }
 .gm-proofbar__item + .gm-proofbar__item::before { content: ""; position: absolute; left: 0; top: 20%; bottom: 20%; width: 1px; background: rgba(124,58,237,0.25); }
 .gm-proofbar__item strong { display: block; font-size: clamp(1.7rem, 3.2vw, 2.6rem); font-weight: 900; font-family: var(--gm-mono); color: var(--gm-cyan); line-height: 1; }
 .gm-proofbar__item span { display: block; margin-top: 0.5rem; font-size: 0.82rem; color: #9B98B8; letter-spacing: 0.02em; }
