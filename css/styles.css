@@ -70,8 +70,13 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-section--sand { background: var(--gm-sand); }
 .gm-section--dark { background: var(--gm-navy); color: #EAE9F5; }
 .gm-section--dark .gm-h2 { color: var(--gm-white); }
+/* Lágy átmenet a világos és a homok háttér közt (#ujragondolas ↔ #gm-orch) — nincs éles határvonal */
+#gm-orch { background: linear-gradient(180deg, var(--gm-off) 0%, var(--gm-sand) 20%, var(--gm-sand) 80%, var(--gm-off) 100%); }
 
 .gm-section-head { margin-bottom: clamp(2rem, 4vw, 3.2rem); }
+/* nagyobb térköz: tagline → címsor → alcím */
+.gm-section-head .gm-eyebrow { margin-bottom: 0.85rem; }
+.gm-section-head .gm-h2 { margin-bottom: 0.95rem; }
 .gm-section-head .gm-lead { margin-inline: auto; max-width: 660px; }
 
 /* ---- Tipográfia ---- */
@@ -447,7 +452,7 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-founder { display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: center; max-width: 820px; margin-inline: auto; }
 .gm-founder img { border-radius: var(--gm-r-lg); border: 2px solid var(--gm-line); }
 .gm-guarantee { max-width: 680px; margin-inline: auto; text-align: center; background: #fff; border: 2px dashed var(--gm-cyan-600); border-radius: var(--gm-r-lg); padding: 2.5rem; }
-.gm-guarantee__seal { font-family: var(--gm-mono); font-size: 3rem; font-weight: 900; color: var(--gm-cyan-700); }
+.gm-guarantee__seal { font-family: var(--gm-mono); font-size: 1.9rem; line-height: 1.15; font-weight: 900; color: var(--gm-cyan-700); margin-bottom: 0.3rem; }
 
 /* ---- Final CTA ---- */
 .gm-finalcta { text-align: center; }
