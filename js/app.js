@@ -23,16 +23,27 @@
   function track(pkg, ctaId) {
     var value = PRICE[pkg] || 0, label = pkg === "pro" ? "Képzés + Konzultáció" : "Képzés";
     try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: "gm_cta_click", cta_id: ctaId || null, package: pkg, item_name: "Az AI csapatod - " + label, value: value, currency: CURRENCY }); } catch (e) {}
-    try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", { currency: CURRENCY, value: value, items: [{ item_id: "ai-csapatod-" + pkg, item_name: "Az AI csapatod - " + label, price: value, quantity: 1 }] }); } catch (e) {}
+    try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", { currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [{ item_id: "ai-csapatod-" + pkg, item_name: "Az AI csapatod - " + label, price: value, quantity: 1 }] }); } catch (e) {}
     try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", { content_name: "Az AI csapatod - " + label, value: value, currency: CURRENCY }); } catch (e) {}
+  }
+  // A landoló URL marketing-paramjait átvisszük a tudástár-checkoutra, hogy a
+  // vásárlás-session NE (direct)-ként attribútálódjon (cross-subdomain attribúció).
+  function withAttribution(url) {
+    try {
+      var inq = new URLSearchParams(location.search);
+      var keep = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+      var out = new URL(url, location.href);
+      keep.forEach(function (k) { var v = inq.get(k); if (v && !out.searchParams.has(k)) out.searchParams.set(k, v); });
+      return out.toString();
+    } catch (e) { return url; }
   }
   function wireCtas() {
     document.querySelectorAll("[data-gm-cta]").forEach(function (el) {
       var key = el.getAttribute("data-gm-checkout");
-      if (key && CHECKOUT[key]) el.setAttribute("href", CHECKOUT[key]);
+      if (key && CHECKOUT[key]) el.setAttribute("href", withAttribution(CHECKOUT[key]));
       el.addEventListener("click", function (ev) {
         track(el.getAttribute("data-gm-package") || "basic", el.getAttribute("data-gm-cta"));
-        if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = CHECKOUT[key]; }
+        if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = withAttribution(CHECKOUT[key]); }
       });
     });
   }
