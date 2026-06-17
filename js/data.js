@@ -119,13 +119,13 @@
         specEn: { pipeline: "profile → content → outreach", cadence: "weekly", scheduler: "continuous" } }
     ]},
     { cat: "Design", catEn: "Design", color: "#9B6DFF", members: [
-      { code: "MORPHEUS", role: "a Figma-tervező", roleEn: "the Figma designer", slug: "figma-use", status: "soon",
+      { code: "MORPHEUS", role: "a Figma-tervező", roleEn: "the Figma designer", slug: "genmarketer-figma-builder", status: "live",
         benefit: "Profi dizájnt tervez neked Figmában, grafikus felvétele nélkül.",
         benefitEn: "Designs professional visuals in Figma – without hiring a graphic designer.",
-        currentTask: "készenlétben – hamarosan indul", currentTaskEn: "on standby – coming soon",
-        metrics: [{ label: "artboard", labelEn: "artboard", target: 0 }],
-        proof: PF + "proof-stilus-guide.webp", spec: { pipeline: "brief → dizájn → átadás", cadence: "—", scheduler: "hamarosan" },
-        specEn: { pipeline: "brief → design → handoff", cadence: "—", scheduler: "coming soon" } },
+        currentTask: "wireframe-et tervez Figmában…", currentTaskEn: "Designing a wireframe in Figma…",
+        metrics: [{ label: "artboard", labelEn: "artboard", target: 12 }, { label: "brand-egységes", labelEn: "on-brand", target: 100, suffix: "%" }],
+        proof: PF + "proof-stilus-guide.webp", spec: { pipeline: "brief → dizájn → átadás", cadence: "igény szerint", scheduler: "készen áll" },
+        specEn: { pipeline: "brief → design → handoff", cadence: "on demand", scheduler: "ready" } },
       { code: "DOROTHY", role: "a Figma–kód híd", roleEn: "the Figma-to-code bridge", slug: "figma-developer-mcp", status: "live",
         benefit: "A dizájnodból működő kódot csinál – fejlesztő nélkül.",
         benefitEn: "Turns your design into working code – without a developer.",
@@ -133,13 +133,13 @@
         metrics: [{ label: "komponens", labelEn: "component", target: 24 }, { label: "kód kész", labelEn: "code done", target: 100, suffix: "%" }],
         proof: null, spec: { pipeline: "Figma → komponens → kód", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "Figma → component → code", cadence: "on demand", scheduler: "ready" } },
-      { code: "MIYAGI", role: "a Figma QA-ellenőr", roleEn: "the Figma QA reviewer", slug: "figma-qa", status: "soon",
+      { code: "MIYAGI", role: "a Figma QA-ellenőr", roleEn: "the Figma QA reviewer", slug: "genmarketer-figma-qa", status: "live",
         benefit: "Kiszúrja a dizájnod hibáit, mielőtt a vevőidnek szúrnának szemet.",
         benefitEn: "Catches the flaws in your design before your customers do.",
-        currentTask: "készenlétben – hamarosan indul", currentTaskEn: "on standby – coming soon",
-        metrics: [{ label: "ellenőrzés", labelEn: "check", target: 0 }],
-        proof: null, spec: { pipeline: "audit → jelölés → javítás", cadence: "—", scheduler: "hamarosan" },
-        specEn: { pipeline: "audit → flag → fix", cadence: "—", scheduler: "coming soon" } }
+        currentTask: "átnézi a dizájn hibáit…", currentTaskEn: "Reviewing the design for flaws…",
+        metrics: [{ label: "ellenőrzés", labelEn: "check", target: 18 }, { label: "hibátlan", labelEn: "flawless", target: 100, suffix: "%" }],
+        proof: null, spec: { pipeline: "audit → jelölés → javítás", cadence: "igény szerint", scheduler: "készen áll" },
+        specEn: { pipeline: "audit → flag → fix", cadence: "on demand", scheduler: "ready" } }
     ]},
     { cat: "Videó", catEn: "Video", color: "#400099", members: [
       { code: "Q", role: "a videós adatgyűjtő", roleEn: "the video data collector", slug: "yt-dlp", status: "live",
@@ -170,13 +170,13 @@
         metrics: [{ label: "render", labelEn: "render", target: 6 }, { label: "stáb nélkül", labelEn: "no crew", target: 100, suffix: "%" }],
         proof: PF + "uc-video.webp", spec: { pipeline: "prompt → shot → render", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "prompt → shot → render", cadence: "on demand", scheduler: "ready" } },
-      { code: "EDWARD", role: "a videóvágó", roleEn: "the video editor", slug: "genmarketer-video-editor", status: "soon",
+      { code: "EDWARD", role: "a videóvágó", roleEn: "the video editor", slug: "genmarketer-videovago", status: "live",
         benefit: "Pörgős, figyelemmegtartó videóvá vágja a nyersanyagodat.",
         benefitEn: "Edits your raw footage into fast-paced, attention-holding video.",
-        currentTask: "készenlétben – hamarosan indul", currentTaskEn: "on standby – coming soon",
-        metrics: [{ label: "vágás", labelEn: "cut", target: 0 }],
-        proof: null, spec: { pipeline: "nyersanyag → vágás → export", cadence: "—", scheduler: "hamarosan" },
-        specEn: { pipeline: "footage → cut → export", cadence: "—", scheduler: "coming soon" } }
+        currentTask: "nyersanyagból kész videót vág…", currentTaskEn: "Editing footage into a finished video…",
+        metrics: [{ label: "vágás", labelEn: "cut", target: 9 }, { label: "kész MP4", labelEn: "final MP4", target: 100, suffix: "%" }],
+        proof: null, spec: { pipeline: "nyersanyag → vágás → export", cadence: "igény szerint", scheduler: "készen áll" },
+        specEn: { pipeline: "footage → cut → export", cadence: "on demand", scheduler: "ready" } }
     ]},
     { cat: "SEO", catEn: "SEO", color: "#00AACC", members: [
       { code: "COLUMBO", role: "a SEO-auditor", roleEn: "the SEO auditor", slug: "genmarketer-seo", status: "live",
