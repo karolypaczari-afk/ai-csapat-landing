@@ -81,13 +81,14 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 
 /* ---- Tipográfia ---- */
 .gm-h1 { font-size: var(--gm-h1); font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; }
-.gm-h2 { font-size: var(--gm-h2); font-weight: 800; line-height: 1.12; letter-spacing: -0.015em; }
+.gm-h2 { font-size: var(--gm-h2); font-weight: 800; line-height: 1.12; letter-spacing: -0.015em; text-wrap: balance; }
+.gm-nb { white-space: nowrap; }
 .gm-h2--xl { font-size: var(--gm-h2-xl); }
 /* EN: kiegyensúlyozott címsor-tördelés (nincs árva szó / rövid utolsó sor) — az angol oldal MINDEN címsorára; a HU változatlan */
 html[lang="en"] .gm-lp h1,
 html[lang="en"] .gm-lp h2,
 html[lang="en"] .gm-lp h3 { text-wrap: balance; }
-.gm-lead { font-size: var(--gm-lead); color: var(--gm-grey); }
+.gm-lead { font-size: var(--gm-lead); color: var(--gm-grey); text-wrap: pretty; }
 .gm-section--dark .gm-lead { color: #B8B6CE; }
 .gm-eyebrow {
   display: inline-flex; align-items: center; gap: 0.5em;
@@ -163,7 +164,7 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-hero__inner { position: relative; z-index: 3; width: 100%; padding-top: clamp(2.5rem, 8vh, 5rem); padding-bottom: clamp(0.8rem, 2vh, 1.4rem); }
 .gm-hero__copy { max-width: 620px; }
 /* .gm-hero__copy prefix kell, hogy a base reset (.gm-lp h1/p { margin:0 }, 0,1,1) fölé kerüljön */
-.gm-hero__copy .gm-hero__h1 { font-size: calc(var(--gm-h1) * 0.9); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 0.72em; text-shadow: 0 1px 3px rgba(0,0,0,0.92), 0 2px 14px rgba(0,0,0,0.85), 0 0 34px rgba(0,0,0,0.55); }
+.gm-hero__copy .gm-hero__h1 { font-size: calc(var(--gm-h1) * 0.9); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; text-wrap: balance; margin-bottom: 0.72em; text-shadow: 0 1px 3px rgba(0,0,0,0.92), 0 2px 14px rgba(0,0,0,0.85), 0 0 34px rgba(0,0,0,0.55); }
 .gm-hero__copy .gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 2.05rem; text-shadow: 0 1px 2px rgba(0,0,0,0.92), 0 1px 10px rgba(0,0,0,0.82), 0 0 22px rgba(0,0,0,0.5); }
 /* A gradiens címsor-sor: a text-shadow átüt a clippelt (átlátszó) kitöltésen → helyette drop-shadow filter, ami a látható alakzatra vet árnyékot */
 .gm-hero__h1 .gm-grad-text { text-shadow: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.85)) drop-shadow(0 2px 9px rgba(0,0,0,0.5)); }
@@ -535,7 +536,13 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-step__num { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: var(--gm-grad); color: #fff; font-weight: 900; font-family: var(--gm-mono); margin-bottom: 0.8rem; }
 .gm-step h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.4rem; }
 .gm-step p { color: var(--gm-grey); font-size: 0.94rem; }
-@media (max-width: 860px) { .gm-steps { grid-template-columns: 1fr; } }
+@media (max-width: 860px) {
+  .gm-steps { grid-template-columns: 1fr; gap: 1rem; }
+  .gm-step { display: grid; grid-template-columns: auto 1fr; column-gap: 0.9rem; align-items: center; padding: 1.2rem 1.3rem; }
+  .gm-step__num { margin-bottom: 0; }
+  .gm-step h3 { margin-bottom: 0; }
+  .gm-step p { grid-column: 2; margin-top: 0.45rem; }
+}
 
 /* ---- „Mitől szakember" tábla ---- */
 .gm-whatis { background: #fff; border: 1px solid var(--gm-line); border-radius: var(--gm-r-lg); padding: 1.8rem; box-shadow: var(--gm-shadow); }
@@ -623,12 +630,17 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
   .gm-pricing { grid-template-columns: 1fr; }
   .gm-founder { grid-template-columns: 1fr; text-align: center; }
   .gm-founder img { margin-inline: auto; max-width: 180px; }
-  .gm-proofbar__row { grid-template-columns: repeat(2, 1fr); }
-  .gm-proofbar__item:nth-child(5) { grid-column: span 2; }
+  .gm-proofbar__row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 0; }
+  .gm-proofbar__item { flex: 0 0 33.333%; min-width: 0; padding: 0.85rem 0.4rem; }
   .gm-proofbar__item + .gm-proofbar__item::before { display: none; }
+  .gm-proofbar__item strong { font-size: clamp(1.5rem, 6vw, 2rem); }
 }
 @media (max-width: 520px) {
   .gm-hero__ctawrap { width: auto; }
   .gm-hero__cta { flex-direction: column; align-items: stretch; }
   .gm-hero__cta .gm-btn { width: 100%; }
+  .gm-hero__cta .gm-btn--lg { font-size: 1rem; padding: 0.95em 1.2em; white-space: nowrap; }
+}
+@media (max-width: 360px) {
+  .gm-hero__cta .gm-btn--lg { font-size: 0.9rem; }
 }
