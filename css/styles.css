@@ -83,6 +83,10 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-h1 { font-size: var(--gm-h1); font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; }
 .gm-h2 { font-size: var(--gm-h2); font-weight: 800; line-height: 1.12; letter-spacing: -0.015em; }
 .gm-h2--xl { font-size: var(--gm-h2-xl); }
+/* EN: kiegyensúlyozott címsor-tördelés (nincs árva szó / rövid utolsó sor) — az angol oldal MINDEN címsorára; a HU változatlan */
+html[lang="en"] .gm-lp h1,
+html[lang="en"] .gm-lp h2,
+html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-lead { font-size: var(--gm-lead); color: var(--gm-grey); }
 .gm-section--dark .gm-lead { color: #B8B6CE; }
 .gm-eyebrow {
