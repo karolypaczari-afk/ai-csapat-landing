@@ -226,11 +226,9 @@
     gsap.registerPlugin(ST, Flip);
     document.documentElement.classList.add("gm-anim-ready");
 
-    gsap.utils.toArray(".gm-reveal").forEach(function (el) {
-      gsap.fromTo(el, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power2.out",
-        // .is-in is hozzáadjuk, mert a .gm-dash__bars (riport-oszlopok) CSS-e arra épül
-        scrollTrigger: { trigger: el, start: "top 88%", onEnter: function () { el.classList.add("is-in"); } } });
-    });
+    // Reveal-effekt ELTÁVOLÍTVA (lassúnak érződött): a blokkok azonnal láthatóak.
+    // Az .is-in-t mégis hozzáadjuk, mert a .gm-dash__bars (riport-oszlopok) CSS-e arra épül.
+    document.querySelectorAll(".gm-reveal").forEach(function (el) { el.classList.add("is-in"); });
 
     // hero copy parallax + 3D scroll-átadás
     var hero = document.getElementById("hero");
@@ -301,6 +299,107 @@
           if (!video.muted && video.paused) video.play().catch(function () {});
         });
       }
+    });
+  }
+
+  /* ---- Carousel (.gm-carousel): egy elem egyszerre, nyilak + csík-pillek ---- */
+  function wireCarousels() {
+    var roots = document.querySelectorAll("[data-gm-carousel]");
+    if (!roots.length) return;
+    Array.prototype.forEach.call(roots, function (root) {
+      var track = root.querySelector("[data-gm-track]");
+      if (!track) return;
+      var slides = Array.prototype.slice.call(track.querySelectorAll("[data-gm-slide]"));
+      if (slides.length < 1) return;
+      var prev = root.querySelector("[data-gm-prev]");
+      var next = root.querySelector("[data-gm-next]");
+      var pillsWrap = root.querySelector("[data-gm-pills]");
+      var pills = [];
+      var active = -1;
+      var WRAP = true;
+
+      if (slides.length < 2) {
+        if (prev) prev.style.display = "none";
+        if (next) next.style.display = "none";
+        if (pillsWrap) pillsWrap.style.display = "none";
+      }
+
+      if (pillsWrap && slides.length > 1) {
+        pillsWrap.innerHTML = "";
+        slides.forEach(function (s, i) {
+          var pill = document.createElement("button");
+          pill.type = "button";
+          pill.className = "gm-carousel__pill";
+          pill.setAttribute("aria-label", (i + 1) + ". dia megjelenítése");
+          if (s.id) pill.setAttribute("aria-controls", s.id);
+          pill.addEventListener("click", function () { goTo(i); });
+          pillsWrap.appendChild(pill);
+          pills.push(pill);
+        });
+      }
+
+      function pauseVideoIn(slide) {
+        if (!slide) return;
+        var v = slide.querySelector("video");
+        if (v && !v.paused) { try { v.pause(); } catch (e) {} }
+      }
+      function playVideoIn(slide) {
+        if (!slide) return;
+        var v = slide.querySelector("video");
+        if (v && v.muted) { try { var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+      }
+
+      function setActive(i) {
+        if (i === active) return;
+        active = i;
+        slides.forEach(function (s, k) {
+          var on = k === i;
+          s.classList.toggle("is-active", on);
+          s.setAttribute("aria-hidden", on ? "false" : "true");
+          if (!on) pauseVideoIn(s); // minden nem-aktív dia videója álljon meg (több videós carouselnél is)
+        });
+        pills.forEach(function (p, k) {
+          var on = k === i;
+          p.classList.toggle("is-active", on);
+          p.setAttribute("aria-current", on ? "true" : "false");
+        });
+        playVideoIn(slides[i]);
+        if (!WRAP) {
+          if (prev) prev.disabled = (i === 0);
+          if (next) next.disabled = (i === slides.length - 1);
+        }
+      }
+
+      function goTo(i) {
+        if (WRAP) i = ((i % slides.length) + slides.length) % slides.length;
+        else i = Math.max(0, Math.min(i, slides.length - 1));
+        setActive(i);
+      }
+
+      if (prev) prev.addEventListener("click", function () { goTo(active - 1); });
+      if (next) next.addEventListener("click", function () { goTo(active + 1); });
+
+      root.addEventListener("keydown", function (e) {
+        if (slides.length < 2) return;
+        if (e.key === "ArrowLeft") { e.preventDefault(); goTo(active - 1); }
+        else if (e.key === "ArrowRight") { e.preventDefault(); goTo(active + 1); }
+      });
+
+      var sx = null, sy = null;
+      root.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      root.addEventListener("touchend", function (e) {
+        if (sx === null) return;
+        var dx = e.changedTouches[0].clientX - sx;
+        var dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) goTo(active + (dx < 0 ? 1 : -1));
+        sx = null; sy = null;
+      }, { passive: true });
+
+      var startIdx = 0;
+      for (var k = 0; k < slides.length; k++) {
+        if (slides[k].classList.contains("is-active")) { startIdx = k; break; }
+      }
+      setActive(startIdx);
     });
   }
 
@@ -397,6 +496,7 @@
     wireScrollState();
     wireFaq();
     wireVideos();
+    wireCarousels();
     wireProofSlider();
     wireLightbox();
     wireScrollAnims();

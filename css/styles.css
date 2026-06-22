@@ -130,8 +130,9 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-header .gm-btn { padding: 0.6em 1.2em; font-size: 0.92rem; }
 
 /* ---- Reveal (GSAP felülírja desktopon; IO fallback no-JS-hez) ---- */
-.gm-reveal { opacity: 0; transform: translateY(22px); }
-.gm-reveal.is-in { opacity: 1; transform: none; transition: opacity 0.7s var(--gm-ease), transform 0.7s var(--gm-ease); }
+/* Reveal-effekt eltávolítva: a blokkok azonnal láthatóak (nincs görgetésre-fade, nincs üres pillanat) */
+.gm-reveal { opacity: 1; transform: none; }
+.gm-reveal.is-in { opacity: 1; transform: none; }
 .gm-lp.gm-anim-ready .gm-reveal { /* GSAP kezeli */ }
 
 /* ============================================================
@@ -274,19 +275,151 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 
 /* ---- Use-case sorok ---- */
 .gm-uc-list { display: grid; gap: clamp(2.4rem, 6vw, 4rem); }
-.gm-uc { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
-.gm-uc--rev .gm-uc__text { order: 2; }
-.gm-uc__banner { border-radius: 10px; margin-bottom: 1rem; border: 1px solid var(--gm-line); }
-.gm-uc__chip { display: inline-block; font-family: var(--gm-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gm-cyan-700); background: rgba(6,182,212,0.08); padding: 0.3em 0.7em; border-radius: 6px; margin-bottom: 0.6rem; }
-.gm-uc__h { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2; }
+.gm-uc { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; background: #fff; border: 1px solid var(--gm-line); border-radius: var(--gm-r-lg); box-shadow: var(--gm-shadow-lg); padding: clamp(1.4rem, 3.2vw, 2.6rem); }
+/* Váltakozó elrendezés: minden páros kártyán a szöveg jobbra (kép balra). nth-of-type → beszúrás/törlés automatikusan helyes marad. */
+.gm-uc-list .gm-uc:nth-of-type(even) .gm-uc__text { order: 2; }
+.gm-uc .gm-uc__h { font-size: clamp(1.4rem, 2.5vw, 1.85rem); font-weight: 800; margin-bottom: 0.7rem; line-height: 1.16; letter-spacing: -0.015em; color: var(--gm-ink); }
 .gm-uc__text > p { color: var(--gm-grey); }
-.gm-uc__cta { display: inline-block; margin-top: 1rem; color: var(--gm-violet); font-weight: 800; }
-.gm-uc__media img { border-radius: var(--gm-r-lg); border: 1px solid var(--gm-line); box-shadow: var(--gm-shadow); }
-@media (max-width: 860px) { .gm-uc { grid-template-columns: 1fr; } .gm-uc--rev .gm-uc__text { order: 0; } }
-.gm-uc__chip { background: rgba(124,58,237,0.1); color: var(--gm-violet); border-radius: 999px; padding: 0.4em 0.9em; font-weight: 800; }
-.gm-uc__media--img { border-radius: var(--gm-r-lg); overflow: hidden; box-shadow: var(--gm-shadow-lg); border: 1px solid var(--gm-line); }
-.gm-uc__media--img img { transition: transform 0.5s var(--gm-ease); will-change: transform; }
-.gm-uc__media--img:hover img { transform: scale(1.035); }
+/* kis, lekerekített avatar(ok) + név — másodlagos byline a cím alatt */
+.gm-uc__who { display: inline-flex; width: fit-content; max-width: 100%; align-items: center; gap: 0.6rem; margin-bottom: 1.1rem; background: #F1EFF7; border: 1px solid var(--gm-line); border-radius: 999px; padding: 0.4rem 0.95rem 0.4rem 0.45rem; }
+.gm-uc__avatars { display: inline-flex; flex: 0 0 auto; }
+.gm-uc__avatars img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.15); background: var(--gm-off); }
+.gm-uc__avatars img + img { margin-left: -11px; }
+.gm-uc__id { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.gm-uc__id strong { font-family: var(--gm-mono); font-size: 0.78rem; letter-spacing: 0.02em; color: var(--gm-ink); }
+.gm-uc__id span { font-size: 0.8rem; color: var(--gm-grey); }
+/* CTA gomb */
+.gm-uc__cta { display: inline-flex; align-items: center; gap: 0.5em; margin-top: 1.2rem; align-self: flex-start; font-family: inherit; font-weight: 700; font-size: 1rem; padding: 0.8em 1.5em; border-radius: 999px; background: var(--gm-grad); color: #fff; box-shadow: 0 8px 22px rgba(64,0,153,0.28); transition: transform 0.2s var(--gm-ease), box-shadow 0.2s var(--gm-ease); }
+.gm-uc__cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(6,182,212,0.4); filter: brightness(1.04); }
+@media (max-width: 860px) { .gm-uc { grid-template-columns: 1fr; } .gm-uc-list .gm-uc:nth-of-type(even) .gm-uc__text { order: 0; } }
+/* Illusztráció: sötét szürke keret; a kép/videó TELJESEN látszik (contain), a maradékot szürke tölti ki — nincs zoom/levágás */
+.gm-uc__media { background: #E6E4EF; border: 1px solid var(--gm-line); border-radius: var(--gm-r); box-shadow: none; padding: clamp(0.7rem, 1.8vw, 1.15rem); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.gm-uc__media--img, .gm-uc__media.gm-video { aspect-ratio: 4 / 3; }
+.gm-uc__media--img > img, .gm-uc__media.gm-video .gm-video__frame, .gm-uc__media video { width: 100%; height: 100%; object-fit: contain; border: 0; box-shadow: none; border-radius: 6px; background: transparent; }
+.gm-uc__media--img:hover img { transform: none; }
+.gm-uc__media .gm-video__cap, .gm-uc__media > figcaption { display: none; }
+.gm-uc__media > .gm-wire, .gm-uc__media > .gm-audit, .gm-uc__media > .gm-dash, .gm-uc__media .gm-uccards { width: 100%; }
+/* Desktopon MINDEN illusztráció a szövegoszlop teljes magasságára nyúlik (címsor tetejétől a gomb aljáig); mobilon marad a 4/3 arány */
+@media (min-width: 861px) {
+  .gm-uc__media { align-self: stretch; position: relative; min-height: 0; }
+  .gm-uc__media--img, .gm-uc__media.gm-video { aspect-ratio: auto; }
+  /* A kép/videó abszolút rétegként tölti ki a keretet: a magasságot a SZÖVEG adja, a tartalom contain-nel középre fér be, és nem feszíti szét a sort (pl. négyzetes/álló videónál sem) */
+  .gm-uc__media--img > img,
+  .gm-uc__media.gm-video > .gm-video__frame {
+    position: absolute; inset: clamp(0.7rem, 1.8vw, 1.15rem);
+    width: auto; height: auto; margin: 0;
+  }
+  /* Videók némák, mute-gomb nélkül → kisebb keret, nagyobb videó */
+  .gm-uc__media.gm-video > .gm-video__frame { inset: clamp(0.3rem, 0.7vw, 0.45rem); }
+  /* a videó töltse ki a keret magasságát és középre kerüljön (contain), ne ragadjon felülre */
+  .gm-uc__media.gm-video > .gm-video__frame video { height: 100%; object-fit: contain; }
+}
+/* ============================================================
+   Klasszikus carousel (egy elem egyszerre) — a régi filmstrip helyett.
+   Egyszerre 1 kép/videó látszik, oldalnyilak + alsó csík-indikátorok.
+   Brand-gradiens: var(--gm-grad). A .gm-uc__media--carousel azonos
+   specificitású az alap .gm-uc__media-val (0,1,0), ezért CSAK így,
+   forrás-sorrendben (a .gm-uc__media UTÁN) tud nyerni.
+   ============================================================ */
+/* Desktopon a keret a szövegoszlop teljes magasságára nyúlik (címsor tetejétől a gomb aljáig); mobilon 4/3 */
+.gm-uc__media--carousel { display: block; padding: 0; overflow: visible; background: transparent; border-color: transparent; align-self: stretch; min-height: 20rem; }
+.gm-carousel { position: relative; width: 100%; height: 100%; border-radius: var(--gm-r); }
+.gm-carousel:focus { outline: none; }
+.gm-carousel:focus-visible { outline: 3px solid var(--gm-cyan); outline-offset: 3px; }
+/* Viewport: levágja a kilógó slide-okat, itt él a keret lekerekítése + a letterbox-háttér */
+.gm-carousel__viewport { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: var(--gm-r); background: #E6E4EF; }
+.gm-carousel__track { position: relative; width: 100%; height: 100%; }
+/* Slide: abszolút egymáson; rejtés NEM display:none (az IntersectionObserver miatt), hanem opacity/visibility */
+.gm-carousel__slide {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  padding: clamp(0.4rem, 1vw, 0.6rem);
+  padding-bottom: clamp(2.1rem, 4vw, 2.6rem); /* alsó szürke sáv a csíkoknak, hogy elkülönüljenek a képtől */
+  box-sizing: border-box;
+  visibility: hidden; opacity: 0; pointer-events: none;
+  transition: opacity 0.4s var(--gm-ease), visibility 0s linear 0.4s;
+}
+.gm-carousel__slide.is-active {
+  visibility: visible; opacity: 1; pointer-events: auto; z-index: 1;
+  transition: opacity 0.4s var(--gm-ease), visibility 0s;
+}
+/* A letterbox (négyzetes tartalom 4/3 keretben) egységesen a viewport világosszürkéje – kép és videó egyformán */
+.gm-carousel__slide > img { width: 100%; height: 100%; object-fit: contain; display: block; border: 0; border-radius: 6px; background: transparent; }
+.gm-carousel__slide .gm-video, .gm-carousel__slide .gm-video__frame { width: 100%; height: 100%; }
+.gm-carousel__slide .gm-video__frame { border-radius: 6px; box-shadow: none; background: transparent; }
+.gm-carousel__slide .gm-video__frame video { width: 100%; height: 100%; object-fit: contain; }
+/* ---- Nyíl gombok: kör, brand-gradiens, fehér ikon, függőlegesen középen ---- */
+.gm-carousel__arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  width: 2.9rem; height: 2.9rem;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; border: 0; border-radius: 50%;
+  background: var(--gm-grad); color: #fff; cursor: pointer;
+  box-shadow: 0 8px 22px rgba(64,0,153,0.28);
+  transition: transform 0.2s var(--gm-ease), box-shadow 0.2s var(--gm-ease), filter 0.2s var(--gm-ease);
+}
+.gm-carousel__arrow svg { width: 1.35rem; height: 1.35rem; }
+.gm-carousel__arrow--prev { left: -1.1rem; }
+.gm-carousel__arrow--next { right: -1.1rem; }
+.gm-carousel__arrow:hover { transform: translateY(-50%) translateY(-2px); box-shadow: 0 12px 30px rgba(6,182,212,0.4); filter: brightness(1.05); }
+.gm-carousel__arrow:active { transform: translateY(-50%) scale(0.94); }
+.gm-carousel__arrow:focus-visible { outline: 3px solid var(--gm-cyan); outline-offset: 2px; }
+.gm-carousel__arrow:disabled, .gm-carousel__arrow[disabled] { opacity: 0.35; cursor: default; pointer-events: none; box-shadow: none; }
+/* ---- Alsó csík-indikátorok (segment pills) ---- */
+.gm-carousel__pills {
+  position: absolute; left: 50%; bottom: 0.7rem; transform: translateX(-50%); z-index: 3;
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.35rem 0.55rem;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  border-radius: 999px;
+}
+.gm-carousel__pill {
+  width: 0.6rem; height: 0.32rem; padding: 0; border: 0; border-radius: 999px;
+  background: var(--gm-grey-300); cursor: pointer;
+  transition: width 0.25s var(--gm-ease), background 0.25s var(--gm-ease), transform 0.15s var(--gm-ease);
+}
+.gm-carousel__pill:hover { background: var(--gm-grey); transform: translateY(-1px); }
+.gm-carousel__pill:focus-visible { outline: 2px solid var(--gm-cyan); outline-offset: 2px; }
+.gm-carousel__pill.is-active { width: 1.5rem; background: var(--gm-grad); }
+/* ---- Mobil (<=860px, ahol a .gm-uc egy oszlopra vált) ---- */
+@media (max-width: 860px) {
+  .gm-uc__media--carousel { aspect-ratio: 4 / 3; align-self: auto; min-height: 0; }
+  .gm-carousel__arrow { width: 2.5rem; height: 2.5rem; }
+  .gm-carousel__arrow svg { width: 1.15rem; height: 1.15rem; }
+  .gm-carousel__arrow--prev { left: 0.45rem; }
+  .gm-carousel__arrow--next { right: 0.45rem; }
+}
+/* ---- Mozgáscsökkentés ---- */
+@media (prefers-reduced-motion: reduce) {
+  .gm-carousel__slide, .gm-carousel__slide.is-active { transition: none; }
+  .gm-carousel__arrow, .gm-carousel__pill { transition: none; }
+}
+/* ---- Hirdetés-kártya (opció 2): egyhasábos – fent 2 hasábos szöveg (bal: cím/szakértő/leírás/CTA, jobb: pipák), alatta középre igazított, fekvő riport-carousel korlátozott magassággal (kiférjen a képernyőre). Desktop; mobilon egyhasábos. Visszavonható: ez a blokk + a .gm-uc--ad-stack osztály törlése. ---- */
+@media (min-width: 861px) {
+  .gm-uc--ad-stack { grid-template-columns: 1fr; }
+  /* 1) a kép feletti szöveg 2 hasábos: bal oszlop a szöveg, jobb oszlop a pipák */
+  .gm-uc--ad-stack .gm-uc__text {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    column-gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  .gm-uc--ad-stack .gm-uc__text > h3 { grid-column: 1 / -1; grid-row: 1; margin-bottom: 1.5rem; } /* cím a 2 hasáb fölött, 1 sor + nagyobb térköz alatta */
+  .gm-uc--ad-stack .gm-uc__text > .gm-uc__who { grid-column: 1; grid-row: 2; }
+  .gm-uc--ad-stack .gm-uc__text > p { grid-column: 1; grid-row: 3; }
+  .gm-uc--ad-stack .gm-uc__text > .gm-uc__cta { grid-column: 1; grid-row: 4; justify-self: start; } /* tartalom-szélességű gomb, ne nyúljon ki a hasáb széléig */
+  /* pipák a jobb hasábban, a teljes magasságot kitöltve → az alja a gomb aljával esik egybe */
+  .gm-uc--ad-stack .gm-uc__text > .gm-check { grid-column: 2; grid-row: 2 / 5; margin: 0; display: flex; flex-direction: column; justify-content: space-between; }
+  /* 2) a riport ne legyen túl magas: középre igazított, korlátozott szélességű (fekvő) keret */
+  .gm-uc--ad-stack .gm-uc__media--carousel {
+    align-self: auto;
+    width: 100%; max-width: 780px;
+    margin: 0.6rem auto 0;
+    aspect-ratio: 4 / 3;
+    min-height: 0;
+  }
+}
 
 /* Mockup — landoló-wireframe (UC1) */
 .gm-wire { border-radius: var(--gm-r-lg); overflow: hidden; box-shadow: var(--gm-shadow-lg); border: 1px solid var(--gm-line); background: #fff; }
@@ -340,7 +473,8 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-video__halo { position: absolute; top: 50%; left: 50%; width: 4.4rem; height: 4.4rem; margin: -2.2rem 0 0 -2.2rem; border-radius: 50%; background: rgba(124,58,237,0.45); pointer-events: none; animation: gm-halo 2.4s cubic-bezier(0.16,1,0.3,1) infinite; }
 @keyframes gm-halo { 0% { transform: scale(1); opacity: 0.6; } 75%, 100% { transform: scale(2); opacity: 0; } }
 @keyframes gm-play-pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-50%) scale(1.08); } }
-.gm-video__mute { position: absolute; right: 0.75rem; bottom: 0.75rem; width: 2.6rem; height: 2.6rem; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: rgba(12,13,14,0.55); color: #fff; cursor: pointer; z-index: 1; transition: background 0.15s, transform 0.15s; }
+/* Minden videó néma → nincs szükség hangerő-gombra (eltávolítva) */
+.gm-video__mute { display: none !important; }
 .gm-video__mute:hover { background: rgba(12,13,14,0.8); transform: scale(1.06); }
 .gm-mute__ico { width: 1.25rem; height: 1.25rem; }
 .gm-video__mute .gm-mute__ico--on { display: none; }
