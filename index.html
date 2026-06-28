@@ -69,7 +69,9 @@
         lang: (document.documentElement.lang || 'hu').slice(0, 2).toLowerCase(),
         content_group: 'landing-ai-csapatod',
         page_category: 'landing',
-        source: 'ai-csapat-landing'
+        source: 'ai-csapat-landing',
+        service_category: 'ai-marketing-training',
+        service_slug: 'ai-csapatod'
       };
       // gclid-et NEM küldünk paramként — a GA4 beépítetten gyűjti (reserved).
       ['gbraid', 'wbraid', 'fbclid', 'msclkid'].forEach(function (k) {
@@ -78,6 +80,13 @@
       gtag('js', new Date());
       gtag('config', 'G-1EV18K1256', cfg);
     })();
+  </script>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "x0aguuyezr");
   </script>
 
   <script defer src="/js/vendor/gsap.min.js"></script>
