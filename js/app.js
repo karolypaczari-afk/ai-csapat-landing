@@ -23,6 +23,7 @@
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
   var PRICE = { basic: 69990, pro: 119990 }, CURRENCY = "HUF";
   var ATTR_COOKIE = "gm_ads_attrib";
+  var META_EXT_COOKIE = "gm_meta_ext_id";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
   function isLocal() { return location.hostname === "localhost" || location.hostname === "127.0.0.1"; }
   function cookieDomain() { return /\.genmarketer\.hu$/i.test(location.hostname) ? ";domain=.genmarketer.hu" : ""; }
@@ -35,9 +36,16 @@
     var maxAge = Math.max(1, days || 90) * 86400;
     document.cookie = name + "=" + encodeURIComponent(value) + ";path=/;max-age=" + maxAge + ";SameSite=Lax" + cookieDomain() + secureFlag();
   }
+  function uid() {
+    return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2);
+  }
   function ensureMetaCookies() {
-    if (isLocal()) return {};
     var now = Math.floor(Date.now() / 1000), qs = new URLSearchParams(location.search);
+    var externalId = readCookie(META_EXT_COOKIE);
+    if (!externalId) {
+      externalId = "gm_" + uid();
+      writeCookie(META_EXT_COOKIE, externalId, 390);
+    }
     var fbp = readCookie("_fbp");
     if (!fbp) {
       fbp = "fb.1." + now + "." + Math.floor(Math.random() * 10000000000);
@@ -48,10 +56,28 @@
       fbc = "fb.1." + now + "." + fbclid;
       writeCookie("_fbc", fbc, 90);
     }
-    return { fbp: fbp, fbc: fbc };
+    return { fbp: fbp, fbc: fbc, externalId: externalId };
   }
   function eventId(name, pkg) {
     return ["gm", name, pkg || "unknown", Date.now(), Math.random().toString(36).slice(2, 10)].join("-");
+  }
+  function metaPayload(item, value, metaCookies) {
+    return {
+      content_name: item.item_name,
+      content_category: item.item_category,
+      content_ids: [item.item_id],
+      content_type: "product",
+      contents: [{ id: item.item_id, quantity: 1, item_price: value }],
+      num_items: 1,
+      value: value,
+      currency: CURRENCY,
+      action_source: "website",
+      event_source_url: location.href,
+      language: (document.documentElement.lang || "hu").slice(0, 2).toLowerCase(),
+      external_id: metaCookies.externalId || undefined,
+      fbp: metaCookies.fbp || undefined,
+      fbc: metaCookies.fbc || undefined
+    };
   }
   function readStoredAttribution() {
     var raw = readCookie(ATTR_COOKIE);
@@ -101,11 +127,11 @@
       try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
       try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: [item] }, adAttrib)); } catch (e) {}
       try { if (typeof window.gtag === "function") window.gtag("event", "conversion", Object.assign({ send_to: ADS_ADD_TO_CART_SEND_TO, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout" }, adAttrib)); } catch (e) {}
-      try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", { content_name: item.item_name, content_ids: [itemId], content_type: "product", contents: [{ id: itemId, quantity: 1, item_price: value }], num_items: 1, value: value, currency: CURRENCY, fbp: metaCookies.fbp || undefined, fbc: metaCookies.fbc || undefined }, { eventID: cartEid }); } catch (e) {}
+      try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies), { eventID: cartEid }); } catch (e) {}
     }
     try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_cta_click", event_id: eid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
     try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }, adAttrib)); } catch (e) {}
-    try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", { content_name: item.item_name, content_ids: [itemId], content_type: "product", contents: [{ id: itemId, quantity: 1, item_price: value }], num_items: 1, value: value, currency: CURRENCY, fbp: metaCookies.fbp || undefined, fbc: metaCookies.fbc || undefined }, { eventID: eid }); } catch (e) {}
+    try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies), { eventID: eid }); } catch (e) {}
   }
   // A landoló URL marketing-paramjait átvisszük a tudástár-checkoutra, hogy a
   // vásárlás-session NE (direct)-ként attribútálódjon (cross-subdomain attribúció).
@@ -121,6 +147,7 @@
       });
       if (metaCookies.fbp && !out.searchParams.has("fbp")) out.searchParams.set("fbp", metaCookies.fbp);
       if (metaCookies.fbc && !out.searchParams.has("fbc")) out.searchParams.set("fbc", metaCookies.fbc);
+      if (metaCookies.externalId && !out.searchParams.has("external_id")) out.searchParams.set("external_id", metaCookies.externalId);
       return out.toString();
     } catch (e) { return url; }
   }

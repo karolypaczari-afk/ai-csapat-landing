@@ -118,6 +118,16 @@
       var fbp = readCookie('_fbp');
       if (!fbp) { fbp = 'fb.1.' + now + '.' + Math.floor(Math.random() * 10000000000); writeCookie('_fbp', fbp, 390); }
       var pageViewEventId = 'gm-pageview-' + uid();
+      var pagePayload = {
+        content_name: document.title,
+        content_category: 'landing-ai-csapatod',
+        action_source: 'website',
+        event_source_url: location.href,
+        language: (document.documentElement.lang || 'hu').slice(0, 2).toLowerCase(),
+        external_id: externalId,
+        fbp: fbp || undefined,
+        fbc: fbc || undefined
+      };
       !function(f,b,e,v,n,t,s){
         if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -127,7 +137,7 @@
         s.parentNode.insertBefore(t,s);
       }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '1866401038098751', { external_id: externalId, fbc: fbc || undefined, fbp: fbp || undefined });
-      fbq('track', 'PageView', {}, { eventID: pageViewEventId });
+      fbq('track', 'PageView', pagePayload, { eventID: pageViewEventId });
     })();
   </script>
   <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1866401038098751&amp;ev=PageView&amp;noscript=1"></noscript>
