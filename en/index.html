@@ -6,6 +6,7 @@
   <title>Your AI team – 25 marketing specialists | GENmarketer</title>
   <meta name="description" content="25 AI marketing specialists installed into your Claude or ChatGPT – market researcher, copywriter, ad manager. 30-day money-back guarantee.">
   <meta name="robots" content="index, follow">
+  <meta name="facebook-domain-verification" content="p6azwcyawsasyrrrahaiypxdpik4fy">
   <link rel="canonical" href="https://ai-csapat.genmarketer.hu/en/">
   <link rel="alternate" hreflang="hu" href="https://ai-csapat.genmarketer.hu/">
   <link rel="alternate" hreflang="en" href="https://ai-csapat.genmarketer.hu/en/">
@@ -88,6 +89,43 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "x0aguuyezr");
   </script>
+  <!-- Meta Pixel — browser-side PageView + checkout intent. CAPI token stays server-side only. -->
+  <script>
+    (function () {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+      function cookieDomain() { return /\.genmarketer\.hu$/i.test(location.hostname) ? ';domain=.genmarketer.hu' : ''; }
+      function secureFlag() { return location.protocol === 'https:' ? ';Secure' : ''; }
+      function readCookie(name) {
+        var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : '';
+      }
+      function writeCookie(name, value, days) {
+        document.cookie = name + '=' + encodeURIComponent(value) + ';path=/;max-age=' + (days * 86400) + ';SameSite=Lax' + cookieDomain() + secureFlag();
+      }
+      function uid() {
+        return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(36).slice(2);
+      }
+      var qs = new URLSearchParams(location.search), now = Math.floor(Date.now() / 1000);
+      var externalId = readCookie('gm_meta_ext_id');
+      if (!externalId) { externalId = 'gm_' + uid(); writeCookie('gm_meta_ext_id', externalId, 390); }
+      var fbclid = qs.get('fbclid'), fbc = readCookie('_fbc');
+      if (fbclid) { fbc = 'fb.1.' + now + '.' + fbclid; writeCookie('_fbc', fbc, 90); }
+      var fbp = readCookie('_fbp');
+      if (!fbp) { fbp = 'fb.1.' + now + '.' + Math.floor(Math.random() * 10000000000); writeCookie('_fbp', fbp, 390); }
+      var pageViewEventId = 'gm-pageview-' + uid();
+      !function(f,b,e,v,n,t,s){
+        if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s);
+      }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1866401038098751', { external_id: externalId, fbc: fbc || undefined, fbp: fbp || undefined });
+      fbq('track', 'PageView', {}, { eventID: pageViewEventId });
+    })();
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1866401038098751&amp;ev=PageView&amp;noscript=1"></noscript>
 
   <script defer src="/js/vendor/gsap.min.js"></script>
   <script defer src="/js/vendor/ScrollTrigger.min.js"></script>

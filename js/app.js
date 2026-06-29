@@ -20,20 +20,55 @@
     pro:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=873"
   };
   var PRICE = { basic: 69990, pro: 119990 }, CURRENCY = "HUF";
+  function isLocal() { return location.hostname === "localhost" || location.hostname === "127.0.0.1"; }
+  function cookieDomain() { return /\.genmarketer\.hu$/i.test(location.hostname) ? ";domain=.genmarketer.hu" : ""; }
+  function secureFlag() { return location.protocol === "https:" ? ";Secure" : ""; }
+  function readCookie(name) {
+    var m = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/[.$?*|{}()[\]\\/+^]/g, "\\$&") + "=([^;]*)"));
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+  function writeCookie(name, value, days) {
+    var maxAge = Math.max(1, days || 90) * 86400;
+    document.cookie = name + "=" + encodeURIComponent(value) + ";path=/;max-age=" + maxAge + ";SameSite=Lax" + cookieDomain() + secureFlag();
+  }
+  function ensureMetaCookies() {
+    if (isLocal()) return {};
+    var now = Math.floor(Date.now() / 1000), qs = new URLSearchParams(location.search);
+    var fbp = readCookie("_fbp");
+    if (!fbp) {
+      fbp = "fb.1." + now + "." + Math.floor(Math.random() * 10000000000);
+      writeCookie("_fbp", fbp, 390);
+    }
+    var fbc = readCookie("_fbc"), fbclid = qs.get("fbclid");
+    if (fbclid) {
+      fbc = "fb.1." + now + "." + fbclid;
+      writeCookie("_fbc", fbc, 90);
+    }
+    return { fbp: fbp, fbc: fbc };
+  }
+  function eventId(name, pkg) {
+    return ["gm", name, pkg || "unknown", Date.now(), Math.random().toString(36).slice(2, 10)].join("-");
+  }
   function track(pkg, ctaId) {
     var value = PRICE[pkg] || 0, label = pkg === "pro" ? "Képzés + Konzultáció" : "Képzés";
-    try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: "gm_cta_click", cta_id: ctaId || null, package: pkg, item_name: "Az AI csapatod - " + label, value: value, currency: CURRENCY }); } catch (e) {}
-    try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", { currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [{ item_id: "ai-csapatod-" + pkg, item_name: "Az AI csapatod - " + label, price: value, quantity: 1 }] }); } catch (e) {}
-    try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", { content_name: "Az AI csapatod - " + label, value: value, currency: CURRENCY }); } catch (e) {}
+    var itemId = "ai-csapatod-" + pkg, eid = eventId("initiate_checkout", pkg);
+    var metaCookies = ensureMetaCookies();
+    var item = { item_id: itemId, item_name: "Az AI csapatod - " + label, price: value, quantity: 1 };
+    try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: "gm_cta_click", event_id: eid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }); } catch (e) {}
+    try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", { event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }); } catch (e) {}
+    try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", { content_name: item.item_name, content_ids: [itemId], content_type: "product", contents: [{ id: itemId, quantity: 1, item_price: value }], num_items: 1, value: value, currency: CURRENCY, fbp: metaCookies.fbp || undefined, fbc: metaCookies.fbc || undefined }, { eventID: eid }); } catch (e) {}
   }
   // A landoló URL marketing-paramjait átvisszük a tudástár-checkoutra, hogy a
   // vásárlás-session NE (direct)-ként attribútálódjon (cross-subdomain attribúció).
   function withAttribution(url) {
     try {
       var inq = new URLSearchParams(location.search);
+      var metaCookies = ensureMetaCookies();
       var keep = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
       var out = new URL(url, location.href);
       keep.forEach(function (k) { var v = inq.get(k); if (v && !out.searchParams.has(k)) out.searchParams.set(k, v); });
+      if (metaCookies.fbp && !out.searchParams.has("fbp")) out.searchParams.set("fbp", metaCookies.fbp);
+      if (metaCookies.fbc && !out.searchParams.has("fbc")) out.searchParams.set("fbc", metaCookies.fbc);
       return out.toString();
     } catch (e) { return url; }
   }
