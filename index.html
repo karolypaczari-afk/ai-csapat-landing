@@ -62,24 +62,29 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1EV18K1256"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    window.gtag = window.gtag || function(){dataLayer.push(arguments);}
+    window.gtag('set', 'url_passthrough', true);
+    window.gtag('set', 'ads_data_redaction', false);
     (function () {
       if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
       var qs = new URLSearchParams(location.search);
+      var isHttps = location.protocol === 'https:';
       var cfg = {
         lang: (document.documentElement.lang || 'hu').slice(0, 2).toLowerCase(),
         content_group: 'landing-ai-csapatod',
         page_category: 'landing',
         source: 'ai-csapat-landing',
         service_category: 'ai-marketing-training',
-        service_slug: 'ai-csapatod'
+        service_slug: 'ai-csapatod',
+        cookie_domain: 'genmarketer.hu'
       };
+      if (isHttps) cfg.cookie_flags = 'SameSite=Lax;Secure';
       // gclid-et NEM küldünk paramként — a GA4 beépítetten gyűjti (reserved).
       ['gbraid', 'wbraid', 'fbclid', 'msclkid'].forEach(function (k) {
         var v = qs.get(k); if (v) cfg[k] = v;
       });
-      gtag('js', new Date());
-      gtag('config', 'G-1EV18K1256', cfg);
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-1EV18K1256', cfg);
     })();
   </script>
   <script type="text/javascript">
