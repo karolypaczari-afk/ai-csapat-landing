@@ -20,6 +20,7 @@
     pro:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=873"
   };
   var GA4_ID = "G-1EV18K1256";
+  var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
   var PRICE = { basic: 69990, pro: 119990 }, CURRENCY = "HUF";
   var ATTR_COOKIE = "gm_ads_attrib";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
@@ -90,12 +91,18 @@
     });
     return out;
   }
-  function track(pkg, ctaId) {
+  function track(pkg, ctaId, isCheckout) {
     var value = PRICE[pkg] || 0, label = pkg === "pro" ? "Képzés + Konzultáció" : "Képzés";
-    var itemId = "ai-csapatod-" + pkg, eid = eventId("initiate_checkout", pkg);
+    var itemId = "ai-csapatod-" + pkg, cartEid = eventId("add_to_cart", pkg), eid = eventId("initiate_checkout", pkg);
     var metaCookies = ensureMetaCookies();
     var adAttrib = ensureAdAttribution();
     var item = { item_id: itemId, item_name: "Az AI csapatod - " + label, item_brand: "GENmarketer", item_category: "AI marketing training", price: value, quantity: 1 };
+    if (isCheckout) {
+      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
+      try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: [item] }, adAttrib)); } catch (e) {}
+      try { if (typeof window.gtag === "function") window.gtag("event", "conversion", Object.assign({ send_to: ADS_ADD_TO_CART_SEND_TO, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout" }, adAttrib)); } catch (e) {}
+      try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", { content_name: item.item_name, content_ids: [itemId], content_type: "product", contents: [{ id: itemId, quantity: 1, item_price: value }], num_items: 1, value: value, currency: CURRENCY, fbp: metaCookies.fbp || undefined, fbc: metaCookies.fbc || undefined }, { eventID: cartEid }); } catch (e) {}
+    }
     try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_cta_click", event_id: eid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
     try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }, adAttrib)); } catch (e) {}
     try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", { content_name: item.item_name, content_ids: [itemId], content_type: "product", contents: [{ id: itemId, quantity: 1, item_price: value }], num_items: 1, value: value, currency: CURRENCY, fbp: metaCookies.fbp || undefined, fbc: metaCookies.fbc || undefined }, { eventID: eid }); } catch (e) {}
@@ -122,7 +129,7 @@
       var key = el.getAttribute("data-gm-checkout");
       if (key && CHECKOUT[key]) el.setAttribute("href", withAttribution(CHECKOUT[key]));
       el.addEventListener("click", function (ev) {
-        track(el.getAttribute("data-gm-package") || "basic", el.getAttribute("data-gm-cta"));
+        track(el.getAttribute("data-gm-package") || "basic", el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]));
         if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = withAttribution(CHECKOUT[key]); }
       });
     });
