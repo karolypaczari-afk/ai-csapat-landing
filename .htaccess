@@ -9,6 +9,7 @@ AddDefaultCharset utf-8
 AddType video/mp4 .mp4
 AddType video/webm .webm
 AddType image/webp .webp
+AddType text/plain .txt
 
 # --- VCS / dotfile védelem (a .git sosem szolgálható ki) ---
 RedirectMatch 404 /\.git(/|$)
@@ -22,6 +23,9 @@ RedirectMatch 404 /\.git(/|$)
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(css|js|mjs)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(txt|xml)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(webp|png|jpe?g|svg|gif|ico|woff2?)$">

@@ -1,0 +1,38 @@
+# GENmarketer AI Team Landing
+
+> GENmarketer helps entrepreneurs, marketers, and small teams use AI specialists for practical marketing execution.
+
+## Site
+- Primary domain: https://genmarketer.hu/
+- Product landing: https://ai-csapat.genmarketer.hu/
+- English product landing: https://ai-csapat.genmarketer.hu/en/
+- Knowledge base and checkout domain: https://tudastar.genmarketer.hu/
+
+## Key Offering
+- Product: AI Team / Az AI csapatod
+- Format: 25 AI marketing specialists for Claude and ChatGPT workflows
+- Typical use cases: market research, ad planning, PPC work, copywriting, landing page improvement, email reporting, video and UGC planning, competitor research, SEO and GEO work
+- Purchase path: the landing sends buyers to the GENmarketer knowledge base checkout
+
+## Important Pages
+- Product landing HU: https://ai-csapat.genmarketer.hu/
+- Product landing EN: https://ai-csapat.genmarketer.hu/en/
+- GENmarketer main site: https://genmarketer.hu/
+- GENmarketer knowledge base: https://tudastar.genmarketer.hu/
+
+## AI and Search Context
+- The landing is a bilingual static site.
+- The Hungarian root page is the default version.
+- The English version is available under /en/.
+- Canonical URLs and hreflang alternates are declared in the HTML head and sitemap.
+- Structured data includes Organization, WebSite, WebPage, Product, Offer, ImageObject, and FAQPage entities.
+
+## Audience
+- Solo entrepreneurs
+- Small agencies
+- In-house marketers
+- Course buyers who want a practical AI marketing workflow
+
+## Contact
+- Website: https://genmarketer.hu/
+- Email: info@genmarketer.hu
