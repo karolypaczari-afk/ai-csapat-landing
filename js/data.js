@@ -2,6 +2,7 @@
    Az AI csapatod — MISSION CONTROL showcase · agent-adatmodell
    Kétnyelvű (HU + …En). A metrics/currentTask SZIMULÁLT telemetria.
    role/benefit a prod-ból portolva.
+   OPTIMUS production card: Károly-approved 2026-07-26.
    ============================================================ */
 (function () {
   "use strict";
@@ -85,6 +86,13 @@
         metrics: [{ label: "kreatív", labelEn: "creative", target: 18 }, { label: "stop-scroll", labelEn: "stop-scroll", target: 27, suffix: "%↑" }],
         proof: PF + "proof-social.webp", spec: { pipeline: "koncepció → vizuál → variáns", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "concept → visual → variant", cadence: "on demand", scheduler: "ready" } },
+      { code: "OPTIMUS", role: "a kép átméretező", roleEn: "the image resizer", slug: "genmarketer-ad-resize", status: "live",
+        benefit: "Egy kész hirdetésből platformkész 1:1, 4:5, 9:16, 16:9 és 2:3 változatokat készít, levágás és széthúzás nélkül.",
+        benefitEn: "Turns one finished ad into platform-ready 1:1, 4:5, 9:16, 16:9 and 2:3 versions without crude cropping or stretching.",
+        currentTask: "a kreatívodat több képarányra tördeli…", currentTaskEn: "Reflowing your creative into multiple aspect ratios…",
+        metrics: [{ label: "képarány", labelEn: "aspect ratio", target: 5 }, { label: "szöveg-QA", labelEn: "text QA", target: 100, suffix: "%" }],
+        proof: BG + "OPTIMUS.webp", spec: { pipeline: "forráskép → újratördelés → betű-QA", cadence: "igény szerint", scheduler: "készen áll" },
+        specEn: { pipeline: "source image → reflow → text QA", cadence: "on demand", scheduler: "ready" } },
       { code: "LUCIUS", role: "a Google Ads-hirdetéskezelő", roleEn: "the Google Ads manager", slug: "genmarketer-google-ads-expert", status: "live",
         benefit: "Beállítja és pörgeti a Google-hirdetéseidet, hogy ne égjen el feleslegesen a kereted.",
         benefitEn: "Sets up and runs your Google Ads so your budget doesn't burn for nothing.",

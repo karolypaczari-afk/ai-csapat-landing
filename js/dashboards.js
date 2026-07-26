@@ -83,6 +83,14 @@
     for(var i=0;i<n;i++){var lit=(Math.floor(t*1.5)%n)===i;A(c,lit?1:0.5);c.fillStyle=sw[i];rr(c,6+i*bw,h*0.55,bw-4,h*0.3,3);c.fill();}A(c,1);
     var fx=6+((Math.sin(t)*0.5+0.5)*(w-40));c.strokeStyle="#fff";c.lineWidth=1.5;rr(c,fx,8,30,h*0.34,3);c.stroke();c.lineWidth=1; }
 
+  // OPTIMUS — képátméretező: egy master kreatív három natív képarányra rendeződik át
+  function reflow(c,t,col,w,h,s){ var src={x:6,y:h*0.22,w:w*0.24,h:h*0.56},ratios=[[1,1],[4,5],[9,16]],x0=w*0.52,gap=w*0.15,active=Math.floor(t*1.2)%3;
+    c.strokeStyle="#fff";c.lineWidth=1.5;rr(c,src.x,src.y,src.w,src.h,3);c.stroke();c.fillStyle=col;A(c,0.7);c.fillRect(src.x+4,src.y+4,src.w-8,5);c.fillRect(src.x+4,src.y+13,(src.w-8)*0.65,3);A(c,1);
+    for(var i=0;i<3;i++){var rw=18,rh=rw*ratios[i][1]/ratios[i][0];if(rh>h-12){rh=h-12;rw=rh*ratios[i][0]/ratios[i][1];}var x=x0+i*gap-rw/2,y=(h-rh)/2,lit=i===active;
+      c.strokeStyle=lit?col:GRID;c.lineWidth=lit?2:1;rr(c,x,y,rw,rh,2);c.stroke();A(c,lit?0.75:0.25);c.fillStyle=col;c.fillRect(x+3,y+3,Math.max(2,rw-6),Math.min(4,rh/5));A(c,1);
+      c.strokeStyle=lit?"#fff":GRID;c.beginPath();c.moveTo(src.x+src.w+4,src.y+src.h/2);c.lineTo(x-4,y+rh/2);c.stroke();}
+    c.lineWidth=1;A(c,1); }
+
   // LUCIUS — Google Ads: költségkeret-óra (gauge)
   function gauge(c,t,col,w,h,s){ var cx=w/2,cy=h*0.74,R=Math.min(w/2,h)-8;c.lineWidth=7;c.lineCap="round";
     c.strokeStyle=GRID;c.beginPath();c.arc(cx,cy,R,Math.PI,0);c.stroke();
@@ -192,7 +200,7 @@
 
   var DRAW = {
     scan:scan, versus:versus, tree:tree, loop:loop, wireframe:wireframe, build:build, funnel:funnel,
-    typead:typead, swatch:swatch, gauge:gauge, reticle:reticle, mailseq:mailseq, artboards:artboards,
+    typead:typead, swatch:swatch, reflow:reflow, gauge:gauge, reticle:reticle, mailseq:mailseq, artboards:artboards,
     code:code, inspect:inspect, ingest:ingest, filmstrip:filmstrip, script:script, render:render,
     timeline:timeline, audit:audit, keywords:keywords, score:score, diagnostics:diagnostics, mappin:mappin,
     network:network, orchestrate:orchestrate

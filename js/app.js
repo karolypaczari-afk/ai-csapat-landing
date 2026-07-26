@@ -169,7 +169,7 @@
   var VIZ = {
     SHERLOCK: ["scan", 1.0],   TYRION: ["versus", 1.0], JOHN: ["tree", 0.9],    GANDALF: ["loop", 1.0],
     CLARK: ["wireframe", 1.0], MAXIMUS: ["build", 1.0],
-    DUMBLEDORE: ["funnel", 1.0], JORDAN: ["typead", 1.1], PAM: ["swatch", 1.0], LUCIUS: ["gauge", 0.95], NEO: ["reticle", 1.0],
+    DUMBLEDORE: ["funnel", 1.0], JORDAN: ["typead", 1.1], PAM: ["swatch", 1.0], OPTIMUS: ["reflow", 1.0], LUCIUS: ["gauge", 0.95], NEO: ["reticle", 1.0],
     FORREST: ["mailseq", 1.0],
     JERRY: ["network", 1.0],
     JARVIS: ["orchestrate", 0.9],
