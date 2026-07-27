@@ -115,6 +115,51 @@
     ["gclid", "gbraid", "wbraid", "msclkid"].forEach(function (k) {
       if (out[k]) writeCookie("gm_" + k, out[k], 90);
     });
+    return normalizeAttribution(out);
+  }
+  // Attribúció-helyreállítás a landolásnál.
+  //
+  // Mérési előzmény (2026-07-27 lifetime audit): a tudástár-checkouton 308 session
+  // `ai-csapat-landing / (not set)` forrással landolt, és ezek vitték a GA4 vásárlások
+  // 40%-át (230 967 Ft) — vagyis a legértékesebb konverziók csatorna nélkül maradtak.
+  //
+  // Két külön ok van, és mindkettőt itt lehet a leghamarabb elkapni:
+  //   1. Kattintásazonosító (fbclid) érkezik UTM nélkül → nincs mit továbbadni a
+  //      checkoutra, ezért a medium `(not set)` lesz.
+  //   2. A `utm_source` a **célt** nevezi meg (a landing saját címkéjét), nem a
+  //      forgalom forrását. A GA4 Paid Social szabálya felismert social forrásra
+  //      illeszkedik, ezért az ilyen session Paid Other csoportba esik.
+  //
+  // Ez a függvény csak akkor pótol, ha az érték hiányzik vagy önmagát nevezi meg —
+  // valódi, kézzel címkézett kampány-UTM-et soha nem ír felül.
+  var CLICK_ID_SOURCE = {
+    fbclid: { utm_source: "facebook", utm_medium: "paid_social" },
+    gclid: { utm_source: "google", utm_medium: "cpc" },
+    gbraid: { utm_source: "google", utm_medium: "cpc" },
+    wbraid: { utm_source: "google", utm_medium: "cpc" },
+    msclkid: { utm_source: "bing", utm_medium: "cpc" }
+  };
+  // A landing saját címkéi: ezek célt jelölnek, nem forrást, ezért felülírhatók.
+  var SELF_DESCRIBING_SOURCE = /^(ai-csapat-landing|ai-csapat|landing|genmarketer(\.hu)?)$/i;
+  function normalizeAttribution(attrib) {
+    var out = Object.assign({}, attrib || {});
+    var derived = null;
+    for (var key in CLICK_ID_SOURCE) {
+      if (Object.prototype.hasOwnProperty.call(CLICK_ID_SOURCE, key) && out[key]) { derived = CLICK_ID_SOURCE[key]; break; }
+    }
+    if (!derived) return out;
+    var changed = false;
+    if (!out.utm_source || SELF_DESCRIBING_SOURCE.test(String(out.utm_source))) {
+      // A felülírt eredetit megőrizzük, hogy a riportban visszakereshető maradjon.
+      if (out.utm_source && !out.gm_source_original) out.gm_source_original = out.utm_source;
+      out.utm_source = derived.utm_source;
+      changed = true;
+    }
+    if (!out.utm_medium) { out.utm_medium = derived.utm_medium; changed = true; }
+    if (changed) {
+      out.gm_attrib_normalized = "1";
+      writeStoredAttribution(out);
+    }
     return out;
   }
   function track(pkg, ctaId, isCheckout) {
@@ -122,6 +167,11 @@
     var itemId = "ai-csapatod-" + pkg, cartEid = eventId("add_to_cart", pkg), eid = eventId("initiate_checkout", pkg);
     var metaCookies = ensureMetaCookies();
     var adAttrib = ensureAdAttribution();
+    // A `source` regisztrált GA4 custom dimension, de eddig csak a `config` hívásban
+    // (page_view scope) szerepelt, ezért a konverziós eseményeken 0%-ban volt kitöltve
+    // (2026-07-27 audit: 62 érintett form/purchase esemény). Eseményszinten is átadjuk,
+    // hogy a lead- és vásárlásforrás bontható legyen.
+    adAttrib = Object.assign({ source: adAttrib.utm_source || "ai-csapat-landing" }, adAttrib);
     var item = { item_id: itemId, item_name: "Az AI csapatod - " + label, item_brand: "GENmarketer", item_category: "AI marketing training", price: value, quantity: 1 };
     if (isCheckout) {
       try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
@@ -142,7 +192,11 @@
       var adAttrib = ensureAdAttribution();
       var out = new URL(url, location.href);
       ATTR_KEYS.forEach(function (k) {
-        var v = inq.get(k) || adAttrib[k];
+        // A normalizált tárolt érték az erősebb: az `ensureAdAttribution` már
+        // beolvasztotta az aktuális URL paramjait ÉS helyreállította a hiányzó vagy
+        // önmagát megnevező source/medium értéket. A nyers URL-paramot előnyben
+        // részesíteni visszahozná a `(not set)` mediumot a checkoutra.
+        var v = adAttrib[k] || inq.get(k);
         if (v && !out.searchParams.has(k)) out.searchParams.set(k, v);
       });
       if (metaCookies.fbp && !out.searchParams.has("fbp")) out.searchParams.set("fbp", metaCookies.fbp);
