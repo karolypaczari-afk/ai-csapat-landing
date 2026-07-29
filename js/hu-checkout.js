@@ -203,7 +203,7 @@
     state.busy = busy;
     el.submit.disabled = busy;
     el.submit.classList.toggle('is-busy', busy);
-    el.submitText.textContent = busy ? 'Feldolgozás…' : money(total()) + ' – fizetés';
+    el.submitText.textContent = busy ? 'Feldolgozás…' : 'Megrendelem – ' + money(total());
   }
 
   /**
@@ -242,7 +242,7 @@
     var message = '';
 
     if (REQUIRED.indexOf(name) !== -1 && !value) {
-      message = 'Ezt a mezőt kérjük kitölteni.';
+      message = 'Ezt a mezőt töltsd ki.';
     } else if (name === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
       message = 'Nézd meg még egyszer ezt az e-mail címet.';
     } else if (name === 'postcode' && value && String(el.form.elements.country.value) === 'HU' && !/^\d{4}$/.test(value)) {
@@ -278,7 +278,7 @@
       el.sumCouponVal.textContent = '–' + money(discount());
     }
     el.sumTotal.textContent = money(total());
-    if (!state.busy && !state.preview) el.submitText.textContent = money(total()) + ' – fizetés';
+    if (!state.busy && !state.preview) el.submitText.textContent = 'Megrendelem – ' + money(total());
   }
 
   // ── PaymentIntent ─────────────────────────────────────────────────────────
