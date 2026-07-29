@@ -1,0 +1,34 @@
+# Protection for the English checkout API directory.
+#
+# This directory sits in a document root fed by a PUBLIC git mirror, so the
+# code here is world-readable by design. The credentials are not: _secrets.php
+# is uploaded out of band and must never be served, listed or downloaded.
+
+Options -Indexes
+
+# Any file starting with an underscore is internal: the secrets file, the
+# shared library, and the log directory. None of them are endpoints.
+<FilesMatch "^_">
+  Require all denied
+</FilesMatch>
+
+# Belt and braces for the logs, which contain customer e-mail addresses.
+<FilesMatch "\.(log|json)$">
+  Require all denied
+</FilesMatch>
+
+# Never cache an API response.
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-store, no-cache, must-revalidate"
+  Header set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "no-referrer"
+</IfModule>
+
+# LiteSpeed's full-page cache would happily serve one customer's JSON to the
+# next one. It is disabled for the whole site, but this directory is where it
+# would hurt most, so it is stated explicitly.
+<IfModule LiteSpeed>
+  CacheDisable public /
+  RewriteEngine On
+  RewriteRule .* - [E=Cache-Control:no-cache]
+</IfModule>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pénztár — Az AI csapatod</title>
+  <meta name="description" content="Szerezd meg mind a 25 AI-marketinges szakembered. Biztonságos fizetés, azonnali hozzáférés, 30 napos pénzvisszafizetési garancia.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://ai-csapat.genmarketer.hu/checkout/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/hu-checkout.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+<header class="co-head">
+  <div class="co-head__in">
+    <a class="co-head__brand" href="/">GEN<span>marketer</span></a>
+    <span class="co-head__secure">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+        <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+        <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+      </svg>
+      Biztonságos fizetés – Stripe
+    </span>
+  </div>
+</header>
+
+<main class="co-wrap">
+  <h1 class="co-title">Szerezd meg az AI-csapatod</h1>
+  <p class="co-sub">Azonnali hozzáférés fizetés után. 30 napos pénzvisszafizetési garancia, indoklás nélkül.</p>
+
+  <!-- Csak akkor jelenik meg, ha a pénztár még nincs élesítve. A hu-checkout.js
+       kapcsolja be, amikor a szerver „checkout_not_open"-t válaszol. -->
+  <div class="co-preview" id="co-preview" hidden>
+    <strong>Előnézet — ez a pénztár még nem indult el.</strong>
+    Minden végigkattintható, de fizetni még nem lehet: a szerver el sem indítja a fizetést,
+    amíg a pénztár nincs élesítve. A vásárlás jelenleg a megszokott úton megy.
+    Élesítés: <code>gm_hu_checkout_enabled</code>.
+  </div>
+
+  <ul class="co-bar">
+    <li>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V7z"/></svg>
+      SSL-védett kapcsolat
+    </li>
+    <li>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      Magyar nyelvű ügyfélszolgálat
+    </li>
+    <li>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Biztonságos kártyás fizetés
+    </li>
+  </ul>
+
+  <!-- Három rövid lépés jobb, mint egy hosszú űrlap: kevesebb mező egyszerre a
+       képernyőn kevesebb helyet ad az elakadásnak. A wallet-gombok az 1. lépésen
+       vannak, hogy aki Apple Payjel vagy Google Payjel fizet, gépelés nélkül
+       végezhessen. -->
+  <p class="co-steps__count" id="co-steps-count">1. lépés a 3-ból</p>
+  <ol class="co-steps" id="co-steps" aria-label="A pénztár lépései">
+    <li class="co-steps__item is-current" data-step-label="1"><span>E-mail</span></li>
+    <li class="co-steps__item" data-step-label="2"><span>Adatok</span></li>
+    <li class="co-steps__item" data-step-label="3"><span>Fizetés</span></li>
+  </ol>
+
+  <form id="co-form" class="co-grid" novalidate>
+
+    <div>
+      <!-- ─── 1. LÉPÉS ──────────────────────────────────────────────────── -->
+      <div data-step="1">
+
+        <!-- Sürgősség. Nem visszaszámláló és nem kitalált határidő: két
+             dokumentált döntés következménye (docs/28 D2 és D8). Épp azért
+             erős, mert igaz, és mert a vevőnek KEDVEZ. -->
+        <section class="co-lock">
+          <p class="co-lock__head">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+            </svg>
+            Most még egyszeri díjas — hamarosan előfizetéses lesz
+          </p>
+          <p class="co-lock__body">
+            Az AI-csapat <strong>előfizetéses modellre áll át</strong>. Ez nem sürgetés, hanem
+            időzítés kérdése: <strong>aki most, egyszeri díjért vásárol, annak a hozzáférése örökre
+            megmarad</strong> — az átállás után is, felár és havidíj nélkül.
+          </p>
+          <ul class="co-lock__list">
+            <li>A mai vásárlásod egyszeri díj: nincs megújítás, nincs lemondanivaló.</li>
+            <li>Az átállás után ezek az egyszeri díjas csomagok kikerülnek a kínálatból — új vevő már csak előfizetést tud venni.</li>
+            <li>Aki addig vásárolt, mindent megkap, ami később érkezik — ugyanúgy, ahogy az eddigi vevők is megkapták az új szakembereket.</li>
+          </ul>
+          <p class="co-lock__foot">
+            Pontos dátumot szándékosan nem írunk ki, mert még nincs kihirdetve. Annyi biztos, hogy
+            az átállás után ez az ár és ez a konstrukció nem lesz újra elérhető.
+          </p>
+        </section>
+
+        <section class="co-card">
+          <h2 class="co-card__title">Válaszd ki a csomagod</h2>
+          <p class="co-card__hint">Fizetés előtt bármikor válthatsz a kettő között.</p>
+
+          <div class="co-plans">
+            <label class="co-plan is-active" data-plan="kepzes">
+              <input type="radio" name="plan" value="kepzes" checked>
+              <span class="co-plan__dot" aria-hidden="true"></span>
+              <span>
+                <span class="co-plan__name">Képzés</span>
+                <span class="co-plan__desc">A teljes csapat, önállóan. Mind a 25 szakember, magyar tananyaggal és képes telepítési útmutatóval.</span>
+              </span>
+              <span class="co-plan__price">
+                <span class="co-plan__was">Később 89 990 Ft</span>
+                69 990 Ft
+              </span>
+            </label>
+
+            <label class="co-plan" data-plan="konzultacio">
+              <span class="co-plan__tag">Legtöbben ezt választják</span>
+              <input type="radio" name="plan" value="konzultacio">
+              <span class="co-plan__dot" aria-hidden="true"></span>
+              <span>
+                <span class="co-plan__name">Képzés + Konzultáció</span>
+                <span class="co-plan__desc">Minden, ami a Képzésben — plusz 2 óra személyes konzultáció Tiborral, ahol együtt állítjátok be a szakembereket a te vállalkozásodra.</span>
+              </span>
+              <span class="co-plan__price">
+                <span class="co-plan__was">Később 149 990 Ft</span>
+                119 990 Ft
+              </span>
+            </label>
+          </div>
+
+          <p class="co-card__hint" style="margin:14px 0 0">
+            Minden ár bruttó, az áfát tartalmazza. Egyszeri díj — a megvett anyag a tiéd marad.
+          </p>
+        </section>
+
+        <section class="co-card co-free">
+          <h2 class="co-card__title">Mindkét csomaghoz jár, felár nélkül</h2>
+          <p class="co-card__hint">Három dolog, amiért máshol külön fizetni szoktak. Nálad benne van.</p>
+
+          <ul class="co-free__list">
+            <li>
+              <span class="co-free__tag">INGYEN</span>
+              <span>
+                <svg class="co-free__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 7H6a5 5 0 0 0 0 10h3M15 7h3a5 5 0 0 1 0 10h-3M8 12h8"/></svg><strong>Élő connector-hozzáférés</strong>
+                <em>49 000 Ft értékben</em>
+                Egyszer bekötöd a Claude-ot, és onnantól minden szakember ott van, minden
+                beszélgetésben — a frissítések pedig maguktól érkeznek. Nincs újraletöltés,
+                nincs verzió, amit követned kell.
+              </span>
+            </li>
+            <li>
+              <span class="co-free__tag">INGYEN</span>
+              <span>
+                <svg class="co-free__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5 20a7 7 0 0 1 14 0"/><path d="M18.5 5.5l1.8-1.8M20 10h2"/></svg><strong>A Csapatvezető, aki mindent a te vállalkozásodra állít be</strong>
+                <em>35 000 Ft értékben</em>
+                Feltesz körülbelül öt kérdést, elkészíti a vállalkozásod profilját, és onnantól
+                minden szakember automatikusan olvassa. Nem kell minden beszélgetésben újra
+                elmagyaráznod, mivel foglalkozol.
+              </span>
+            </li>
+            <li>
+              <span class="co-free__tag">INGYEN</span>
+              <span>
+                <svg class="co-free__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 10l3 3-3 3M13 16h4"/></svg><strong>A parancscsomag</strong>
+                <em>24 000 Ft értékben</em>
+                Kész parancsok azokra a munkákra, amiket hetente újra elvégzel — hogy ne üres
+                prompttal kelljen kezdened.
+              </span>
+            </li>
+          </ul>
+
+          <p class="co-free__foot">
+            <strong>108 000 Ft értékű extra, felár nélkül.</strong> Abban a pillanatban bekapcsolnak,
+            amint a fizetésed megérkezik — nincs mit igényelni vagy beváltani.
+          </p>
+        </section>
+
+        <section class="co-card">
+          <h2 class="co-card__title">Fizess egyetlen koppintással</h2>
+          <p class="co-card__hint">Ha Apple Payt vagy Google Payt használsz, másodpercek alatt megvagy — űrlap nélkül.</p>
+
+          <div id="co-express" class="co-express"></div>
+          <div id="co-or" class="co-or" hidden>vagy add meg az e-mail-címed</div>
+
+          <div class="co-fields">
+            <div class="co-field" data-field="email">
+              <label for="co-email">E-mail-cím</label>
+              <input type="email" id="co-email" name="email" autocomplete="email" inputmode="email" required
+                     placeholder="te@cegneved.hu">
+              <span class="co-field__err" data-err></span>
+              <span class="co-field__note">Ide küldjük a hozzáférésed, ezért kérünk, nézd meg még egyszer.</span>
+            </div>
+          </div>
+
+          <button type="button" class="co-submit co-next" data-next="2">Tovább az adataimhoz →</button>
+        </section>
+
+        <section class="co-card co-growth">
+          <h2 class="co-card__title">A csapat folyamatosan bővül — és te kapod</h2>
+          <p class="co-card__hint">Ez nem egy letöltés, ami aztán elöregszik a gépeden.</p>
+
+          <div class="co-growth__row">
+            <svg class="co-growth__chart" viewBox="0 0 150 96" role="img"
+                 aria-label="A szakemberek száma 25-ről 31-re nőtt az indulás óta">
+              <defs>
+                <linearGradient id="gmGrow" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stop-color="#06B6D4"/>
+                  <stop offset="100%" stop-color="#7C3AED"/>
+                </linearGradient>
+              </defs>
+              <rect x="18" y="36" width="42" height="44" rx="5" class="gr-bar gr-bar--was"/>
+              <text x="39" y="30" class="gr-num gr-num--was">25</text>
+              <text x="39" y="92" class="gr-cap">induláskor</text>
+
+              <rect x="90" y="14" width="42" height="66" rx="5" class="gr-bar gr-bar--now"/>
+              <text x="111" y="8" class="gr-num gr-num--now">31</text>
+              <text x="111" y="92" class="gr-cap">ma</text>
+
+              <path d="M64 40 L86 22" class="gr-arrow"/>
+              <path d="M86 22 l-7 1 l3 5 z" class="gr-arrow-head"/>
+            </svg>
+            <p class="co-growth__note">
+              25 szakemberrel indultunk. A connector <strong>ma 31-et szolgál ki</strong> — a
+              legújabbak azután érkeztek, hogy az az oldal megíródott, ahonnan idejöttél.
+              Aki korábban vásárolt, mindet megkapta, felár nélkül.
+            </p>
+          </div>
+
+          <ul class="co-growth__list">
+            <li>Új szakemberek akkor kerülnek be, amikor a saját ügyfélmunkánkhoz megépítjük őket</li>
+            <li>A meglévők is élesednek — a hirdetés-, SEO- és e-mail-szakember is frissült nemrég</li>
+            <li>Új connectorok is érkeznek, így a csapat egyre több eszközödben tud dolgozni</li>
+            <li>A connectorosok maguktól kapják a frissítést; a ZIP-esek újraletöltik, amikor szólunk</li>
+          </ul>
+        </section>
+
+        <section class="co-card co-fit">
+          <h2 class="co-card__title">Miért éri meg — bármelyik oldalon állsz</h2>
+          <p class="co-card__hint">Ugyanaz a csomag, két egészen különböző használattal.</p>
+
+          <div class="co-fit__cols">
+            <div class="co-fit__col">
+              <h3>Ha kisvállalkozás vagy</h3>
+              <p class="co-fit__lead">Te vagy a marketingosztály — minden más mellett.</p>
+              <ul>
+                <li>Amit eddig kiadtál a házon kívülre — hirdetésszöveg, landoló, e-mail, versenytárs-kutatás —, az házon belül készül el</li>
+                <li>Egyetlen ügynökségi havidíj általában többe kerül havonta, mint ez egyszer</li>
+                <li>Nincs felvétel, nincs betanítás, nincs felmondási idő</li>
+                <li>Te maradsz a döntéshozó: a szakemberek megírják, te döntöd el, mi megy ki</li>
+              </ul>
+            </div>
+
+            <div class="co-fit__col">
+              <h3>Ha ügynökség vagy szabadúszó vagy</h3>
+              <p class="co-fit__lead">Tudod, mi a jó. Ez a lassú részt veszi le rólad.</p>
+              <ul>
+                <li>Az első változatok nem eszik meg azt az időt, amit inkább stratégiára számláznál</li>
+                <li>Használhatod minden ügyfeleden — nincs fejenkénti vagy ügyfelenkénti díj</li>
+                <li>A junior munka is kap egy szenior alapszintet: a keretrendszereket a szakemberek hozzák</li>
+                <li>Gyorsabb pitch és audit — versenytárs-elemzés és fiókátvizsgálás egy délután alatt</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ─── 2. LÉPÉS ──────────────────────────────────────────────────── -->
+      <div data-step="2" hidden>
+        <section class="co-card">
+          <h2 class="co-card__title">Az adataid</h2>
+          <p class="co-card__hint">Ezek a számlához kellenek. Senkinek nem adjuk tovább.</p>
+
+          <div class="co-fields">
+            <div class="co-row">
+              <div class="co-field" data-field="last_name">
+                <label for="co-last">Vezetéknév</label>
+                <input type="text" id="co-last" name="last_name" autocomplete="family-name" required>
+                <span class="co-field__err" data-err></span>
+              </div>
+              <div class="co-field" data-field="first_name">
+                <label for="co-first">Keresztnév</label>
+                <input type="text" id="co-first" name="first_name" autocomplete="given-name" required>
+                <span class="co-field__err" data-err></span>
+              </div>
+            </div>
+
+            <div class="co-row">
+              <div class="co-field" data-field="country">
+                <label for="co-country">Ország</label>
+                <select id="co-country" name="country" autocomplete="country" required></select>
+                <span class="co-field__err" data-err></span>
+              </div>
+              <div class="co-field" data-field="postcode">
+                <label for="co-postcode">Irányítószám</label>
+                <input type="text" id="co-postcode" name="postcode" autocomplete="postal-code" inputmode="numeric" required>
+                <span class="co-field__err" data-err></span>
+              </div>
+            </div>
+
+            <div class="co-row">
+              <div class="co-field" data-field="city">
+                <label for="co-city">Város</label>
+                <input type="text" id="co-city" name="city" autocomplete="address-level2" required>
+                <span class="co-field__err" data-err></span>
+              </div>
+              <div class="co-field" data-field="address">
+                <label for="co-address">Cím</label>
+                <input type="text" id="co-address" name="address" autocomplete="street-address" required>
+                <span class="co-field__err" data-err></span>
+              </div>
+            </div>
+
+            <div class="co-row">
+              <div class="co-field" data-field="company">
+                <label for="co-company">Cégnév <span class="co-field__opt">(nem kötelező)</span></label>
+                <input type="text" id="co-company" name="company" autocomplete="organization">
+                <span class="co-field__err" data-err></span>
+              </div>
+              <div class="co-field" data-field="vat_number">
+                <label for="co-vat">Adószám <span class="co-field__opt">(nem kötelező)</span></label>
+                <input type="text" id="co-vat" name="vat_number" inputmode="numeric" placeholder="12345678-1-42">
+                <span class="co-field__err" data-err></span>
+                <span class="co-field__hint">Céges számlához add meg. Magánszemélyként hagyd üresen.</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="co-submit co-next" data-next="3">Tovább a biztonságos fizetéshez →</button>
+          <button type="button" class="co-back" data-back="1">← Vissza</button>
+        </section>
+      </div>
+
+      <!-- ─── 3. LÉPÉS ──────────────────────────────────────────────────── -->
+      <div data-step="3" hidden>
+        <section class="co-card">
+          <h2 class="co-card__title">Fizetés</h2>
+          <p class="co-card__hint">A kártyaadataid közvetlenül a Stripe-hoz mennek. A mi szerverünket nem érintik.</p>
+
+          <div id="co-payment" class="co-pay"></div>
+
+          <p class="co-pay__note">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            Titkosítva, közvetlenül a Stripe-nak. A kártyaszámod sosem jut el a szerverünkre.
+          </p>
+
+          <!-- A bump közvetlenül a fizetőgomb fölött van: ez az utolsó döntési
+               pont, és az ajánlatnak csak akkor van értelme, ha valaki már
+               eldöntötte, hogy vásárol. -->
+          <label class="co-bump" id="co-bump-label">
+            <input type="checkbox" id="co-bump" name="bump">
+            <span>
+              <span class="co-bump__title">Kérek még egy konzultációs órát — <span class="co-bump__price">29 990 Ft</span></span>
+              <span class="co-bump__body">
+                Még egy élő óra velünk, amikor az első hat hónapban szükséged lesz rá. A legtöbben
+                akkor használják fel, amikor már lefuttatták az első feladataikat, és pontosan
+                tudják, mit akarnak kérdezni.
+              </span>
+            </span>
+          </label>
+
+          <div class="co-coupon">
+            <label for="co-coupon">Van kuponkódod?</label>
+            <div class="co-coupon__row">
+              <input type="text" id="co-coupon" name="coupon" autocomplete="off" placeholder="Írd be a kódot">
+              <button type="button" id="co-coupon-apply">Beváltom</button>
+            </div>
+            <span class="co-coupon__msg" id="co-coupon-msg"></span>
+          </div>
+
+          <button type="submit" class="co-submit" id="co-submit">
+            <span class="co-submit__spin" aria-hidden="true"></span>
+            <span id="co-submit-text">69 990 Ft – fizetés</span>
+          </button>
+          <button type="button" class="co-back" data-back="2">← Vissza</button>
+
+          <!-- A kockázatcsökkentés a döntési ponthoz tartozik. Ez a három sor
+               arra válaszol, amin az emberek tényleg haboznak: terhelnek-e még
+               egyszer, kinél van a kártyám, mi van, ha mégsem jó. -->
+          <ul class="co-reassure">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              A kártyát a Stripe kezeli — mi nem látjuk és nem tároljuk az adataid
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14"/></svg>
+              Egyszeri fizetés. Nincs előfizetés, nincs megújítás, nincs mit lemondani
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              30 napod van meggondolni magad — egyetlen e-mail elég
+            </li>
+          </ul>
+
+          <div class="co-error" id="co-error" role="alert"></div>
+
+          <p class="co-legal">
+            Ez digitális termék, amit a fizetés után azonnal megkapsz. A 30 napos garancia szerinti
+            teljes visszatérítéshez való jogod ettől függetlenül megmarad — az azonnali hozzáférés
+            ezt nem érinti.
+          </p>
+        </section>
+      </div>
+
+      <!-- Minden lépésen látszik: az a két dolog, amit fizetés előtt tényleg
+           megnéznek — mit jelent pontosan a garancia, és van-e valódi cég a
+           lap mögött. -->
+      <section class="co-card co-guarantee">
+        <h2 class="co-card__title">A 30 napos, indoklás nélküli garancia</h2>
+        <p class="co-card__hint">Kiírva, pontról pontra, hogy tudd, mihez járulsz hozzá.</p>
+        <ul class="co-guarantee__list">
+          <li><strong>Meddig:</strong> a fizetéstől számított 30 napig.</li>
+          <li><strong>Mit teszel:</strong> írsz az <a href="mailto:info@genmarketer.hu">info@genmarketer.hu</a> címre, hogy visszakéred az árat. Nincs űrlap, nincs indoklás.</li>
+          <li><strong>Mit teszünk:</strong> a teljes összeget visszautaljuk ugyanarra a kártyára. Nem kérjük, hogy bármit visszaküldj vagy kitörölj.</li>
+          <li><strong>Ki dönt:</strong> te. Nálunk nincs jóváhagyási lépés.</li>
+        </ul>
+      </section>
+
+      <section class="co-card">
+        <h2 class="co-card__title">Kitől vásárolsz</h2>
+        <p class="co-who">
+          <strong>GENmarketer</strong> — magyar marketingügynökség, amely AI-rendszereket épít kis
+          csapatoknak. A csomagban lévő szakembereket mi magunk használjuk ügyfélmunkában, minden nap.
+        </p>
+        <p class="co-who">
+          Kérdésed van vásárlás előtt? Írj az <a href="mailto:info@genmarketer.hu">info@genmarketer.hu</a>
+          címre. Magyarul válaszolunk, általában egy munkanapon belül, és minden levelet ember olvas el.
+        </p>
+      </section>
+    </div>
+
+    <!-- Összegzés ------------------------------------------------------- -->
+    <aside class="co-summary">
+      <h2 class="co-summary__title">A rendelésed</h2>
+
+      <div class="co-line">
+        <span class="co-line__label" id="co-sum-plan">Az AI csapatod – Képzés</span>
+        <span class="co-line__val" id="co-sum-plan-price">69 990 Ft</span>
+      </div>
+
+      <div class="co-line co-line--free">
+        <span class="co-line__label">Élő connector-hozzáférés</span>
+        <span class="co-line__val"><s>49 000 Ft</s> INGYEN</span>
+      </div>
+      <div class="co-line co-line--free">
+        <span class="co-line__label">Csapatvezető + cégprofil</span>
+        <span class="co-line__val"><s>35 000 Ft</s> INGYEN</span>
+      </div>
+      <div class="co-line co-line--free">
+        <span class="co-line__label">Parancscsomag</span>
+        <span class="co-line__val"><s>24 000 Ft</s> INGYEN</span>
+      </div>
+
+      <div class="co-line is-hidden" id="co-sum-bump-line">
+        <span class="co-line__label">Extra konzultációs óra</span>
+        <span class="co-line__val">29 990 Ft</span>
+      </div>
+
+      <div class="co-line is-hidden" id="co-sum-coupon-line">
+        <span class="co-line__label" id="co-sum-coupon-label">Kedvezmény</span>
+        <span class="co-line__val" id="co-sum-coupon-val">–0 Ft</span>
+      </div>
+
+      <div class="co-total">
+        <span>Összesen</span>
+        <span>
+          <span id="co-sum-total">69 990 Ft</span>
+          <span class="co-total__note">egyszeri díj, bruttó</span>
+        </span>
+      </div>
+
+      <ul class="co-trust">
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>Hozzáférés percekkel a fizetés után</span>
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>30 napos pénzvisszafizetési garancia, indoklás nélkül</span>
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>Új szakemberek – min. 6 hónapig garantáltan</span>
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>Magyar nyelvű ügyfélszolgálat</span>
+        </li>
+      </ul>
+
+      <!-- A sürgősség rövid változata a hasábban is, mert mobilon az összegzés
+           kerül felülre, és ott ez az utolsó dolog a gomb előtt. -->
+      <div class="co-lock">
+        <p class="co-lock__head">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          </svg>
+          A mai áron fixálod
+        </p>
+        <p class="co-lock__body">
+          Az AI-csapat előfizetéses modellre áll át. Aki most egyszeri díjért vásárol,
+          <strong>örökre megtartja a hozzáférését</strong> — havidíj nélkül.
+        </p>
+      </div>
+
+      <div class="co-why">
+        <h3 class="co-why__title">Miért ez a csomag</h3>
+        <ul class="co-why__list">
+          <li>18 év marketingtapasztalatra épül</li>
+          <li>Nem elmélet — olyan kampányokból származó tudás, amiket tényleg futtattunk</li>
+          <li>Gyakorlatias: minden szakember kész munkát ad a kezedbe, nem tanácsot</li>
+          <li>Kész briefek és promptok — csak le kell futtatnod őket</li>
+          <li>Amit letöltesz, az véglegesen a tiéd marad</li>
+          <li>Min. 6 hónapnyi frissítés, ahogy a platformok változnak</li>
+          <li>Ott működik, ahol már úgyis használod a Claude-ot vagy a ChatGPT-t</li>
+        </ul>
+      </div>
+
+      <figure class="co-quote">
+        <blockquote>
+          „Tibivel már hónapok óta dolgozunk együtt, és az utóbbi időben a legnagyobb versenytársam
+          abban, hogy ki mennyire AI-fanatikus.”
+        </blockquote>
+        <figcaption>
+          <img src="https://tudastar.genmarketer.hu/wp-content/uploads/2025/12/wolf-gabor.jpg"
+               width="48" height="48" loading="lazy" alt="Wolf Gábor">
+          <span>
+            <strong>Wolf Gábor</strong>
+            Marketing Commando
+          </span>
+        </figcaption>
+      </figure>
+
+      <div class="co-seal">
+        <img src="https://tudastar.genmarketer.hu/wp-content/uploads/2025/12/garancia-300x298-1.png"
+             width="88" height="87" loading="lazy" alt="100% elégedettségi garancia">
+        <p>
+          Ha bármilyen okból nem vagy elégedett a csomaggal, és ezt 30 napon belül jelzed,
+          a teljes összeget visszautaljuk.
+        </p>
+      </div>
+
+      <div class="co-timeline">
+        <h3 class="co-timeline__title">Mi történik a fizetés után</h3>
+        <svg class="co-timeline__svg" viewBox="0 0 300 74" role="img"
+             aria-label="Fizetés, majd percekben belül megérkezik a belépés és a szakemberek, aztán lefuttatod az első feladatot">
+          <line x1="26" y1="26" x2="274" y2="26" class="tl-track"/>
+          <line x1="26" y1="26" x2="274" y2="26" class="tl-fill"/>
+
+          <circle cx="26" cy="26" r="14" class="tl-node tl-node--done"/>
+          <path d="M20 26l4 4 8-8" class="tl-check"/>
+          <text x="26" y="55" class="tl-label">Fizetés</text>
+          <text x="26" y="67" class="tl-sub">most</text>
+
+          <circle cx="150" cy="26" r="14" class="tl-node"/>
+          <path d="M143 22h14v10h-14z M143 22l7 6 7-6" class="tl-icon"/>
+          <text x="150" y="55" class="tl-label">E-mail + belépés</text>
+          <text x="150" y="67" class="tl-sub">perceken belül</text>
+
+          <circle cx="274" cy="26" r="14" class="tl-node"/>
+          <path d="M268 26h12 M275 21l5 5-5 5" class="tl-icon"/>
+          <text x="274" y="55" class="tl-label">Első feladat</text>
+          <text x="274" y="67" class="tl-sub">még ma este</text>
+        </svg>
+      </div>
+
+      <div class="co-marks" aria-label="Elfogadott fizetési módok">
+        <svg viewBox="0 0 48 30" role="img" aria-label="Visa"><rect width="48" height="30" rx="4"/><text x="24" y="19" text-anchor="middle">VISA</text></svg>
+        <svg viewBox="0 0 48 30" role="img" aria-label="Mastercard"><rect width="48" height="30" rx="4"/><circle cx="20" cy="15" r="7" class="mc-l"/><circle cx="28" cy="15" r="7" class="mc-r"/></svg>
+        <svg viewBox="0 0 48 30" role="img" aria-label="American Express"><rect width="48" height="30" rx="4"/><text x="24" y="19" text-anchor="middle">AMEX</text></svg>
+        <svg viewBox="0 0 48 30" role="img" aria-label="Apple Pay"><rect width="48" height="30" rx="4"/><text x="24" y="19" text-anchor="middle">&#63743;Pay</text></svg>
+        <svg viewBox="0 0 48 30" role="img" aria-label="Google Pay"><rect width="48" height="30" rx="4"/><text x="24" y="19" text-anchor="middle">G Pay</text></svg>
+      </div>
+    </aside>
+  </form>
+</main>
+
+<script src="../js/hu-checkout.js"></script>
+</body>
+</html>

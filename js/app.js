@@ -15,13 +15,22 @@
   function tr(hu, en) { return EN ? en : hu; }
 
   /* ---- Tracking (portolva a prod script.js-ből) ---- */
-  var CHECKOUT = {
+  // A két nyelv KÜLÖN pénztárra megy, és ez szándékos:
+  //   HU → a tudástár WooCommerce/CartFlows pénztára, forintban;
+  //   EN → a saját, EUR-os Stripe-pénztár a /en/checkout/-on.
+  // Az angol vevő így soha nem lát magyar felületet, a magyar úthoz pedig
+  // egyetlen sort sem kell hozzányúlni.
+  var CHECKOUT = EN ? {
+    basic: "/en/checkout/?plan=training",
+    pro:   "/en/checkout/?plan=consultation"
+  } : {
     basic: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=872",
     pro:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=873"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = { basic: 69990, pro: 119990 }, CURRENCY = "HUF";
+  var PRICE = EN ? { basic: 189, pro: 289 } : { basic: 69990, pro: 119990 };
+  var CURRENCY = EN ? "EUR" : "HUF";
   var ATTR_COOKIE = "gm_ads_attrib";
   var META_EXT_COOKIE = "gm_meta_ext_id";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];

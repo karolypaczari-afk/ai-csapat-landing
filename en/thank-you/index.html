@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thank you — Your AI Team</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://ai-csapat.genmarketer.hu/en/thank-you/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/en-checkout.css">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+
+</head>
+<body>
+
+<header class="co-head">
+  <div class="co-head__in">
+    <a class="co-head__brand" href="/en/">GEN<span>marketer</span></a>
+  </div>
+</header>
+
+<main class="co-wrap">
+
+  <!-- Shown while a redirect-based method (iDEAL, Bancontact…) is still
+       settling, or if the bank is taking its time. -->
+  <div class="co-pending" id="ty-pending">
+    <strong>Your payment is still going through.</strong>
+    Some banks take a minute or two to confirm. You can close this page — we will email you as soon as it clears.
+  </div>
+
+  <div class="co-error" id="ty-error" role="alert"></div>
+
+  <section id="ty-success" hidden>
+    <div class="ty-hero">
+      <div class="ty-check" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h1 class="co-title">Your AI team is yours</h1>
+      <p class="co-sub" id="ty-sub">We have emailed your access details. Here is what happens next.</p>
+    </div>
+
+    <div class="co-grid">
+      <div>
+        <section class="co-card">
+          <h2 class="co-card__title">Next steps</h2>
+          <p class="co-card__hint">The whole setup takes about fifteen minutes.</p>
+
+          <ol class="ty-steps">
+            <li>
+              <div>
+                <strong>Check your inbox.</strong>
+                Two emails are on their way: your account details, and your receipt.
+                If neither has arrived in ten minutes, look in spam — then email us.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>Sign in and open the guide.</strong>
+                Your written guide lives at
+                <a href="https://tudastar.genmarketer.hu/" rel="noopener">tudastar.genmarketer.hu</a>
+                and walks you through installing the specialists in Claude or ChatGPT.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>Connect once, use everywhere.</strong>
+                If you use Claude on the web or the desktop app, the connector is the fastest route —
+                one setup and every specialist is available in every conversation, updates included.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>Give a specialist a real task.</strong>
+                Not a test question — something you actually need this week. That is where you find out
+                what they are worth.
+              </div>
+            </li>
+          </ol>
+
+          <div class="ty-note" id="ty-consult" hidden>
+            <strong>About your consultation:</strong>
+            we will email you a booking link within one working day so you can pick a time that suits you.
+            Come with a specific problem — the hour is far more useful that way.
+          </div>
+        </section>
+
+        <section class="co-card">
+          <h2 class="co-card__title">If anything is unclear</h2>
+          <p class="co-card__hint">A human reads every message.</p>
+          <p>
+            Email <a href="mailto:info@genmarketer.hu">info@genmarketer.hu</a> and tell us what you tried and what
+            happened. That gets you a useful answer far faster than "it doesn't work".
+          </p>
+          <p style="margin-bottom:0">
+            Your 30-day money-back guarantee starts today. If the pack is not what you expected, one email is enough —
+            no form, no reason required.
+          </p>
+        </section>
+      </div>
+
+      <aside class="co-summary">
+        <h2 class="co-summary__title">Your order</h2>
+        <div class="co-line">
+          <span class="co-line__label" id="ty-plan">—</span>
+          <span class="co-line__val" id="ty-amount">—</span>
+        </div>
+        <div class="co-total">
+          <span>Paid</span>
+          <span><span id="ty-total">—</span></span>
+        </div>
+        <p class="co-cards" id="ty-ref"></p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<script src="../../js/en-thank-you.js"></script>
+</body>
+</html>
