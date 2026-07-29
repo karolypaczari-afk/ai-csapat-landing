@@ -366,7 +366,15 @@
             </span>
           </label>
 
-          <div class="co-coupon">
+          <!-- Kuponmező: EGYELŐRE ELREJTVE (Károly, 2026-07-29).
+               Csak a felület van elrejtve — a teljes kupon-lánc a helyén marad és
+               működik: a `validate-coupon` REST-útvonal, a szerveroldali
+               kedvezmény-számítás, a beváltás rögzítése és a Stripe-hoz igazított
+               végösszeg. Visszakapcsolás = ennek az egy `hidden` attribútumnak a
+               törlése, se JS-t, se PHP-t nem kell hozzányúlni.
+               (A `[hidden] { display: none !important }` szabály miatt ez a
+               rejtés a `display:`-t adó szabályokkal szemben is megbízható.) -->
+          <div class="co-coupon" hidden>
             <label for="co-coupon">Van kuponkódod?</label>
             <div class="co-coupon__row">
               <input type="text" id="co-coupon" name="coupon" autocomplete="off" placeholder="Írd be a kódot">

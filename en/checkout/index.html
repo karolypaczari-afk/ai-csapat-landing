@@ -352,7 +352,15 @@
             </span>
           </label>
 
-          <div class="co-coupon">
+          <!-- Coupon field: HIDDEN FOR NOW (Károly, 2026-07-29).
+               Only the surface is hidden — the whole coupon chain stays in place
+               and working: the `validate-coupon` REST route, the server-side
+               discount calculation, redemption recording and the total reconciled
+               to Stripe. Bringing it back = deleting this one `hidden` attribute;
+               no JS or PHP change needed.
+               (The `[hidden] { display: none !important }` rule makes this hold
+               even against rules that set `display:`.) -->
+          <div class="co-coupon" hidden>
             <label for="co-coupon">Have a coupon code?</label>
             <div class="co-coupon__row">
               <input type="text" id="co-coupon" name="coupon" autocomplete="off" placeholder="Enter code">
