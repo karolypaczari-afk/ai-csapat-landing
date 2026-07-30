@@ -11,8 +11,12 @@
  *   - a failed bridge call returns 500 so Stripe retries (16 times over 72h)
  *   - a duplicate delivery is safe: the plugin keys orders by PaymentIntent
  *
- * Never returns 200 for work that did not happen. A 200 tells Stripe to stop
- * retrying, and a silent drop here is a paying customer with no access.
+ * A 200 tells Stripe to stop retrying, so it is never returned for work that
+ * could still succeed — a silent drop there is a paying customer with no
+ * access. It IS returned for the two cases a retry cannot change: an event
+ * that is not ours, and an intent of ours that carries no address anywhere.
+ * Both are alerted or logged; retrying them only buries the alert under 72
+ * hours of noise and pushes the endpoint towards Stripe's auto-disable.
  */
 
 declare(strict_types=1);
@@ -64,23 +68,32 @@ $currency = strtoupper((string) ($pi['currency'] ?? 'EUR'));
 $metadata = is_array($pi['metadata'] ?? null) ? $pi['metadata'] : [];
 
 /**
- * Language guard — both funnels bill through the SAME Stripe account.
+ * Funnel guard — EVERY payment on this Stripe account is delivered here.
  *
  * A Stripe webhook endpoint receives every event it subscribes to; there is no
- * metadata filter on Stripe's side. So once the Hungarian funnel is live, this
- * endpoint also sees its payments. Handing one to the English bridge would get
- * "unknown plan" back, return 500, and Stripe would retry that for 72 hours
- * while e-mailing the operator on each attempt.
+ * metadata filter on Stripe's side. Three funnels bill through this account:
+ * this one, the Hungarian checkout, and the WooCommerce shop on tudastar, which
+ * charges through its own Stripe gateway. Only intents created by our two
+ * checkouts carry metadata.lang — so an intent without it is somebody else's.
  *
- * The default is 'en' so that any intent created before this key existed keeps
- * being processed exactly as it is today — the guard only ever drops something
- * that positively identifies as another funnel's.
+ * This used to default to 'en' when the key was absent, reasoning that an intent
+ * created before the key existed should keep working. There were no such
+ * intents — the funnel shipped with the key — and the default instead claimed
+ * every WooCommerce order: no metadata.email, so the handler alerted "paid
+ * intent with no email" and returned 500, and Stripe retried that for 72 hours.
+ * A guard may only ever claim what positively identifies as ours.
  */
-$lang = (string) ($metadata['lang'] ?? 'en');
-if ('en' !== $lang) {
-    gm_en_log('info', 'Not an English payment — leaving it to the other endpoint', [
-        'pi'   => $piId,
-        'lang' => $lang,
+$lang    = (string) ($metadata['lang'] ?? '');
+$foreign = gm_en_foreign_gateway($metadata);
+if ('en' !== $lang || '' !== $foreign) {
+    gm_en_log('info', 'Not this funnel\'s payment — acknowledged and dropped', [
+        'pi'       => $piId,
+        'lang'     => '' === $lang ? '(none)' : $lang,
+        'currency' => $currency,
+        // WooCommerce stamps its order number on the intent; logging it makes
+        // the drop traceable to a real order instead of looking like data loss.
+        'woo_order' => (string) ($metadata['order_id'] ?? ''),
+        'marker'    => $foreign ?: '(none)',
     ]);
     http_response_code(200);
     echo json_encode(['received' => true, 'ignored' => 'foreign_funnel']);
@@ -102,17 +115,24 @@ gm_en_save_payload(
     ]
 );
 
-$email = (string) ($metadata['email'] ?? $pi['receipt_email'] ?? '');
+// Falls back to the charge's billing details, which is where a wallet payment
+// leaves the address when the pre-confirm intent update did not land.
+$email = gm_en_resolve_email($pi);
 if ('' === $email) {
-    // Without an e-mail we cannot create or find the customer. This is a hard
-    // failure worth alerting on: the money arrived and we cannot deliver.
+    // The money arrived on an intent of ours and we cannot deliver. Nothing a
+    // retry can change — an intent's metadata is fixed once it succeeded — so
+    // this is acknowledged with a 200 rather than left to hammer the endpoint
+    // for 72 hours. The alert is forced past the throttle instead: it fires
+    // exactly once per payment, and it must not be swallowed by an unrelated
+    // alert that happened to go out in the same quarter of an hour.
     gm_en_log('error', 'Paid intent has no email — cannot create order', ['pi' => $piId, 'event_id' => $eventId]);
     gm_en_alert_admin(
         'Paid PaymentIntent with no email',
-        "PaymentIntent: $piId\nAmount: $amount $currency\n\nThe payment succeeded but carries no e-mail address, so no order could be created. Look it up in the Stripe dashboard and create the order manually."
+        "PaymentIntent: $piId\nAmount: $amount $currency\n\nThe payment succeeded but carries no e-mail address, so no order could be created. Look it up in the Stripe dashboard and create the order manually.",
+        true
     );
-    http_response_code(500);
-    echo json_encode(['error' => 'no email on intent']);
+    http_response_code(200);
+    echo json_encode(['received' => true, 'error' => 'no email on intent', 'action' => 'manual']);
     exit;
 }
 

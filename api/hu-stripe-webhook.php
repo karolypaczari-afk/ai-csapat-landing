@@ -75,10 +75,21 @@ $currency = strtoupper((string) ($pi['currency'] ?? 'HUF'));
 $metadata = is_array($pi['metadata'] ?? null) ? $pi['metadata'] : [];
 
 // ── The language guard (see the file header) ────────────────────────────────
-if ('hu' !== (string) ($metadata['lang'] ?? '')) {
+//
+// The second condition is the WooCommerce lock: the shop on tudastar is the
+// live Hungarian sales channel, and this endpoint speaks the same language, so
+// it is the one most likely to be handed one of its orders by mistake. A second
+// order for a payment that already produced one would be a real invoice sent to
+// a real customer — worth a lock that does not depend on the language tag.
+$foreign = gm_en_foreign_gateway($metadata);
+if ('hu' !== (string) ($metadata['lang'] ?? '') || '' !== $foreign) {
     gm_hu_log('info', 'Not a Hungarian payment — leaving it to the other endpoint', [
         'pi'   => $piId,
         'lang' => (string) ($metadata['lang'] ?? '(none)'),
+        // WooCommerce stamps its order number on the intent; logging it makes
+        // the drop traceable to a real order instead of looking like data loss.
+        'woo_order' => (string) ($metadata['order_id'] ?? ''),
+        'marker'    => $foreign ?: '(none)',
     ]);
     http_response_code(200);
     echo json_encode(['received' => true, 'ignored' => 'foreign_funnel']);
@@ -98,15 +109,22 @@ gm_en_save_payload(
     ]
 );
 
-$email = (string) ($metadata['email'] ?? $pi['receipt_email'] ?? '');
+// Falls back to the charge's billing details, which is where a wallet payment
+// leaves the address when the pre-confirm intent update did not land.
+$email = gm_en_resolve_email($pi);
 if ('' === $email) {
+    // Acknowledged with a 200 on purpose: a succeeded intent's metadata is
+    // fixed, so no retry can supply the address, and 72 hours of retries would
+    // only bury the one alert that matters. That alert skips the throttle —
+    // it fires once per payment and must reach the operator.
     gm_hu_log('error', 'Paid intent has no email — cannot create order', ['pi' => $piId, 'event_id' => $eventId]);
     gm_en_alert_admin(
         'Fizetett PaymentIntent e-mail nélkül (HU)',
-        "PaymentIntent: $piId\nÖsszeg: $amount $currency\n\nA fizetés sikerült, de nincs rajta e-mail cím, így nem jött létre rendelés. Keresd meg a Stripe-fiókban, és hozd létre kézzel."
+        "PaymentIntent: $piId\nÖsszeg: $amount $currency\n\nA fizetés sikerült, de nincs rajta e-mail cím, így nem jött létre rendelés. Keresd meg a Stripe-fiókban, és hozd létre kézzel.",
+        true
     );
-    http_response_code(500);
-    echo json_encode(['error' => 'no email on intent']);
+    http_response_code(200);
+    echo json_encode(['received' => true, 'error' => 'no email on intent', 'action' => 'manual']);
     exit;
 }
 

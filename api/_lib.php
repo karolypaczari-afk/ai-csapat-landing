@@ -253,6 +253,68 @@ function gm_en_verify_stripe_signature(string $payload, string $header, string $
     return false;
 }
 
+/**
+ * Names the other gateway when an intent was created by one, otherwise ''.
+ *
+ * The funnel guard already drops anything without our own language tag, so this
+ * is a second, independent lock — deliberately so. The WooCommerce shop on
+ * tudastar is the live Hungarian sales channel: an order created there must
+ * never be touched by these endpoints, and a duplicate would be a real order
+ * with a real invoice. One guard reading one field is not enough insurance for
+ * that, especially now that a missing address can be recovered from the charge:
+ * without this lock, a mis-tagged intent would resolve an e-mail and go on to
+ * create a second order for a customer who already paid once.
+ *
+ * These keys are written by the Payment Plugins Stripe gateway and never by our
+ * own checkout, which stamps `plan`, `lang` and `source` instead.
+ */
+function gm_en_foreign_gateway(array $metadata): string
+{
+    foreach (['order_id', 'gateway_id', 'partner', 'webhook_id'] as $key) {
+        if ('' !== trim((string) ($metadata[$key] ?? ''))) {
+            return $key;
+        }
+    }
+    return '';
+}
+
+/**
+ * Finds the customer's e-mail on a paid intent.
+ *
+ * Our checkout puts it in metadata, and a wallet payment copies the address the
+ * wallet supplied onto the intent before confirming — but that update is one
+ * more network call in the browser, and a payment that is already `processing`
+ * will not accept it. When it does not land, the address is still on the charge
+ * that Stripe created, so we go and read it there rather than strand a paying
+ * customer. The webhook payload only carries the charge ID, hence the lookup.
+ *
+ * Callers must have established that the intent is ours before calling this:
+ * on a foreign funnel's payment this would happily return an e-mail and we
+ * would create a duplicate order for someone else's customer.
+ */
+function gm_en_resolve_email(array $pi): string
+{
+    foreach ([$pi['metadata']['email'] ?? '', $pi['receipt_email'] ?? ''] as $candidate) {
+        $candidate = trim((string) $candidate);
+        if ('' !== $candidate && filter_var($candidate, FILTER_VALIDATE_EMAIL)) {
+            return $candidate;
+        }
+    }
+
+    $charge = $pi['latest_charge'] ?? null;
+    if (is_array($charge)) {
+        $fromCharge = (string) ($charge['billing_details']['email'] ?? '');
+    } elseif (is_string($charge) && '' !== $charge) {
+        $result     = gm_en_stripe('GET', '/charges/' . $charge);
+        $fromCharge = (string) ($result['body']['billing_details']['email'] ?? '');
+    } else {
+        return '';
+    }
+
+    $fromCharge = trim($fromCharge);
+    return ('' !== $fromCharge && filter_var($fromCharge, FILTER_VALIDATE_EMAIL)) ? $fromCharge : '';
+}
+
 // ── WordPress bridge ────────────────────────────────────────────────────────
 
 /**
@@ -293,15 +355,26 @@ function gm_en_call_bridge(array $payload): array
     ];
 }
 
-/** Rate-limited operator alert; a broken bridge must not send hundreds of mails. */
-function gm_en_alert_admin(string $subject, string $body): void
+/**
+ * Rate-limited operator alert; a broken bridge must not send hundreds of mails.
+ *
+ * The throttle is per SUBJECT, not global. With one shared lock a chatty bridge
+ * failure would have silenced the far more serious "money arrived, no order"
+ * alert for fifteen minutes — and both funnels share this log directory, so an
+ * English alert would have swallowed a Hungarian one.
+ *
+ * $force skips the throttle. Use it only where the caller guarantees the alert
+ * fires once per event (no Stripe retry behind it), otherwise the throttle is
+ * the only thing standing between a stuck webhook and a flooded inbox.
+ */
+function gm_en_alert_admin(string $subject, string $body, bool $force = false): void
 {
     $config = gm_en_config();
     if (empty($config['admin_email'])) {
         return;
     }
-    $lock = gm_en_log_dir() . '/.last_alert';
-    if (is_file($lock) && (time() - (int) file_get_contents($lock)) < 900) {
+    $lock = gm_en_log_dir() . '/.last_alert_' . substr(md5($subject), 0, 12);
+    if (!$force && is_file($lock) && (time() - (int) file_get_contents($lock)) < 900) {
         return;
     }
     @mail(

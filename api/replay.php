@@ -71,8 +71,20 @@ if (!$found) {
 
 $metadata = is_array($found['metadata'] ?? null) ? $found['metadata'] : [];
 $email = (string) ($metadata['email'] ?? '');
+
+// An intent that arrived without an address is exactly the case the operator
+// gets alerted about, so the recovery path has to be able to supply one — the
+// alternative is building the order by hand in wp-admin.
+$override = isset($input['email']) ? trim((string) $input['email']) : '';
+if ('' !== $override) {
+    if (!filter_var($override, FILTER_VALIDATE_EMAIL)) {
+        gm_en_json(['error' => 'the supplied email is not a valid address'], 400);
+    }
+    $email = $override;
+}
+
 if ('' === $email) {
-    gm_en_json(['error' => 'saved payload has no email — create the order manually'], 422);
+    gm_en_json(['error' => 'saved payload has no email — replay it with {"payment_intent":…,"email":…}'], 422);
 }
 
 $payload = [
