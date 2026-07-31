@@ -15,22 +15,42 @@
   function tr(hu, en) { return EN ? en : hu; }
 
   /* ---- Tracking (portolva a prod script.js-ből) ---- */
-  // A két nyelv KÜLÖN pénztárra megy, és ez szándékos:
-  //   HU → a tudástár WooCommerce/CartFlows pénztára, forintban;
-  //   EN → a saját, EUR-os Stripe-pénztár a /en/checkout/-on.
-  // Az angol vevő így soha nem lát magyar felületet, a magyar úthoz pedig
-  // egyetlen sort sem kell hozzányúlni.
+  // A két nyelv KÜLÖN pénztárra és KÜLÖN ajánlatra megy, és ez szándékos:
+  //   HU → ELŐFIZETÉS: a tudástár WooCommerce/CartFlows pénztára, forintban
+  //        (2026-07-31 óta; korábban az egyszeri díjas 872/873);
+  //   EN → egyszeri díjas, a saját EUR-os Stripe-pénztár a /en/checkout/-on.
+  // Az angol vevő így soha nem lát magyar felületet, és az EN ajánlat átállítása
+  // külön kör (Károly, 2026-07-31) — ezért az EN ág itt VÁLTOZATLAN.
+  //
+  // A HU előfizetéses pénztár ugyanazon a bizonyított Woo/CartFlows útvonalon megy,
+  // mint korábban az egyszeri díj, csak más termék-ID-kkal:
+  //   1992 = „Az AI csapatod – Tervező előfizetés"    9 990 Ft/hó  (subscription)
+  //   1993 = „Az AI csapatod – Autopilóta előfizetés" 19 990 Ft/hó (subscription)
+  // Mindkettő `publish` + `_related_course=[712]` (élő readback: 2026-07-31).
   var CHECKOUT = EN ? {
     basic: "/en/checkout/?plan=training",
     pro:   "/en/checkout/?plan=consultation"
   } : {
-    basic: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=872",
-    pro:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=873"
+    planner:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992",
+    autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { basic: 189, pro: 289 } : { basic: 69990, pro: 119990 };
+  var PRICE = EN ? { basic: 189, pro: 289 } : { planner: 9990, autopilot: 19990 };
   var CURRENCY = EN ? "EUR" : "HUF";
+  // Csomagcímke és GA4 `item_id`. Az `item_id` szándékosan UGYANAZ, mint az
+  // aicsapat.genmarketer.hu előfizetéses landolón (`ai-csapatod-elofizetes-<pkg>`):
+  // ugyanaz a Woo-termék (1992/1993), tehát a termék-szintű riport ne hasadjon
+  // ketté landolónként. A két landoló szétválasztása a `content_group` /
+  // `source` dimenzión megy — ez a bevált minta, nem az item_id csonkítása.
+  var PKG = EN ? {
+    basic: { label: "Képzés",                itemId: "ai-csapatod-basic" },
+    pro:   { label: "Képzés + Konzultáció",  itemId: "ai-csapatod-pro" }
+  } : {
+    planner:   { label: "Tervező előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
+    autopilot: { label: "Autopilóta előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" }
+  };
+  var PKG_DEFAULT = EN ? "basic" : "planner";
   var ATTR_COOKIE = "gm_ads_attrib";
   var META_EXT_COOKIE = "gm_meta_ext_id";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
@@ -172,8 +192,9 @@
     return out;
   }
   function track(pkg, ctaId, isCheckout) {
-    var value = PRICE[pkg] || 0, label = pkg === "pro" ? "Képzés + Konzultáció" : "Képzés";
-    var itemId = "ai-csapatod-" + pkg, cartEid = eventId("add_to_cart", pkg), eid = eventId("initiate_checkout", pkg);
+    var meta = PKG[pkg] || PKG[PKG_DEFAULT];
+    var value = PRICE[pkg] || 0, label = meta.label;
+    var itemId = meta.itemId, cartEid = eventId("add_to_cart", pkg), eid = eventId("initiate_checkout", pkg);
     var metaCookies = ensureMetaCookies();
     var adAttrib = ensureAdAttribution();
     // A `source` regisztrált GA4 custom dimension, de eddig csak a `config` hívásban
@@ -219,7 +240,7 @@
       var key = el.getAttribute("data-gm-checkout");
       if (key && CHECKOUT[key]) el.setAttribute("href", withAttribution(CHECKOUT[key]));
       el.addEventListener("click", function (ev) {
-        track(el.getAttribute("data-gm-package") || "basic", el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]));
+        track(el.getAttribute("data-gm-package") || PKG_DEFAULT, el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]));
         if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = withAttribution(CHECKOUT[key]); }
       });
     });

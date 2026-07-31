@@ -12,6 +12,9 @@
 - Product: AI Team / Az AI csapatod
 - Format: 25 AI marketing specialists for Claude and ChatGPT workflows
 - Typical use cases: market research, ad planning, PPC work, copywriting, landing page improvement, email reporting, video and UGC planning, competitor research, SEO and GEO work
+- Hungarian pricing model: monthly subscription, two plans — Tervező (planner) 9 990 HUF/month and Autopilóta (autopilot) 19 990 HUF/month. No minimum term, cancel anytime, plan switching allowed.
+- Plan difference: Tervező researches, audits and produces ready-to-use plans and copy; Autopilóta also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there.
+- English pricing model: one-time purchase (see the /en/ page) — the English offer is not a subscription.
 - Purchase path: the landing sends buyers to the GENmarketer knowledge base checkout
 
 ## Important Pages
