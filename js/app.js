@@ -9,6 +9,10 @@
   var gsap = window.gsap, ST = window.ScrollTrigger, Flip = window.Flip;
   var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var TEAM = window.GM_TEAM || [], AGENTS = window.GM_AGENTS || [];
+  // A látható létszámot az ADATBÓL számoljuk, nem kézzel írjuk. A bedrótozott szám
+  // némán elavul: 2026-07-31-ig „25 szakember" állt a prózában, miközben a data.js
+  // már 28 ágenst tartalmazott. A gépi kapu: tests/roster-counts.mjs.
+  var LIVE_COUNT = AGENTS.filter(function (a) { return a.status !== "soon"; }).length;
   var AV = "/assets/img/avatars/";
   // Nyelv: a <html lang> dönti el (HU a gyökéren, EN a /en/-en).
   var EN = (document.documentElement.getAttribute("lang") || "hu").slice(0, 2).toLowerCase() === "en";
@@ -299,7 +303,9 @@
     var html = "";
     AGENTS.forEach(function (a, i) {
       var soon = a.status === "soon";
-      var statusCls = soon ? "soon" : "live", statusTxt = soon ? "STANDBY" : "NOMINAL";
+      // A magyar oldalon a státusz-badge is magyarul szól — a látogató magyar,
+      // a „NOMINAL"/„STANDBY" neki üres zaj. Az angol oldalon marad az eredeti.
+      var statusCls = soon ? "soon" : "live", statusTxt = soon ? tr("HAMAROSAN", "STANDBY") : tr("AKTÍV", "NOMINAL");
       var role = EN ? a.roleEn : a.role, task = EN ? a.currentTaskEn : a.currentTask;
       var label = a.name || a.code;   // megjelenítendő (ékezetes) név; a.code marad az ASCII fájl-/adatkulcs
       html += '<button type="button" class="gm-agent' + (soon ? " is-soon" : "") + '" data-code="' + esc(a.code) + '" data-cat="' + esc(a.cat) + '" style="--c:' + esc(a.color) + '">';
@@ -378,7 +384,7 @@
     var soon = a.status === "soon";
     var spec = (EN ? a.specEn : a.spec) || {};
     var rows = "";
-    rows += '<dt>' + tr("Státusz", "Status") + '</dt><dd class="is-accent">' + (soon ? tr("STANDBY · hamarosan", "STANDBY · soon") : tr("NOMINAL · aktív", "NOMINAL · active")) + '</dd>';
+    rows += '<dt>' + tr("Státusz", "Status") + '</dt><dd class="is-accent">' + (soon ? tr("HAMAROSAN", "STANDBY · soon") : tr("AKTÍV", "NOMINAL · active")) + '</dd>';
     rows += '<dt>' + tr("Aktuális feladat", "Current task") + '</dt><dd>' + esc(EN ? a.currentTaskEn : a.currentTask) + '</dd>';
     rows += '<dt>' + tr("Folyamat", "Pipeline") + '</dt><dd>' + esc(spec.pipeline || "—") + '</dd>';
     rows += '<dt>' + tr("Ütem", "Cadence") + '</dt><dd>' + esc(spec.cadence || "—") + '</dd>';
@@ -673,8 +679,8 @@
   function boot() {
     var b = document.getElementById("gm-boot");
     var fill = b && b.querySelector(".gm-boot__fill"), log = b && b.querySelector(".gm-boot__log");
-    var lines = EN ? ["booting system…", "loading 25 specialists…", "connecting telemetry…", "mission control ready."]
-                   : ["rendszer indítása…", "25 szakember betöltése…", "telemetria csatlakoztatása…", "parancsnoki pult kész."];
+    var lines = EN ? ["booting system…", "loading " + LIVE_COUNT + " specialists…", "connecting telemetry…", "mission control ready."]
+                   : ["rendszer indítása…", LIVE_COUNT + " szakember betöltése…", "telemetria csatlakoztatása…", "parancsnoki pult kész."];
     function done() { if (!b) return; b.classList.add("is-done"); setTimeout(function () { b.style.display = "none"; }, 700); }
     if (!b || REDUCE) { done(); return; }
     var p = 0, li = 0;
