@@ -229,16 +229,17 @@
   // munkáját idéző vizuált kapja (mind egyedi). A drawerek: js/dashboards.js.
   // ⚠️ ÚJ specialista felvételekor IDE is kell egy [drawer, sebesség] sor (relevánssal),
   //    különben a kártya a semleges fallbackra esik — a gépi kapu: tests/viz-coverage.mjs (test:all).
+  /* A kulcs a data.js `code` mezője (ASCII). A drawer-nevek a dashboards.js DRAW mapjéből. */
   var VIZ = {
-    SHERLOCK: ["scan", 1.0],   TYRION: ["versus", 1.0], JOHN: ["tree", 0.9],    GANDALF: ["loop", 1.0],
-    CLARK: ["wireframe", 1.0], MAXIMUS: ["build", 1.0],
-    DUMBLEDORE: ["funnel", 1.0], JORDAN: ["typead", 1.1], PAM: ["swatch", 1.0], OPTIMUS: ["reflow", 1.0], LUCIUS: ["gauge", 0.95], NEO: ["reticle", 1.0],
-    FORREST: ["mailseq", 1.0],
-    JERRY: ["network", 1.0],
-    JARVIS: ["orchestrate", 0.9],
-    MORPHEUS: ["artboards", 1.0], DOROTHY: ["code", 1.1], MIYAGI: ["inspect", 1.0],
-    Q: ["ingest", 1.0], TRUMAN: ["filmstrip", 1.1], TED: ["script", 1.0], SARAH: ["render", 1.0], EDWARD: ["timeline", 1.0],
-    COLUMBO: ["audit", 0.9], INDIANA: ["keywords", 1.0], MONICA: ["score", 0.95], DOKI: ["diagnostics", 1.0], KATNISS: ["mappin", 1.0]
+    SHERLOCK: ["scan", 1.0],   "SUN-TZU": ["versus", 1.0], ATHENE: ["tree", 0.9],  PERPETUUM: ["loop", 1.0],
+    MIDASZ: ["wireframe", 1.0], ROBINSON: ["build", 1.0],
+    KEPLER: ["funnel", 1.0], CYRANO: ["typead", 1.1], LEONARDO: ["swatch", 1.0], VECTOR: ["reflow", 1.0], APOLLON: ["gauge", 0.95], AURORA: ["reticle", 1.0],
+    HERMESZ: ["mailseq", 1.0],
+    FIGARO: ["network", 1.0],
+    ATLASZ: ["orchestrate", 0.9],
+    MATISSE: ["artboards", 1.0], NEXUS: ["code", 1.1], SENTRY: ["inspect", 1.0],
+    GULLIVER: ["ingest", 1.0], LUMIERE: ["filmstrip", 1.1], SEHEREZADE: ["script", 1.0], GUTENBERG: ["render", 1.0], KRONOSZ: ["timeline", 1.0],
+    VERITAS: ["audit", 0.9], KOLUMBUSZ: ["keywords", 1.0], PARETO: ["score", 0.95], MERIDIAN: ["diagnostics", 1.0], ARTEMISZ: ["mappin", 1.0]
   };
   function vizOf(code, fb) { return (VIZ[code] && VIZ[code][0]) || fb; }
   function speedOf(code) { return (VIZ[code] && VIZ[code][1]) || 1; }
@@ -279,10 +280,11 @@
       var soon = a.status === "soon";
       var statusCls = soon ? "soon" : "live", statusTxt = soon ? "STANDBY" : "NOMINAL";
       var role = EN ? a.roleEn : a.role, task = EN ? a.currentTaskEn : a.currentTask;
+      var label = a.name || a.code;   // megjelenítendő (ékezetes) név; a.code marad az ASCII fájl-/adatkulcs
       html += '<button type="button" class="gm-agent' + (soon ? " is-soon" : "") + '" data-code="' + esc(a.code) + '" data-cat="' + esc(a.cat) + '" style="--c:' + esc(a.color) + '">';
       html += '<span class="gm-agent__top">';
-      html += '<span class="gm-agent__av"><img src="' + AV + esc(a.code) + '.webp" alt="' + esc(a.code + " – " + role) + '" loading="lazy" width="60" height="60"></span>';
-      html += '<span class="gm-agent__meta"><span class="gm-agent__code">' + esc(a.code) + ' <span class="gm-status gm-status--' + statusCls + '">' + statusTxt + '</span></span>';
+      html += '<span class="gm-agent__av"><img src="' + AV + esc(a.code) + '.webp" alt="' + esc(label + " – " + role) + '" loading="lazy" width="60" height="60"></span>';
+      html += '<span class="gm-agent__meta"><span class="gm-agent__code">' + esc(label) + ' <span class="gm-status gm-status--' + statusCls + '">' + statusTxt + '</span></span>';
       html += '<span class="gm-agent__role">' + esc(role) + '</span></span>';
       html += '</span>';
       html += '<canvas class="gm-agent__viz" data-viz="' + esc(vizOf(a.code, a.vizType)) + '" aria-hidden="true"></canvas>';
@@ -350,7 +352,7 @@
     panel.style.setProperty("--c", a.color);
     modal.querySelector(".gm-modal__av img").src = AV + a.code + ".webp";
     var role = EN ? a.roleEn : a.role;
-    modal.querySelector(".gm-modal__title h3").textContent = a.code;
+    modal.querySelector(".gm-modal__title h3").textContent = a.name || a.code;
     modal.querySelector(".gm-modal__title p").textContent = role;
     var soon = a.status === "soon";
     var spec = (EN ? a.specEn : a.spec) || {};
