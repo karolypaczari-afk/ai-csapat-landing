@@ -14,8 +14,9 @@
 - Typical use cases: market research, ad planning, PPC work, copywriting, landing page improvement, email reporting, video and UGC planning, competitor research, SEO and GEO work
 - Hungarian pricing model: monthly subscription, two plans — Tervező (planner) 9 990 HUF/month and Autopilóta (autopilot) 19 990 HUF/month. No minimum term, cancel anytime, plan switching allowed.
 - Plan difference: Tervező researches, audits and produces ready-to-use plans and copy; Autopilóta also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there.
-- English pricing model: one-time purchase (see the /en/ page) — the English offer is not a subscription.
-- Purchase path: the landing sends buyers to the GENmarketer knowledge base checkout
+- English pricing model: monthly subscription, two plans — Planner 29 EUR/month and Autopilot 59 EUR/month. No minimum term, cancel anytime, plan switching allowed. Same structure as the Hungarian offer, priced in euros.
+- Purchase path: the Hungarian landing sends buyers to the GENmarketer knowledge base checkout (WooCommerce, HUF); the English landing uses its own Stripe checkout at /en/checkout/ (EUR). The two never mix — the shop currency is HUF, so the euro prices are billed by Stripe and mirrored into WooCommerce afterwards.
+- Subscription self-service EN: https://ai-csapat.genmarketer.hu/en/manage/ — the customer requests an emailed link to the Stripe billing portal to change card, download invoices or cancel.
 
 ## Important Pages
 - Product landing HU: https://ai-csapat.genmarketer.hu/

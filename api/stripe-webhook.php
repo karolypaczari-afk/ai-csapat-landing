@@ -52,6 +52,16 @@ if (!is_array($event) || empty($event['type'])) {
 $eventId   = (string) ($event['id'] ?? '');
 $eventType = (string) $event['type'];
 
+// The subscription funnel's events are handled in their own file. They share
+// this endpoint (one Stripe endpoint, one signing secret, one signature check)
+// but nothing else: different objects, different idempotency keys, different
+// failure behaviour.
+if (in_array($eventType, GM_EN_SUBSCRIPTION_EVENTS, true)) {
+    require __DIR__ . '/_subscription-events.php';
+    gm_en_handle_subscription_event($event, $eventId, $eventType);
+    exit;
+}
+
 // Events we do not act on still get a 200 — otherwise Stripe would retry them
 // forever and the log would fill with noise.
 if ('payment_intent.succeeded' !== $eventType) {
@@ -85,6 +95,23 @@ $metadata = is_array($pi['metadata'] ?? null) ? $pi['metadata'] : [];
  */
 $lang    = (string) ($metadata['lang'] ?? '');
 $foreign = gm_en_foreign_gateway($metadata);
+
+// Our own subscription payments also land here: Stripe emits
+// payment_intent.succeeded for every invoice it charges, and that intent
+// carries no metadata of ours. They are handled by invoice.paid instead, so
+// dropping them is right — but calling them "not this funnel's payment" in the
+// log would send a future reader hunting for a foreign integration that does
+// not exist.
+if ('' === $lang && !empty($pi['invoice'])) {
+    gm_en_log('info', 'Subscription invoice payment — handled by invoice.paid, dropped here', [
+        'pi'      => $piId,
+        'invoice' => (string) $pi['invoice'],
+    ]);
+    http_response_code(200);
+    echo json_encode(['received' => true, 'ignored' => 'subscription_invoice']);
+    exit;
+}
+
 if ('en' !== $lang || '' !== $foreign) {
     gm_en_log('info', 'Not this funnel\'s payment — acknowledged and dropped', [
         'pi'       => $piId,

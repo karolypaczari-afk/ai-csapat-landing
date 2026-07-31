@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage your subscription — Your AI Team</title>
+  <meta name="description" content="Update your card, download invoices, or cancel your Your AI Team subscription.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://ai-csapat.genmarketer.hu/en/manage/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/en-checkout.css">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="co-head">
+  <div class="co-head__in">
+    <a class="co-head__brand" href="/en/">GEN<span>marketer</span></a>
+    <span class="co-head__secure">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+        <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+        <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+      </svg>
+      Billing handled by Stripe
+    </span>
+  </div>
+</header>
+
+<main class="co-wrap">
+  <h1 class="co-title">Manage your subscription</h1>
+  <p class="co-sub">Update your card, download invoices, or cancel. Cancelling takes effect immediately.</p>
+
+  <div class="co-grid">
+    <div>
+
+      <!-- Step 1: ask for the address. Deliberately NOT a login, and
+           deliberately not a straight "open the portal" button. A billing
+           portal link lets whoever holds it cancel the subscription and read
+           every past invoice, so it is only ever sent to the address itself —
+           otherwise anyone who knew a customer's e-mail could cancel for them. -->
+      <section class="co-card" id="mg-request">
+        <h2 class="co-card__title">Send me my link</h2>
+        <p class="co-card__hint">
+          Enter the e-mail address you subscribed with. We will send you a link to your billing page —
+          it works for one hour.
+        </p>
+
+        <div class="co-fields">
+          <div class="co-field" data-field="email">
+            <label for="mg-email">Email address</label>
+            <input type="email" id="mg-email" name="email" autocomplete="email" inputmode="email" required
+                   placeholder="you@company.com">
+            <span class="co-field__err" data-err></span>
+          </div>
+        </div>
+
+        <button type="button" class="co-submit" id="mg-send">
+          <span class="co-submit__spin" aria-hidden="true"></span>
+          <span id="mg-send-text">Email me the link</span>
+        </button>
+
+        <p class="co-legal" id="mg-sent" hidden></p>
+        <div class="co-error" id="mg-error" role="alert"></div>
+      </section>
+
+      <!-- Step 2: only rendered when the visitor arrived from that e-mail,
+           with a signature this page cannot forge. -->
+      <section class="co-card" id="mg-open" hidden>
+        <h2 class="co-card__title">Your billing page is ready</h2>
+        <p class="co-card__hint">
+          This opens Stripe's secure billing page, where you can change your card, download every
+          invoice, or cancel.
+        </p>
+        <button type="button" class="co-submit" id="mg-go">
+          <span class="co-submit__spin" aria-hidden="true"></span>
+          <span id="mg-go-text">Open my billing page</span>
+        </button>
+      </section>
+
+      <section class="co-card">
+        <h2 class="co-card__title">What cancelling does</h2>
+        <ul class="co-guarantee__list">
+          <li><strong>Straight away:</strong> no further payment is taken. There is no notice period and no cancellation fee.</li>
+          <li><strong>Your access:</strong> runs to the end of the month you have already paid for, then stops.</li>
+          <li><strong>Coming back:</strong> subscribe again any time from the <a href="/en/">main page</a>. Your account and history are still there.</li>
+          <li><strong>Something else wrong?</strong> Email <a href="mailto:info@genmarketer.hu">info@genmarketer.hu</a> — a person reads every message, and we would rather fix it than lose you.</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<script src="../../js/en-manage.js"></script>
+</body>
+</html>

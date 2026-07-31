@@ -23,6 +23,46 @@ const GM_EN_BUMP_PRICE = 7900; // 79.00 EUR — extra consultation hour
 const GM_EN_CURRENCY   = 'eur';
 
 /**
+ * The monthly plans.
+ *
+ * The amount is NOT sent to Stripe for these — a subscription is billed against
+ * a Price object, and the Price is the single source of truth for what recurs.
+ * The cents here exist only so the summary in the browser and the server agree,
+ * and so a mismatch between this file and Stripe is detectable rather than
+ * silent (api/health.php compares them).
+ *
+ * Prices are looked up by `lookup_key`, never by name. Stripe enforces
+ * uniqueness on the lookup key and on nothing else: a script that searched by
+ * product name would happily create a second product with a second recurring
+ * price, and customers would end up split across two of them.
+ */
+const GM_EN_SUBSCRIPTION_PLANS = [
+    'planner' => [
+        'lookup_key' => 'gm_en_ai_team_planner_monthly_eur',
+        'amount'     => 2900, // 29.00 EUR / month
+        'label'      => 'Your AI Team — Planner',
+    ],
+    'autopilot' => [
+        'lookup_key' => 'gm_en_ai_team_autopilot_monthly_eur',
+        'amount'     => 5900, // 59.00 EUR / month
+        'label'      => 'Your AI Team — Autopilot',
+    ],
+];
+
+/**
+ * The order bump, charged ONCE on the first invoice.
+ *
+ * It goes on the subscription through `add_invoice_items`, which takes a Price
+ * — hence a real one-off Price rather than an ad-hoc amount, so the customer's
+ * invoice shows a named line instead of an anonymous charge.
+ */
+const GM_EN_SUBSCRIPTION_BUMP = [
+    'lookup_key' => 'gm_en_consult_hour_once_eur',
+    'amount'     => 7900, // 79.00 EUR, one-off
+    'label'      => 'Extra consultation hour',
+];
+
+/**
  * @return array{stripe_secret:string,stripe_publishable:string,webhook_secret:string,bridge_secret:string,bridge_url:string,mode:string,pmc:string,admin_email:string}
  */
 function gm_en_config(): array
@@ -406,6 +446,145 @@ function gm_en_resolve_amount(string $plan, bool $bump): array
         $amount += GM_EN_BUMP_PRICE;
     }
     return ['amount' => $amount, 'plan' => $plan, 'bump' => $bump];
+}
+
+// ── Subscriptions ───────────────────────────────────────────────────────────
+
+/**
+ * The events the subscription funnel acts on.
+ *
+ * `invoice.paid` is the one that grants access — for the first invoice and for
+ * every renewal alike. Provisioning on `customer.subscription.created` instead
+ * would hand out access before the money arrived.
+ */
+const GM_EN_SUBSCRIPTION_EVENTS = [
+    'invoice.paid',
+    'invoice.payment_failed',
+    'customer.subscription.updated',
+    'customer.subscription.deleted',
+];
+
+/**
+ * Resolves a plan slug to the live Stripe Price id.
+ *
+ * Looked up by `lookup_key` at request time rather than pinned in _secrets.php,
+ * so the test and live modes each find their own price with no extra config and
+ * no chance of a live checkout quoting a test price. The result is cached for
+ * the request; Stripe's lookup endpoint is fast but this runs on every step.
+ */
+function gm_en_subscription_price_id(string $plan): string
+{
+    if (!isset(GM_EN_SUBSCRIPTION_PLANS[$plan])) {
+        return '';
+    }
+    return gm_en_lookup_price(
+        GM_EN_SUBSCRIPTION_PLANS[$plan]['lookup_key'],
+        GM_EN_SUBSCRIPTION_PLANS[$plan]['amount'],
+        'month'
+    );
+}
+
+/** The one-off bump price. Same discipline, no recurring interval. */
+function gm_en_bump_price_id(): string
+{
+    return gm_en_lookup_price(GM_EN_SUBSCRIPTION_BUMP['lookup_key'], GM_EN_SUBSCRIPTION_BUMP['amount'], '');
+}
+
+/**
+ * @param string $expectInterval '' for a one-off price, otherwise 'month' etc.
+ */
+function gm_en_lookup_price(string $key, int $expectAmount, string $expectInterval): string
+{
+    static $cache = [];
+    if (isset($cache[$key])) {
+        return $cache[$key];
+    }
+
+    $res = gm_en_stripe('GET', '/prices', ['lookup_keys' => [$key], 'active' => 'true', 'limit' => 2]);
+    if (200 !== $res['status']) {
+        gm_en_log('error', 'Price lookup failed', ['key' => $key, 'status' => $res['status']]);
+        return '';
+    }
+
+    $rows = $res['body']['data'] ?? [];
+    if (count($rows) !== 1) {
+        // Zero means the price was never created in this mode; more than one means
+        // the uniqueness guarantee we rely on has been broken. Neither may be
+        // guessed past — quoting the wrong price is a recurring charge at the
+        // wrong amount, discovered a month later.
+        gm_en_log('error', 'Price lookup did not return exactly one price', [
+            'key'   => $key,
+            'found' => count($rows),
+        ]);
+        return '';
+    }
+
+    $price    = $rows[0];
+    $currency = strtolower((string) ($price['currency'] ?? ''));
+    $amount   = (int) ($price['unit_amount'] ?? 0);
+    $interval = isset($price['recurring']['interval']) ? (string) $price['recurring']['interval'] : '';
+
+    // The interval is asserted in BOTH directions. A one-off price that grew a
+    // recurring interval would bill a single consultation hour every month, and
+    // a monthly price that lost one would be charged exactly once and never
+    // renew — two silent failures that look nothing like each other.
+    if (GM_EN_CURRENCY !== $currency || $interval !== $expectInterval || $amount !== $expectAmount) {
+        gm_en_log('error', 'Stripe price disagrees with the configured plan', [
+            'key'              => $key,
+            'currency'         => $currency,
+            'interval'         => '' === $interval ? '(one-off)' : $interval,
+            'expected_interval'=> '' === $expectInterval ? '(one-off)' : $expectInterval,
+            'amount'           => $amount,
+            'expected_amount'  => $expectAmount,
+        ]);
+        return '';
+    }
+
+    $cache[$key] = (string) $price['id'];
+    return $cache[$key];
+}
+
+/**
+ * Hands a subscription event to the gm-en-checkout plugin.
+ *
+ * Same shared-secret transport as the one-time bridge, different route: the
+ * payloads and the idempotency keys differ, and a shared endpoint would have
+ * made every change to one funnel a risk to the other.
+ *
+ * @return array{success:bool,status:int,body:array,error:string}
+ */
+function gm_en_call_subscription_bridge(array $payload): array
+{
+    $config = gm_en_config();
+    $url    = str_replace('/checkout-complete', '/subscription-event', $config['bridge_url']);
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 45,
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json; charset=utf-8',
+            'X-GM-EN-Secret: ' . $config['bridge_secret'],
+        ],
+        CURLOPT_POSTFIELDS     => json_encode($payload, JSON_UNESCAPED_UNICODE),
+    ]);
+
+    $raw    = curl_exec($ch);
+    $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $err    = curl_error($ch);
+    curl_close($ch);
+
+    $success = !$err && $status >= 200 && $status < 300;
+    $body    = json_decode((string) $raw, true);
+
+    return [
+        'success' => $success,
+        'status'  => $status,
+        'body'    => is_array($body) ? $body : [],
+        'error'   => $err ?: ('HTTP ' . $status),
+    ];
 }
 
 /**

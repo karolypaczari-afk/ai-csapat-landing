@@ -1,32 +1,45 @@
 /**
  * English checkout — ai-csapat.genmarketer.hu/en/checkout/
  *
+ * Sells the two MONTHLY plans. The one-off packs this page used to sell moved
+ * out when the English offer became a subscription, matching the Hungarian
+ * root; what did not change is that the Hungarian funnel is untouched by any of
+ * this — it runs through WooCommerce and CartFlows and never loads this file.
+ *
  * Structure of the payment flow:
  *
- *   1. On load we ask our own endpoint for a PaymentIntent. It replies with a
- *      client secret and the publishable key, so no Stripe key is hardcoded in
- *      this file and rotating one needs no redeploy of the front end.
- *   2. Two Stripe elements are mounted against that intent:
- *        - Express Checkout Element  — Apple Pay / Google Pay / Link buttons
- *        - Payment Element           — card and EU local methods
- *      Stripe hides wallets from the Payment Element when both are present, so
- *      the customer never sees Apple Pay twice.
- *   3. Changing the plan or ticking the bump UPDATES the same intent rather
- *      than creating a new one. One payment attempt, one intent — which is
- *      what makes the webhook's idempotency meaningful.
+ *   1. The customer's e-mail comes first, and nothing is created in Stripe
+ *      before it. A subscription belongs to a Customer, and a Customer with no
+ *      address cannot be sent a receipt or a cancellation link — so unlike the
+ *      one-off flow, which could open a PaymentIntent on page load, this one
+ *      waits until step 1 is done.
+ *   2. Leaving step 1 creates an INCOMPLETE subscription and mounts two Stripe
+ *      elements against its first invoice:
+ *        - Express Checkout Element  — Apple Pay / Google Pay / Link
+ *        - Payment Element           — card and the EU methods that can be
+ *          charged again next month
+ *      Nothing is billed until the customer confirms; an abandoned checkout
+ *      leaves an incomplete subscription that Stripe expires by itself.
+ *   3. Changing the plan re-prices the SAME subscription. Toggling the bump
+ *      replaces it, because the bump is a line on the draft invoice rather than
+ *      a subscription item and cannot be toggled in place.
  *   4. Prices are never sent to the server. The browser asks for a plan; the
- *      server decides what that costs.
+ *      server resolves it to a Stripe Price by lookup key and that Price is the
+ *      only thing that decides what recurs.
  */
 (function () {
   'use strict';
 
-  var API = '/api/create-intent.php';
+  var API = '/api/create-subscription.php';
   var RETURN_URL = 'https://ai-csapat.genmarketer.hu/en/thank-you/';
   var GA4_ID = 'G-1EV18K1256';
 
-  var PRICES = { training: 189, consultation: 289 };
+  // Monthly, in euros. Mirrors api/_lib.php GM_EN_SUBSCRIPTION_PLANS — the
+  // server checks these against the live Stripe Price and refuses to sell if
+  // they disagree, so a drift here fails loudly instead of mispricing.
+  var PRICES = { planner: 29, autopilot: 59 };
   var BUMP_PRICE = 79;
-  var PLAN_LABEL = { training: 'The team', consultation: 'The team + consultation' };
+  var PLAN_LABEL = { planner: 'Planner', autopilot: 'Autopilot' };
 
   // The EU, because that is where we are set up to sell. Sorted by name so the
   // list reads naturally rather than by country code.
@@ -80,19 +93,19 @@
   }
 
   var state = {
-    plan: 'training',
+    plan: 'planner',
     bump: false,
-    paymentIntentId: '',
+    subscriptionId: '',
     clientSecret: '',
     stripe: null,
     elements: null,
     paymentElement: null,
     expressElement: null,
     busy: false,
+    starting: false,
     updateSeq: 0,
     step: 1,
-    paymentMounted: false,
-    coupon: null
+    paymentMounted: false
   };
 
   var el = {};
@@ -103,16 +116,14 @@
 
   function money(v) { return '€' + v; }
 
-  function subtotal() {
+  /** What the customer pays TODAY: the first month, plus the one-off bump. */
+  function total() {
     return PRICES[state.plan] + (state.bump ? BUMP_PRICE : 0);
   }
 
-  function discount() {
-    return state.coupon ? Math.round(state.coupon.discount_cent / 100) : 0;
-  }
-
-  function total() {
-    return Math.max(1, subtotal() - discount());
+  /** What recurs every month after that. The bump is charged once and never again. */
+  function recurring() {
+    return PRICES[state.plan];
   }
 
   function readForm() {
@@ -188,7 +199,19 @@
     state.busy = busy;
     el.submit.disabled = busy;
     el.submit.classList.toggle('is-busy', busy);
-    el.submitText.textContent = busy ? 'Processing…' : 'Pay ' + money(total());
+    el.submitText.textContent = busy ? 'Processing…' : payLabel();
+  }
+
+  /**
+   * The button says what is actually about to happen.
+   *
+   * "Subscribe" rather than "Pay", and the amount charged today rather than the
+   * monthly rate, because those differ whenever the bump is ticked — a button
+   * reading "Pay €29" that takes €108 is the kind of surprise that produces
+   * chargebacks rather than customers.
+   */
+  function payLabel() {
+    return 'Subscribe — ' + money(total()) + ' today';
   }
 
   // ── Validation ────────────────────────────────────────────────────────────
@@ -228,26 +251,30 @@
 
   function renderSummary() {
     el.sumPlan.textContent = PLAN_LABEL[state.plan];
-    el.sumPlanPrice.textContent = money(PRICES[state.plan]);
+    el.sumPlanPrice.textContent = money(PRICES[state.plan]) + '/mo';
     el.sumBumpLine.classList.toggle('is-hidden', !state.bump);
-    el.sumCouponLine.classList.toggle('is-hidden', !state.coupon);
-    if (state.coupon) {
-      el.sumCouponLabel.textContent = 'Discount (' + state.coupon.code + ')';
-      el.sumCouponVal.textContent = '–' + money(discount());
-    }
+    if (el.sumCouponLine) el.sumCouponLine.classList.add('is-hidden');
     el.sumTotal.textContent = money(total());
-    if (!state.busy) el.submitText.textContent = 'Pay ' + money(total());
+
+    // The recurring line is not decoration. Card network rules require the
+    // amount, the frequency and how to cancel to be visible at the point of
+    // authorisation, and the bump makes today's charge differ from the monthly
+    // one — exactly the case the rule exists for.
+    if (el.sumRecurring) {
+      el.sumRecurring.textContent =
+        'Then ' + money(recurring()) + ' every month until you cancel. Cancel any time — no notice period.';
+    }
+    if (!state.busy) el.submitText.textContent = payLabel();
   }
 
-  // ── PaymentIntent ─────────────────────────────────────────────────────────
+  // ── Subscription ──────────────────────────────────────────────────────────
 
-  function requestIntent() {
+  function requestSubscription() {
     var body = Object.assign(
       {
         plan: state.plan,
         bump: state.bump,
-        payment_intent_id: state.paymentIntentId,
-        coupon: state.coupon ? state.coupon.code : ''
+        subscription_id: state.subscriptionId
       },
       readForm(),
       attribution()
@@ -258,26 +285,34 @@
       body: JSON.stringify(body)
     }).then(function (res) {
       return res.json().then(function (json) {
-        if (!res.ok) throw new Error((json && json.error && json.error.message) || 'Payment could not be started.');
+        if (!res.ok) throw new Error((json && json.error && json.error.message) || 'The subscription could not be started.');
         return json;
       });
     });
   }
 
   /**
-   * Re-prices the existing intent after a plan or bump change.
+   * Re-prices after a plan or bump change, and re-mounts if Stripe handed back
+   * a different invoice.
    *
-   * Guarded by a sequence number: a customer can toggle faster than the
-   * network responds, and an out-of-order reply would otherwise leave the
-   * elements showing a stale amount.
+   * Guarded by a sequence number: a customer can toggle faster than the network
+   * responds, and an out-of-order reply would leave the elements showing a
+   * stale amount. Toggling the bump makes the server replace the subscription
+   * altogether, so the client secret can genuinely change under us — carrying
+   * on with the old one would confirm a payment against an invoice that no
+   * longer exists.
    */
   function syncAmount() {
     if (!state.elements) return;
     var seq = ++state.updateSeq;
-    requestIntent()
+    requestSubscription()
       .then(function (data) {
         if (seq !== state.updateSeq) return;
-        state.paymentIntentId = data.payment_intent_id || state.paymentIntentId;
+        state.subscriptionId = data.subscription_id || state.subscriptionId;
+        if (data.client_secret && data.client_secret !== state.clientSecret) {
+          remountStripe(data);
+          return null;
+        }
         return state.elements.fetchUpdates();
       })
       .catch(function (err) {
@@ -302,10 +337,30 @@
     };
   }
 
+  /**
+   * Tears the elements down and rebuilds them against a new invoice.
+   *
+   * Needed because toggling the bump replaces the subscription server-side.
+   * Stripe Elements are bound to one client secret for their lifetime; there is
+   * no "point this at a different invoice" call, so the honest move is a full
+   * rebuild rather than hoping fetchUpdates() papers over it.
+   */
+  function remountStripe(data) {
+    try {
+      if (state.paymentElement) state.paymentElement.unmount();
+      if (state.expressElement) state.expressElement.unmount();
+    } catch (e) { /* an already-unmounted element is not a problem */ }
+    state.paymentElement = null;
+    state.expressElement = null;
+    state.paymentMounted = false;
+    mountStripe(data);
+    if (state.step === 3) mountPaymentElement();
+  }
+
   function mountStripe(data) {
     state.stripe = window.Stripe(data.publishable_key);
     state.clientSecret = data.client_secret;
-    state.paymentIntentId = data.payment_intent_id;
+    state.subscriptionId = data.subscription_id;
 
     state.elements = state.stripe.elements({
       clientSecret: state.clientSecret,
@@ -352,6 +407,47 @@
     track('begin_checkout');
   }
 
+  function mountPaymentElement() {
+    if (!state.elements || state.paymentMounted) return;
+    state.paymentElement = state.elements.create('payment', {
+      layout: { type: 'tabs', defaultCollapsed: false },
+      // Wallets live in the Express element on step 2; repeating them here
+      // would show the customer the same button twice.
+      wallets: { applePay: 'never', googlePay: 'never' },
+      fields: { billingDetails: { address: 'never', name: 'never', email: 'never' } }
+    });
+    state.paymentElement.mount('#co-payment');
+    state.paymentMounted = true;
+  }
+
+  /**
+   * Creates the subscription the first time we have an e-mail, then mounts.
+   *
+   * Returns a promise so the caller can decide whether to wait. Step
+   * progression deliberately does not: a customer who typed their address
+   * should move to the next screen even if Stripe is slow, and the payment
+   * button stays disabled until the elements are actually ready.
+   */
+  function ensureSubscription() {
+    if (state.elements || state.starting) return Promise.resolve(null);
+    state.starting = true;
+    return requestSubscription()
+      .then(function (data) {
+        state.starting = false;
+        mountStripe(data);
+        el.submit.disabled = false;
+        return data;
+      })
+      .catch(function (err) {
+        state.starting = false;
+        showError(
+          err.message ||
+          'We could not start the checkout. Please reload the page, or email info@genmarketer.hu and we will set your subscription up manually.'
+        );
+        throw err;
+      });
+  }
+
   // ── Confirmation ──────────────────────────────────────────────────────────
 
   function billingDetailsFromForm() {
@@ -393,8 +489,8 @@
 
     track('add_payment_info', { payment_type: event.expressPaymentType || 'wallet' });
 
-    // Write the wallet's details onto the intent, then confirm.
-    requestIntent()
+    // Write the wallet's details onto the subscription, then confirm.
+    requestSubscription()
       .then(function () {
         return state.stripe.confirmPayment({
           elements: state.elements,
@@ -424,11 +520,10 @@
       );
       return;
     }
-    // No redirect happened, so the payment succeeded here. The order itself is
-    // created by the webhook; this page just moves the customer along.
-    var pi = result && result.paymentIntent;
-    var url = RETURN_URL + (pi ? '?payment_intent=' + encodeURIComponent(pi.id) : '');
-    window.location.href = url;
+    // No redirect happened, so the first invoice was paid here. The order, the
+    // WooCommerce subscription and the course access are all created by the
+    // invoice.paid webhook; this page just moves the customer along.
+    window.location.href = RETURN_URL + (state.subscriptionId ? '?subscription=' + encodeURIComponent(state.subscriptionId) : '');
   }
 
   function handleSubmit(ev) {
@@ -445,9 +540,11 @@
     setBusy(true);
     track('add_payment_info', { payment_type: 'card' });
 
-    // Push the final form values onto the intent before confirming, so the
-    // webhook receives whatever the customer typed last.
-    requestIntent()
+    // Push the final form values onto the subscription before confirming. This
+    // matters more here than on the one-off path: renewal invoices a year from
+    // now inherit the subscription's metadata, and it is the only place the
+    // customer's details still exist at that point.
+    requestSubscription()
       .then(function () {
         return state.stripe.confirmPayment({
           elements: state.elements,
@@ -495,17 +592,7 @@
 
     // Stripe measures the container when the element mounts, so a hidden
     // container yields a collapsed card field. Mount on first reveal instead.
-    if (n === 3 && state.elements && !state.paymentMounted) {
-      state.paymentElement = state.elements.create('payment', {
-        layout: { type: 'tabs', defaultCollapsed: false },
-        // Wallets live in the Express element on step 1; repeating them here
-        // would show the customer the same button twice.
-        wallets: { applePay: 'never', googlePay: 'never' },
-        fields: { billingDetails: { address: 'never', name: 'never', email: 'never' } }
-      });
-      state.paymentElement.mount('#co-payment');
-      state.paymentMounted = true;
-    }
+    if (n === 3) mountPaymentElement();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
     track('checkout_progress', { checkout_step: n });
@@ -526,10 +613,15 @@
           if (bad) { bad.focus(); bad.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
           return;
         }
-        // Push what we have onto the PaymentIntent as we go. If the customer
-        // leaves after step 1, their email is already attached to the intent
-        // rather than lost with the tab.
-        requestIntent().catch(function () { /* never block progress on this */ });
+        // The e-mail is known once step 1 is valid, so this is the earliest
+        // moment a Stripe Customer — and therefore a subscription — can exist.
+        // Nothing is billed by it; the customer still has to confirm.
+        if (!state.elements) {
+          ensureSubscription().catch(function () { /* the error is already on screen */ });
+        } else {
+          // Later steps only refresh the details already on the subscription.
+          requestSubscription().catch(function () { /* never block progress on this */ });
+        }
         captureLead();
         goToStep(Number(btn.getAttribute('data-next')));
       });
@@ -555,60 +647,18 @@
 
   // ── Coupon ────────────────────────────────────────────────────────────────
   //
-  // The code is checked by WordPress against the real WooCommerce coupon and
-  // the discount comes back from the server. Nothing here decides a price.
-
-  function applyCoupon() {
-    var input = $('co-coupon');
-    var msg = $('co-coupon-msg');
-    var btn = $('co-coupon-apply');
-    var code = String(input.value || '').trim();
-
-    msg.textContent = '';
-    msg.className = 'co-coupon__msg';
-    if (!code) return;
-
-    btn.disabled = true;
-    btn.textContent = 'Checking…';
-
-    state.coupon = { code: code, discount_cent: 0 };
-    requestIntent()
-      .then(function (data) {
-        var c = data.coupon || {};
-        if (c.valid) {
-          state.coupon = { code: c.code || code, discount_cent: c.discount_cent || 0 };
-          msg.textContent = (c.label ? c.label + ' applied.' : 'Coupon applied.');
-          msg.className = 'co-coupon__msg is-ok';
-          input.disabled = true;
-          btn.textContent = 'Applied';
-        } else {
-          state.coupon = null;
-          msg.textContent = c.reason || 'That code is not valid.';
-          msg.className = 'co-coupon__msg is-bad';
-          btn.disabled = false;
-          btn.textContent = 'Apply';
-        }
-        renderSummary();
-        return state.elements ? state.elements.fetchUpdates() : null;
-      })
-      .catch(function () {
-        state.coupon = null;
-        msg.textContent = 'We could not check that code. Please try again.';
-        msg.className = 'co-coupon__msg is-bad';
-        btn.disabled = false;
-        btn.textContent = 'Apply';
-        renderSummary();
-      });
-  }
-
-  function wireCoupon() {
-    var btn = $('co-coupon-apply');
-    if (!btn) return;
-    btn.addEventListener('click', applyCoupon);
-    $('co-coupon').addEventListener('keydown', function (ev) {
-      if (ev.key === 'Enter') { ev.preventDefault(); applyCoupon(); }
-    });
-  }
+  // Removed with the move to subscriptions, along with its markup.
+  //
+  // The old field validated a WooCommerce coupon and subtracted the discount
+  // from a one-off PaymentIntent. Neither half survives here: a subscription is
+  // billed against a Stripe Price, and a discount on it has to be a Stripe
+  // coupon or promotion code so that Stripe knows whether it applies once or
+  // every month. Leaving a field that quietly discounted only the first charge
+  // would have been worse than not having one.
+  //
+  // Nothing customer-visible was lost — the block was already `hidden` on the
+  // one-off checkout. When discounts are wanted here, the way in is
+  // `discounts[0][promotion_code]` on api/create-subscription.php.
 
   // ── Wiring ────────────────────────────────────────────────────────────────
 
@@ -676,15 +726,12 @@
     el.sumPlanPrice = $('co-sum-plan-price');
     el.sumBumpLine = $('co-sum-bump-line');
     el.sumTotal = $('co-sum-total');
+    el.sumRecurring = $('co-sum-recurring');
     el.steps = $('co-steps');
     el.stepsCount = $('co-steps-count');
-    el.sumCouponLine = $('co-sum-coupon-line');
-    el.sumCouponLabel = $('co-sum-coupon-label');
-    el.sumCouponVal = $('co-sum-coupon-val');
 
     fillCountries();
     wireSteps();
-    wireCoupon();
     wirePlans();
     wireBump();
     wireValidation();
@@ -706,18 +753,9 @@
       if (state.step > 1) captureLead();
     });
 
+    // Stays disabled until the subscription exists and the elements are
+    // mounted, which cannot happen before step 1 gives us an e-mail address.
     el.submit.disabled = true;
-    requestIntent()
-      .then(function (data) {
-        mountStripe(data);
-        el.submit.disabled = false;
-      })
-      .catch(function (err) {
-        showError(
-          err.message ||
-          'We could not start the checkout. Please reload the page, or email info@genmarketer.hu and we will take your order manually.'
-        );
-      });
   }
 
   if (document.readyState === 'loading') {

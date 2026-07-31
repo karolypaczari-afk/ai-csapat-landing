@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Checkout — Your AI Team</title>
-  <meta name="description" content="Get your 25 AI marketing specialists. Secure checkout, instant access, 30-day money-back guarantee.">
+  <meta name="description" content="Subscribe to your AI marketing team. Secure Stripe checkout, instant access, cancel any time.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="canonical" href="https://ai-csapat.genmarketer.hu/en/checkout/">
 
@@ -33,7 +33,7 @@
 
 <main class="co-wrap">
   <h1 class="co-title">Get your AI team</h1>
-  <p class="co-sub">Instant access after payment. 30-day money-back guarantee, no questions asked.</p>
+  <p class="co-sub">Instant access after your first payment. Monthly, cancel any time — no minimum term.</p>
 
   <ul class="co-bar">
     <li>
@@ -51,8 +51,9 @@
   </ul>
 
   <!-- Three short steps beat one long form: fewer fields on screen at once
-       means fewer places to stall. The wallet buttons sit in step 1 so anyone
-       paying with Apple Pay or Google Pay can finish without typing at all. -->
+       means fewer places to stall. The wallet buttons sit in step 2 rather than
+       step 1, because a subscription needs an e-mail address before anything
+       can be created in Stripe — after that a wallet tap fills in the rest. -->
   <p class="co-steps__count" id="co-steps-count">Step 1 of 3</p>
   <ol class="co-steps" id="co-steps" aria-label="Checkout progress">
     <li class="co-steps__item is-current" data-step-label="1"><span>Your email</span></li>
@@ -66,62 +67,60 @@
       <!-- ─── STEP 1 ─────────────────────────────────────────────────────── -->
       <div data-step="1">
 
-        <!-- Urgency. Not a countdown and not an invented deadline: this is the
-             consequence of two decisions already taken (docs/28 D2 and D8). It
-             works precisely because it is true — and because it favours the
-             buyer. -->
+        <!-- What replaced the old "buy before it becomes a subscription" block.
+             That copy described a switch that has now happened, so keeping it
+             would have been a live page promising something it no longer sells.
+             What is left is the honest version of the same reassurance: the
+             risk of subscribing is that you get stuck, and you do not. -->
         <section class="co-lock">
           <p class="co-lock__head">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
               <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
             </svg>
-            One-off price today — moving to a subscription
+            Monthly, and yours to stop whenever you like
           </p>
           <p class="co-lock__body">
-            The AI team is <strong>moving to a subscription model</strong>. This is a matter of timing,
-            not pressure: <strong>buy once today and your access stays yours permanently</strong> —
-            after the switch too, with no monthly fee and no upgrade charge.
+            <strong>No minimum term and no notice period.</strong> You subscribe today, and if it is not
+            for you, one click ends it — you keep access until the month you already paid for runs out.
           </p>
           <ul class="co-lock__list">
-            <li>Today's purchase is a single payment: no renewal, nothing to cancel.</li>
-            <li>After the switch these one-off packages leave the catalogue — new customers will only be able to subscribe.</li>
-            <li>Buy before then and you keep receiving what comes later, exactly as earlier customers received the new specialists.</li>
+            <li>New specialists arrive while you subscribe, and the existing ones keep improving. Nothing to re-download.</li>
+            <li>Cancel from the link in your welcome e-mail. It takes effect immediately; we never ask why.</li>
+            <li>The price you sign up at is the price you keep, even when the list price moves.</li>
           </ul>
           <p class="co-lock__foot">
-            We deliberately do not print a date, because none has been announced. What is certain is
-            that after the switch, this price and this arrangement will not come back.
+            We deliberately do not run a countdown here. If the offer is right for you this month, it
+            will still be right next month — and if it is not, you should not be locked into it.
           </p>
         </section>
 
         <section class="co-card">
-          <h2 class="co-card__title">Choose your package</h2>
-          <p class="co-card__hint">You can switch between these at any point before paying.</p>
+          <h2 class="co-card__title">Choose your plan</h2>
+          <p class="co-card__hint">You can switch between these at any point before paying — and change plan later from your subscription page.</p>
 
           <div class="co-plans">
-            <label class="co-plan is-active" data-plan="training">
-              <input type="radio" name="plan" value="training" checked>
+            <label class="co-plan is-active" data-plan="planner">
+              <input type="radio" name="plan" value="planner" checked>
               <span class="co-plan__dot" aria-hidden="true"></span>
               <span>
-                <span class="co-plan__name">The team</span>
-                <span class="co-plan__desc">All 25 specialists, the full written guide, and at least 6 months of updates.</span>
+                <span class="co-plan__name">Planner</span>
+                <span class="co-plan__desc">The full specialist team for research, planning, copy and creative concepts. You stay in charge of execution.</span>
               </span>
               <span class="co-plan__price">
-                <span class="co-plan__was">€229</span>
-                €189
+                €29<span class="co-plan__per">/month</span>
               </span>
             </label>
 
-            <label class="co-plan" data-plan="consultation">
+            <label class="co-plan" data-plan="autopilot">
               <span class="co-plan__tag">Most popular</span>
-              <input type="radio" name="plan" value="consultation">
+              <input type="radio" name="plan" value="autopilot">
               <span class="co-plan__dot" aria-hidden="true"></span>
               <span>
-                <span class="co-plan__name">The team + consultation</span>
-                <span class="co-plan__desc">Everything above, plus a live session where we set the specialists up around your business.</span>
+                <span class="co-plan__name">Autopilot</span>
+                <span class="co-plan__desc">Everything in Planner, plus every connector — Meta Ads, Google Ads, GA4, Search Console, MailerLite. The team also works inside your own accounts, paused by default.</span>
               </span>
               <span class="co-plan__price">
-                <span class="co-plan__was">€379</span>
-                €289
+                €59<span class="co-plan__per">/month</span>
               </span>
             </label>
           </div>
@@ -162,17 +161,14 @@
           </ul>
 
           <p class="co-free__foot">
-            <strong>€270 of extras, included.</strong> They're switched on the moment your payment lands —
-            there is nothing to claim or redeem.
+            <strong>€270 of extras, included.</strong> They're switched on the moment your first payment
+            lands — there is nothing to claim or redeem, and nothing extra to pay for them.
           </p>
         </section>
 
         <section class="co-card">
-          <h2 class="co-card__title">Pay in one tap</h2>
-          <p class="co-card__hint">If you use Apple Pay or Google Pay, you're done in seconds — no forms to fill in.</p>
-
-          <div id="co-express" class="co-express"></div>
-          <div id="co-or" class="co-or" hidden>or continue with email</div>
+          <h2 class="co-card__title">Your email</h2>
+          <p class="co-card__hint">This is the only thing we need before we can set the subscription up.</p>
 
           <div class="co-fields">
             <div class="co-field" data-field="email">
@@ -260,6 +256,21 @@
 
       <!-- ─── STEP 2 ─────────────────────────────────────────────────────── -->
       <div data-step="2" hidden>
+
+        <!-- The wallet buttons live here, not on step 1 as they did on the
+             one-off checkout. A subscription is attached to a Stripe Customer,
+             and a Customer needs an e-mail address, so nothing can be created
+             in Stripe until step 1 is done — and the wallet has nothing to pay
+             against before that. Placed above the address fields on purpose:
+             the wallet fills those in, so a tap here skips the whole form. -->
+        <section class="co-card">
+          <h2 class="co-card__title">Pay in one tap</h2>
+          <p class="co-card__hint">Apple Pay or Google Pay fills in the rest for you — no forms.</p>
+
+          <div id="co-express" class="co-express"></div>
+          <div id="co-or" class="co-or" hidden>or fill in your details</div>
+        </section>
+
         <section class="co-card">
           <h2 class="co-card__title">Your details</h2>
           <p class="co-card__hint">We need these for your invoice. Nothing is shared with anyone.</p>
@@ -344,40 +355,24 @@
           <label class="co-bump" id="co-bump-label">
             <input type="checkbox" id="co-bump" name="bump">
             <span>
-              <span class="co-bump__title">Add an extra consultation hour — <span class="co-bump__price">€79</span></span>
+              <span class="co-bump__title">Add an extra consultation hour — <span class="co-bump__price">€79 once</span></span>
               <span class="co-bump__body">
-                One more live hour with us, whenever you need it in the first six months. Most people use it once they
-                have run their first few tasks and know exactly what to ask.
+                One live hour with us, whenever you need it in your first six months. Charged once, on
+                today's invoice only — it never appears on a renewal. Most people use it after their
+                first few tasks, when they know exactly what to ask.
               </span>
             </span>
           </label>
 
-          <!-- Coupon field: HIDDEN FOR NOW (Károly, 2026-07-29).
-               Only the surface is hidden — the whole coupon chain stays in place
-               and working: the `validate-coupon` REST route, the server-side
-               discount calculation, redemption recording and the total reconciled
-               to Stripe. Bringing it back = deleting this one `hidden` attribute;
-               no JS or PHP change needed.
-               (The `[hidden] { display: none !important }` rule makes this hold
-               even against rules that set `display:`.) -->
-          <div class="co-coupon" hidden>
-            <label for="co-coupon">Have a coupon code?</label>
-            <div class="co-coupon__row">
-              <input type="text" id="co-coupon" name="coupon" autocomplete="off" placeholder="Enter code">
-              <button type="button" id="co-coupon-apply">Apply</button>
-            </div>
-            <span class="co-coupon__msg" id="co-coupon-msg"></span>
-          </div>
-
           <button type="submit" class="co-submit" id="co-submit">
             <span class="co-submit__spin" aria-hidden="true"></span>
-            <span id="co-submit-text">Pay €189</span>
+            <span id="co-submit-text">Subscribe — €29 today</span>
           </button>
           <button type="button" class="co-back" data-back="2">← Back</button>
 
-          <!-- Risk reduction belongs at the decision point. These three lines
-               answer what people actually hesitate on: will I be charged
-               again, who has my card, what if it turns out to be wrong. -->
+          <!-- Risk reduction belongs at the decision point. On a subscription
+               the questions change: people no longer ask "what if it's wrong",
+               they ask "how hard is it to get out". Answer that first. -->
           <ul class="co-reassure">
             <li>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
@@ -385,35 +380,39 @@
             </li>
             <li>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14"/></svg>
-              One payment. No subscription, no renewal, nothing to cancel
+              Cancel in one click, any time. No minimum term, no notice period
             </li>
             <li>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-              30 days to change your mind — one email is enough
+              The price you join at stays yours, even if the list price rises
             </li>
           </ul>
 
           <div class="co-error" id="co-error" role="alert"></div>
 
           <p class="co-legal">
-            This is a digital product, delivered immediately after payment. You keep your right to a
-            full refund for 30 days under the guarantee below — that right is not affected by the
-            instant delivery.
+            This is a digital service, available immediately after your first payment. Your subscription
+            renews automatically each month at the price shown, until you cancel. You can cancel at any
+            time from the link in your welcome e-mail; cancelling stops all future payments and you keep
+            access for the month you have already paid for.
           </p>
         </section>
       </div>
 
-      <!-- Always visible, on every step: the two things people check before
-           handing over money — what the guarantee actually means, and whether
-           there is a real business behind the page. -->
+      <!-- Always visible, on every step. The 30-day money-back guarantee that
+           used to sit here was removed with the move to a subscription: there
+           is deliberately no refund guarantee on a monthly plan (docs/28, 2nd
+           round, D7), and a live page must not carry a promise nobody has
+           agreed to honour. What replaces it is the thing that actually
+           reverses the risk on a subscription — being able to leave. -->
       <section class="co-card co-guarantee">
-        <h2 class="co-card__title">The 30-day, no-questions guarantee</h2>
-        <p class="co-card__hint">Written out in full, so you know exactly what you're agreeing to.</p>
+        <h2 class="co-card__title">No lock-in, written out in full</h2>
+        <p class="co-card__hint">So you know exactly what you're agreeing to before you pay.</p>
         <ul class="co-guarantee__list">
-          <li><strong>How long:</strong> 30 days from the moment you pay.</li>
-          <li><strong>What you do:</strong> email <a href="mailto:info@genmarketer.hu">info@genmarketer.hu</a> and say you want a refund. No form, no reason required.</li>
-          <li><strong>What we do:</strong> refund the full amount to the same card. We do not ask you to return or delete anything.</li>
-          <li><strong>Who decides:</strong> you do. There is no approval step on our side.</li>
+          <li><strong>Term:</strong> none. The subscription runs month to month from the day you join.</li>
+          <li><strong>To cancel:</strong> open the link in your welcome e-mail and cancel there. No form, no reason required, and nobody to talk to first.</li>
+          <li><strong>When it takes effect:</strong> immediately. No further payment is taken, and your access runs to the end of the month you have already paid for.</li>
+          <li><strong>What we do not do:</strong> auto-renew you into a longer term, raise your price after you join, or charge a cancellation fee.</li>
         </ul>
       </section>
 
@@ -435,8 +434,8 @@
       <h2 class="co-summary__title">Order summary</h2>
 
       <div class="co-line">
-        <span class="co-line__label" id="co-sum-plan">The team</span>
-        <span class="co-line__val" id="co-sum-plan-price">€189</span>
+        <span class="co-line__label" id="co-sum-plan">Planner</span>
+        <span class="co-line__val" id="co-sum-plan-price">€29/mo</span>
       </div>
 
       <div class="co-line co-line--free">
@@ -457,31 +456,35 @@
         <span class="co-line__val">€79</span>
       </div>
 
-      <div class="co-line is-hidden" id="co-sum-coupon-line">
-        <span class="co-line__label" id="co-sum-coupon-label">Discount</span>
-        <span class="co-line__val" id="co-sum-coupon-val">–€0</span>
-      </div>
-
       <div class="co-total">
-        <span>Total</span>
+        <span>Due today</span>
         <span>
-          <span id="co-sum-total">€189</span>
-          <span class="co-total__note">one-time payment</span>
+          <span id="co-sum-total">€29</span>
+          <span class="co-total__note">first month</span>
         </span>
       </div>
+
+      <!-- Written by renderSummary(), and never left to the markup alone: the
+           amount due today differs from the monthly amount whenever the bump is
+           ticked, and card network rules require the recurring amount, its
+           frequency and how to stop it to be visible where the customer
+           authorises the payment. -->
+      <p class="co-total__recurring" id="co-sum-recurring">
+        Then €29 every month until you cancel. Cancel any time — no notice period.
+      </p>
 
       <ul class="co-trust">
         <li>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-          <span>Access within minutes of paying</span>
+          <span>Access within minutes of your first payment</span>
         </li>
         <li>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-          <span>30-day money-back guarantee, no reason required</span>
+          <span>Cancel in one click — no minimum term</span>
         </li>
         <li>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-          <span>At least 6 months of updates included</span>
+          <span>New specialists keep arriving while you subscribe</span>
         </li>
         <li>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
@@ -490,9 +493,8 @@
       </ul>
 
 
-      <!-- The short version of the urgency in the column too: on mobile the
-           summary moves to the top, and this is the last thing before the
-           button. -->
+      <!-- The short version in the column too: on mobile the summary moves to
+           the top, and this is the last thing before the button. -->
       <div class="co-lock">
         <p class="co-lock__head">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
@@ -501,8 +503,8 @@
           You lock in today's price
         </p>
         <p class="co-lock__body">
-          The AI team is moving to a subscription model. Buy once today and
-          <strong>your access stays yours permanently</strong> — with no monthly fee.
+          The rate you join at stays yours for as long as you keep the subscription —
+          <strong>even when the list price rises</strong>.
         </p>
       </div>
 
@@ -513,8 +515,8 @@
           <li>Not theory — knowledge taken from campaigns we actually ran</li>
           <li>Practical: every specialist hands you finished work, not advice</li>
           <li>Ready-made briefs and prompts — you just run them</li>
-          <li>What you download stays yours, permanently</li>
-          <li>At least 6 months of updates as platforms change</li>
+          <li>Everything stays in sync — nothing to re-download when it improves</li>
+          <li>New specialists and updates keep arriving for as long as you subscribe</li>
           <li>Works anywhere you already use Claude or ChatGPT</li>
         </ul>
       </div>
@@ -534,12 +536,17 @@
         </figcaption>
       </figure>
 
+      <!-- The satisfaction-guarantee seal came off with the move to a
+           subscription. There is deliberately no refund guarantee on a monthly
+           plan (docs/28, 2nd round, D7), and a badge saying otherwise is the
+           kind of promise a customer can hold us to. Being able to leave is
+           what reverses the risk here, so that is what the panel says. -->
       <div class="co-seal">
         <img src="https://tudastar.genmarketer.hu/wp-content/uploads/2025/12/garancia-300x298-1.png"
-             width="88" height="87" loading="lazy" alt="100% satisfaction guarantee">
+             width="88" height="87" loading="lazy" alt="Cancel any time">
         <p>
-          If for any reason you are not happy with the pack and you tell us within 30 days,
-          we refund the full amount.
+          No minimum term. Cancel in one click whenever you like — your access simply runs to the
+          end of the month you have already paid for.
         </p>
       </div>
 

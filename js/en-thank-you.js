@@ -1,11 +1,10 @@
 /**
  * Thank-you page for the English checkout.
  *
- * Two ways a customer arrives here:
- *   - card / wallet: we redirected them after a successful confirmation, with
- *     ?payment_intent=…
- *   - iDEAL, Bancontact, EPS, P24: Stripe redirected them back after the bank,
- *     with ?payment_intent=… and ?redirect_status=…
+ * Arrivals come with one of two references:
+ *   - ?subscription=sub_…   the monthly plans, which is what this page sells now
+ *   - ?payment_intent=pi_…  the one-off packs, kept working because historic
+ *     receipts and bank-redirect returns still carry that form
  *
  * Either way the truth comes from our own endpoint, not from the query string.
  * A "processing" payment is a real and normal outcome for bank-redirect
@@ -65,6 +64,16 @@
     $('ty-total').textContent = money(data.amount, data.currency);
     $('ty-ref').textContent = 'Reference: ' + data.reference;
 
+    // What recurs, spelled out on the receipt as well as at the pay button.
+    // The amount charged today includes the one-off bump, so without this line
+    // a customer who added it would reasonably expect €108 every month.
+    var rec = $('ty-recurring');
+    if (rec && data.kind === 'subscription' && data.recurring) {
+      rec.textContent = 'Renews at ' + money(data.recurring, data.currency)
+        + ' a month until you cancel. The extra consultation hour, if you added one, was charged once.';
+      rec.hidden = false;
+    }
+
     // Only mention the consultation to people who actually bought one.
     if (data.plan === 'consultation' || data.bump) {
       $('ty-consult').hidden = false;
@@ -84,8 +93,8 @@
     box.classList.add('is-visible');
   }
 
-  function poll(piId, attempt) {
-    fetch(API + '?payment_intent=' + encodeURIComponent(piId))
+  function poll(query, attempt) {
+    fetch(API + '?' + query)
       .then(function (res) { return res.json(); })
       .then(function (data) {
         if (data.error) {
@@ -93,15 +102,19 @@
           return;
         }
 
-        if (data.status === 'succeeded') {
+        // A subscription reports its own lifecycle rather than a payment
+        // status: `active` is the success case, and `incomplete` means the
+        // first invoice has not been paid — the same "still in the air" state
+        // that `processing` describes on a one-off payment.
+        if (data.status === 'succeeded' || data.status === 'active' || data.status === 'trialing') {
           showSuccess(data);
           return;
         }
 
-        if (data.status === 'processing' || data.status === 'requires_action') {
+        if (data.status === 'processing' || data.status === 'requires_action' || data.status === 'incomplete') {
           showPending();
           if (attempt < POLL_LIMIT) {
-            window.setTimeout(function () { poll(piId, attempt + 1); }, POLL_MS);
+            window.setTimeout(function () { poll(query, attempt + 1); }, POLL_MS);
           }
           return;
         }
@@ -116,16 +129,20 @@
   }
 
   function init() {
+    var subId = param('subscription');
     var piId = param('payment_intent');
 
-    if (!piId) {
+    if (!subId && !piId) {
       // Someone opened the page directly. Not an error worth alarming them
       // about — just point them somewhere useful.
-      showError('There is no payment to show here. If you have just bought, check your email for your access details.');
+      showError('There is no payment to show here. If you have just subscribed, check your email for your access details.');
       return;
     }
 
-    poll(piId, 0);
+    poll(
+      subId ? 'subscription=' + encodeURIComponent(subId) : 'payment_intent=' + encodeURIComponent(piId),
+      0
+    );
   }
 
   if (document.readyState === 'loading') {

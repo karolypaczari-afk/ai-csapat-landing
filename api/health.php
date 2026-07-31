@@ -51,6 +51,40 @@ if ($configOk) {
     $bridgeOk = 200 === $status && !empty($bridgeBody['ok']);
     $checks['bridge'] = $bridgeOk ? 'ok' : ('fail (' . $status . ')');
     $ok = $ok && $bridgeOk;
+
+    // 4. The subscription funnel, reported separately.
+    //
+    // Separate because it can be broken while one-off sales are perfectly
+    // healthy, and a single combined "ok" would hide exactly that. Three things
+    // must line up before a monthly plan can be sold: a Stripe Price whose
+    // amount and interval match this file, WooCommerce Subscriptions on the
+    // WordPress side, and a product map for the mirror to write into.
+    $subChecks = [];
+    $subOk = true;
+    if ($stripeOk) {
+        foreach (array_keys(GM_EN_SUBSCRIPTION_PLANS) as $plan) {
+            $priceId = gm_en_subscription_price_id($plan);
+            $subChecks['price_' . $plan] = '' !== $priceId ? 'ok' : 'fail';
+            $subOk = $subOk && '' !== $priceId;
+        }
+    } else {
+        $subOk = false;
+    }
+
+    $mirror = is_array($bridgeBody['subscriptions'] ?? null) ? $bridgeBody['subscriptions'] : [];
+    $subChecks['wcs']      = !empty($mirror['wcs']) ? 'ok' : 'fail';
+    $subChecks['products'] = !empty($mirror['ok']) ? 'ok' : 'fail';
+    $subOk = $subOk && !empty($mirror['wcs']) && !empty($mirror['ok']);
+
+    $checks['subscriptions'] = ($subOk ? 'ok' : 'fail') . ' — ' . implode(' ', array_map(
+        static fn ($k, $v) => $k . '=' . $v,
+        array_keys($subChecks),
+        $subChecks
+    ));
+
+    // Deliberately does NOT flip the top-level `ok`. That flag answers "can a
+    // customer buy right now?" for the one-time funnel, which is live revenue;
+    // a subscription problem must not make the monitoring say the shop is down.
 }
 
 gm_en_json(

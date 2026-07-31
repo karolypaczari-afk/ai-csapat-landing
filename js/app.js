@@ -19,42 +19,43 @@
   function tr(hu, en) { return EN ? en : hu; }
 
   /* ---- Tracking (portolva a prod script.js-ből) ---- */
-  // A két nyelv KÜLÖN pénztárra és KÜLÖN ajánlatra megy, és ez szándékos:
-  //   HU → ELŐFIZETÉS: a tudástár WooCommerce/CartFlows pénztára, forintban
-  //        (2026-07-31 óta; korábban az egyszeri díjas 872/873);
-  //   EN → egyszeri díjas, a saját EUR-os Stripe-pénztár a /en/checkout/-on.
-  // Az angol vevő így soha nem lát magyar felületet, és az EN ajánlat átállítása
-  // külön kör (Károly, 2026-07-31) — ezért az EN ág itt VÁLTOZATLAN.
+  // MINDKÉT nyelv előfizetést árul (2026-07-31), de KÜLÖN pénztáron — és ez a
+  // szétválasztás a vezérlő tervezési elv, nem kényelmi kérdés:
+  //   HU → a tudástár WooCommerce/CartFlows pénztára, forintban (1992/1993);
+  //   EN → a saját EUR-os Stripe-pénztár a /en/checkout/-on (Woo 2197/2198).
   //
-  // A HU előfizetéses pénztár ugyanazon a bizonyított Woo/CartFlows útvonalon megy,
-  // mint korábban az egyszeri díj, csak más termék-ID-kkal:
-  //   1992 = „Az AI csapatod – Tervező előfizetés"    9 990 Ft/hó  (subscription)
-  //   1993 = „Az AI csapatod – Autopilóta előfizetés" 19 990 Ft/hó (subscription)
-  // Mindkettő `publish` + `_related_course=[712]` (élő readback: 2026-07-31).
+  // Az angol vevő azért NEM mehet a Woo-pénztárra, mert a bolt pénzneme HUF és
+  // nincs multi-currency plugin: ott a 29 az 29 FORINT lenne. Az EUR-os
+  // ismétlődő fizetés ezért Stripe-natív, és a WooCommerce csak kész tényt kap
+  // (docs/30 §14/b „A" út). A magyar út egyetlen sort sem lát ebből.
   var CHECKOUT = EN ? {
-    basic: "/en/checkout/?plan=training",
-    pro:   "/en/checkout/?plan=consultation"
+    planner:   "/en/checkout/?plan=planner",
+    autopilot: "/en/checkout/?plan=autopilot"
   } : {
     planner:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992",
     autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { basic: 189, pro: 289 } : { planner: 9990, autopilot: 19990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990 };
   var CURRENCY = EN ? "EUR" : "HUF";
   // Csomagcímke és GA4 `item_id`. Az `item_id` szándékosan UGYANAZ, mint az
   // aicsapat.genmarketer.hu előfizetéses landolón (`ai-csapatod-elofizetes-<pkg>`):
   // ugyanaz a Woo-termék (1992/1993), tehát a termék-szintű riport ne hasadjon
   // ketté landolónként. A két landoló szétválasztása a `content_group` /
   // `source` dimenzión megy — ez a bevált minta, nem az item_id csonkítása.
+  //
+  // Az EN `item_id` szándékosan KÜLÖN marad a magyartól (`-en-` taggel): más a
+  // Woo-termék (2197/2198 vs. 1992/1993), más a pénznem és más a fizetési út,
+  // tehát egy közös azonosító két különböző terméket olvasztana egy sorba.
   var PKG = EN ? {
-    basic: { label: "Képzés",                itemId: "ai-csapatod-basic" },
-    pro:   { label: "Képzés + Konzultáció",  itemId: "ai-csapatod-pro" }
+    planner:   { label: "Planner subscription",   itemId: "ai-csapatod-en-elofizetes-planner" },
+    autopilot: { label: "Autopilot subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" }
   } : {
     planner:   { label: "Tervező előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
     autopilot: { label: "Autopilóta előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" }
   };
-  var PKG_DEFAULT = EN ? "basic" : "planner";
+  var PKG_DEFAULT = "planner";
   var ATTR_COOKIE = "gm_ads_attrib";
   var META_EXT_COOKIE = "gm_meta_ext_id";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
