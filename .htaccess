@@ -38,6 +38,23 @@ RedirectMatch 404 /\.git(/|$)
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 
+# --- A magyar /checkout/ nem indexelhető (Károly, 2026-07-31) ---
+# Ez a saját, HUF-os Stripe-pénztár oldala. 2026-07-31 óta EGYETLEN CTA sem mutat rá:
+# a magyar út az előfizetéses tudástár-pénztárra megy (Woo 1992/1993). Az oldal viszont
+# él, és még az EGYSZERI árat + a 30 napos garanciát mutatja — árva, mégis indexelhető
+# duplikátumként ellentmondana az éles ajánlatnak.
+#
+# A `<meta name="robots" content="noindex, nofollow">` már benne van a HTML-ben; ez a
+# fejléc a második, erősebb réteg: akkor is érvényes, ha a lekérő nem parse-ol HTML-t.
+#
+# A minta SZÁNDÉKOSAN horgonyzott (`^/checkout`): az `/en/checkout/` egy MŰKÖDŐ, EUR-os
+# pénztár — azt ez a szabály nem érintheti. (Neki is van meta-noindexe, de a hatóköre
+# külön döntés, az EN körhöz tartozik.)
+SetEnvIf Request_URI "^/checkout(/(index\.html)?)?$" GM_NOINDEX=1
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow" env=GM_NOINDEX
+</IfModule>
+
 # --- LiteSpeed: ne full-page-cache-elje a HTML-t → azonnali frissülés ---
 <IfModule LiteSpeed>
   CacheDisable public /
