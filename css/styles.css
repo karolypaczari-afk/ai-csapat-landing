@@ -582,8 +582,14 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-price__amount { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; font-family: var(--gm-mono); color: var(--gm-cyan); line-height: 1; margin: 0.2rem 0 0.3rem; }
 .gm-price__cur { font-size: 1rem; color: #B8B6CE; }
 .gm-price__list { list-style: none; padding: 0; margin: 1.4rem 0; display: grid; gap: 0.7rem; font-size: 0.94rem; color: #D7D5EA; }
-.gm-price__list li { display: flex; gap: 0.6rem; }
-.gm-price__list li::before { content: "✓"; color: var(--gm-cyan); font-weight: 900; }
+/* Lógó behúzás, NEM flex. A `display:flex` minden inline gyereket (pl. egy
+   mondat közepére tett <strong>-ot) ÖNÁLLÓ flex-elemmé tesz, és közéjük teszi
+   a `gap`-et → a mondat szóközök helyett 0,6rem-es résekkel szakad szét, és
+   rosszul tördel. Ez élesben is látszott a STANDARD/PRO kártyák listáin.
+   A text-indent-es hanging indent ugyanazt a ✓-igazítást adja, de a szöveg
+   normál inline folyamban marad, tehát tetszőleges inline jelölés belefér. */
+.gm-price__list li { padding-left: 1.3rem; text-indent: -1.3rem; }
+.gm-price__list li::before { content: "✓"; color: var(--gm-cyan); font-weight: 900; margin-right: 0.45rem; }
 .gm-price .gm-btn { width: 100%; margin-top: auto; }
 
 /* ---- Pricing: két ajánlat-csoport egymás mellett (előfizetés + egyszeri) ----

@@ -31,7 +31,7 @@
   //
   // MINDKÉT nyelv 2026-08-01 óta HÁROM ajánlatot visz: a két előfizetés mellett
   // visszakerült az EGYSZERI díjas csomag (min. 6 hónap frissítés + 30 napos garancia).
-  //   HU „Képzés"  → Woo 872, 69 990 Ft, ugyanaz a bizonyított tudástár Woo/CartFlows
+  //   HU „Skillpakk"  → Woo 872, 69 990 Ft, ugyanaz a bizonyított tudástár Woo/CartFlows
   //                  útvonal, mint a két előfizetésé (a termék végig `publish` maradt,
   //                  csak a landolóról nem volt elérhető — docs/30 D14);
   //   EN „Training" → 189 €, a SAJÁT Stripe-pénztár egyszeri (PaymentIntent) ága az
@@ -70,13 +70,13 @@
     // különböző ajánlat bevételét olvasztaná egy sorba.
     onetime:   { label: "Training (one-off)",     itemId: "ai-csapatod-en-egyszeri-training" }
   } : {
-    planner:   { label: "Tervező előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
-    autopilot: { label: "Autopilóta előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" },
-    // Az egyszeri Képzés csomag SZÁNDÉKOSAN a régi `ai-csapatod-basic` azonosítót kapja
+    planner:   { label: "Standard előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
+    autopilot: { label: "Pro előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" },
+    // Az egyszeri Skillpakk csomag SZÁNDÉKOSAN a régi `ai-csapatod-basic` azonosítót kapja
     // vissza, nem újat: ugyanaz a Woo-termék (872), amit 2026-07-31-ig ezzel az
     // item_id-val mértünk. Új azonosítóval a 872 termék-szintű riportja két sorra
     // hasadna, és a visszahozatal előtti hetek forgalma elszakadna a mostanitól.
-    onetime:   { label: "Képzés (egyszeri díj)", itemId: "ai-csapatod-basic" }
+    onetime:   { label: "Skillpakk (egyszeri díj)", itemId: "ai-csapatod-basic" }
   };
   var PKG_DEFAULT = "planner";
   var ATTR_COOKIE = "gm_ads_attrib";
