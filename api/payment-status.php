@@ -68,11 +68,12 @@ $pi = $res['body'];
 $metadata = is_array($pi['metadata'] ?? null) ? $pi['metadata'] : [];
 
 $plan = (string) ($metadata['plan'] ?? '');
-// The one-off packs are no longer sold, but historic thank-you links still
-// resolve here — a customer reopening last month's receipt should not meet a
-// blank page.
+// `training` is sold again since 2026-08-01 as the one-off package.
+// `consultation` is NOT — it stays in this table because historic thank-you
+// links still resolve here, and a customer reopening an old receipt should see
+// what they bought rather than a blank page.
 $labels = [
-    'training'     => 'The team',
+    'training'     => 'Training (one-off)',
     'consultation' => 'The team + consultation',
 ];
 

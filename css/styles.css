@@ -586,6 +586,30 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-price__list li::before { content: "✓"; color: var(--gm-cyan); font-weight: 900; }
 .gm-price .gm-btn { width: 100%; margin-top: auto; }
 
+/* ---- Pricing: két ajánlat-csoport egymás mellett (előfizetés + egyszeri) ----
+   A HU oldal 2026-08-01 óta MINDKÉT ajánlatot mutatja. A súlyozás szándékos:
+   az előfizetés kap 2fr-t (két kártya), az egyszeri 1fr-t (egy kártya) —
+   az egyszeri út él és eladható, de nem az elsődleges ajánlat.
+   Az `/en/` út ezt a réteget NEM használja (ott egy sorban áll a két csomag). */
+.gm-pricing--split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 2.2rem; align-items: stretch; max-width: var(--gm-maxw); margin-inline: auto; }
+.gm-pgroup { position: relative; display: flex; flex-direction: column; }
+.gm-pgroup--once { padding-left: 2.2rem; }
+.gm-pgroup--once::before { content: ""; position: absolute; left: 0; top: 0.4rem; bottom: 0; width: 1px; background: linear-gradient(180deg, rgba(255,196,0,0.35), rgba(255,196,0,0)); }
+.gm-pgroup__head { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+.gm-pgroup__head .gm-eyebrow { margin: 0; }
+.gm-pgroup__desc { font-size: 0.86rem; color: #8C89A8; }
+.gm-pgroup__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem; align-items: stretch; flex: 1; }
+.gm-pgroup--once .gm-pgroup__cards { grid-template-columns: minmax(0, 1fr); }
+.gm-pgroup__cards .gm-price { height: 100%; }
+
+/* Egyszeri csomag — borostyán variáns, hogy ránézésre elváljon az előfizetéstől. */
+.gm-price--gold { border-color: rgba(255,196,0,0.34); box-shadow: 0 0 0 1px rgba(255,196,0,0.18), 0 24px 60px rgba(255,196,0,0.12); }
+.gm-price--gold .gm-price__amount { color: var(--gm-gold); }
+.gm-price--gold .gm-price__list li::before { color: var(--gm-gold); }
+.gm-price__tag--gold { background: linear-gradient(135deg, #8A5A00 0%, #D99500 38%, #FFC400 78%, #FFDA6B 100%); color: #241800; }
+.gm-btn--gold { background: linear-gradient(135deg, #8A5A00 0%, #D99500 38%, #FFC400 78%, #FFDA6B 100%); color: #241800; box-shadow: 0 10px 30px rgba(180,130,0,0.35); }
+.gm-btn--gold:hover { transform: translateY(-2px); box-shadow: 0 18px 42px rgba(180,130,0,0.45); filter: brightness(1.06); }
+
 /* ---- GYIK ---- */
 .gm-faq { max-width: 780px; margin-inline: auto; display: grid; gap: 0.8rem; }
 .gm-faq__item { background: #fff; border: 1px solid var(--gm-line); border-radius: var(--gm-r); padding: 0; overflow: hidden; }
@@ -625,9 +649,17 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 }
 
 /* ---- Responsive ---- */
+@media (max-width: 1020px) {
+  /* A két ajánlat-csoport egymás alá kerül; a bal oldali arany elválasztó
+     ilyenkor értelmét veszti (nincs mit elválasztania vízszintesen). */
+  .gm-pricing--split { grid-template-columns: 1fr; gap: 2.6rem; }
+  .gm-pgroup--once { padding-left: 0; }
+  .gm-pgroup--once::before { display: none; }
+}
 @media (max-width: 860px) {
   .gm-split { grid-template-columns: 1fr; }
   .gm-pricing { grid-template-columns: 1fr; }
+  .gm-pgroup__cards { grid-template-columns: 1fr; }
   .gm-founder { grid-template-columns: 1fr; text-align: center; }
   .gm-founder img { margin-inline: auto; max-width: 180px; }
   .gm-proofbar__row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 0; }

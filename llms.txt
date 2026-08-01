@@ -10,12 +10,12 @@
 
 ## Key Offering
 - Product: AI Team / Az AI csapatod
-- Format: 25 AI marketing specialists for Claude and ChatGPT workflows
+- Format: 27 AI marketing specialists for Claude and ChatGPT workflows
 - Typical use cases: market research, ad planning, PPC work, copywriting, landing page improvement, email reporting, video and UGC planning, competitor research, SEO and GEO work
-- Hungarian pricing model: monthly subscription, two plans — Tervező (planner) 9 990 HUF/month and Autopilóta (autopilot) 19 990 HUF/month. No minimum term, cancel anytime, plan switching allowed.
-- Plan difference: Tervező researches, audits and produces ready-to-use plans and copy; Autopilóta also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there.
-- English pricing model: monthly subscription, two plans — Planner 29 EUR/month and Autopilot 59 EUR/month. No minimum term, cancel anytime, plan switching allowed. Same structure as the Hungarian offer, priced in euros.
-- Purchase path: the Hungarian landing sends buyers to the GENmarketer knowledge base checkout (WooCommerce, HUF); the English landing uses its own Stripe checkout at /en/checkout/ (EUR). The two never mix — the shop currency is HUF, so the euro prices are billed by Stripe and mirrored into WooCommerce afterwards.
+- Hungarian pricing model: three offers. Two monthly subscriptions — Tervező (planner) 9 990 HUF/month and Autopilóta (autopilot) 19 990 HUF/month, no minimum term, cancel anytime, plan switching allowed — plus one single payment package, Képzés (training) 69 990 HUF one-off.
+- Plan difference: Tervező researches, audits and produces ready-to-use plans and copy; Autopilóta also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there. Képzés is the same specialist team bought outright: no monthly fee and no account connectors, with at least six months of continued updates from the purchase date and a 30-day money-back guarantee.
+- English pricing model: three offers, mirroring the Hungarian structure in euros. Two monthly subscriptions — Planner 29 EUR/month and Autopilot 59 EUR/month, no minimum term, cancel anytime, plan switching allowed — plus one single payment package, Training 189 EUR one-off, with at least six months of continued updates and a 30-day money-back guarantee.
+- Purchase path: the Hungarian landing sends buyers to the GENmarketer knowledge base checkout (WooCommerce, HUF) for all three offers; the English landing uses its own Stripe checkout at /en/checkout/ (EUR) for all three of its offers. The two never mix — the shop currency is HUF, so the euro prices are billed by Stripe and mirrored into WooCommerce afterwards.
 - Subscription self-service EN: https://ai-csapat.genmarketer.hu/en/manage/ — the customer requests an emailed link to the Stripe billing portal to change card, download invoices or cancel.
 
 ## Important Pages

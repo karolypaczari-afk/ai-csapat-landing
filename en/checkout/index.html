@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Checkout — Your AI Team</title>
-  <meta name="description" content="Subscribe to your AI marketing team. Secure Stripe checkout, instant access, cancel any time.">
+  <meta name="description" content="Get your AI marketing team — monthly subscription or a one-off purchase. Secure Stripe checkout, instant access.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="canonical" href="https://ai-csapat.genmarketer.hu/en/checkout/">
 
@@ -33,7 +33,7 @@
 
 <main class="co-wrap">
   <h1 class="co-title">Get your AI team</h1>
-  <p class="co-sub">Instant access after your first payment. Monthly, cancel any time — no minimum term.</p>
+  <p class="co-sub">Instant access after your payment. Subscribe monthly and cancel any time, or buy the team once.</p>
 
   <ul class="co-bar">
     <li>
@@ -53,7 +53,8 @@
   <!-- Three short steps beat one long form: fewer fields on screen at once
        means fewer places to stall. The wallet buttons sit in step 2 rather than
        step 1, because a subscription needs an e-mail address before anything
-       can be created in Stripe — after that a wallet tap fills in the rest. -->
+       can be created in Stripe — after that a wallet tap fills in the rest. The
+       one-off goes through the same gate so there is one flow, not two. -->
   <p class="co-steps__count" id="co-steps-count">Step 1 of 3</p>
   <ol class="co-steps" id="co-steps" aria-label="Checkout progress">
     <li class="co-steps__item is-current" data-step-label="1"><span>Your email</span></li>
@@ -77,14 +78,16 @@
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
               <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
             </svg>
-            Monthly, and yours to stop whenever you like
+            Whichever you pick, you are not stuck with it
           </p>
           <p class="co-lock__body">
-            <strong>No minimum term and no notice period.</strong> You subscribe today, and if it is not
-            for you, one click ends it — you keep access until the month you already paid for runs out.
+            <strong>On a subscription: no minimum term and no notice period.</strong> If it is not for you,
+            one click ends it — you keep access until the month you already paid for runs out.
+            <strong>On the one-off Training package: a 30-day money-back guarantee.</strong>
           </p>
           <ul class="co-lock__list">
             <li>New specialists arrive while you subscribe, and the existing ones keep improving. Nothing to re-download.</li>
+            <li>On the one-off package, updates keep coming for at least six months, and what you bought stays yours.</li>
             <li>Cancel from the link in your welcome e-mail. It takes effect immediately; we never ask why.</li>
             <li>The price you sign up at is the price you keep, even when the list price moves.</li>
           </ul>
@@ -95,8 +98,8 @@
         </section>
 
         <section class="co-card">
-          <h2 class="co-card__title">Choose your plan</h2>
-          <p class="co-card__hint">You can switch between these at any point before paying — and change plan later from your subscription page.</p>
+          <h2 class="co-card__title">Choose your package</h2>
+          <p class="co-card__hint">You can switch between these at any point before paying. On a subscription you can also change plan later from your subscription page; the one-off Training package is a single payment with nothing recurring.</p>
 
           <div class="co-plans">
             <label class="co-plan is-active" data-plan="planner">
@@ -123,11 +126,26 @@
                 €59<span class="co-plan__per">/month</span>
               </span>
             </label>
+
+            <!-- One-off. Same picker on purpose: the customer chooses between
+                 renting and buying in one place, and js/en-checkout.js swaps the
+                 API endpoint, the wording and the thank-you parameter behind it. -->
+            <label class="co-plan" data-plan="training">
+              <input type="radio" name="plan" value="training">
+              <span class="co-plan__dot" aria-hidden="true"></span>
+              <span>
+                <span class="co-plan__name">Training — one-off</span>
+                <span class="co-plan__desc">The same full specialist team, bought outright. No monthly fee and no account connectors. Updates keep coming for at least six months, and a 30-day money-back guarantee applies.</span>
+              </span>
+              <span class="co-plan__price">
+                €189<span class="co-plan__per">once</span>
+              </span>
+            </label>
           </div>
         </section>
 
         <section class="co-card co-free">
-          <h2 class="co-card__title">Included free with either package</h2>
+          <h2 class="co-card__title">Included free with every package</h2>
           <p class="co-card__hint">Three things people expect to pay extra for. You don't.</p>
 
           <ul class="co-free__list">
@@ -460,7 +478,7 @@
         <span>Due today</span>
         <span>
           <span id="co-sum-total">€29</span>
-          <span class="co-total__note">first month</span>
+          <span class="co-total__note" id="co-sum-total-note">first month</span>
         </span>
       </div>
 
@@ -473,18 +491,30 @@
         Then €29 every month until you cancel. Cancel any time — no notice period.
       </p>
 
-      <ul class="co-trust">
+      <ul class="co-trust" id="co-trust">
         <li>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-          <span>Access within minutes of your first payment</span>
+          <span>Access within minutes of your payment</span>
         </li>
-        <li>
+        <!-- Two of these hold for only one of the two payment shapes, so
+             js/en-checkout.js shows the matching pair. Written out in the markup
+             rather than generated, so a customer with JavaScript blocked still
+             sees the subscription pair (the default) instead of an empty list. -->
+        <li data-mode="sub">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
           <span>Cancel in one click — no minimum term</span>
         </li>
-        <li>
+        <li data-mode="sub">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
           <span>New specialists keep arriving while you subscribe</span>
+        </li>
+        <li data-mode="once" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>One single payment — nothing recurring, nothing to cancel</span>
+        </li>
+        <li data-mode="once" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>At least 6 months of updates · 30-day money-back guarantee</span>
         </li>
         <li>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
@@ -504,7 +534,8 @@
         </p>
         <p class="co-lock__body">
           The rate you join at stays yours for as long as you keep the subscription —
-          <strong>even when the list price rises</strong>.
+          <strong>even when the list price rises</strong>. On the one-off package you simply
+          pay today's price once.
         </p>
       </div>
 

@@ -2,9 +2,9 @@
  * Thank-you page for the English checkout.
  *
  * Arrivals come with one of two references:
- *   - ?subscription=sub_…   the monthly plans, which is what this page sells now
- *   - ?payment_intent=pi_…  the one-off packs, kept working because historic
- *     receipts and bank-redirect returns still carry that form
+ *   - ?subscription=sub_…   the monthly plans (Planner, Autopilot)
+ *   - ?payment_intent=pi_…  the one-off Training package, and the historic packs
+ *     whose receipts and bank-redirect returns still carry that form
  *
  * Either way the truth comes from our own endpoint, not from the query string.
  * A "processing" payment is a real and normal outcome for bank-redirect

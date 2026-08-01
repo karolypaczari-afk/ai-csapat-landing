@@ -1,45 +1,67 @@
 /**
  * English checkout — ai-csapat.genmarketer.hu/en/checkout/
  *
- * Sells the two MONTHLY plans. The one-off packs this page used to sell moved
- * out when the English offer became a subscription, matching the Hungarian
- * root; what did not change is that the Hungarian funnel is untouched by any of
- * this — it runs through WooCommerce and CartFlows and never loads this file.
+ * Sells the two MONTHLY plans and the one-off Training package. The Hungarian
+ * funnel is untouched by any of this — it runs through WooCommerce and
+ * CartFlows and never loads this file.
+ *
+ * TWO payment shapes behind one form (2026-08-01):
+ *
+ *   - subscription (planner, autopilot) → api/create-subscription.php, and the
+ *     client secret belongs to the subscription's first INVOICE;
+ *   - one-off (training)                → api/create-intent.php, and the client
+ *     secret belongs to a bare PaymentIntent.
+ *
+ * Everything downstream of "give me a client secret" is identical, which is why
+ * the two share this file instead of forking it. What is NOT identical, and is
+ * therefore handled explicitly at every point: the endpoint, the id we carry
+ * back (`subscription_id` vs `payment_intent_id`), the "then €X every month"
+ * line — which must never be shown on a one-off — and the thank-you query
+ * parameter, because api/payment-status.php resolves the two differently.
  *
  * Structure of the payment flow:
  *
  *   1. The customer's e-mail comes first, and nothing is created in Stripe
  *      before it. A subscription belongs to a Customer, and a Customer with no
- *      address cannot be sent a receipt or a cancellation link — so unlike the
- *      one-off flow, which could open a PaymentIntent on page load, this one
- *      waits until step 1 is done.
- *   2. Leaving step 1 creates an INCOMPLETE subscription and mounts two Stripe
- *      elements against its first invoice:
+ *      address cannot be sent a receipt or a cancellation link. The one-off
+ *      could technically open its PaymentIntent earlier, but it goes through
+ *      the same gate so there is one flow to reason about, not two.
+ *   2. Leaving step 1 creates the subscription (or intent) and mounts two
+ *      Stripe elements against it:
  *        - Express Checkout Element  — Apple Pay / Google Pay / Link
  *        - Payment Element           — card and the EU methods that can be
  *          charged again next month
  *      Nothing is billed until the customer confirms; an abandoned checkout
- *      leaves an incomplete subscription that Stripe expires by itself.
- *   3. Changing the plan re-prices the SAME subscription. Toggling the bump
- *      replaces it, because the bump is a line on the draft invoice rather than
- *      a subscription item and cannot be toggled in place.
+ *      leaves an incomplete subscription (or intent) that Stripe expires.
+ *   3. Changing the plan re-prices in place where it can. Toggling the bump —
+ *      and switching between a subscription and the one-off — changes the
+ *      client secret, so the elements are torn down and rebuilt.
  *   4. Prices are never sent to the server. The browser asks for a plan; the
- *      server resolves it to a Stripe Price by lookup key and that Price is the
- *      only thing that decides what recurs.
+ *      server resolves it (a Stripe Price by lookup key for subscriptions, the
+ *      GM_EN_PRICES table for the one-off) and that is the only thing that
+ *      decides what is charged.
  */
 (function () {
   'use strict';
 
-  var API = '/api/create-subscription.php';
+  var SUBSCRIPTION_API = '/api/create-subscription.php';
+  var ONE_OFF_API = '/api/create-intent.php';
   var RETURN_URL = 'https://ai-csapat.genmarketer.hu/en/thank-you/';
   var GA4_ID = 'G-1EV18K1256';
 
-  // Monthly, in euros. Mirrors api/_lib.php GM_EN_SUBSCRIPTION_PLANS — the
-  // server checks these against the live Stripe Price and refuses to sell if
-  // they disagree, so a drift here fails loudly instead of mispricing.
-  var PRICES = { planner: 29, autopilot: 59 };
+  // In euros. The monthly two mirror api/_lib.php GM_EN_SUBSCRIPTION_PLANS and
+  // `training` mirrors GM_EN_PRICES — the server checks its own numbers against
+  // the live Stripe Price and refuses to sell if they disagree, so a drift here
+  // fails loudly instead of mispricing.
+  var PRICES = { planner: 29, autopilot: 59, training: 189 };
   var BUMP_PRICE = 79;
-  var PLAN_LABEL = { planner: 'Planner', autopilot: 'Autopilot' };
+  var PLAN_LABEL = { planner: 'Planner', autopilot: 'Autopilot', training: 'Training' };
+
+  // The plans that RECUR. Everything not in here is a single payment — stated
+  // as an allow-list rather than a `plan === 'training'` check, so adding a
+  // second one-off pack later cannot silently inherit the monthly wording.
+  var RECURRING = { planner: true, autopilot: true };
+  function isOneOff() { return !RECURRING[state.plan]; }
 
   // The EU, because that is where we are set up to sell. Sorted by name so the
   // list reads naturally rather than by country code.
@@ -96,6 +118,7 @@
     plan: 'planner',
     bump: false,
     subscriptionId: '',
+    paymentIntentId: '',
     clientSecret: '',
     stripe: null,
     elements: null,
@@ -116,14 +139,14 @@
 
   function money(v) { return '€' + v; }
 
-  /** What the customer pays TODAY: the first month, plus the one-off bump. */
+  /** What the customer pays TODAY: the first month (or the whole one-off), plus the bump. */
   function total() {
     return PRICES[state.plan] + (state.bump ? BUMP_PRICE : 0);
   }
 
-  /** What recurs every month after that. The bump is charged once and never again. */
+  /** What recurs every month after that. Zero on the one-off — nothing recurs. */
   function recurring() {
-    return PRICES[state.plan];
+    return isOneOff() ? 0 : PRICES[state.plan];
   }
 
   function readForm() {
@@ -209,9 +232,14 @@
    * monthly rate, because those differ whenever the bump is ticked — a button
    * reading "Pay €29" that takes €108 is the kind of surprise that produces
    * chargebacks rather than customers.
+   *
+   * On the one-off the word "Subscribe" would be a plain untruth, and "today"
+   * would imply there is a tomorrow instalment. Both are dropped.
    */
   function payLabel() {
-    return 'Subscribe — ' + money(total()) + ' today';
+    return isOneOff()
+      ? 'Pay ' + money(total()) + ' — one-off'
+      : 'Subscribe — ' + money(total()) + ' today';
   }
 
   // ── Validation ────────────────────────────────────────────────────────────
@@ -250,42 +278,67 @@
   // ── Summary ───────────────────────────────────────────────────────────────
 
   function renderSummary() {
+    var once = isOneOff();
     el.sumPlan.textContent = PLAN_LABEL[state.plan];
-    el.sumPlanPrice.textContent = money(PRICES[state.plan]) + '/mo';
+    el.sumPlanPrice.textContent = money(PRICES[state.plan]) + (once ? '' : '/mo');
     el.sumBumpLine.classList.toggle('is-hidden', !state.bump);
     if (el.sumCouponLine) el.sumCouponLine.classList.add('is-hidden');
     el.sumTotal.textContent = money(total());
+    if (el.sumTotalNote) el.sumTotalNote.textContent = once ? 'one-off' : 'first month';
 
     // The recurring line is not decoration. Card network rules require the
     // amount, the frequency and how to cancel to be visible at the point of
     // authorisation, and the bump makes today's charge differ from the monthly
     // one — exactly the case the rule exists for.
+    //
+    // On the one-off there is nothing recurring to disclose, and leaving a
+    // "then €189 every month" line under a single payment would be the exact
+    // opposite of the disclosure the rule is for. The line states the truth of
+    // this purchase instead of being hidden, so the box is never empty.
     if (el.sumRecurring) {
-      el.sumRecurring.textContent =
-        'Then ' + money(recurring()) + ' every month until you cancel. Cancel any time — no notice period.';
+      el.sumRecurring.textContent = once
+        ? 'One single payment. Nothing recurring, no subscription, nothing to cancel.'
+        : 'Then ' + money(recurring()) + ' every month until you cancel. Cancel any time — no notice period.';
+    }
+
+    // Two of the trust bullets only hold for one of the two shapes.
+    if (el.trust) {
+      Array.prototype.forEach.call(el.trust.querySelectorAll('[data-mode]'), function (li) {
+        li.hidden = li.getAttribute('data-mode') !== (once ? 'once' : 'sub');
+      });
     }
     if (!state.busy) el.submitText.textContent = payLabel();
   }
 
-  // ── Subscription ──────────────────────────────────────────────────────────
+  // ── Payment (subscription or one-off) ─────────────────────────────────────
 
-  function requestSubscription() {
+  /**
+   * Asks the server for a client secret for the CURRENT plan.
+   *
+   * The endpoint and the id we carry back differ per shape, and both responses
+   * are normalised here so nothing downstream has to know which one it got.
+   * The amount is deliberately not in the request: the server derives it from
+   * the plan slug alone.
+   */
+  function requestPayment() {
+    var once = isOneOff();
     var body = Object.assign(
-      {
-        plan: state.plan,
-        bump: state.bump,
-        subscription_id: state.subscriptionId
-      },
+      once
+        ? { plan: state.plan, bump: state.bump, payment_intent_id: state.paymentIntentId }
+        : { plan: state.plan, bump: state.bump, subscription_id: state.subscriptionId },
       readForm(),
       attribution()
     );
-    return fetch(API, {
+    return fetch(once ? ONE_OFF_API : SUBSCRIPTION_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     }).then(function (res) {
       return res.json().then(function (json) {
-        if (!res.ok) throw new Error((json && json.error && json.error.message) || 'The subscription could not be started.');
+        if (!res.ok) {
+          throw new Error((json && json.error && json.error.message) ||
+            (once ? 'The payment could not be started.' : 'The subscription could not be started.'));
+        }
         return json;
       });
     });
@@ -300,15 +353,17 @@
    * stale amount. Toggling the bump makes the server replace the subscription
    * altogether, so the client secret can genuinely change under us — carrying
    * on with the old one would confirm a payment against an invoice that no
-   * longer exists.
+   * longer exists. Switching between a subscription and the one-off changes it
+   * for the same reason: a different Stripe object entirely.
    */
   function syncAmount() {
     if (!state.elements) return;
     var seq = ++state.updateSeq;
-    requestSubscription()
+    requestPayment()
       .then(function (data) {
         if (seq !== state.updateSeq) return;
         state.subscriptionId = data.subscription_id || state.subscriptionId;
+        state.paymentIntentId = data.payment_intent_id || state.paymentIntentId;
         if (data.client_secret && data.client_secret !== state.clientSecret) {
           remountStripe(data);
           return null;
@@ -360,7 +415,10 @@
   function mountStripe(data) {
     state.stripe = window.Stripe(data.publishable_key);
     state.clientSecret = data.client_secret;
-    state.subscriptionId = data.subscription_id;
+    // Exactly one of these comes back per shape; keeping the other as-is would
+    // send the thank-you page looking for a subscription that does not exist.
+    state.subscriptionId = data.subscription_id || '';
+    state.paymentIntentId = data.payment_intent_id || '';
 
     state.elements = state.stripe.elements({
       clientSecret: state.clientSecret,
@@ -421,17 +479,18 @@
   }
 
   /**
-   * Creates the subscription the first time we have an e-mail, then mounts.
+   * Creates the subscription (or the one-off intent) the first time we have an
+   * e-mail, then mounts.
    *
    * Returns a promise so the caller can decide whether to wait. Step
    * progression deliberately does not: a customer who typed their address
    * should move to the next screen even if Stripe is slow, and the payment
    * button stays disabled until the elements are actually ready.
    */
-  function ensureSubscription() {
+  function ensurePayment() {
     if (state.elements || state.starting) return Promise.resolve(null);
     state.starting = true;
-    return requestSubscription()
+    return requestPayment()
       .then(function (data) {
         state.starting = false;
         mountStripe(data);
@@ -442,7 +501,7 @@
         state.starting = false;
         showError(
           err.message ||
-          'We could not start the checkout. Please reload the page, or email info@genmarketer.hu and we will set your subscription up manually.'
+          'We could not start the checkout. Please reload the page, or email info@genmarketer.hu and we will set your order up manually.'
         );
         throw err;
       });
@@ -489,8 +548,8 @@
 
     track('add_payment_info', { payment_type: event.expressPaymentType || 'wallet' });
 
-    // Write the wallet's details onto the subscription, then confirm.
-    requestSubscription()
+    // Write the wallet's details onto the subscription (or intent), then confirm.
+    requestPayment()
       .then(function () {
         return state.stripe.confirmPayment({
           elements: state.elements,
@@ -520,10 +579,19 @@
       );
       return;
     }
-    // No redirect happened, so the first invoice was paid here. The order, the
-    // WooCommerce subscription and the course access are all created by the
-    // invoice.paid webhook; this page just moves the customer along.
-    window.location.href = RETURN_URL + (state.subscriptionId ? '?subscription=' + encodeURIComponent(state.subscriptionId) : '');
+    // No redirect happened, so the payment completed here. The order and the
+    // access are created by the webhook (`invoice.paid` for a subscription,
+    // `payment_intent.succeeded` for a one-off); this page just moves the
+    // customer along.
+    //
+    // The parameter name is not cosmetic: api/payment-status.php looks up a
+    // subscription for `?subscription=` and a PaymentIntent for
+    // `?payment_intent=`. Sending the wrong one gives the customer a 404 on a
+    // payment that actually went through.
+    var ref = isOneOff()
+      ? (state.paymentIntentId ? '?payment_intent=' + encodeURIComponent(state.paymentIntentId) : '')
+      : (state.subscriptionId ? '?subscription=' + encodeURIComponent(state.subscriptionId) : '');
+    window.location.href = RETURN_URL + ref;
   }
 
   function handleSubmit(ev) {
@@ -540,11 +608,11 @@
     setBusy(true);
     track('add_payment_info', { payment_type: 'card' });
 
-    // Push the final form values onto the subscription before confirming. This
-    // matters more here than on the one-off path: renewal invoices a year from
-    // now inherit the subscription's metadata, and it is the only place the
+    // Push the final form values onto the subscription (or intent) before
+    // confirming. This matters most on the subscription: renewal invoices a
+    // year from now inherit its metadata, and that is the only place the
     // customer's details still exist at that point.
-    requestSubscription()
+    requestPayment()
       .then(function () {
         return state.stripe.confirmPayment({
           elements: state.elements,
@@ -617,10 +685,10 @@
         // moment a Stripe Customer — and therefore a subscription — can exist.
         // Nothing is billed by it; the customer still has to confirm.
         if (!state.elements) {
-          ensureSubscription().catch(function () { /* the error is already on screen */ });
+          ensurePayment().catch(function () { /* the error is already on screen */ });
         } else {
           // Later steps only refresh the details already on the subscription.
-          requestSubscription().catch(function () { /* never block progress on this */ });
+          requestPayment().catch(function () { /* never block progress on this */ });
         }
         captureLead();
         goToStep(Number(btn.getAttribute('data-next')));
@@ -726,7 +794,9 @@
     el.sumPlanPrice = $('co-sum-plan-price');
     el.sumBumpLine = $('co-sum-bump-line');
     el.sumTotal = $('co-sum-total');
+    el.sumTotalNote = $('co-sum-total-note');
     el.sumRecurring = $('co-sum-recurring');
+    el.trust = $('co-trust');
     el.steps = $('co-steps');
     el.stepsCount = $('co-steps-count');
 

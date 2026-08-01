@@ -19,7 +19,7 @@
   function tr(hu, en) { return EN ? en : hu; }
 
   /* ---- Tracking (portolva a prod script.js-ből) ---- */
-  // MINDKÉT nyelv előfizetést árul (2026-07-31), de KÜLÖN pénztáron — és ez a
+  // Mindkét nyelv árul előfizetést (2026-07-31 óta), de KÜLÖN pénztáron — és ez a
   // szétválasztás a vezérlő tervezési elv, nem kényelmi kérdés:
   //   HU → a tudástár WooCommerce/CartFlows pénztára, forintban (1992/1993);
   //   EN → a saját EUR-os Stripe-pénztár a /en/checkout/-on (Woo 2197/2198).
@@ -28,16 +28,28 @@
   // nincs multi-currency plugin: ott a 29 az 29 FORINT lenne. Az EUR-os
   // ismétlődő fizetés ezért Stripe-natív, és a WooCommerce csak kész tényt kap
   // (docs/30 §14/b „A" út). A magyar út egyetlen sort sem lát ebből.
+  //
+  // MINDKÉT nyelv 2026-08-01 óta HÁROM ajánlatot visz: a két előfizetés mellett
+  // visszakerült az EGYSZERI díjas csomag (min. 6 hónap frissítés + 30 napos garancia).
+  //   HU „Képzés"  → Woo 872, 69 990 Ft, ugyanaz a bizonyított tudástár Woo/CartFlows
+  //                  útvonal, mint a két előfizetésé (a termék végig `publish` maradt,
+  //                  csak a landolóról nem volt elérhető — docs/30 D14);
+  //   EN „Training" → 189 €, a SAJÁT Stripe-pénztár egyszeri (PaymentIntent) ága az
+  //                  `/en/checkout/?plan=training`-en. A `training` slug szándékosan a
+  //                  régi: az `api/_lib.php` `GM_EN_PRICES` és a `create-intent.php` ezt
+  //                  a nevet ismeri, és a szerver dönti el az összeget, nem a böngésző.
   var CHECKOUT = EN ? {
     planner:   "/en/checkout/?plan=planner",
-    autopilot: "/en/checkout/?plan=autopilot"
+    autopilot: "/en/checkout/?plan=autopilot",
+    onetime:   "/en/checkout/?plan=training"
   } : {
     planner:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992",
-    autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993"
+    autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993",
+    onetime:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=872"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59, onetime: 189 } : { planner: 9990, autopilot: 19990, onetime: 69990 };
   var CURRENCY = EN ? "EUR" : "HUF";
   // Csomagcímke és GA4 `item_id`. Az `item_id` szándékosan UGYANAZ, mint az
   // aicsapat.genmarketer.hu előfizetéses landolón (`ai-csapatod-elofizetes-<pkg>`):
@@ -50,10 +62,21 @@
   // tehát egy közös azonosító két különböző terméket olvasztana egy sorba.
   var PKG = EN ? {
     planner:   { label: "Planner subscription",   itemId: "ai-csapatod-en-elofizetes-planner" },
-    autopilot: { label: "Autopilot subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" }
+    autopilot: { label: "Autopilot subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" },
+    // Az EN egyszeri csomag ÚJ, `-en-` tagelt azonosítót kap, NEM a régi közöset.
+    // 2026-07-31 előtt a HU és az EN egyszeri út UGYANAZT az `ai-csapatod-basic`
+    // azonosítót küldte — ez volt a hiba, amit a `-en-` tagelés javított: más a
+    // pénznem, más a fizetési út és más a termék, tehát egy közös azonosító két
+    // különböző ajánlat bevételét olvasztaná egy sorba.
+    onetime:   { label: "Training (one-off)",     itemId: "ai-csapatod-en-egyszeri-training" }
   } : {
     planner:   { label: "Tervező előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
-    autopilot: { label: "Autopilóta előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" }
+    autopilot: { label: "Autopilóta előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" },
+    // Az egyszeri Képzés csomag SZÁNDÉKOSAN a régi `ai-csapatod-basic` azonosítót kapja
+    // vissza, nem újat: ugyanaz a Woo-termék (872), amit 2026-07-31-ig ezzel az
+    // item_id-val mértünk. Új azonosítóval a 872 termék-szintű riportja két sorra
+    // hasadna, és a visszahozatal előtti hetek forgalma elszakadna a mostanitól.
+    onetime:   { label: "Képzés (egyszeri díj)", itemId: "ai-csapatod-basic" }
   };
   var PKG_DEFAULT = "planner";
   var ATTR_COOKIE = "gm_ads_attrib";
