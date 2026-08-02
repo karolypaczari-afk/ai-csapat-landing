@@ -11,7 +11,12 @@
   <meta name="facebook-domain-verification" content="p6azwcyawsasyrrrahaiypxdpik4fy">
   <link rel="canonical" href="https://ai-csapat.genmarketer.hu/">
   <link rel="alternate" hreflang="hu" href="https://ai-csapat.genmarketer.hu/">
-  <link rel="alternate" hreflang="en" href="https://ai-csapat.genmarketer.hu/en/">
+  <!-- Az angol pár 2026-08-02 óta a `genmarketer.eu` gyökere, nem a `/en/` almappa.
+       A hreflang KÖLCSÖNÖS jelzés: a .eu már a magyar gyökérre mutat vissza, ezért
+       ha ez a sor a régi `/en/`-re maradna, a Google az EGÉSZ hreflang-fürtöt eldobná
+       (nem-viszonos annotáció). A látható EN nyelvváltó gomb SZÁNDÉKOSAN marad a
+       `/en/`-en: az átkötése a kigurítás 6. lépése, Károly-kapu (docs/33 §8). -->
+  <link rel="alternate" hreflang="en" href="https://genmarketer.eu/">
   <link rel="alternate" hreflang="x-default" href="https://ai-csapat.genmarketer.hu/">
   <link rel="author" href="https://genmarketer.hu/">
   <link rel="help" href="https://ai-csapat.genmarketer.hu/llms.txt" type="text/plain">

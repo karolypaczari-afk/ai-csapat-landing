@@ -1,26 +1,71 @@
-# GENmarketer AI Team Landing
+# GENmarketer — Your AI team
 
-> GENmarketer helps entrepreneurs, marketers, and small teams use AI specialists for practical marketing execution.
+> GENmarketer sells a team of 27 AI marketing specialists that the customer installs into their own Claude or ChatGPT account. Each specialist is a packaged expert — market researcher, ad copywriter, Google Ads manager, landing page expert, SEO auditor, email expert and more — that does one marketing job properly instead of answering as a generic chatbot.
+
+Everything below is a factual statement about the product as sold today. Prices are the published list prices and include no hidden fees.
 
 ## Site
-- Primary domain: https://genmarketer.hu/
-- Product landing: https://ai-csapat.genmarketer.hu/
+- Company site (agency + courses): https://genmarketer.hu/
+- Product landing, Hungarian: https://ai-csapat.genmarketer.hu/
 - English product landing: https://ai-csapat.genmarketer.hu/en/
-- Knowledge base and checkout domain: https://tudastar.genmarketer.hu/
+- Knowledge base and Hungarian checkout: https://tudastar.genmarketer.hu/
 
-## Key Offering
-- Product: AI Team / Az AI csapatod
-- Format: 27 AI marketing specialists for Claude and ChatGPT workflows
-- Typical use cases: market research, ad planning, PPC work, copywriting, landing page improvement, email reporting, video and UGC planning, competitor research, SEO and GEO work
+## What you get
+- Product: „Az AI csapatod" (Hungarian) / „Your AI team" (English)
+- 27 available specialists across seven areas: leadership and strategy, advertising, landing page, design and Figma, video, SEO, customer and revenue. One more specialist is announced as coming soon.
+- Format: Claude Skills and ChatGPT-compatible packages, plus written training material and installation guides for Claude, Claude Code and ChatGPT.
+- Typical jobs: market and ICP research, competitor and ad-library research, campaign planning, ad copywriting, Meta Ads and Google Ads management, landing page design and build, creative and Figma design, video scripting, UGC and ad-video production, keyword research, technical SEO and SEO audits, local SEO, email sequences, membership and recurring-revenue design, LinkedIn presence.
+- New specialists keep arriving and existing ones keep improving; on a subscription those updates are included for as long as the subscription runs.
+
+## The 27 specialists
+- Leadership and strategy: ATLASZ (team lead — routes every task to the right specialist), ATHÉNÉ (strategic partner), SUN TZU (competitor analyst), SHERLOCK (market researcher)
+- Advertising: KEPLER (ad planner), CYRANO (ad copywriter), AURORA (Facebook/Meta Ads expert), APOLLÓN (Google Ads manager)
+- Landing page: MIDÁSZ (landing page expert)
+- Design and Figma: LEONARDO (creative designer), MATISSE (Figma designer), NEXUS (Figma-to-code bridge), SENTRY (Figma QA reviewer), VECTOR (ad image resizer for 1:1, 4:5, 9:16, 16:9 and 2:3)
+- Video: GULLIVER (video data collector), SEHEREZÁDÉ (video script writer), LUMIÈRE (UGC video producer), KRONOSZ (video editor), GUTENBERG (video renderer)
+- SEO: KOLUMBUSZ (keyword researcher), PARETO (content optimizer), MERIDIAN (technical SEO expert), VERITAS (SEO auditor), ARTEMISZ (local SEO expert)
+- Customer and revenue: HERMÉSZ (email expert), PERPETUUM (membership expert), FIGARO (LinkedIn specialist)
+- Coming soon: ROBINSON (landing page builder)
+
+## Pricing
 - Hungarian pricing model: three offers. Two monthly subscriptions — Tervező (planner) 9 990 HUF/month and Autopilóta (autopilot) 19 990 HUF/month, no minimum term, cancel anytime, plan switching allowed — plus one single payment package, Képzés (training) 69 990 HUF one-off.
-- Plan difference: Tervező researches, audits and produces ready-to-use plans and copy; Autopilóta also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there. Képzés is the same specialist team bought outright: no monthly fee and no account connectors, with at least six months of continued updates from the purchase date and a 30-day money-back guarantee.
 - English pricing model: three offers, mirroring the Hungarian structure in euros. Two monthly subscriptions — Planner 29 EUR/month and Autopilot 59 EUR/month, no minimum term, cancel anytime, plan switching allowed — plus one single payment package, Training 189 EUR one-off, with at least six months of continued updates and a 30-day money-back guarantee.
+- Plan difference: Tervező researches, audits and produces ready-to-use plans and copy; Autopilóta also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there. Képzés is the same specialist team bought outright: no monthly fee and no account connectors, with at least six months of continued updates from the purchase date and a 30-day money-back guarantee.
+- All three offers include the full 27-strong team. The difference is execution rights and billing, not the number of specialists.
+- Price lock: while a subscription stays active, the rate the customer joined at does not rise, even as the team grows. It only resets if the customer cancels and returns later.
 - Purchase path: the Hungarian landing sends buyers to the GENmarketer knowledge base checkout (WooCommerce, HUF) for all three offers; the English landing uses its own Stripe checkout at /en/checkout/ (EUR) for all three of its offers. The two never mix — the shop currency is HUF, so the euro prices are billed by Stripe and mirrored into WooCommerce afterwards.
 - Subscription self-service EN: https://ai-csapat.genmarketer.hu/en/manage/ — the customer requests an emailed link to the Stripe billing portal to change card, download invoices or cancel.
+
+## What you need before buying
+- A Claude or a ChatGPT account. The specialists run inside it; they are not hosted by GENmarketer.
+- Claude's free tier is enough for many tasks. For heavier use Claude Pro (about 20 EUR/month) or Claude Code is recommended. That fee is paid directly to Anthropic and is not part of the GENmarketer price.
+- Autopilot additionally needs the customer's own advertising and analytics accounts (Meta Ads, Google Ads, GA4, Search Console, MailerLite) to connect to. GENmarketer does not supply those accounts or the ad budget.
+- No coding skill is required. Every specialist ships with a simple upload guide for Claude or ChatGPT and a command for Claude Code.
+
+## What this is NOT
+- It is not human done-for-you agency work. The specialists run inside the customer's own AI account and the customer stays in control. GENmarketer does sell separate agency services, but those are a different offering at https://genmarketer.hu/.
+- It is not a standalone SaaS product with its own dashboard or its own model. There is no GENmarketer app to log into for the day-to-day work — the workspace is the customer's Claude or ChatGPT.
+- It does not include advertising spend. Meta and Google still charge the customer's own budget directly.
+- It does not include the Claude or ChatGPT subscription fee.
+- Autopilot does not spend money on its own: it prepares the work in the customer's connected accounts and takes it live only with the customer's approval.
+- It is not a fit for someone who does not want to use Claude or ChatGPT at all, or who wants results without reviewing and approving the work.
+
+## Guarantees and cancellation
+- Subscriptions: no minimum term and no notice period. Cancelling stops future payments; access continues to the end of the month already paid for. Cancelling is one click from the link in the welcome e-mail, or from the subscription self-service page.
+- One-off Training package: 30-day money-back guarantee — one e-mail is enough. What was bought stays the customer's permanently, with a concrete update promise of at least six months from the purchase date.
+- Switching between Planner and Autopilot works in both directions and applies from the next monthly payment; nothing is charged twice.
+
+## Language and support
+- The specialists read the brief and reply in whichever language the customer writes in, because they run inside the customer's own AI.
+- The English specialist packages, written guides and examples are in English; the Hungarian ones are in Hungarian.
+- Support is by e-mail, in English on the English channel and in Hungarian on the Hungarian one: info@genmarketer.hu
 
 ## Important Pages
 - Product landing HU: https://ai-csapat.genmarketer.hu/
 - Product landing EN: https://ai-csapat.genmarketer.hu/en/
+- Terms and Conditions (EN): https://genmarketer.eu/terms/
+- Privacy Notice (EN): https://genmarketer.eu/privacy/
+- Cookie Notice (EN): https://genmarketer.eu/cookies/
 - GENmarketer main site: https://genmarketer.hu/
 - GENmarketer knowledge base: https://tudastar.genmarketer.hu/
 
@@ -29,13 +74,20 @@
 - The Hungarian root page is the default version.
 - The English version is available under /en/.
 - Canonical URLs and hreflang alternates are declared in the HTML head and sitemap.
-- Structured data includes Organization, WebSite, WebPage, Product, Offer, ImageObject, and FAQPage entities.
+- Structured data includes Organization, WebSite, WebPage, Product, Offer, ImageObject, ItemList and FAQPage entities.
+- The interactive specialist grid on the landing is rendered client-side; the same roster is also present as plain text inside a noscript block, so it can be read without executing JavaScript.
+- AI crawlers are explicitly allowed in robots.txt, including the retrieval and user-triggered agents that produce citations.
 
 ## Audience
 - Solo entrepreneurs
 - Small agencies
 - In-house marketers
 - Course buyers who want a practical AI marketing workflow
+
+## Company
+- GENmarketer is a Hungarian AI-marketing agency and training company.
+- Founder: Tibor Szántai.
+- Brand positioning: strategy stays human, execution becomes intelligent.
 
 ## Contact
 - Website: https://genmarketer.hu/

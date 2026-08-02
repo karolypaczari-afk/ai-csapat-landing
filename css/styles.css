@@ -644,8 +644,26 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-sticky-cta.is-visible { transform: none; }
 .gm-sticky-cta .gm-btn { width: 100%; }
 
+/* Halkabb, kisebb „apróbetűs" lead-változat (korlátok, kizárások). Additív osztály —
+   a magyar oldal ma nem használja, tehát a HU felület bájtra változatlan. */
+.gm-lead--fineprint { font-size: 0.92rem; opacity: 0.78; margin-top: 0.9rem; }
+
+/* ---- Statikus specialista-névsor (noscript fallback, csak az EN oldalon) ----
+   A rácsot a js/app.js építi; JS nélkül ez a szöveges névsor marad. Generált tartalom:
+   _dev/build-en-static-roster.mjs. Nem flex/grid — a fallback dolga az olvashatóság. */
+.gm-mc__roster { max-width: 62rem; margin: 1.5rem auto 0; text-align: left; }
+.gm-mc__roster h3 { margin: 1.25rem 0 0.4rem; font-size: 1.05rem; }
+.gm-mc__roster ul { margin: 0 0 0.5rem; padding-left: 1.2rem; }
+.gm-mc__roster li { margin-bottom: 0.35rem; line-height: 1.55; }
+
 /* ---- Footer ---- */
 .gm-footer { background: var(--gm-navy-950); color: #8C89A8; padding-block: 2.5rem; text-align: center; font-size: 0.85rem; }
+/* Jogi + kapcsolat sor. SZÁNDÉKOSAN nem flex: egy inline sor tördelése kis kijelzőn
+   magától jó, és nem érinti a `<strong>`-ös flex-lista csapdáját sem. A HU oldal ma
+   nem használja ezt az osztályt — a szabály additív, a magyar felület bájtra változatlan. */
+.gm-footer__legal { margin-bottom: 0.75rem; line-height: 2; }
+.gm-footer__legal a { color: #B8B5D4; text-decoration: underline; text-underline-offset: 2px; }
+.gm-footer__legal a:hover, .gm-footer__legal a:focus-visible { color: #FFFFFF; }
 
 /* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {

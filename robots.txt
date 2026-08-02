@@ -1,19 +1,72 @@
+# ai-csapat.genmarketer.hu — az „Az AI csapatod" landoló (HU gyökér + a régi /en/).
+# A genmarketer.eu SAJÁT robots.txt-et kap, amit a deploy/build-eu-snapshot.mjs generál.
+#
+# AI-botok: mind engedélyezve. 2026-ban minden nagy gyártó SZÉTVÁLASZTOTTA a tanító
+# és a kereső/valós idejű crawlerét, és ezek függetlenül vezérelhetők:
+#   OpenAI     GPTBot (tanítás)    ≠ OAI-SearchBot (keresőindex)   ≠ ChatGPT-User (élő)
+#   Anthropic  ClaudeBot (tanítás) ≠ Claude-SearchBot (keresőindex) ≠ Claude-User (élő)
+#   Perplexity PerplexityBot                                        ≠ Perplexity-User
+# A korábbi lista mind a hat „kereső/élő" ágat kihagyta — vagyis pont azokat, amelyek
+# a ChatGPT- és Claude-válaszokban megjelenő HIVATKOZÁSOKAT termelik.
+
 User-agent: *
 Allow: /
 
-User-agent: GPTBot
+# — keresés / visszakeresés (ezek termelik a hivatkozásokat)
+User-agent: OAI-SearchBot
 Allow: /
 
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: ClaudeBot
+User-agent: Claude-SearchBot
 Allow: /
 
 User-agent: PerplexityBot
 Allow: /
 
+# — felhasználó indította lekérés (egy ember vár rá)
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# — tanítás / adathalmaz
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
 User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: Bytespider
 Allow: /
 
 Sitemap: https://ai-csapat.genmarketer.hu/sitemap.xml
