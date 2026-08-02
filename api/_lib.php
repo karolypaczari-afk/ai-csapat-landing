@@ -11,7 +11,7 @@
 declare(strict_types=1);
 
 const GM_EN_API_VERSION   = '1.0.0';
-const GM_EN_STRIPE_API    = '2026-06-24.dahlia';
+const GM_EN_STRIPE_API    = '2026-07-29.dahlia';
 const GM_EN_ALLOWED_ORIGIN = 'https://ai-csapat.genmarketer.hu';
 
 /** Prices are the server's business. The browser may ask for a plan, never a price. */

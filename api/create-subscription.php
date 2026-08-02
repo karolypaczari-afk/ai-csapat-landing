@@ -18,7 +18,7 @@
  *     because access hangs off `invoice.paid`, not off this call.
  *   - the client secret comes from `latest_invoice.confirmation_secret`. The
  *     older `latest_invoice.payment_intent` field is gone from the API version
- *     this account is pinned to (2026-06-24.dahlia).
+ *     this account is pinned to (2026-07-29.dahlia).
  *
  * The customer's e-mail is REQUIRED here, unlike on the one-time path. A
  * subscription is attached to a Customer, and a Customer with no e-mail cannot

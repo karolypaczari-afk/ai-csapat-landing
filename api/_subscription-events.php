@@ -8,7 +8,7 @@
  * is keyed by invoice and delivers again every month for years.
  *
  * Field locations follow the API version this account is pinned to
- * (2026-06-24.dahlia). Two of them moved in the 2025-03-31.basil release and are
+ * (2026-07-29.dahlia). Two of them moved in the 2025-03-31.basil release and are
  * the kind of thing that fails silently rather than loudly:
  *
  *   - `invoice.subscription` is gone. The subscription is now at
