@@ -17,6 +17,30 @@ Options -Indexes
   Require all denied
 </FilesMatch>
 
+# ── RETIRED: the English custom checkout (2026-08-03) ────────────────────────
+#
+# The English business moved to its own WordPress on vip.genmarketer.eu, which
+# sells natively through WooCommerce + WCS + Stripe. These endpoints are the
+# previous, bespoke channel. Nothing links to them any more — but they were
+# still answering, still holding LIVE Stripe credentials, and their WordPress
+# bridge on tudastar.genmarketer.hu is gone (gm-en-checkout deactivated), so a
+# payment started here could no longer become an order. Money in, nothing out:
+# that is the reason this block exists and why it is a block, not a cleanup.
+#
+# Denied here rather than deleted-and-hoped, because this directory is served
+# from TWO document roots — ai-csapat.genmarketer.hu (a git clone, where a file
+# deletion does propagate) and genmarketer.eu (uploaded over TUS, where it does
+# NOT: the uploader has no delete). One file, both roots, same day.
+#
+# The Hungarian bespoke checkout is deliberately NOT in this list. It is
+# switched off at the application level (hu-health: funnel_open=false) but its
+# chain is intact and Károly kept it as a fallback (2026-08-03).
+#
+# Anchored on ^ so that hu-create-intent.php and friends never match.
+<FilesMatch "^(create-intent|create-subscription|stripe-webhook|payment-status|capture-lead|portal|portal-link|replay|health)\.php$">
+  Require all denied
+</FilesMatch>
+
 # Never cache an API response.
 <IfModule mod_headers.c>
   Header set Cache-Control "no-store, no-cache, must-revalidate"
