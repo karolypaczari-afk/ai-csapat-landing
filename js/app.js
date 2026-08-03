@@ -46,8 +46,19 @@
     autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly",
     onetime:   "https://vip.genmarketer.eu/checkout/?add-to-cart=51"
   } : {
-    planner:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992",
-    autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993",
+    // 2026-08-03 óta az 1992/1993 `variable-subscription`: EGY termék kezeli a havi
+    // ÉS az éves ciklust (Károly döntése; a két külön éves terméket, a 2320/2321-et
+    // ő maga vezette ki). A ciklus VARIÁCIÓ, ezért a link nem lehet csupasz: a
+    // `?add-to-cart=1992` variáció NÉLKÜL semmit nem tesz a kosárba (élőben mérve) —
+    // a Woo a terméklapra irányít. A markup a HAVI variációt viseli, az évest a
+    // ciklusváltó írja rá (`data-yearly-href`).
+    //   1992 → 2342 Havi 9 990 Ft/hó · 2343 Éves 99 900 Ft/év
+    //   1993 → 2344 Havi 19 990 Ft/hó · 2345 Éves 199 900 Ft/év
+    // Az attribútum-SLUG ékezet nélküli (a WP `sanitize_title()`-je transzliterál),
+    // az ÉRTÉK viszont ékezetes, ezért URL-kódolva megy. Rossz slug nem 404-et adna,
+    // hanem némán a HAVI (alapértelmezett) variációt tenné a kosárba.
+    planner:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992&variation_id=2342&attribute_szamlazasi-ciklus=Havi",
+    autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993&variation_id=2344&attribute_szamlazasi-ciklus=Havi",
     onetime:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=872"
   };
   var GA4_ID = "G-1EV18K1256";
@@ -297,13 +308,92 @@
       return out.toString();
     } catch (e) { return url; }
   }
+  /* A kattintás CÉLJA a GOMBON ÁLLÓ href, nem a `CHECKOUT` konstans.
+   *
+   * ☠️ 2026-08-03, élesben mérve: a `wireCtas` kattintáskor `ev.preventDefault()`-tal
+   * a beépített `CHECKOUT[key]`-re navigált, és ezzel ELDOBTA azt a hrefet, amit az
+   * oldal futásidőben írt rá. A havi↔éves ciklusváltó pontosan ezt teszi → a vevő az
+   * ÉVES gombot látta (a hover-URL is az éves variációt mutatta), a kosárba mégis a
+   * HAVI került. A hiba osztálya: KÉT igazság-forrás ugyanarra a célra, és a néma
+   * vesztes az volt, amelyiket a vevő látta.
+   *
+   * A `href` mostantól nyer — de FAIL-CLOSED: csak akkor hisszük el, ha ugyanarra az
+   * originre ÉS ugyanarra az útvonalra megy, mint a beépített cél (tehát csak a query
+   * térhet el, mint a ciklusváltónál). Minden más esetben a beépített cél marad, így
+   * egy elrontott vagy idegen href nem tudja elvinni a vevőt máshova.
+   *
+   * A `withAttribution` idempotens (csak hiányzó paramot ír), ezért ha semmi nem írja
+   * át a hrefet, a viselkedés bájtra a régi. */
+  function checkoutTarget(el, key) {
+    var built = CHECKOUT[key];
+    var live = el.getAttribute("href");
+    if (!live) return withAttribution(built);
+    try {
+      var a = new URL(live, location.href), b = new URL(built, location.href);
+      if (a.origin !== b.origin || a.pathname !== b.pathname) return withAttribution(built);
+      return withAttribution(live);
+    } catch (e) { return withAttribution(built); }
+  }
+  /* ── Havi ↔ éves számlázási ciklus ─────────────────────────────────────────
+   *
+   * EGY implementáció mindkét nyelvre, és MINDEN ciklus-függő értéket a MARKUP
+   * DEKLARÁL — a script nem következtet, nem számol és nem alakít sztringet.
+   *
+   * ☠️ Miért nem sztring-átalakítás (az első, angol változat így indult):
+   *  1. az árformátum nyelvfüggő. A `/(\d+)/` első találata a magyar
+   *     „9 990 Ft/hó"-ban a **9**, tehát a csere „99 990"-et gyártana — néma,
+   *     tízszeres tévedés a fő pénzúton;
+   *  2. az egységcímke is nyelvfüggő (`/month` vs. `Ft/hó`);
+   *  3. a GOMB FELIRATA is árat hordoz, és arról külön meg kell emlékezni.
+   * Deklarált értékkel mindhárom eltűnik: ami a kártyán áll, azt a markup mondja ki.
+   *
+   * FAIL-CLOSED: ha egy CTA-ból hiányzik a `data-yearly-href`, a kapcsoló NEM
+   * kapcsol. Éves árat hirdetni havi kosárral rosszabb, mint nem kapcsolni.
+   *
+   * A havi értékeket az ELSŐ kapcsoláskor jegyezzük meg, nem betöltéskor: addigra a
+   * `wireCtas` már ráírta a hrefre a marketing-attribúciót, és azt az éves ágnak is
+   * meg kell tartania. */
+  function wireBillingCycle() {
+    var box = document.querySelector("[data-gm-cycle]");
+    if (!box) return;
+    var links = [], amounts = [];
+    document.querySelectorAll("a[data-gm-checkout][data-yearly-href]").forEach(function (a) { links.push(a); });
+    document.querySelectorAll("[data-gm-price][data-yearly]").forEach(function (x) { amounts.push(x); });
+    if (!links.length) return;
+
+    function apply(cycle) {
+      var yearly = cycle === "yearly";
+      links.forEach(function (a) {
+        if (!a.dataset.monthlyHref) a.dataset.monthlyHref = a.getAttribute("href");
+        if (!a.dataset.monthlyLabel) a.dataset.monthlyLabel = a.innerHTML;
+        a.setAttribute("href", yearly ? a.dataset.yearlyHref : a.dataset.monthlyHref);
+        var label = yearly ? a.dataset.yearlyLabel : a.dataset.monthlyLabel;
+        if (label) a.innerHTML = label;
+      });
+      amounts.forEach(function (x) {
+        if (!x.dataset.monthly) x.dataset.monthly = x.innerHTML;
+        x.innerHTML = yearly ? x.dataset.yearly : x.dataset.monthly;
+      });
+      box.querySelectorAll("button[data-cycle]").forEach(function (b) {
+        var on = b.dataset.cycle === cycle;
+        b.classList.toggle("is-on", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      box.setAttribute("data-gm-cycle", cycle);
+    }
+
+    box.addEventListener("click", function (ev) {
+      var b = ev.target.closest("button[data-cycle]");
+      if (b) apply(b.dataset.cycle);
+    });
+  }
   function wireCtas() {
     document.querySelectorAll("[data-gm-cta]").forEach(function (el) {
       var key = el.getAttribute("data-gm-checkout");
       if (key && CHECKOUT[key]) el.setAttribute("href", withAttribution(CHECKOUT[key]));
       el.addEventListener("click", function (ev) {
         track(el.getAttribute("data-gm-package") || PKG_DEFAULT, el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]));
-        if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = withAttribution(CHECKOUT[key]); }
+        if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = checkoutTarget(el, key); }
       });
     });
   }
@@ -793,6 +883,7 @@
     renderAgents();
     wireFilters();
     wireCtas();
+    wireBillingCycle();
     trackViewContent();
     wireProofbar();
     wireSmoothScroll();

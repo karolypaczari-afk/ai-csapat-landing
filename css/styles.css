@@ -709,3 +709,19 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 @media (max-width: 360px) {
   .gm-hero__cta .gm-btn--lg { font-size: 0.9rem; }
 }
+
+/* ── Havi/éves számlázási ciklusváltó ─────────────────────────────────────────
+   Mindkét nyelv használja (HU gyökér + /en/ → genmarketer.eu). A logika a
+   js/app.js `wireBillingCycle`-jében él, a ciklus-függő értékeket pedig a
+   markup deklarálja (data-yearly-href / data-yearly-label / data-yearly). */
+.gm-cycle { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 0 26px; flex-wrap: wrap; }
+.gm-cycle__label { font-size: .72rem; letter-spacing: 1.6px; text-transform: uppercase; color: var(--gm-muted, #8b8f98); font-weight: 600; }
+.gm-cycle__seg { display: inline-flex; background: rgba(0,0,0,.28); border: 1px solid var(--gm-line, #2a2d36); border-radius: 999px; padding: 3px; gap: 2px; }
+.gm-cycle__seg button { background: none; border: none; color: inherit; font: inherit; font-weight: 700; font-size: .95rem; padding: 8px 18px; border-radius: 999px; cursor: pointer; transition: .15s; }
+.gm-cycle__seg button:hover { background: rgba(255,255,255,.07); }
+.gm-cycle__seg button.is-on { background: var(--gm-grad, linear-gradient(135deg,#6d28d9,#2563eb)); color: #fff; box-shadow: 0 10px 30px rgba(64,0,153,.35); }
+.gm-cycle__save { display: inline-block; margin-left: 8px; font-size: .7rem; font-weight: 800; color: #1A1A2E; background: var(--gm-gold, #f5b301); padding: 2px 8px; border-radius: 999px; vertical-align: 1px; }
+@media (max-width: 420px) {
+  .gm-cycle__seg button { padding: 8px 12px; font-size: .88rem; }
+  .gm-cycle__save { display: block; margin: 3px 0 0; }
+}
