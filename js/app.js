@@ -38,13 +38,13 @@
   //                  útvonal, mint a két előfizetésé (a termék végig `publish` maradt,
   //                  csak a landolóról nem volt elérhető — docs/30 D14);
   //   EN „Training" → 189 €, a SAJÁT Stripe-pénztár egyszeri (PaymentIntent) ága az
-  //                  `/en/checkout/?plan=training`-en. A `training` slug szándékosan a
+  //                  `https://vip.genmarketer.eu/checkout/?add-to-cart=51`-en. A `training` slug szándékosan a
   //                  régi: az `api/_lib.php` `GM_EN_PRICES` és a `create-intent.php` ezt
   //                  a nevet ismeri, és a szerver dönti el az összeget, nem a böngésző.
   var CHECKOUT = EN ? {
-    planner:   "/en/checkout/?plan=planner",
-    autopilot: "/en/checkout/?plan=autopilot",
-    onetime:   "/en/checkout/?plan=training"
+    planner:   "https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly",
+    autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly",
+    onetime:   "https://vip.genmarketer.eu/checkout/?add-to-cart=51"
   } : {
     planner:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992",
     autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993",
@@ -54,6 +54,18 @@
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
   var PRICE = EN ? { planner: 29, autopilot: 59, onetime: 189 } : { planner: 9990, autopilot: 19990, onetime: 34990 };
   var CURRENCY = EN ? "EUR" : "HUF";
+  // Az angol CTA egy TELJESEN MŰSZEREZETT WooCommerce-pénztárba visz
+  // (`vip.genmarketer.eu`, PixelYourSite Pro 12.6.0). 2026-08-03-án élőben mérve, a
+  // pénztár `window.pysOptions.staticEvents`-éből: a VIP maga tüzeli az
+  // `InitiateCheckout`-ot (Meta, EUR, saját eventID-vel) és a `begin_checkout`-ot (GA4).
+  // Ha a landoló is tüzelné ugyanezeket a CTA-kattintásra, a Meta és a GA4 KÉT
+  // eseményt látna egyetlen vevői szándékra — a dedup nem fog, mert az `event_id`-k
+  // különböznek (más rendszer generálja őket).
+  //
+  // A magyar úton NINCS ilyen átfedés: ott a landoló a CartFlows-pénztárba visz, és a
+  // kosár-esemény a landolón keletkezik. Ezért a kapcsoló nyelvhez kötött, és a magyar
+  // ág viselkedése bájtra változatlan.
+  var FUNNEL_OWNED_DOWNSTREAM = EN;
   // Csomagcímke és GA4 `item_id`. Az `item_id` szándékosan UGYANAZ, mint az
   // aicsapat.genmarketer.hu előfizetéses landolón (`ai-csapatod-elofizetes-<pkg>`):
   // ugyanaz a Woo-termék (1992/1993), tehát a termék-szintű riport ne hasadjon
@@ -86,7 +98,17 @@
   var META_EXT_COOKIE = "gm_meta_ext_id";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
   function isLocal() { return location.hostname === "localhost" || location.hostname === "127.0.0.1"; }
-  function cookieDomain() { return /\.genmarketer\.hu$/i.test(location.hostname) ? ";domain=.genmarketer.hu" : ""; }
+  // A süti-scope-ot a REGISZTRÁLHATÓ domainre kell emelni, különben a landolón írt
+  // `_fbc` / `_fbp` / `gm_meta_ext_id` host-only marad, és a pénztár-aldomain NEM látja.
+  // A `.eu`-n ez élesben azt jelentette, hogy a hirdetés-kattintás `fbclid`-je a
+  // landolón rekedt, és a `vip.genmarketer.eu`-n történő vásárlás elvesztette a
+  // kattintás-attribúciót — miközben az oldal hibátlanul működött (néma hiba).
+  // A `.hu` ág szándékosan bájtra változatlan: a magyar út stabil, nem nyúlunk hozzá.
+  function cookieDomain() {
+    if (/\.genmarketer\.hu$/i.test(location.hostname)) return ";domain=.genmarketer.hu";
+    if (/(^|\.)genmarketer\.eu$/i.test(location.hostname)) return ";domain=.genmarketer.eu";
+    return "";
+  }
   function secureFlag() { return location.protocol === "https:" ? ";Secure" : ""; }
   function readCookie(name) {
     var m = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/[.$?*|{}()[\]\\/+^]/g, "\\$&") + "=([^;]*)"));
@@ -236,13 +258,22 @@
     var item = { item_id: itemId, item_name: "Az AI csapatod - " + label, item_brand: "GENmarketer", item_category: "AI marketing training", price: value, quantity: 1 };
     if (isCheckout) {
       try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
-      try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: [item] }, adAttrib)); } catch (e) {}
-      try { if (typeof window.gtag === "function") window.gtag("event", "conversion", Object.assign({ send_to: ADS_ADD_TO_CART_SEND_TO, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout" }, adAttrib)); } catch (e) {}
-      try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies), { eventID: cartEid }); } catch (e) {}
+      if (!FUNNEL_OWNED_DOWNSTREAM) {
+        try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: [item] }, adAttrib)); } catch (e) {}
+        try { if (typeof window.gtag === "function") window.gtag("event", "conversion", Object.assign({ send_to: ADS_ADD_TO_CART_SEND_TO, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout" }, adAttrib)); } catch (e) {}
+        try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies), { eventID: cartEid }); } catch (e) {}
+      }
     }
     try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_cta_click", event_id: eid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
-    try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }, adAttrib)); } catch (e) {}
-    try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies), { eventID: eid }); } catch (e) {}
+    if (FUNNEL_OWNED_DOWNSTREAM) {
+      // A landoló-oldali CTA-kattintás CRO-jele megmarad, de SAJÁT néven: egy
+      // `begin_checkout` itt összeadódna a pénztárban tüzelő igazival. A `gm_cta_click`
+      // nem szabványos ecommerce-esemény, tehát nem folyik bele a tölcsér-riportba.
+      try { if (typeof window.gtag === "function") window.gtag("event", "gm_cta_click", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", package: pkg }, adAttrib)); } catch (e) {}
+    } else {
+      try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }, adAttrib)); } catch (e) {}
+      try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies), { eventID: eid }); } catch (e) {}
+    }
   }
   // A landoló URL marketing-paramjait átvisszük a tudástár-checkoutra, hogy a
   // vásárlás-session NE (direct)-ként attribútálódjon (cross-subdomain attribúció).
@@ -719,11 +750,50 @@
     }, 180);
   }
 
+  // A landolón eddig CSAK `PageView` tüzelt. A `ViewContent` az a jel, amiből a Meta
+  // termék-érdeklődést tud építeni (remarketing-közönség, DPA), és nélküle a tölcsér
+  // első valódi foka hiányzott. A pénztár-aldomain ezt NEM pótolja: oda csak az jut el,
+  // aki már kattintott, tehát pont az érdeklődő-réteg veszett el.
+  // Kizárólag az angol ágon fut: a magyar landoló mérése stabil, nem nyúlunk hozzá.
+  function trackViewContent() {
+    if (!FUNNEL_OWNED_DOWNSTREAM) return;
+    try {
+      var metaCookies = ensureMetaCookies();
+      var adAttrib = ensureAdAttribution();
+      var ids = Object.keys(PKG).map(function (k) { return PKG[k].itemId; });
+      var value = PRICE[PKG_DEFAULT] || 0;
+      var items = Object.keys(PKG).map(function (k) {
+        return { item_id: PKG[k].itemId, item_name: "Az AI csapatod - " + PKG[k].label, item_brand: "GENmarketer", item_category: "AI marketing training", price: PRICE[k] || 0, quantity: 1 };
+      });
+      var eid = eventId("view_content", PKG_DEFAULT);
+      if (typeof window.fbq === "function") {
+        window.fbq("track", "ViewContent", {
+          content_name: document.title,
+          content_category: "AI marketing training",
+          content_ids: ids,
+          content_type: "product",
+          value: value,
+          currency: CURRENCY,
+          action_source: "website",
+          event_source_url: location.href,
+          language: (document.documentElement.lang || "en").slice(0, 2).toLowerCase(),
+          external_id: metaCookies.externalId || undefined,
+          fbp: metaCookies.fbp || undefined,
+          fbc: metaCookies.fbc || undefined
+        }, { eventID: eid });
+      }
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "view_item", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, items: items }, adAttrib));
+      }
+    } catch (e) {}
+  }
+
   function init() {
     boot();
     renderAgents();
     wireFilters();
     wireCtas();
+    trackViewContent();
     wireProofbar();
     wireSmoothScroll();
     wireScrollState();

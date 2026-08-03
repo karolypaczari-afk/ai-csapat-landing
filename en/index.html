@@ -135,7 +135,15 @@
   <script>
     (function () {
       if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
-      function cookieDomain() { return /\.genmarketer\.hu$/i.test(location.hostname) ? ';domain=.genmarketer.hu' : ''; }
+      // Lásd js/app.js azonos nevű függvényét: a scope-ot a regisztrálható domainre
+      // emeljük, hogy a landolón írt `_fbc`/`_fbp`/`gm_meta_ext_id` átérjen a
+      // `vip.genmarketer.eu` pénztárra. Host-only sütivel a vásárlás elveszti a
+      // kattintás-attribúciót, és ez semmilyen felületen nem látszik.
+      function cookieDomain() {
+        if (/\.genmarketer\.hu$/i.test(location.hostname)) return ';domain=.genmarketer.hu';
+        if (/(^|\.)genmarketer\.eu$/i.test(location.hostname)) return ';domain=.genmarketer.eu';
+        return '';
+      }
       function secureFlag() { return location.protocol === 'https:' ? ';Secure' : ''; }
       function readCookie(name) {
         var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
@@ -711,6 +719,28 @@
             <span class="gm-eyebrow">Subscription</span>
             <span class="gm-pgroup__desc">The team grows with you · no minimum term</span>
           </div>
+          <!-- Billing-cycle switch.
+               The markup carries the MONTHLY prices and links, so a crawler and
+               a JS-less visitor still see a complete, buyable offer — the switch
+               only rewrites them. Each button click adds the right variation to
+               the cart and opens the checkout in one step, exactly like the
+               Hungarian side. -->
+          <style>
+            .gm-cycle{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 26px}
+            .gm-cycle__label{font-size:.72rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--gm-muted,#8b8f98);font-weight:600}
+            .gm-cycle__seg{display:inline-flex;background:rgba(0,0,0,.28);border:1px solid var(--gm-line,#2a2d36);border-radius:999px;padding:3px;gap:2px}
+            .gm-cycle__seg button{background:none;border:none;color:inherit;font:inherit;font-weight:700;font-size:.95rem;padding:8px 18px;border-radius:999px;cursor:pointer;transition:.15s}
+            .gm-cycle__seg button:hover{background:rgba(255,255,255,.07)}
+            .gm-cycle__seg button.is-on{background:var(--gm-grad,linear-gradient(135deg,#6d28d9,#2563eb));color:#fff;box-shadow:0 10px 30px rgba(64,0,153,.35)}
+            .gm-cycle__save{display:inline-block;margin-left:8px;font-size:.7rem;font-weight:800;color:#1A1A2E;background:var(--gm-gold,#f5b301);padding:2px 8px;border-radius:999px;vertical-align:1px}
+          </style>
+          <div class="gm-cycle gm-reveal" data-gm-cycle>
+            <span class="gm-cycle__label">Billing</span>
+            <div class="gm-cycle__seg" role="group" aria-label="Billing period">
+              <button type="button" class="is-on" data-cycle="monthly" aria-pressed="true">Monthly</button>
+              <button type="button" data-cycle="yearly" aria-pressed="false">Yearly<span class="gm-cycle__save">2 months free</span></button>
+            </div>
+          </div>
           <div class="gm-pgroup__cards">
             <div class="gm-price gm-reveal">
               <div class="gm-price__name">Planner</div>
@@ -720,7 +750,7 @@
               <ul class="gm-price__list">
                 <li>All 28 specialists, across seven areas</li><li>Claude and ChatGPT compatible</li><li>Full training material + examples for each</li><li>Illustrated installation guide</li><li>New specialists arrive while you subscribe</li><li>Existing ones keep improving too</li><li>Cancel in one click, no notice period</li>
               </ul>
-              <a class="gm-btn gm-btn--ghost" href="/en/checkout/?plan=planner" data-gm-cta="pricing-planner" data-gm-checkout="planner" data-gm-package="planner">Subscribe – &euro;29/mo</a>
+              <a class="gm-btn gm-btn--ghost" href="https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly" data-gm-cta="pricing-planner" data-gm-checkout="planner" data-gm-package="planner">Subscribe – &euro;29/mo</a>
             </div>
             <div class="gm-price gm-price--featured gm-reveal">
               <div class="gm-price__tag">Most people choose this</div>
@@ -731,7 +761,7 @@
               <ul class="gm-price__list">
                 <li>Everything in the Planner plan</li><li><strong>Every connector included</strong> &ndash; Meta Ads, Google Ads, GA4, Search Console, MailerLite</li><li>The team reads your real numbers instead of guessing</li><li>It also executes inside your own accounts</li><li>Everything it creates starts paused &ndash; you approve before anything goes live</li><li>Cancel in one click, no notice period</li>
               </ul>
-              <a class="gm-btn gm-btn--primary" href="/en/checkout/?plan=autopilot" data-gm-cta="pricing-autopilot" data-gm-checkout="autopilot" data-gm-package="autopilot">Go Autopilot – &euro;59/mo</a>
+              <a class="gm-btn gm-btn--primary" href="https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly" data-gm-cta="pricing-autopilot" data-gm-checkout="autopilot" data-gm-package="autopilot">Go Autopilot – &euro;59/mo</a>
             </div>
           </div>
         </section>
@@ -750,7 +780,7 @@
               <ul class="gm-price__list">
                 <li>All 28 specialists, across seven areas</li><li>Claude and ChatGPT compatible</li><li>Full training material + examples for each</li><li>Illustrated installation guide</li><li><strong>New specialists – guaranteed for at least 6 months</strong></li><li>Existing ones keep improving too</li><li>30-day money-back guarantee</li>
               </ul>
-              <a class="gm-btn gm-btn--gold" href="/en/checkout/?plan=training" data-gm-cta="pricing-onetime" data-gm-checkout="onetime" data-gm-package="onetime">Order now – &euro;189</a>
+              <a class="gm-btn gm-btn--gold" href="https://vip.genmarketer.eu/checkout/?add-to-cart=51" data-gm-cta="pricing-onetime" data-gm-checkout="onetime" data-gm-package="onetime">Order now – &euro;189</a>
             </div>
           </div>
         </section>
@@ -820,9 +850,9 @@
       <h2 class="gm-h2 gm-h2--xl" style="margin:.5rem 0">Install it tonight. They're working for you by morning.</h2>
       <p class="gm-lead">28 specialists, tuned to your market – in a single account. Subscribe and they keep improving with you; buy once and today's team stays yours.</p>
       <div class="gm-hero__cta" style="justify-content:center">
-        <a class="gm-btn gm-btn--primary gm-btn--lg" href="/en/checkout/?plan=planner" data-gm-cta="final-planner" data-gm-checkout="planner" data-gm-package="planner">Subscribe – &euro;29/mo</a>
-        <a class="gm-btn gm-btn--ghost gm-btn--lg" href="/en/checkout/?plan=autopilot" data-gm-cta="final-autopilot" data-gm-checkout="autopilot" data-gm-package="autopilot">Go Autopilot – &euro;59/mo</a>
-        <a class="gm-btn gm-btn--ghost gm-btn--lg" href="/en/checkout/?plan=training" data-gm-cta="final-onetime" data-gm-checkout="onetime" data-gm-package="onetime">Buy once – &euro;189</a>
+        <a class="gm-btn gm-btn--primary gm-btn--lg" href="https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly" data-gm-cta="final-planner" data-gm-checkout="planner" data-gm-package="planner">Subscribe – &euro;29/mo</a>
+        <a class="gm-btn gm-btn--ghost gm-btn--lg" href="https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly" data-gm-cta="final-autopilot" data-gm-checkout="autopilot" data-gm-package="autopilot">Go Autopilot – &euro;59/mo</a>
+        <a class="gm-btn gm-btn--ghost gm-btn--lg" href="https://vip.genmarketer.eu/checkout/?add-to-cart=51" data-gm-cta="final-onetime" data-gm-checkout="onetime" data-gm-package="onetime">Buy once – &euro;189</a>
       </div>
       <p style="margin-top:1.2rem;color:#8C89A8;font-size:.85rem">On a subscription: new specialists keep arriving, switch plans any time, cancel any time · One-off: at least 6 months of updates and a 30-day guarantee · All prices gross</p>
     </div>
@@ -880,5 +910,63 @@
   </div>
 
 </div>
+
+<script>
+/* Billing-cycle switch — a landolón (2026-08-03).
+   A gomb NEM terméklapra visz: kosárba teszi a helyes variációt és megnyitja a
+   pénztárt, ugyanúgy, mint a magyar oldalon.
+   A YEARLY variáció-ID-k a VIP élő termékeié; a HAVI a markupban áll, tehát
+   JS nélkül is teljes az ajánlat. */
+(function () {
+  var YEARLY = { 46: 47, 49: 50 };            // havi variáció → éves variáció
+  var PRICE  = { 29: '290', 59: '590' };      // havi ár → éves ár
+  var box = document.querySelector('[data-gm-cycle]');
+  if (!box) return;
+  var cards = document.querySelectorAll('.gm-pgroup--sub .gm-price');
+
+  function apply(cycle) {
+    var yearly = cycle === 'yearly';
+    cards.forEach(function (card) {
+      var a = card.querySelector('a[data-gm-checkout]');
+      var amount = card.querySelector('.gm-price__amount');
+      if (!a || !amount) return;
+      if (!a.dataset.monthlyHref) a.dataset.monthlyHref = a.getAttribute('href');
+      if (!a.dataset.monthlyLabel) a.dataset.monthlyLabel = a.innerHTML;
+      if (!amount.dataset.monthly) amount.dataset.monthly = amount.innerHTML;
+
+      /* A GOMB FELIRATA is árat hordoz („Subscribe – EUR 29/mo"). Az első
+         változatom csak a kártya árát írta át, ezért éves módban a gomb tovább
+         hirdette a havi árat — a vevő két KÜLÖNBÖZŐ árat látott egy kártyán. */
+      if (!yearly) {
+        a.setAttribute('href', a.dataset.monthlyHref);
+        a.innerHTML = a.dataset.monthlyLabel;
+        amount.innerHTML = amount.dataset.monthly;
+        return;
+      }
+
+      var href = a.dataset.monthlyHref.replace(/variation_id=(\d+)/, function (m, id) {
+        return 'variation_id=' + (YEARLY[id] || id);
+      }).replace('attribute_billing-period=Monthly', 'attribute_billing-period=Yearly');
+      a.setAttribute('href', href);
+      var toYear = function (html) {
+        return html.replace(/(\d+)/, function (n) { return PRICE[n] || n; })
+                   .replace('/month', '/year').replace('/mo', '/yr');
+      };
+      amount.innerHTML = toYear(amount.dataset.monthly);
+      a.innerHTML = toYear(a.dataset.monthlyLabel);
+    });
+    box.querySelectorAll('button[data-cycle]').forEach(function (b) {
+      var on = b.dataset.cycle === cycle;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-cycle]');
+    if (b) apply(b.dataset.cycle);
+  });
+})();
+</script>
 </body>
 </html>
