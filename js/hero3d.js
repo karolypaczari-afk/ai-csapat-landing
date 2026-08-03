@@ -1,7 +1,7 @@
 /* ============================================================
    HERO 3D — Three.js parancsnoki nyitókép.
    • Visszafogott, halk csillagpor (nem „pixel-katyvasz").
-   • A 25 ágens NÉV + SZEREP feliratos kártyaként lebeg egy
+   • A 28 ágens NÉV + SZEREP feliratos kártyaként lebeg egy
      enyhén jobbra tolt konstellációban; mélység-halványítás
      a zsúfoltság ellen, így a bal oldali szöveg olvasható marad.
    • Egér-parallax, görgetésre összetartás.

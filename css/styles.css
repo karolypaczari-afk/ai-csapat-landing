@@ -589,7 +589,16 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
    A text-indent-es hanging indent ugyanazt a ✓-igazítást adja, de a szöveg
    normál inline folyamban marad, tehát tetszőleges inline jelölés belefér. */
 .gm-price__list li { padding-left: 1.3rem; text-indent: -1.3rem; }
-.gm-price__list li::before { content: "✓"; color: var(--gm-cyan); font-weight: 900; margin-right: 0.45rem; }
+/* Fix szélesség, hogy a ✓ és a – ugyanoda igazodjon: 0,85rem + 0,45rem margó
+   pontosan a lógó behúzás 1,3rem-je. Enélkül a keskenyebb glifa elcsúsztatja
+   a sor első szavát a többsoros folytatáshoz képest. */
+.gm-price__list li::before { content: "✓"; color: var(--gm-cyan); font-weight: 900; display: inline-block; width: 0.85rem; margin-right: 0.45rem; }
+/* Amit a csomag NEM tartalmaz, azt nem szabad pipával nyitni: a ✓ azt ígéri,
+   hogy jár. A STANDARD „Connectorok nélkül" sora ezért mínusz jelet kap
+   (Károly, 2026-08-03). Halványabb szín is, hogy ránézésre elváljon. */
+.gm-price__list li.is-off { color: #9B98B6; }
+.gm-price__list li.is-off::before { content: "–"; color: #6F6C8C; }
+.gm-price--gold .gm-price__list li.is-off::before { color: #6F6C8C; }
 .gm-price .gm-btn { width: 100%; margin-top: auto; }
 
 /* ---- Pricing: két ajánlat-csoport egymás mellett (előfizetés + egyszeri) ----

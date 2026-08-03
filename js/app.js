@@ -9,10 +9,13 @@
   var gsap = window.gsap, ST = window.ScrollTrigger, Flip = window.Flip;
   var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var TEAM = window.GM_TEAM || [], AGENTS = window.GM_AGENTS || [];
-  // A látható létszámot az ADATBÓL számoljuk, nem kézzel írjuk. A bedrótozott szám
-  // némán elavul: 2026-07-31-ig „25 szakember" állt a prózában, miközben a data.js
-  // már 28 ágenst tartalmazott. A gépi kapu: tests/roster-counts.mjs.
-  var LIVE_COUNT = AGENTS.filter(function (a) { return a.status !== "soon"; }).length;
+  // A látható létszám a DEKLARÁLT landoló-tényből jön (js/data.js →
+  // `window.GM_LANDING_FACTS`), nem az ágens-tömbből számolva. 2026-08-03 óta a
+  // hirdetett csapatlétszám üzleti döntés, nem az élesített skillek darabszáma —
+  // az egyes tagok állapota a kártyájukon látszik. A bedrótozott szám továbbra
+  // sem szabad: a kapu (tests/roster-counts.mjs) a prózát EHHEZ az értékhez méri.
+  var FACTS = window.GM_LANDING_FACTS || {};
+  var TEAM_COUNT = FACTS.team || AGENTS.length;
   var AV = "/assets/img/avatars/";
   // Nyelv: a <html lang> dönti el (HU a gyökéren, EN a /en/-en).
   var EN = (document.documentElement.getAttribute("lang") || "hu").slice(0, 2).toLowerCase() === "en";
@@ -31,7 +34,7 @@
   //
   // MINDKÉT nyelv 2026-08-01 óta HÁROM ajánlatot visz: a két előfizetés mellett
   // visszakerült az EGYSZERI díjas csomag (min. 6 hónap frissítés + 30 napos garancia).
-  //   HU „Skillpakk"  → Woo 872, 69 990 Ft, ugyanaz a bizonyított tudástár Woo/CartFlows
+  //   HU „Skillpakk"  → Woo 872, 34 990 Ft, ugyanaz a bizonyított tudástár Woo/CartFlows
   //                  útvonal, mint a két előfizetésé (a termék végig `publish` maradt,
   //                  csak a landolóról nem volt elérhető — docs/30 D14);
   //   EN „Training" → 189 €, a SAJÁT Stripe-pénztár egyszeri (PaymentIntent) ága az
@@ -49,7 +52,7 @@
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { planner: 29, autopilot: 59, onetime: 189 } : { planner: 9990, autopilot: 19990, onetime: 69990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59, onetime: 189 } : { planner: 9990, autopilot: 19990, onetime: 34990 };
   var CURRENCY = EN ? "EUR" : "HUF";
   // Csomagcímke és GA4 `item_id`. Az `item_id` szándékosan UGYANAZ, mint az
   // aicsapat.genmarketer.hu előfizetéses landolón (`ai-csapatod-elofizetes-<pkg>`):
@@ -703,8 +706,8 @@
   function boot() {
     var b = document.getElementById("gm-boot");
     var fill = b && b.querySelector(".gm-boot__fill"), log = b && b.querySelector(".gm-boot__log");
-    var lines = EN ? ["booting system…", "loading " + LIVE_COUNT + " specialists…", "connecting telemetry…", "mission control ready."]
-                   : ["rendszer indítása…", LIVE_COUNT + " szakember betöltése…", "telemetria csatlakoztatása…", "parancsnoki pult kész."];
+    var lines = EN ? ["booting system…", "loading " + TEAM_COUNT + " specialists…", "connecting telemetry…", "mission control ready."]
+                   : ["rendszer indítása…", TEAM_COUNT + " szakember betöltése…", "telemetria csatlakoztatása…", "parancsnoki pult kész."];
     function done() { if (!b) return; b.classList.add("is-done"); setTimeout(function () { b.style.display = "none"; }, 700); }
     if (!b || REDUCE) { done(); return; }
     var p = 0, li = 0;

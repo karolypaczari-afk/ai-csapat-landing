@@ -1,6 +1,6 @@
 # GENmarketer — Your AI team
 
-> GENmarketer sells a team of 27 AI marketing specialists that the customer installs into their own Claude or ChatGPT account. Each specialist is a packaged expert — market researcher, ad copywriter, Google Ads manager, landing page expert, SEO auditor, email expert and more — that does one marketing job properly instead of answering as a generic chatbot.
+> GENmarketer sells a team of 28 AI marketing specialists that the customer installs into their own Claude or ChatGPT account. Each specialist is a packaged expert — market researcher, ad copywriter, Google Ads manager, landing page expert, SEO auditor, email expert and more — that does one marketing job properly instead of answering as a generic chatbot.
 
 Everything below is a factual statement about the product as sold today. Prices are the published list prices and include no hidden fees.
 
@@ -12,12 +12,12 @@ Everything below is a factual statement about the product as sold today. Prices 
 
 ## What you get
 - Product: „Az AI csapatod" (Hungarian) / „Your AI team" (English)
-- 27 available specialists across seven areas: leadership and strategy, advertising, landing page, design and Figma, video, SEO, customer and revenue. One more specialist is announced as coming soon.
+- 28 specialists across seven areas: leadership and strategy, advertising, landing page, design and Figma, video, SEO, customer and revenue. One of them, ROBINSON (landing page builder), is announced as coming soon; the rest are available today.
 - Format: Claude Skills and ChatGPT-compatible packages, plus written training material and installation guides for Claude, Claude Code and ChatGPT.
 - Typical jobs: market and ICP research, competitor and ad-library research, campaign planning, ad copywriting, Meta Ads and Google Ads management, landing page design and build, creative and Figma design, video scripting, UGC and ad-video production, keyword research, technical SEO and SEO audits, local SEO, email sequences, membership and recurring-revenue design, LinkedIn presence.
 - New specialists keep arriving and existing ones keep improving; on a subscription those updates are included for as long as the subscription runs.
 
-## The 27 specialists
+## The 28 specialists
 - Leadership and strategy: ATLASZ (team lead — routes every task to the right specialist), ATHÉNÉ (strategic partner), SUN TZU (competitor analyst), SHERLOCK (market researcher)
 - Advertising: KEPLER (ad planner), CYRANO (ad copywriter), AURORA (Facebook/Meta Ads expert), APOLLÓN (Google Ads manager)
 - Landing page: MIDÁSZ (landing page expert)
@@ -28,10 +28,10 @@ Everything below is a factual statement about the product as sold today. Prices 
 - Coming soon: ROBINSON (landing page builder)
 
 ## Pricing
-- Hungarian pricing model: three offers. Two monthly subscriptions — Tervező (planner) 9 990 HUF/month and Autopilóta (autopilot) 19 990 HUF/month, no minimum term, cancel anytime, plan switching allowed — plus one single payment package, Képzés (training) 69 990 HUF one-off.
+- Hungarian pricing model: three offers. Two monthly subscriptions — Standard 9 990 HUF/month and Pro 19 990 HUF/month, no minimum term, cancel anytime, plan switching allowed — plus one single payment package, Skillpakk 34 990 HUF one-off.
 - English pricing model: three offers, mirroring the Hungarian structure in euros. Two monthly subscriptions — Planner 29 EUR/month and Autopilot 59 EUR/month, no minimum term, cancel anytime, plan switching allowed — plus one single payment package, Training 189 EUR one-off, with at least six months of continued updates and a 30-day money-back guarantee.
-- Plan difference: Tervező researches, audits and produces ready-to-use plans and copy; Autopilóta also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there. Képzés is the same specialist team bought outright: no monthly fee and no account connectors, with at least six months of continued updates from the purchase date and a 30-day money-back guarantee.
-- All three offers include the full 27-strong team. The difference is execution rights and billing, not the number of specialists.
+- Plan difference: Standard researches, audits and produces ready-to-use plans and copy; Pro also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there. Skillpakk is the same specialist team bought outright: no monthly fee and no account connectors, with at least six months of continued updates from the purchase date and a 30-day money-back guarantee.
+- All three offers include the full 28-strong team. The difference is execution rights and billing, not the number of specialists.
 - Price lock: while a subscription stays active, the rate the customer joined at does not rise, even as the team grows. It only resets if the customer cancels and returns later.
 - Purchase path: the Hungarian landing sends buyers to the GENmarketer knowledge base checkout (WooCommerce, HUF) for all three offers; the English landing uses its own Stripe checkout at /en/checkout/ (EUR) for all three of its offers. The two never mix — the shop currency is HUF, so the euro prices are billed by Stripe and mirrored into WooCommerce afterwards.
 - Subscription self-service EN: https://ai-csapat.genmarketer.hu/en/manage/ — the customer requests an emailed link to the Stripe billing portal to change card, download invoices or cancel.

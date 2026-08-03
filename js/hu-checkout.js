@@ -32,7 +32,7 @@
   var GA4_ID = 'G-1EV18K1256';
 
   // Forintban. A szerver fillérben dolgozik (×100) — itt csak megjelenítünk.
-  var PRICES = { kepzes: 69990, konzultacio: 119990 };
+  var PRICES = { kepzes: 34990, konzultacio: 119990 };
   var BUMP_PRICE = 29990;
   var PLAN_LABEL = {
     kepzes: 'Az AI csapatod – Képzés',

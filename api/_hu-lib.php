@@ -34,7 +34,7 @@ const GM_HU_ALLOWED_ORIGIN = 'https://ai-csapat.genmarketer.hu';
  * As with the English funnel: the browser may ask for a plan, never a price.
  */
 const GM_HU_PRICES = [
-    'kepzes'       => 6999000, // 69 990 Ft — „Az AI csapatod – Képzés" (Woo 872)
+    'kepzes'       => 3499000, // 34 990 Ft — „Az AI csapatod – Képzés" (Woo 872)
     'konzultacio'  => 11999000, // 119 990 Ft — „… Képzés + Konzultáció" (Woo 873)
 ];
 const GM_HU_BUMP_PRICE = 2999000; // 29 990 Ft — extra konzultációs óra

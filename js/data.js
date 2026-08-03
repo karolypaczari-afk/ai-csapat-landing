@@ -14,6 +14,20 @@
   "use strict";
   var AV = "/assets/img/avatars/", BG = "/assets/img/badges/", PF = "/assets/img/proof/";
 
+  /* ── A landolón HIRDETETT számok (2026-08-03, Károly döntése) ────────────────
+     Ez DEKLARÁLT marketing-tény, NEM az alábbi tömbből származtatott szám.
+     2026-08-01-ig a `tests/roster-counts.mjs` a próza minden létszám-állítását a
+     `status !== "soon"` ágensek darabszámához kötötte, tehát a landoló csak azt
+     mondhatta, amennyi éppen élesben volt (27). Károly ezt a kötést kivetette:
+     a csapat 28 fős, és a landoló ezt hirdeti akkor is, ha egy tag kártyáján még
+     „Hamarosan" badge áll — az egyes tagok állapota a kártyán látszik, nem a
+     fejlécszámban. A gépi kapu MEGMARADT, csak a mércéje változott: minden
+     látható szám EHHEZ a két értékhez méretik, tehát két egymásnak ellentmondó
+     szám továbbra sem élhet egy oldalon (ez volt az eredeti baj: 25 / 27 / 28).
+     ⚠️ Egyetlen hely: aki átírja, itt írja át — a HTML-prózát is vele együtt,
+     különben a kapu megbukik. */
+  window.GM_LANDING_FACTS = { team: 28, areas: 7 };
+
   window.GM_TEAM = [
     { cat: "Vezetés és stratégia", catEn: "Leadership & strategy", color: "#F5A623", members: [
       { code: "ATLASZ", name: "ATLASZ", role: "a csapatvezető", roleEn: "the team lead", slug: "genmarketer-team", status: "live",
