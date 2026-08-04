@@ -7,7 +7,7 @@ Everything below is a factual statement about the product as sold today. Prices 
 ## Site
 - Company site (agency + courses): https://genmarketer.hu/
 - Product landing, Hungarian: https://ai-csapat.genmarketer.hu/
-- English product landing: https://ai-csapat.genmarketer.hu/en/
+- English product landing: https://genmarketer.eu/
 - Knowledge base and Hungarian checkout: https://tudastar.genmarketer.hu/
 
 ## What you get
@@ -62,7 +62,7 @@ Everything below is a factual statement about the product as sold today. Prices 
 
 ## Important Pages
 - Product landing HU: https://ai-csapat.genmarketer.hu/
-- Product landing EN: https://ai-csapat.genmarketer.hu/en/
+- Product landing EN: https://genmarketer.eu/
 - Terms and Conditions (EN): https://genmarketer.eu/terms/
 - Privacy Notice (EN): https://genmarketer.eu/privacy/
 - Cookie Notice (EN): https://genmarketer.eu/cookies/
@@ -70,12 +70,12 @@ Everything below is a factual statement about the product as sold today. Prices 
 - GENmarketer knowledge base: https://tudastar.genmarketer.hu/
 
 ## AI and Search Context
-- The landing is a bilingual static site.
-- The Hungarian root page is the default version.
-- The English version is available under /en/.
+- The product has one landing page per language, each a static site.
+- The Hungarian one is https://ai-csapat.genmarketer.hu/ and it is the x-default version.
+- The English one is https://genmarketer.eu/. The former English path, https://ai-csapat.genmarketer.hu/en/, has redirected there with a permanent, path-preserving 301 since 2026-08-02; do not cite the old path.
 - Canonical URLs and hreflang alternates are declared in the HTML head and sitemap.
-- Structured data includes Organization, WebSite, WebPage, Product, Offer, ImageObject, ItemList and FAQPage entities.
-- The interactive specialist grid on the landing is rendered client-side; the same roster is also present as plain text inside a noscript block, so it can be read without executing JavaScript.
+- Structured data includes Organization, WebSite, WebPage, BreadcrumbList, Product, Offer, ImageObject, ItemList and FAQPage entities. Both language versions carry the same set.
+- The interactive specialist grid on the landing is rendered client-side; the same roster is also present as plain text inside a noscript block and as a JSON-LD ItemList, on BOTH language versions, so it can be read without executing JavaScript.
 - AI crawlers are explicitly allowed in robots.txt, including the retrieval and user-triggered agents that produce citations.
 
 ## Audience

@@ -11,6 +11,22 @@ AddType video/webm .webm
 AddType image/webp .webp
 AddType text/plain .txt
 
+# --- A régi angol útvonal: útvonal-hű, ÖRÖK 301 a genmarketer.eu-ra ---
+# Az angol üzletág 2026-08-02 óta a `genmarketer.eu` gyökerén él (docs/33), és az
+# `/en/*` azóta 301-gyel oda megy. A szabály eddig CSAK az élő szerveren létezett:
+# a repo `htaccess-prod`-jában nem volt benne, pedig a `sync-landing-mirror.yml`
+# EBBŐL a fájlból írja a docroot `.htaccess`-ét — vagyis a következő mirror-sync
+# némán levette volna a 301-et, és az `/en/` újra kiszolgált, indexelhető
+# duplikátummá vált volna a `.eu` mellett. Élőben mérve 2026-08-04-én, hogy a
+# leképezés útvonal-hű és minden cél 200-at ad (`/en/terms/` → `/terms/` stb.).
+# A `landing-ai-csapatod/en/` forrásmappa SZÁNDÉKOSAN megmarad: abból épül a `.eu`
+# snapshot (docs/33) — csak kiszolgálni nem szabad többé.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^en$        https://genmarketer.eu/ [R=301,L]
+  RewriteRule ^en/(.*)$   https://genmarketer.eu/$1 [R=301,L]
+</IfModule>
+
 # --- VCS / dotfile védelem (a .git sosem szolgálható ki) ---
 RedirectMatch 404 /\.git(/|$)
 <FilesMatch "^\.">
