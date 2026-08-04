@@ -37,6 +37,31 @@ Options -Indexes
 # chain is intact and Károly kept it as a fallback (2026-08-03).
 #
 # Anchored on ^ so that hu-create-intent.php and friends never match.
+#
+# ── The SIGNAL matters, not just the block (2026-08-04) ─────────────────────
+#
+# `Require all denied` answers 403 Forbidden, which means "you may not" — a
+# permission problem, and permission problems are the kind a client retries.
+# What is true here is stronger and permanent: these endpoints are GONE. The
+# English business no longer sells through them and never will again.
+#
+# 410 says exactly that, and it is the one status code a well-behaved client
+# treats as final: crawlers drop the URL instead of re-checking it, and a stale
+# integration stops retrying instead of hammering a dead payment endpoint
+# forever. With 403 the two cases are indistinguishable from the outside.
+#
+# mod_rewrite's [G] runs in the fixup phase, BEFORE authz, so it wins — and the
+# `Require all denied` below stays as belt and braces: if mod_rewrite were ever
+# unavailable, the endpoints still do not answer. Never weaken that to a bare
+# redirect: the deny is what guarantees the PHP is not executed.
+#
+# The pattern is relative to this directory (per-directory .htaccess), so it
+# does not assume where `api/` sits in either of the two document roots.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(create-intent|create-subscription|stripe-webhook|payment-status|capture-lead|portal|portal-link|replay|health)\.php$ - [G,L]
+</IfModule>
+
 <FilesMatch "^(create-intent|create-subscription|stripe-webhook|payment-status|capture-lead|portal|portal-link|replay|health)\.php$">
   Require all denied
 </FilesMatch>
