@@ -6,6 +6,10 @@
 (function () {
   "use strict";
 
+  // A három GSAP-fájl 2026-08-05 óta LUSTÁN töltődik (ld. loadGsap lent), ezért ezek
+  // a változók induláskor még undefined-ok, és a betöltés után kapnak értéket. Minden
+  // használati helyük igazságkapun megy át (`if (gsap && ST)`, `Flip ? … : null`), így
+  // az oldal akkor is teljes értékű, ha a vendor-fájl sosem érkezik meg.
   var gsap = window.gsap, ST = window.ScrollTrigger, Flip = window.Flip;
   var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var TEAM = window.GM_TEAM || [], AGENTS = window.GM_AGENTS || [];
@@ -575,14 +579,18 @@
   }
 
   /* ---- GSAP scroll-animációk ---- */
+  // Reveal-effekt ELTÁVOLÍTVA (lassúnak érződött): a blokkok azonnal láthatóak.
+  // Az .is-in-t mégis hozzáadjuk, mert a .gm-dash__bars (riport-oszlopok) CSS-e arra épül.
+  // 2026-08-05: ez KIVÁLT a gsap-ágból — nem függhet egy lustán töltődő vendor-fájltól,
+  // különben a riport-oszlopok addig összecsuklott állapotban állnának.
+  function applyRevealState() {
+    document.querySelectorAll(".gm-reveal").forEach(function (el) { el.classList.add("is-in"); });
+  }
+
   function wireScrollAnims() {
-    if (!gsap || !ST || REDUCE) { document.querySelectorAll(".gm-reveal").forEach(function (el) { el.classList.add("is-in"); }); return; }
+    if (!gsap || !ST || REDUCE) return;
     gsap.registerPlugin(ST, Flip);
     document.documentElement.classList.add("gm-anim-ready");
-
-    // Reveal-effekt ELTÁVOLÍTVA (lassúnak érződött): a blokkok azonnal láthatóak.
-    // Az .is-in-t mégis hozzáadjuk, mert a .gm-dash__bars (riport-oszlopok) CSS-e arra épül.
-    document.querySelectorAll(".gm-reveal").forEach(function (el) { el.classList.add("is-in"); });
 
     // hero copy parallax + 3D scroll-átadás
     var hero = document.getElementById("hero");
@@ -627,13 +635,71 @@
   }
 
   /* ---- Demó-videók (.gm-video): --loop in-view, --click poszteres ---- */
+  // A `preload="none"` a POSZTERT nem tartja vissza: azt a böngésző azonnal lehúzza,
+  // amint a <video> layoutba kerül. Mérve 2026-08-05-én: 5 hajtás alatti poszter
+  // 191 KB-ot töltött a kritikus ablakban, még az app.js lefutása előtt. Ezért a
+  // `poster` a HTML-ben `data-poster`, és csak a viewport közelében kerül a helyére.
+  function wireLazyPosters() {
+    var vids = document.querySelectorAll("video[data-poster]");
+    if (!vids.length) return;
+    function apply(v) {
+      var p = v.getAttribute("data-poster");
+      if (!p) return;
+      v.setAttribute("poster", p);
+      v.removeAttribute("data-poster");
+    }
+    function applyAllIn(root) {
+      var list = root.querySelectorAll ? root.querySelectorAll("video[data-poster]") : [];
+      for (var i = 0; i < list.length; i++) apply(list[i]);
+      if (root.tagName === "VIDEO") apply(root);
+    }
+    // Nincs IntersectionObserver (régi böngésző) → mindet betesszük. Ott a lassú,
+    // de HELYES viselkedés a cél; a poszter nélküli fekete doboz hiba lenne.
+    if (!("IntersectionObserver" in window)) {
+      for (var i = 0; i < vids.length; i++) apply(vids[i]);
+      return;
+    }
+    // ⚠️ NEM magát a <video>-t figyeljük, hanem a legközelebbi, a normál layoutban látható
+    // ŐSÉT (karusszel vagy médiakeret). A videók egy része karusszel-lapon ül; az inaktív lap
+    // `visibility:hidden; opacity:0`. Ha laponként figyelnénk, a látogató a lapozás
+    // PILLANATÁBAN kezdené tölteni a posztert → üres/fekete doboz villanna fel. Így viszont
+    // amikor a karusszel beér a képbe, az alatta lévő ÖSSZES poszter a helyére kerül —
+    // lapozáskor nincs villanás, a kritikus betöltési ablakot pedig ugyanúgy elkerüljük.
+    var anchors = [], map = [];
+    for (var j = 0; j < vids.length; j++) {
+      var a = vids[j].closest(".gm-carousel") || vids[j].closest(".gm-uc__media") || vids[j].parentElement || vids[j];
+      var k = anchors.indexOf(a);
+      if (k === -1) { anchors.push(a); map.push([vids[j]]); } else { map[k].push(vids[j]); }
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        applyAllIn(en.target);
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: "300px 0px" });
+    for (var m = 0; m < anchors.length; m++) io.observe(anchors[m]);
+  }
+
+  // Régi eszköz / mért adatkapcsolat: a hurok-videók 0,7–3,0 MB-osak. A `saveData`
+  // és a 2g/3g `effectiveType` mellett NEM indítjuk őket maguktól — a lejátszógomb
+  // marad, tehát semmi nem vész el, csak a látogató dönt róla.
+  function autoplayAllowed() {
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (!c) return true;
+    if (c.saveData) return false;
+    var t = c.effectiveType || "";
+    return !(t === "slow-2g" || t === "2g" || t === "3g");
+  }
+
   function wireVideos() {
     var figs = document.querySelectorAll(".gm-video"); if (!figs.length) return;
+    var mayAutoplay = autoplayAllowed();
     figs.forEach(function (fig) {
       var video = fig.querySelector("video"); if (!video) return;
       var btn = fig.querySelector(".gm-video__play");
       if (REDUCE) { video.controls = true; if (btn) btn.remove(); var mb0 = fig.querySelector(".gm-video__mute"); if (mb0) mb0.remove(); return; }
-      if (fig.classList.contains("gm-video--loop") && "IntersectionObserver" in window) {
+      if (mayAutoplay && fig.classList.contains("gm-video--loop") && "IntersectionObserver" in window) {
         var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting && en.intersectionRatio >= 0.5) video.play().catch(function () {}); else video.pause(); }); }, { threshold: [0, 0.5] });
         io.observe(video);
       }
@@ -810,7 +876,17 @@
   }
 
   /* ---- WebGL hero (csak desktop) ---- */
+  // A dinamikus `import()` SZINTAKTIKAI hiba minden 2018 előtti motorban (Chrome <63,
+  // Safari <11.1, régi Android-stock/UC böngésző). Szó szerint a fájlban hagyva az EGÉSZ
+  // app.js parse-olhatatlan lett volna ott — vagyis nem a 3D-hero esett volna ki, hanem
+  // a teljes oldal-logika: ágens-kártyák, CTA-mérés, GYIK, szűrő, minden. A `new Function`
+  // a parse-t FUTÁSIDŐRE tolja, ahol a hiba elkapható; ami nem tudja, az egyszerűen nem
+  // kapja meg a 3D-hátteret. (Az csak ≥1024 px + `pointer:fine` mellett futna amúgy is.)
+  var dynImport = null;
+  try { dynImport = new Function("u", "return import(u);"); } catch (e) { dynImport = null; }
+
   function maybeHero() {
+    if (!dynImport) return;
     var wide = window.matchMedia("(min-width: 1024px)").matches;
     var fine = window.matchMedia("(pointer: fine)").matches;
     if (!wide || !fine || REDUCE) return;
@@ -818,26 +894,60 @@
     try { var probe = document.createElement("canvas"); var gl = probe.getContext("webgl") || probe.getContext("experimental-webgl"); if (!gl) return; } catch (e) { return; }
     document.documentElement.classList.add("gm-webgl");
     document.querySelector(".gm-lp").classList.add("gm-webgl");
-    import("./hero3d.js").then(function (mod) {
-      window.__gmHero = mod.initHero({ canvas: canvas, agents: AGENTS, avBase: AV, en: EN });
-    }).catch(function (e) { console.warn("hero3d nem indult:", e); });
+    try {
+      // ABSZOLÚT útvonal kell: a `new Function` törzse globális kontextusban fut, ott a
+      // relatív `./hero3d.js` a DOKUMENTUMHOZ képest oldódna fel (→ `/hero3d.js`, 404).
+      dynImport("/js/hero3d.js").then(function (mod) {
+        window.__gmHero = mod.initHero({ canvas: canvas, agents: AGENTS, avBase: AV, en: EN });
+      })["catch"](function (e) { console.warn("hero3d nem indult:", e); });
+    } catch (e) { console.warn("hero3d nem indult:", e); }
   }
 
-  /* ---- Boot ---- */
+  /* ---- Boot ----
+     2026-08-05: a boot-réteg MÉRT-EN 1070–1790 ms-ig (medián 1430) tartotta magát a
+     tartalom előtt, + 600 ms fade — és mivel `position:fixed; inset:0` átlátszatlan
+     réteg volt `pointer-events` korlátozás nélkül, addig a CTA-ra KATTINTANI SEM lehetett.
+     Ez tiszta, mesterséges késleltetés volt: a haladás-sáv nem mért semmit, csak
+     `Math.random()`-mal telt. Mostantól a sáv CSS-animációval fut VALÓDI betöltés alatt
+     (parse → DOMContentLoaded), és amint a JS elindul, a réteg azonnal megy le. A
+     `pointer-events: none` a hud.css-ben már a kiindulási állapotban rajta van. */
   function boot() {
     var b = document.getElementById("gm-boot");
-    var fill = b && b.querySelector(".gm-boot__fill"), log = b && b.querySelector(".gm-boot__log");
-    var lines = EN ? ["booting system…", "loading " + TEAM_COUNT + " specialists…", "connecting telemetry…", "mission control ready."]
-                   : ["rendszer indítása…", TEAM_COUNT + " szakember betöltése…", "telemetria csatlakoztatása…", "parancsnoki pult kész."];
-    function done() { if (!b) return; b.classList.add("is-done"); setTimeout(function () { b.style.display = "none"; }, 700); }
-    if (!b || REDUCE) { done(); return; }
-    var p = 0, li = 0;
-    var iv = setInterval(function () {
-      p = Math.min(p + 12 + Math.random() * 16, 100);
-      if (fill) fill.style.width = p + "%";
-      if (log && li < lines.length && p > li * 25) { log.textContent = lines[li]; li++; }
-      if (p >= 100) { clearInterval(iv); if (log) log.textContent = lines[lines.length - 1]; setTimeout(done, 350); }
-    }, 180);
+    if (!b) return;
+    var log = b.querySelector(".gm-boot__log"), fill = b.querySelector(".gm-boot__fill");
+    if (log) log.textContent = EN ? "mission control ready." : "parancsnoki pult kész.";
+    if (fill) fill.style.width = "100%";
+    b.classList.add("is-done");
+    setTimeout(function () { b.style.display = "none"; }, 400);
+  }
+
+  /* ---- GSAP: lusta betöltés (2026-08-05) ----
+     A három vendor-fájl 53 KB brotli / ~180 KB parse-olandó JS volt a KRITIKUS úton,
+     miközben pontosan két dolgot szolgál ki: a hero-parallaxot és a csapat-szűrő
+     átrendezését. Régi, lassú CPU-n a parse-idő a legdrágább tétel, ezért a betöltés
+     az első paint utánra csúszik. Ha valamelyik fájl nem érkezik meg, az oldal
+     hiánytalanul működik — csak animáció nélkül, ugyanazon az ágon, mint reduced-motion mellett. */
+  function loadScript(src, cb) {
+    var s = document.createElement("script");
+    s.src = src;
+    s.async = false; // dinamikus scripteknél ez tartja a beszúrási sorrendet: a pluginok a core UTÁN futnak
+    s.onload = function () { cb(); };
+    s.onerror = function () { cb(); };
+    document.head.appendChild(s);
+  }
+  function loadGsap(done) {
+    if (REDUCE || !window.Promise) { done(); return; }
+    var files = ["gsap.min.js", "ScrollTrigger.min.js", "Flip.min.js"], left = files.length;
+    function step() {
+      if (--left > 0) return;
+      gsap = window.gsap; ST = window.ScrollTrigger; Flip = window.Flip;
+      done();
+    }
+    for (var i = 0; i < files.length; i++) loadScript("/js/vendor/" + files[i], step);
+  }
+  function whenIdle(fn) {
+    if (window.requestIdleCallback) window.requestIdleCallback(fn, { timeout: 2000 });
+    else setTimeout(fn, 200);
   }
 
   // A landolón eddig CSAK `PageView` tüzelt. A `ViewContent` az a jel, amiből a Meta
@@ -879,7 +989,9 @@
   }
 
   function init() {
+    // 1) Minden, ami a tartalom HASZNÁLHATÓSÁGÁHOZ kell — azonnal, vendor-függés nélkül.
     boot();
+    applyRevealState();
     renderAgents();
     wireFilters();
     wireCtas();
@@ -889,12 +1001,19 @@
     wireSmoothScroll();
     wireScrollState();
     wireFaq();
+    wireLazyPosters();
     wireVideos();
     wireCarousels();
     wireProofSlider();
     wireLightbox();
-    wireScrollAnims();
-    maybeHero();
+
+    // 2) Ami CSAK dísz — az első paint után, üresjáratban. Ha sosem fut le, az oldal ép.
+    whenIdle(function () {
+      loadGsap(function () {
+        wireScrollAnims();
+        maybeHero();
+      });
+    });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();

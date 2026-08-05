@@ -79,13 +79,10 @@
   </script>
       <!-- gm:en-roster:ld:end -->
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- A Google Fonts stíluslap render-blokkoló, harmadik feles kérés. A `preload as=style`
-       előrehozza a kérést a fő CSS-ekkel PÁRHUZAMOSAN; a mögötte álló sima stylesheet-tag
-       marad, tehát nincs FOUT-kockázat és nincs JS-függés. -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Font: SELF-HOSTED (2026-08-05). The Google Fonts <link> was render-blocking and put two
+       third-party origins on the critical path. Recipe + legacy-device fallback: assets/fonts/README.md -->
+  <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/fonts.css">
 
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/hud.css">
@@ -120,18 +117,28 @@
       window.gtag('config', 'G-1EV18K1256', cfg);
     })();
   </script>
-  <script type="text/javascript">
-    if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "x0aguuyezr");
-    }
+  <!-- OptiMonk — DEFERRED (2026-08-05). Measured: 42 requests to 8 hostnames; the campaign impression
+       fired at 18.7 s. It is not needed in the first seconds of load, yet it was the biggest
+       consumer of connections and main-thread time — the most expensive thing on an older device.
+       Loaded on the first real interaction (or after 3.5 s); the campaign logic is untouched. -->
+  <script>
+    (function () {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+      var loaded = false;
+      function load() {
+        if (loaded) return; loaded = true;
+        for (var i = 0; i < evts.length; i++) { window.removeEventListener(evts[i], load, true); }
+        clearTimeout(timer);
+        var s = document.createElement('script');
+        s.src = 'https://onsite.optimonk.com/script.js?account=272001';
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      var evts = ['scroll', 'pointermove', 'touchstart', 'keydown', 'click'];
+      for (var i = 0; i < evts.length; i++) { window.addEventListener(evts[i], load, true); }
+      var timer = setTimeout(load, 3500);
+    })();
   </script>
-  <script type="text/javascript"
-      src="https://onsite.optimonk.com/script.js?account=272001"
-      async></script>
   <!-- Meta Pixel — browser-side PageView + checkout intent. CAPI token stays server-side only. -->
   <script>
     (function () {
@@ -188,9 +195,9 @@
   </script>
   <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1866401038098751&amp;ev=PageView&amp;noscript=1"></noscript>
 
-  <script defer src="/js/vendor/gsap.min.js"></script>
-  <script defer src="/js/vendor/ScrollTrigger.min.js"></script>
-  <script defer src="/js/vendor/Flip.min.js"></script>
+  <!-- gsap + ScrollTrigger + Flip: DELIBERATELY not here (2026-08-05). 53 KB brotli /
+       ~180 KB of JS to parse on the critical path for two animations. app.js loads them
+       after first paint (loadGsap), when idle; if they never arrive, the page is intact. -->
   <script defer src="/js/data.js"></script>
   <script defer src="/js/dashboards.js"></script>
   <script defer src="/js/app.js"></script>
@@ -294,7 +301,7 @@
           <div class="gm-orch__step" style="margin-top:1.3rem"><h3 class="gm-h2" style="font-size:1.35rem">As a team, on one task</h3><p class="gm-lead">Several specialists can work together on a single problem.</p></div>
           <div class="gm-orch__step" style="margin-top:1.3rem"><h3 class="gm-h2" style="font-size:1.35rem">Tasks from A to Z</h3><p class="gm-lead">The team also runs complete tasks from A to Z – like creating and setting up ads, or designing and building websites.</p></div>
         </div>
-        <figure class="gm-reveal" style="margin:0"><img src="/assets/img/team-v2.jpg" alt="From one goal the AI automatically calls in several specialists and returns finished work" style="border-radius:24px;border:1px solid var(--gm-line)" loading="lazy" width="1086" height="859"></figure>
+        <figure class="gm-reveal" style="margin:0"><img src="/assets/img/team-v2.webp" alt="From one goal the AI automatically calls in several specialists and returns finished work" style="border-radius:24px;border:1px solid var(--gm-line)" loading="lazy" width="1086" height="859"></figure>
       </div>
     </div>
   </section>
@@ -369,7 +376,7 @@
                   <div class="gm-carousel__slide" id="gm-cslide-kreativ-3" data-gm-slide role="group" aria-roledescription="slide" aria-label="3 / 3" aria-hidden="true">
                     <div class="gm-video gm-video--loop">
                       <div class="gm-video__frame">
-                        <video preload="none" muted playsinline loop poster="/assets/video/kreativ-motion-poster.webp" width="720" height="720" data-gm-video="kreativ-motion" aria-label="Motion creative (motion ad) example">
+                        <video preload="none" muted playsinline loop data-poster="/assets/video/kreativ-motion-poster.webp" width="720" height="720" data-gm-video="kreativ-motion" aria-label="Motion creative (motion ad) example">
                           <source src="/assets/video/kreativ-motion.mp4" type="video/mp4">
                         </video>
                         <button class="gm-video__mute" type="button" aria-label="Unmute" aria-pressed="false">
@@ -403,7 +410,7 @@
             <ul class="gm-check"><li>Analyzes your landing page and gives you ideas to optimize it</li><li>Designs new pages with concrete copy, section by section</li><li>Builds complete designs on its own in Figma (wireframe and design)</li><li>Builds working HTML pages</li></ul>
             <a class="gm-uc__cta" href="#arazas" data-gm-cta="usecase-weboldal" data-gm-package="planner">I want this →</a>
           </div>
-          <figure class="gm-uc__media gm-uc__media--img gm-reveal" style="margin:0"><img src="/assets/img/proof/lumore-preview.png" alt="A preview of a finished landing page" loading="lazy" width="1027" height="753"><p class="gm-uc__note" style="margin-top:10px;font-size:.82rem;color:#54595F">Hooks, body copy and calls to action written by the specialists — six angles for a single offer.</p></figure>
+          <figure class="gm-uc__media gm-uc__media--img gm-reveal" style="margin:0"><img src="/assets/img/proof/lumore-preview.webp" alt="A preview of a finished landing page" loading="lazy" width="1027" height="753"><p class="gm-uc__note" style="margin-top:10px;font-size:.82rem;color:#54595F">Hooks, body copy and calls to action written by the specialists — six angles for a single offer.</p></figure>
         </article>
 
         <article class="gm-uc gm-reveal">
@@ -433,7 +440,7 @@
           </div>
           <figure class="gm-uc__media gm-video gm-video--loop gm-reveal">
             <div class="gm-video__frame">
-              <video preload="none" muted playsinline loop poster="/assets/video/demo-kreativ-poster.webp" width="1280" height="720" data-gm-video="demo-videovago" aria-label="Demo: video editing and captioning">
+              <video preload="none" muted playsinline loop data-poster="/assets/video/demo-kreativ-poster.webp" width="1280" height="720" data-gm-video="demo-videovago" aria-label="Demo: video editing and captioning">
                 <source src="/assets/video/demo-kreativ.mp4" type="video/mp4">
               </video>
               <button class="gm-video__mute" type="button" aria-label="Unmute" aria-pressed="false">
@@ -458,7 +465,7 @@
           </div>
           <figure class="gm-uc__media gm-video gm-video--loop gm-reveal">
             <div class="gm-video__frame">
-              <video preload="none" muted playsinline loop poster="/assets/video/demo-video-ad-poster.webp" width="1280" height="720" data-gm-video="demo-video-ad" aria-label="AI-generated ad video with no shoot">
+              <video preload="none" muted playsinline loop data-poster="/assets/video/demo-video-ad-poster.webp" width="1280" height="720" data-gm-video="demo-video-ad" aria-label="AI-generated ad video with no shoot">
                 <source src="/assets/video/demo-video-ad.mp4" type="video/mp4">
               </video>
               <button class="gm-video__mute" type="button" aria-label="Unmute" aria-pressed="false">
@@ -488,7 +495,7 @@
                   <div class="gm-carousel__slide is-active" id="gm-cslide-ugc-1" data-gm-slide role="group" aria-roledescription="slide" aria-label="1 / 2" aria-hidden="false">
                     <div class="gm-video gm-video--loop">
                       <div class="gm-video__frame">
-                        <video preload="none" muted playsinline loop poster="/assets/video/demo-ugc-poster.webp" width="720" height="720" data-gm-video="demo-ugc" aria-label="UGC video example – product demo">
+                        <video preload="none" muted playsinline loop data-poster="/assets/video/demo-ugc-poster.webp" width="720" height="720" data-gm-video="demo-ugc" aria-label="UGC video example – product demo">
                           <source src="/assets/video/demo-ugc.mp4" type="video/mp4">
                         </video>
                       </div>
@@ -497,7 +504,7 @@
                   <div class="gm-carousel__slide" id="gm-cslide-ugc-2" data-gm-slide role="group" aria-roledescription="slide" aria-label="2 / 2" aria-hidden="true">
                     <div class="gm-video gm-video--loop">
                       <div class="gm-video__frame">
-                        <video preload="none" muted playsinline loop poster="/assets/video/ugc-example-2-poster.webp" width="720" height="720" data-gm-video="ugc-example-2" aria-label="UGC video example – scene with an actor">
+                        <video preload="none" muted playsinline loop data-poster="/assets/video/ugc-example-2-poster.webp" width="720" height="720" data-gm-video="ugc-example-2" aria-label="UGC video example – scene with an actor">
                           <source src="/assets/video/ugc-example-2.mp4" type="video/mp4">
                         </video>
                       </div>
@@ -794,7 +801,7 @@
   <section class="gm-section gm-section--light" id="tibor">
     <div class="gm-container gm-author">
       <figure class="gm-author__photo gm-reveal">
-        <img src="/assets/img/tibor.webp" alt="Tibor Szántai, founder of GENmarketer" width="900" height="900">
+        <img src="/assets/img/tibor.webp" alt="Tibor Szántai, founder of GENmarketer" width="900" height="900" loading="lazy" decoding="async">
       </figure>
       <div class="gm-author__body">
         <span class="gm-eyebrow gm-reveal">A few words from me</span>

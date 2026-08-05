@@ -80,11 +80,11 @@
   </script>
       <!-- gm:hu-roster:ld:end -->
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="/css/styles.css?v=20260619c">
+  <!-- Betűtípus: ÖNHOSZTOLT (2026-08-05). A Google Fonts <link> render-blokkoló volt, és két
+       harmadik-fél-origint tett a kritikus útba. Recept + régi-eszköz fallback: assets/fonts/README.md -->
+  <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/styles.css?v=20260805a">
   <link rel="stylesheet" href="/css/hud.css">
 
   <!-- GA4 — localhoston KI (prod paritás); éles hoston pörög.
@@ -126,9 +126,28 @@
     })(window, document, "clarity", "script", "x0aguuyezr");
     }
   </script>
-  <script type="text/javascript"
-      src="https://onsite.optimonk.com/script.js?account=272001"
-      async></script>
+  <!-- OptiMonk — KÉSLELTETVE (2026-08-05). Mérve: 42 kérés 8 hosztnévre, és a kampány-impresszió
+       a 18,7. másodpercnél tüzelt. A betöltés első másodperceiben tehát nincs rá szükség, közben
+       viszont ő vitte el a legtöbb kapcsolatot és main-thread-időt — ez régi eszközön a legdrágább.
+       Az első valódi interakcióra (vagy 3,5 mp-re) töltjük be; a kampánylogika érintetlen. -->
+  <script>
+    (function () {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+      var loaded = false;
+      function load() {
+        if (loaded) return; loaded = true;
+        for (var i = 0; i < evts.length; i++) { window.removeEventListener(evts[i], load, true); }
+        clearTimeout(timer);
+        var s = document.createElement('script');
+        s.src = 'https://onsite.optimonk.com/script.js?account=272001';
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      var evts = ['scroll', 'pointermove', 'touchstart', 'keydown', 'click'];
+      for (var i = 0; i < evts.length; i++) { window.addEventListener(evts[i], load, true); }
+      var timer = setTimeout(load, 3500);
+    })();
+  </script>
   <!-- Meta Pixel — browser-side PageView + checkout intent. CAPI token stays server-side only. -->
   <script>
     (function () {
@@ -177,12 +196,12 @@
   </script>
   <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1866401038098751&amp;ev=PageView&amp;noscript=1"></noscript>
 
-  <script defer src="/js/vendor/gsap.min.js"></script>
-  <script defer src="/js/vendor/ScrollTrigger.min.js"></script>
-  <script defer src="/js/vendor/Flip.min.js"></script>
+  <!-- gsap + ScrollTrigger + Flip: SZÁNDÉKOSAN nincs itt (2026-08-05). 53 KB brotli /
+       ~180 KB parse-olandó JS volt a kritikus úton két animációért. Az app.js tölti be
+       az első paint után (`loadGsap`), üresjáratban; ha nem érkezik meg, az oldal ép. -->
   <script defer src="/js/data.js"></script>
   <script defer src="/js/dashboards.js"></script>
-  <script defer src="/js/app.js?v=20260619c"></script>
+  <script defer src="/js/app.js?v=20260805a"></script>
 </head>
 <body>
 <div class="gm-lp">
@@ -283,7 +302,7 @@
           <div class="gm-orch__step" style="margin-top:1.3rem"><h3 class="gm-h2" style="font-size:1.35rem">Csapatként, egy feladaton</h3><p class="gm-lead">Akár több szakember is együtt tud dolgozni egyetlen problémán.</p></div>
           <div class="gm-orch__step" style="margin-top:1.3rem"><h3 class="gm-h2" style="font-size:1.35rem">Feladatok <span class="gm-nb">A-tól Z-ig</span></h3><p class="gm-lead">A csapat teljes feladatokat is végrehajt <span class="gm-nb">A-tól Z-ig</span> – például hirdetések létrehozása és beállítása, vagy weboldalak tervezése és felépítése.</p></div>
         </div>
-        <figure class="gm-reveal" style="margin:0"><img src="/assets/img/team-v2.jpg" alt="Az AI egy célból automatikusan több szakembert hív be, és kész munkát ad vissza" style="border-radius:24px;border:1px solid var(--gm-line)" loading="lazy"></figure>
+        <figure class="gm-reveal" style="margin:0"><img src="/assets/img/team-v2.webp" alt="Az AI egy célból automatikusan több szakembert hív be, és kész munkát ad vissza" style="border-radius:24px;border:1px solid var(--gm-line)" loading="lazy"></figure>
       </div>
     </div>
   </section>
@@ -358,7 +377,7 @@
                   <div class="gm-carousel__slide" id="gm-cslide-kreativ-3" data-gm-slide role="group" aria-roledescription="dia" aria-label="3 / 3" aria-hidden="true">
                     <div class="gm-video gm-video--loop">
                       <div class="gm-video__frame">
-                        <video preload="none" muted playsinline loop poster="/assets/video/kreativ-motion-poster.webp" width="720" height="720" data-gm-video="kreativ-motion" aria-label="Mozgó kreatív (motion ad) példa">
+                        <video preload="none" muted playsinline loop data-poster="/assets/video/kreativ-motion-poster.webp" width="720" height="720" data-gm-video="kreativ-motion" aria-label="Mozgó kreatív (motion ad) példa">
                           <source src="/assets/video/kreativ-motion.mp4" type="video/mp4">
                         </video>
                         <button class="gm-video__mute" type="button" aria-label="Hang bekapcsolása" aria-pressed="false">
@@ -392,7 +411,7 @@
             <ul class="gm-check"><li>Kielemzi a landoló oldalad, és ötleteket ad az optimalizáláshoz</li><li>Új oldalakat tervez konkrét szövegekkel, szekcióról szekcióra</li><li>Komplett terveket épít önállóan Figmában (drótváz és látványterv)</li><li>Működőképes HTML-oldalakat épít</li></ul>
             <a class="gm-uc__cta" href="#arazas" data-gm-cta="usecase-weboldal" data-gm-package="planner">Ezt akarom →</a>
           </div>
-          <figure class="gm-uc__media gm-uc__media--img gm-reveal" style="margin:0"><img src="/assets/img/proof/lumore-preview.png" alt="Egy elkészült landoló oldal előnézete" loading="lazy"></figure>
+          <figure class="gm-uc__media gm-uc__media--img gm-reveal" style="margin:0"><img src="/assets/img/proof/lumore-preview.webp" alt="Egy elkészült landoló oldal előnézete" loading="lazy"></figure>
         </article>
 
         <article class="gm-uc gm-reveal">
@@ -422,7 +441,7 @@
           </div>
           <figure class="gm-uc__media gm-video gm-video--loop gm-reveal">
             <div class="gm-video__frame">
-              <video preload="none" muted playsinline loop poster="/assets/video/demo-kreativ-poster.webp" width="1280" height="720" data-gm-video="demo-videovago" aria-label="Demó: videóvágás és feliratozás">
+              <video preload="none" muted playsinline loop data-poster="/assets/video/demo-kreativ-poster.webp" width="1280" height="720" data-gm-video="demo-videovago" aria-label="Demó: videóvágás és feliratozás">
                 <source src="/assets/video/demo-kreativ.mp4" type="video/mp4">
               </video>
               <button class="gm-video__mute" type="button" aria-label="Hang bekapcsolása" aria-pressed="false">
@@ -447,7 +466,7 @@
           </div>
           <figure class="gm-uc__media gm-video gm-video--loop gm-reveal">
             <div class="gm-video__frame">
-              <video preload="none" muted playsinline loop poster="/assets/video/demo-video-ad-poster.webp" width="1280" height="720" data-gm-video="demo-video-ad" aria-label="AI-generált hirdetésvideó forgatás nélkül">
+              <video preload="none" muted playsinline loop data-poster="/assets/video/demo-video-ad-poster.webp" width="1280" height="720" data-gm-video="demo-video-ad" aria-label="AI-generált hirdetésvideó forgatás nélkül">
                 <source src="/assets/video/demo-video-ad.mp4" type="video/mp4">
               </video>
               <button class="gm-video__mute" type="button" aria-label="Hang bekapcsolása" aria-pressed="false">
@@ -477,7 +496,7 @@
                   <div class="gm-carousel__slide is-active" id="gm-cslide-ugc-1" data-gm-slide role="group" aria-roledescription="dia" aria-label="1 / 2" aria-hidden="false">
                     <div class="gm-video gm-video--loop">
                       <div class="gm-video__frame">
-                        <video preload="none" muted playsinline loop poster="/assets/video/demo-ugc-poster.webp" width="720" height="720" data-gm-video="demo-ugc" aria-label="UGC-videó példa – termékbemutató">
+                        <video preload="none" muted playsinline loop data-poster="/assets/video/demo-ugc-poster.webp" width="720" height="720" data-gm-video="demo-ugc" aria-label="UGC-videó példa – termékbemutató">
                           <source src="/assets/video/demo-ugc.mp4" type="video/mp4">
                         </video>
                       </div>
@@ -486,7 +505,7 @@
                   <div class="gm-carousel__slide" id="gm-cslide-ugc-2" data-gm-slide role="group" aria-roledescription="dia" aria-label="2 / 2" aria-hidden="true">
                     <div class="gm-video gm-video--loop">
                       <div class="gm-video__frame">
-                        <video preload="none" muted playsinline loop poster="/assets/video/ugc-example-2-poster.webp" width="720" height="720" data-gm-video="ugc-example-2" aria-label="UGC-videó példa – szereplős jelenet">
+                        <video preload="none" muted playsinline loop data-poster="/assets/video/ugc-example-2-poster.webp" width="720" height="720" data-gm-video="ugc-example-2" aria-label="UGC-videó példa – szereplős jelenet">
                           <source src="/assets/video/ugc-example-2.mp4" type="video/mp4">
                         </video>
                       </div>
@@ -771,7 +790,7 @@
   <section class="gm-section gm-section--light" id="tibor">
     <div class="gm-container gm-author">
       <figure class="gm-author__photo gm-reveal">
-        <img src="/assets/img/tibor.webp" alt="Tibor Szántai, a GENmarketer alapítója" width="900" height="900">
+        <img src="/assets/img/tibor.webp" alt="Tibor Szántai, a GENmarketer alapítója" width="900" height="900" loading="lazy" decoding="async">
       </figure>
       <div class="gm-author__body">
         <span class="gm-eyebrow gm-reveal">Pár szó tőlem</span>

@@ -10,6 +10,9 @@ AddType video/mp4 .mp4
 AddType video/webm .webm
 AddType image/webp .webp
 AddType text/plain .txt
+# 2026-08-05: önhosztolt webfontok. Rossz MIME-mel a böngésző eldobja a `preload`-ot
+# („was preloaded but not used") és újra letölti — vagyis a preload ártana, nem használna.
+AddType font/woff2 .woff2
 
 # --- Az angol csatorna elköltözött: /en/* → genmarketer.eu (Károly, 2026-08-02) ---
 #
@@ -61,8 +64,14 @@ RedirectMatch 404 /\.git(/|$)
   <FilesMatch "\.(txt|xml)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "\.(webp|png|jpe?g|svg|gif|ico|woff2?)$">
+  <FilesMatch "\.(webp|png|jpe?g|svg|gif|ico)$">
     Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  # A webfontok TARTALOM-STABILAK: frissítéskor új fájlnevet kapnak (assets/fonts/README.md),
+  # ezért egy évig `immutable`-ök. Ez az a réteg, ahol a hosszú cache kockázat NÉLKÜL jár —
+  # a CSS/JS szándékosan marad `no-cache` alatta (azonnali élesedés, két agent deployol).
+  <FilesMatch "\.woff2?$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   <FilesMatch "\.(mp4|webm)$">
     Header set Cache-Control "public, max-age=604800"
