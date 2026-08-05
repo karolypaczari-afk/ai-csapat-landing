@@ -11,21 +11,38 @@ AddType video/webm .webm
 AddType image/webp .webp
 AddType text/plain .txt
 
-# --- A régi angol útvonal: útvonal-hű, ÖRÖK 301 a genmarketer.eu-ra ---
-# Az angol üzletág 2026-08-02 óta a `genmarketer.eu` gyökerén él (docs/33), és az
-# `/en/*` azóta 301-gyel oda megy. A szabály eddig CSAK az élő szerveren létezett:
-# a repo `htaccess-prod`-jában nem volt benne, pedig a `sync-landing-mirror.yml`
-# EBBŐL a fájlból írja a docroot `.htaccess`-ét — vagyis a következő mirror-sync
-# némán levette volna a 301-et, és az `/en/` újra kiszolgált, indexelhető
-# duplikátummá vált volna a `.eu` mellett. Élőben mérve 2026-08-04-én, hogy a
-# leképezés útvonal-hű és minden cél 200-at ad (`/en/terms/` → `/terms/` stb.).
-# A `landing-ai-csapatod/en/` forrásmappa SZÁNDÉKOSAN megmarad: abból épül a `.eu`
-# snapshot (docs/33) — csak kiszolgálni nem szabad többé.
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteRule ^en$        https://genmarketer.eu/ [R=301,L]
-  RewriteRule ^en/(.*)$   https://genmarketer.eu/$1 [R=301,L]
-</IfModule>
+# --- Az angol csatorna elköltözött: /en/* → genmarketer.eu (Károly, 2026-08-02) ---
+#
+# Az angol oldal saját domaint kapott. Amíg mindkét útvonal 200-at adott, két
+# indexelhető angol oldal versenyzett egymással ugyanazzal a tartalommal, és a
+# hreflang sem volt viszonos — ilyenkor a Google az egész fürtöt eldobja.
+#
+# ÚTVONAL-HŰ a leképezés: /en/checkout/ → genmarketer.eu/checkout/, mert a .eu-n
+# az angol oldal MAGA a gyökér. Egy vak /en/* → gyökér átirányítás a mélylinkeket
+# (pénztár, köszönőoldal, manage) mind a főoldalra dobná, és a már KIKÜLDÖTT
+# portál-linkek törnének el — azok e-mailben élnek, nem tudjuk visszahívni őket.
+#
+# 301 és nem 302: ez végleges. A szabály a docs/33 8c szerint ÖRÖKRE marad, akkor
+# is, ha az /en/ mappa egyszer törlődik a docrootból.
+#
+# ⚠️ 2026-08-04: EZ A BLOKK 2026-08-02 ÓTA CSAK AZ ÉLŐ SZERVEREN LÉTEZETT.
+# Kézzel került a docroot `.htaccess`-ébe, a repo forrásába soha — pedig a
+# `sync-landing-mirror.yml` EBBŐL a fájlból írja a docroot `.htaccess`-ét. Két
+# következménye volt, és a második két napig láthatatlan maradt:
+#   1. a következő mirror-sync NÉMÁN levette volna a saját 301-ét, és az `/en/`
+#      újra kiszolgált, indexelhető duplikátummá vált volna a `.eu` mellett;
+#   2. a kézi szerkesztéstől a docroot git-munkafája TARTÓSAN PISZKOS lett ezen
+#      az egy fájlon → a `git merge --ff-only` minden olyan commitnál elbukik,
+#      ami szintén hozzányúl a `.htaccess`-hez. 08-02 és 08-04 között egyetlen
+#      ilyen commit sem volt, ezért minden deploy zöld maradt — a hiba ott ült,
+#      csak nem volt mihez hozzáérnie.
+# A szöveg SZÁNDÉKOSAN az élő, bizonyítottan működő `RedirectMatch` alak (nem
+# `RewriteRule`): élőben mérve 2026-08-04-én, hogy útvonal-hű és minden cél
+# 200-at ad (`/en/terms/` → `/terms/`, `/en/checkout/` → `/checkout/` stb.).
+# A `landing-ai-csapatod/en/` forrásmappa MEGMARAD: abból épül a `.eu` snapshot
+# (docs/33) — csak kiszolgálni nem szabad többé.
+RedirectMatch 301 ^/en/(.*)$ https://genmarketer.eu/$1
+RedirectMatch 301 ^/en$ https://genmarketer.eu/
 
 # --- VCS / dotfile védelem (a .git sosem szolgálható ki) ---
 RedirectMatch 404 /\.git(/|$)
