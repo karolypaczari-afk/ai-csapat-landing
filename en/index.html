@@ -3,8 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Marketing Team – 28 Specialists for Claude &amp; ChatGPT</title>
-  <meta name="description" content="28 AI marketing specialists – market researcher, copywriter, PPC manager – running inside your own Claude or ChatGPT. From €29/month, cancel anytime, or €189 once.">
+  <!-- A cím és a leírás 2026-08-05-én a GSC MÉRÉSE alapján lett hangolva, nem érzésre.
+       A `sc-domain:genmarketer.hu` 90 napos adata szerint a landoló a NEM-márka
+       forgalmát két alakra kapja, és egyikre sem a termék saját szókincsével:
+         · munka-alakú kifejezés — „ai hirdetés készítés" (35 megjelenés, pos 6,9),
+           „online hirdetés készítés" (21), „hirdetés szerkesztő program" (6);
+         · szerep+ügynök alak — „cmo ai agent": 1 megjelenés, **pos 1, 1 kattintás**,
+           az egyetlen ANGOL nem-márka lekérdezés, ami valaha kattintást hozott.
+       A „specialist" a mi belső szavunk; az angol kereső „AI agent"-et ír. Ezért a
+       cím a „28 AI Agents" alakot viszi, a próza és a strukturált adat viszont
+       VÉGIG „specialist" marad — a kettő nem mond ellent, csak más közönségnek szól.
+       A „Claude Skills" a termék pontos kategória-neve, saját angol keresési
+       kereslettel; a leírásba került, mert a címben már nem fért el 60 karakter alatt. -->
+  <title>AI Marketing Team – 28 AI Agents for Claude &amp; ChatGPT</title>
+  <meta name="description" content="28 AI marketing agents – researcher, ad copywriter, PPC, SEO – as Claude Skills in your own Claude or ChatGPT. From €29/mo, cancel anytime, or €189 once.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="theme-color" content="#0B1020">
   <meta name="color-scheme" content="dark light">
@@ -20,7 +32,18 @@
   <link rel="canonical" href="https://genmarketer.eu/">
   <link rel="alternate" hreflang="hu" href="https://ai-csapat.genmarketer.hu/">
   <link rel="alternate" hreflang="en" href="https://genmarketer.eu/">
-  <link rel="alternate" hreflang="x-default" href="https://ai-csapat.genmarketer.hu/">
+  <!-- ⚠️ Az `x-default` 2026-08-05-ig a MAGYAR oldalra mutatott — ez mérhető kár volt.
+       Az x-default definíció szerint annak szól, akinek a nyelve/régiója EGYIK
+       annotációra sem illik: egy német, lengyel vagy amerikai keresőnek tehát a
+       Google eddig a magyar nyelvű oldalt ajánlotta fel. A fürt két tagja közül az
+       ANGOL a nemzetközi tartalék — nem a magyar. Az `.eu` domain, az EUR-árazás és
+       az angol bolt (vip.genmarketer.eu) mind ezt támasztja alá.
+       A hreflang-annotációnak KÖLCSÖNÖSNEK és a fürt minden tagján AZONOSNAK kell
+       lennie, különben a Google az EGÉSZ fürtöt eldobja — ezért ez a hármas négy
+       helyen él együtt, és mind a négy ebben a körben változott:
+         en/index.html · index.html · sitemap.xml · deploy/build-eu-snapshot.mjs
+       Gépi kapu erre: tests/seo-schema.mjs (a négy forrást EGYMÁSHOZ méri). -->
+  <link rel="alternate" hreflang="x-default" href="https://genmarketer.eu/">
   <link rel="author" href="https://genmarketer.hu/">
   <link rel="help" href="https://ai-csapat.genmarketer.hu/llms.txt" type="text/plain">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -42,14 +65,33 @@
   <meta name="twitter:description" content="28 AI marketing specialists, installed into your Claude or ChatGPT. Subscribe from €29 a month, or buy once for €189.">
   <meta name="twitter:image" content="https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg">
 
+  <!-- HÁROM DOLOG VÁLTOZOTT ITT 2026-08-05-ÉN (ledger #271), mind a magyar körből tanulva:
+       1. `Person` node a alapítóra, ÖNÁLLÓ csomópontként (eddig az Organization
+          `founder` mezőjébe volt ágyazva, kép és leírás nélkül). A látható `#tibor`
+          szekció minden bizonyítéka — 18 év, 0→2,5 M €, 60 000 fős közösség, exit —
+          csak PRÓZÁBAN állt, tehát a „ki áll emögött?" kérdésre a strukturált adat
+          nem válaszolt. E-E-A-T és GEO szempontból ez a legolcsóbb nyerő. A
+          `WebPage.author` most erre a `@id`-ra mutat. Egyetlen állítás sincs benne,
+          ami a látható oldalon ne szerepelne — kitalált `sameAs` SZÁNDÉKOSAN nincs
+          (a genmarketer.hu-n ma egyetlen publikus közösségi profil sem található;
+          amint Károly megadja őket, ide jönnek).
+       2. `hasMerchantReturnPolicy.applicableCountry` — a Google a `MerchantReturnPolicy`-t
+          ország nélkül ELDOBJA, tehát a 30 napos garancia strukturált adatként eddig
+          nem létezett. A magyar páron `"HU"` áll; itt az EU-27, mert a szolgáltató
+          magyar letelepedésű, az ÁSZF az EU-s fogyasztói elállási szabályokra
+          hivatkozik, az árazás EUR és a domain `.eu`. ⚠️ Az EU-n KÍVÜLI piacokra
+          (UK, US, CH, NO) kiterjeszteni ÜZLETI döntés — Károly-kapu, nem SEO-kérdés.
+       3. `contactPoint` az Organizationön: a lábléc e-mail-címe eddig csak `mailto:`
+          linkként létezett, entitás-szinten nem. -->
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
-    {"@type":"Organization","@id":"https://genmarketer.hu/#org","name":"GENmarketer","url":"https://genmarketer.hu/","email":"info@genmarketer.hu","description":"Hungarian AI-marketing agency and training company. Builds AI marketing specialists (Claude Skills and ChatGPT-compatible packages) that entrepreneurs and small teams run inside their own AI account.","logo":{"@type":"ImageObject","@id":"https://genmarketer.hu/#logo","url":"https://genmarketer.hu/wp-content/uploads/2025/10/genmarketer-logo-1.png","contentUrl":"https://genmarketer.hu/wp-content/uploads/2025/10/genmarketer-logo-1.png"},"founder":{"@type":"Person","@id":"https://genmarketer.hu/#founder","name":"Tibor Szántai","jobTitle":"Founder","worksFor":{"@id":"https://genmarketer.hu/#org"}}},
+    {"@type":"Organization","@id":"https://genmarketer.hu/#org","name":"GENmarketer","url":"https://genmarketer.hu/","email":"info@genmarketer.hu","description":"Hungarian AI-marketing agency and training company. Builds AI marketing specialists (Claude Skills and ChatGPT-compatible packages) that entrepreneurs and small teams run inside their own AI account.","logo":{"@type":"ImageObject","@id":"https://genmarketer.hu/#logo","url":"https://genmarketer.hu/wp-content/uploads/2025/10/genmarketer-logo-1.png","contentUrl":"https://genmarketer.hu/wp-content/uploads/2025/10/genmarketer-logo-1.png"},"contactPoint":{"@type":"ContactPoint","contactType":"customer support","email":"info@genmarketer.hu","availableLanguage":["en","hu"]},"founder":{"@id":"https://genmarketer.hu/#founder"}},
+    {"@type":"Person","@id":"https://genmarketer.hu/#founder","name":"Tibor Szántai","jobTitle":"Founder","worksFor":{"@id":"https://genmarketer.hu/#org"},"image":{"@type":"ImageObject","url":"https://genmarketer.eu/assets/img/tibor.webp","contentUrl":"https://genmarketer.eu/assets/img/tibor.webp","width":900,"height":900},"description":"Founder of GENmarketer. 18 years in marketing: grew subscription businesses from zero to €2.5M in annual revenue at two companies, built a 60,000-member developer community, took a HRTech startup through three funding rounds to exit, and organises one of Hungary's largest e-commerce events.","knowsAbout":["AI marketing","Claude Skills","subscription business models","performance marketing","e-commerce","community building"]},
     {"@type":"WebSite","@id":"https://genmarketer.hu/#website","url":"https://genmarketer.hu/","name":"GENmarketer","publisher":{"@id":"https://genmarketer.hu/#org"},"inLanguage":["hu","en"]},
     {"@type":"ImageObject","@id":"https://genmarketer.eu/#primaryimage","url":"https://genmarketer.eu/assets/img/og-share.jpg","contentUrl":"https://genmarketer.eu/assets/img/og-share.jpg","width":1200,"height":630},
-    {"@type":"WebPage","@id":"https://genmarketer.eu/","url":"https://genmarketer.eu/","name":"AI Marketing Team – 28 Specialists for Claude & ChatGPT","description":"28 AI marketing specialists – market researcher, copywriter, PPC manager – running inside your own Claude or ChatGPT. From €29/month, cancel anytime, or €189 once.","inLanguage":"en","isPartOf":{"@id":"https://genmarketer.hu/#website"},"dateModified":"2026-08-02","primaryImageOfPage":{"@id":"https://genmarketer.eu/#primaryimage"},"publisher":{"@id":"https://genmarketer.hu/#org"},"mainEntity":{"@id":"https://genmarketer.eu/#product"},"significantLink":["https://genmarketer.eu/checkout/","https://genmarketer.eu/terms/","https://genmarketer.eu/privacy/"],"breadcrumb":{"@id":"https://genmarketer.eu/#breadcrumb"}},
+    {"@type":"WebPage","@id":"https://genmarketer.eu/","url":"https://genmarketer.eu/","name":"AI Marketing Team – 28 AI Agents for Claude & ChatGPT","description":"28 AI marketing agents – researcher, ad copywriter, PPC, SEO – as Claude Skills in your own Claude or ChatGPT. From €29/mo, cancel anytime, or €189 once.","inLanguage":"en","isPartOf":{"@id":"https://genmarketer.hu/#website"},"dateModified":"2026-08-05","primaryImageOfPage":{"@id":"https://genmarketer.eu/#primaryimage"},"publisher":{"@id":"https://genmarketer.hu/#org"},"author":{"@id":"https://genmarketer.hu/#founder"},"mainEntity":{"@id":"https://genmarketer.eu/#product"},"significantLink":["https://genmarketer.eu/checkout/","https://genmarketer.eu/terms/","https://genmarketer.eu/privacy/"],"breadcrumb":{"@id":"https://genmarketer.eu/#breadcrumb"}},
     {"@type":"BreadcrumbList","@id":"https://genmarketer.eu/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"GENmarketer","item":"https://genmarketer.hu/"},{"@type":"ListItem","position":2,"name":"Your AI team","item":"https://genmarketer.eu/"}]},
-    {"@type":"Product","@id":"https://genmarketer.eu/#product","name":"Your AI team","alternateName":"GENmarketer AI marketing team","description":"28 AI marketing specialists (market researcher, competitor analyst, ad planner, ad copywriter, Facebook Ads expert, Google Ads manager, landing page expert, creative designer, Figma designer, video script writer, UGC video producer, SEO auditor, email expert and more) in Claude- and ChatGPT-compatible format, with full training material. Three ways to get it: the Planner subscription (research, audit, plan and copy — you execute), the Autopilot subscription (also connects to your own Meta Ads, Google Ads, GA4, Search Console and MailerLite accounts and executes approved work there), or the one-off Training package with at least six months of continued updates and a 30-day money-back guarantee. It is not a done-for-you agency service and not an ad-management tool with its own dashboard: every specialist runs inside the customer's own Claude or ChatGPT account.","image":{"@id":"https://genmarketer.eu/#primaryimage"},"brand":{"@type":"Brand","name":"GENmarketer"},"category":"AI marketing training","audience":{"@type":"BusinessAudience","name":"Solo entrepreneurs, small agencies and in-house marketers"},"mainEntityOfPage":{"@id":"https://genmarketer.eu/"},"offers":[{"@type":"Offer","name":"Planner subscription – monthly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"29","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Planner subscription – yearly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=47&attribute_billing-period=Yearly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"290","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"ANN"}},{"@type":"Offer","name":"Autopilot subscription – monthly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"59","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Autopilot subscription – yearly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=50&attribute_billing-period=Yearly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"590","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"ANN"}},{"@type":"Offer","name":"Training – one-off","price":"189","priceCurrency":"EUR","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=51","seller":{"@id":"https://genmarketer.hu/#org"},"category":"one-off purchase","hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":30,"refundType":"https://schema.org/FullRefund","returnFees":"https://schema.org/FreeReturn"}}]},
+    {"@type":"Product","@id":"https://genmarketer.eu/#product","name":"Your AI team","alternateName":"GENmarketer AI marketing team","description":"28 AI marketing specialists (market researcher, competitor analyst, ad planner, ad copywriter, Facebook Ads expert, Google Ads manager, landing page expert, creative designer, Figma designer, video script writer, UGC video producer, SEO auditor, email expert and more) in Claude- and ChatGPT-compatible format, with full training material. Three ways to get it: the Planner subscription (research, audit, plan and copy — you execute), the Autopilot subscription (also connects to your own Meta Ads, Google Ads, GA4, Search Console and MailerLite accounts and executes approved work there), or the one-off Training package with at least six months of continued updates and a 30-day money-back guarantee. It is not a done-for-you agency service and not an ad-management tool with its own dashboard: every specialist runs inside the customer's own Claude or ChatGPT account.","image":{"@id":"https://genmarketer.eu/#primaryimage"},"brand":{"@type":"Brand","name":"GENmarketer"},"category":"AI marketing training","audience":{"@type":"BusinessAudience","name":"Solo entrepreneurs, small agencies and in-house marketers"},"mainEntityOfPage":{"@id":"https://genmarketer.eu/"},"offers":[{"@type":"Offer","name":"Planner subscription – monthly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"29","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Planner subscription – yearly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=47&attribute_billing-period=Yearly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"290","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"ANN"}},{"@type":"Offer","name":"Autopilot subscription – monthly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"59","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Autopilot subscription – yearly","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=50&attribute_billing-period=Yearly","seller":{"@id":"https://genmarketer.hu/#org"},"category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"590","priceCurrency":"EUR","billingDuration":1,"billingIncrement":1,"unitCode":"ANN"}},{"@type":"Offer","name":"Training – one-off","price":"189","priceCurrency":"EUR","availability":"https://schema.org/InStock","url":"https://vip.genmarketer.eu/checkout/?add-to-cart=51","seller":{"@id":"https://genmarketer.hu/#org"},"category":"one-off purchase","hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"],"returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":30,"refundType":"https://schema.org/FullRefund","returnFees":"https://schema.org/FreeReturn"}}]},
     {"@type":"FAQPage","@id":"https://genmarketer.eu/#faq","mainEntity":[
       {"@type":"Question","name":"Do I need a Claude account?","acceptedAnswer":{"@type":"Answer","text":"Yes. The specialists come in Claude skill format. Claude's free tier is enough for many tasks; for heavier use, Claude Pro or Claude Code is recommended. Cowork and the Claude Code CLI are both supported."}},
       {"@type":"Question","name":"Does it work with both Claude and ChatGPT?","acceptedAnswer":{"@type":"Answer","text":"Yes – the specialists work with both Claude and ChatGPT. We built them on Claude because that's where the specialist experience is best, but you're not locked in: ChatGPT (and Codex) can convert our specialists to work there too, on their own. If you get stuck, write to us and we'll help you through it."}},
@@ -583,54 +625,54 @@
       <!-- gm:en-roster:html:start -->
       <noscript>
         <div class="gm-mc__roster">
-        <p>The interactive roster above needs JavaScript. Here is the same team as plain text — name, role and what it does for you.</p>
+        <p>The interactive roster above needs JavaScript. Here is the same team as plain text — name, role, what it does for you, and the steps it works in.</p>
         <h3>Leadership &amp; strategy</h3>
         <ul>
-          <li><strong>ATLASZ</strong> — the team lead. Gets to know your business once, then brings in the right specialist for every task – you only ever talk to one.</li>
-          <li><strong>ATHÉNÉ</strong> — the strategic partner. Thinks through your next big move with you – like having your own board of directors.</li>
-          <li><strong>SUN TZU</strong> — the competitor analyst. Maps out your competitors so you're always one step ahead.</li>
-          <li><strong>SHERLOCK</strong> — the market researcher. Pinpoints exactly who your buyers are and what hurts them – so you stop shooting in the dark.</li>
+          <li><strong>ATLASZ</strong> — the team lead. Gets to know your business once, then brings in the right specialist for every task – you only ever talk to one. <em>How it works: profile → routing → playbook</em></li>
+          <li><strong>ATHÉNÉ</strong> — the strategic partner. Thinks through your next big move with you – like having your own board of directors. <em>How it works: situation → options → decision</em></li>
+          <li><strong>SUN TZU</strong> — the competitor analyst. Maps out your competitors so you're always one step ahead. <em>How it works: recon → ad-watch → gap</em></li>
+          <li><strong>SHERLOCK</strong> — the market researcher. Pinpoints exactly who your buyers are and what hurts them – so you stop shooting in the dark. <em>How it works: research → persona → message</em></li>
         </ul>
         <h3>Advertising</h3>
         <ul>
-          <li><strong>KEPLER</strong> — the ad planner. Comes up with the campaign that stops the scrolling thumb in the feed.</li>
-          <li><strong>CYRANO</strong> — the ad copywriter. Writes ad copy people actually click – instead of scrolling past.</li>
-          <li><strong>AURORA</strong> — the Facebook Ads expert. Runs your Meta campaigns to bring cheaper leads and more buyers.</li>
-          <li><strong>APOLLÓN</strong> — the Google Ads manager. Sets up and runs your Google Ads so your budget doesn't burn for nothing.</li>
+          <li><strong>KEPLER</strong> — the ad planner. Comes up with the campaign that stops the scrolling thumb in the feed. <em>How it works: insight → angle → concept</em></li>
+          <li><strong>CYRANO</strong> — the ad copywriter. Writes ad copy people actually click – instead of scrolling past. <em>How it works: hook → body → CTA</em></li>
+          <li><strong>AURORA</strong> — the Facebook Ads expert. Runs your Meta campaigns to bring cheaper leads and more buyers. <em>How it works: targeting → creative → scale</em></li>
+          <li><strong>APOLLÓN</strong> — the Google Ads manager. Sets up and runs your Google Ads so your budget doesn't burn for nothing. <em>How it works: structure → bid → report</em></li>
         </ul>
         <h3>Landing page</h3>
         <ul>
-          <li><strong>MIDÁSZ</strong> — the landing page expert. Designs a landing page that actually turns your visitors into buyers.</li>
+          <li><strong>MIDÁSZ</strong> — the landing page expert. Designs a landing page that actually turns your visitors into buyers. <em>How it works: outline → copy → sections</em></li>
         </ul>
         <h3>Design &amp; Figma</h3>
         <ul>
-          <li><strong>LEONARDO</strong> — the creative designer. Designs ad creatives that stand out in the endless feed.</li>
-          <li><strong>MATISSE</strong> — the Figma designer. Designs professional visuals in Figma – without hiring a graphic designer.</li>
-          <li><strong>NEXUS</strong> — the Figma-to-code bridge. Turns your design into working code – without a developer.</li>
-          <li><strong>SENTRY</strong> — the Figma QA reviewer. Catches the flaws in your design before your customers do.</li>
-          <li><strong>VECTOR</strong> — the image resizer. Turns one finished ad into platform-ready 1:1, 4:5, 9:16, 16:9 and 2:3 versions without crude cropping or stretching.</li>
+          <li><strong>LEONARDO</strong> — the creative designer. Designs ad creatives that stand out in the endless feed. <em>How it works: concept → visual → variant</em></li>
+          <li><strong>MATISSE</strong> — the Figma designer. Designs professional visuals in Figma – without hiring a graphic designer. <em>How it works: brief → design → handoff</em></li>
+          <li><strong>NEXUS</strong> — the Figma-to-code bridge. Turns your design into working code – without a developer. <em>How it works: Figma → component → code</em></li>
+          <li><strong>SENTRY</strong> — the Figma QA reviewer. Catches the flaws in your design before your customers do. <em>How it works: audit → flag → fix</em></li>
+          <li><strong>VECTOR</strong> — the image resizer. Turns one finished ad into platform-ready 1:1, 4:5, 9:16, 16:9 and 2:3 versions without crude cropping or stretching. <em>How it works: source image → reflow → text QA</em></li>
         </ul>
         <h3>Video</h3>
         <ul>
-          <li><strong>GULLIVER</strong> — the video data collector. Gathers what's working in your market so you can build on it.</li>
-          <li><strong>SEHEREZÁDÉ</strong> — the video script writer. Writes your video scripts that hold viewers from the first second.</li>
-          <li><strong>LUMIÈRE</strong> — the UGC video producer. Creates authentic UGC videos that actually bring buyers.</li>
-          <li><strong>KRONOSZ</strong> — the video editor. Edits your raw footage into fast-paced, attention-holding video.</li>
-          <li><strong>GUTENBERG</strong> — the video renderer. Generates your high-converting ad videos – no camera, crew or shoot.</li>
+          <li><strong>GULLIVER</strong> — the video data collector. Gathers what's working in your market so you can build on it. <em>How it works: collect → transcript → pattern</em></li>
+          <li><strong>SEHEREZÁDÉ</strong> — the video script writer. Writes your video scripts that hold viewers from the first second. <em>How it works: hook → arc → CTA</em></li>
+          <li><strong>LUMIÈRE</strong> — the UGC video producer. Creates authentic UGC videos that actually bring buyers. <em>How it works: script → shoot → edit</em></li>
+          <li><strong>KRONOSZ</strong> — the video editor. Edits your raw footage into fast-paced, attention-holding video. <em>How it works: footage → cut → export</em></li>
+          <li><strong>GUTENBERG</strong> — the video renderer. Generates your high-converting ad videos – no camera, crew or shoot. <em>How it works: prompt → shot → render</em></li>
         </ul>
         <h3>SEO</h3>
         <ul>
-          <li><strong>KOLUMBUSZ</strong> — the keyword researcher. Finds the keywords your buyers actually search for.</li>
-          <li><strong>PARETO</strong> — the content optimizer. Rewrites your content so both Google and your readers love it.</li>
-          <li><strong>MERIDIAN</strong> — the technical SEO expert. Fixes the technical issues on your site that hold back your rankings.</li>
-          <li><strong>VERITAS</strong> — the SEO auditor. Tells you why Google can't find you – and exactly what to fix on your site.</li>
-          <li><strong>ARTEMISZ</strong> — the local SEO expert. Lifts your business in local search and on Google Maps.</li>
+          <li><strong>KOLUMBUSZ</strong> — the keyword researcher. Finds the keywords your buyers actually search for. <em>How it works: research → intent → map</em></li>
+          <li><strong>PARETO</strong> — the content optimizer. Rewrites your content so both Google and your readers love it. <em>How it works: outline → write → optimize</em></li>
+          <li><strong>MERIDIAN</strong> — the technical SEO expert. Fixes the technical issues on your site that hold back your rankings. <em>How it works: audit → fix → measure</em></li>
+          <li><strong>VERITAS</strong> — the SEO auditor. Tells you why Google can't find you – and exactly what to fix on your site. <em>How it works: crawl → audit → actions</em></li>
+          <li><strong>ARTEMISZ</strong> — the local SEO expert. Lifts your business in local search and on Google Maps. <em>How it works: GBP → citation → review</em></li>
         </ul>
         <h3>Customer &amp; revenue</h3>
         <ul>
-          <li><strong>HERMÉSZ</strong> — the email expert. Writes your email sequences that sell for you – even while you sleep.</li>
-          <li><strong>PERPETUUM</strong> — the membership expert. Builds your recurring revenue so you don't start from zero every month.</li>
-          <li><strong>FIGARO</strong> — the LinkedIn specialist. Builds your LinkedIn presence and brings clients – from profile to posts to outreach.</li>
+          <li><strong>HERMÉSZ</strong> — the email expert. Writes your email sequences that sell for you – even while you sleep. <em>How it works: subject → sequence → schedule</em></li>
+          <li><strong>PERPETUUM</strong> — the membership expert. Builds your recurring revenue so you don't start from zero every month. <em>How it works: offer → membership → retention</em></li>
+          <li><strong>FIGARO</strong> — the LinkedIn specialist. Builds your LinkedIn presence and brings clients – from profile to posts to outreach. <em>How it works: profile → content → outreach</em></li>
         </ul>
         </div>
       </noscript>

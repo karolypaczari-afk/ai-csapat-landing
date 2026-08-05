@@ -8,9 +8,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://ai-csapat.genmarketer.hu/</loc>
-    <lastmod>2026-08-04</lastmod>
+    <lastmod>2026-08-05</lastmod>
     <xhtml:link rel="alternate" hreflang="hu" href="https://ai-csapat.genmarketer.hu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://genmarketer.eu/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ai-csapat.genmarketer.hu/"/>
+    <!-- x-default = az ANGOL oldal (2026-08-05): akinek a nyelve egyik annotációra
+         sem illik, annak a nemzetközi verzió jár, nem a magyar. Ugyanez a hármas áll
+         a két HTML fejlécében és a .eu sitemapjában — a négy forrást a
+         tests/seo-schema.mjs méri EGYMÁSHOZ. -->
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://genmarketer.eu/"/>
   </url>
 </urlset>

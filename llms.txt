@@ -71,8 +71,8 @@ Everything below is a factual statement about the product as sold today. Prices 
 
 ## AI and Search Context
 - The product has one landing page per language, each a static site.
-- The Hungarian one is https://ai-csapat.genmarketer.hu/ and it is the x-default version.
-- The English one is https://genmarketer.eu/. The former English path, https://ai-csapat.genmarketer.hu/en/, has redirected there with a permanent, path-preserving 301 since 2026-08-02; do not cite the old path.
+- The Hungarian one is https://ai-csapat.genmarketer.hu/.
+- The English one is https://genmarketer.eu/, and since 2026-08-05 it is the x-default version: readers whose language is neither Hungarian nor explicitly matched should be pointed at the English page. The former English path, https://ai-csapat.genmarketer.hu/en/, has redirected to it with a permanent, path-preserving 301 since 2026-08-02; do not cite the old path.
 - Canonical URLs and hreflang alternates are declared in the HTML head and sitemap.
 - Structured data includes Organization, WebSite, WebPage, BreadcrumbList, Product, Offer, ImageObject, ItemList and FAQPage entities. Both language versions carry the same set.
 - The interactive specialist grid on the landing is rendered client-side; the same roster is also present as plain text inside a noscript block and as a JSON-LD ItemList, on BOTH language versions, so it can be read without executing JavaScript.

@@ -21,7 +21,16 @@
        (nem-viszonos annotáció). A látható EN nyelvváltó gomb SZÁNDÉKOSAN marad a
        `/en/`-en: az átkötése a kigurítás 6. lépése, Károly-kapu (docs/33 §8). -->
   <link rel="alternate" hreflang="en" href="https://genmarketer.eu/">
-  <link rel="alternate" hreflang="x-default" href="https://ai-csapat.genmarketer.hu/">
+  <!-- ⚠️ Az `x-default` 2026-08-05-ig ERRE a magyar oldalra mutatott. Az x-default
+       annak szól, akinek a nyelve/régiója EGYIK annotációra sem illik — egy német,
+       lengyel vagy amerikai kereső tehát eddig a MAGYAR oldalt kapta ajánlatként.
+       A fürt két tagja közül az ANGOL a nemzetközi tartalék. A magyar oldal ettől
+       semmit nem veszít: magyar keresésre továbbra is a `hreflang="hu"` viszi.
+       A hármasnak a fürt minden tagján AZONOSNAK kell lennie (négy hely:
+       index.html · en/index.html · sitemap.xml · deploy/build-eu-snapshot.mjs) —
+       nem-viszonos annotációnál a Google az EGÉSZ fürtöt eldobja.
+       Gépi kapu: tests/seo-schema.mjs. -->
+  <link rel="alternate" hreflang="x-default" href="https://genmarketer.eu/">
   <link rel="author" href="https://genmarketer.hu/">
   <link rel="help" href="https://ai-csapat.genmarketer.hu/llms.txt" type="text/plain">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -45,10 +54,11 @@
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
-    {"@type":"Organization","@id":"https://genmarketer.hu/#org","name":"GENmarketer","url":"https://genmarketer.hu/","email":"info@genmarketer.hu","founder":{"@type":"Person","name":"Tibor Szántai"}},
+    {"@type":"Organization","@id":"https://genmarketer.hu/#org","name":"GENmarketer","url":"https://genmarketer.hu/","email":"info@genmarketer.hu","description":"Magyar AI-marketing ügynökség és képzőcég. AI-marketinges szakembereket épít (Claude Skill és ChatGPT-kompatibilis csomagok), amiket a vállalkozók és kis csapatok a SAJÁT AI-fiókjukban futtatnak.","logo":{"@type":"ImageObject","@id":"https://genmarketer.hu/#logo","url":"https://genmarketer.hu/wp-content/uploads/2025/10/genmarketer-logo-1.png","contentUrl":"https://genmarketer.hu/wp-content/uploads/2025/10/genmarketer-logo-1.png"},"contactPoint":{"@type":"ContactPoint","contactType":"ügyfélszolgálat","email":"info@genmarketer.hu","availableLanguage":["hu","en"]},"founder":{"@id":"https://genmarketer.hu/#founder"}},
+    {"@type":"Person","@id":"https://genmarketer.hu/#founder","name":"Tibor Szántai","jobTitle":"alapító","worksFor":{"@id":"https://genmarketer.hu/#org"},"image":{"@type":"ImageObject","url":"https://ai-csapat.genmarketer.hu/assets/img/tibor.webp","contentUrl":"https://ai-csapat.genmarketer.hu/assets/img/tibor.webp","width":900,"height":900},"description":"A GENmarketer alapítója. 18 éve él a marketingből: előfizetéses modelleket marketingezett nulláról 1 milliárd forintig két cégnél, 60 000 fős fejlesztői közösséget épített, egy HRTech-startupot három körön át vitt exitig, és Magyarország egyik legnagyobb e-kereskedelmi rendezvényének szervezője.","knowsAbout":["AI-marketing","Claude Skillek","előfizetéses üzleti modellek","teljesítménymarketing","e-kereskedelem","közösségépítés"]},
     {"@type":"WebSite","@id":"https://genmarketer.hu/#website","url":"https://genmarketer.hu/","name":"GENmarketer","publisher":{"@id":"https://genmarketer.hu/#org"},"inLanguage":["hu","en"]},
     {"@type":"ImageObject","@id":"https://ai-csapat.genmarketer.hu/#primaryimage","url":"https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg","contentUrl":"https://ai-csapat.genmarketer.hu/assets/img/og-share.jpg","width":1200,"height":630},
-    {"@type":"WebPage","@id":"https://ai-csapat.genmarketer.hu/","url":"https://ai-csapat.genmarketer.hu/","name":"Az AI csapatod – 28 marketinges szakember | GENmarketer","inLanguage":"hu","isPartOf":{"@id":"https://genmarketer.hu/#website"},"dateModified":"2026-08-04","primaryImageOfPage":{"@id":"https://ai-csapat.genmarketer.hu/#primaryimage"},"publisher":{"@id":"https://genmarketer.hu/#org"},"mainEntity":{"@id":"https://ai-csapat.genmarketer.hu/#product"},"breadcrumb":{"@id":"https://ai-csapat.genmarketer.hu/#breadcrumb"}},
+    {"@type":"WebPage","@id":"https://ai-csapat.genmarketer.hu/","url":"https://ai-csapat.genmarketer.hu/","name":"Az AI csapatod – 28 marketinges szakember | GENmarketer","inLanguage":"hu","isPartOf":{"@id":"https://genmarketer.hu/#website"},"dateModified":"2026-08-05","primaryImageOfPage":{"@id":"https://ai-csapat.genmarketer.hu/#primaryimage"},"publisher":{"@id":"https://genmarketer.hu/#org"},"author":{"@id":"https://genmarketer.hu/#founder"},"mainEntity":{"@id":"https://ai-csapat.genmarketer.hu/#product"},"breadcrumb":{"@id":"https://ai-csapat.genmarketer.hu/#breadcrumb"}},
     {"@type":"BreadcrumbList","@id":"https://ai-csapat.genmarketer.hu/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"GENmarketer","item":"https://genmarketer.hu/"},{"@type":"ListItem","position":2,"name":"Az AI csapatod","item":"https://ai-csapat.genmarketer.hu/"}]},
     {"@type":"Product","@id":"https://ai-csapat.genmarketer.hu/#product","name":"Az AI csapatod","description":"28 AI-marketinges szakember (piackutató, szövegíró, PPC-s, landoló-szakértő és társaik) Claude- és ChatGPT-kompatibilis formátumban, magyar tananyaggal. Kétféleképpen a tiéd: havidíjas előfizetéssel, amíg előfizetsz folyamatosan érkeznek az új szakemberek és a meglévők is fejlődnek (bármikor lemondható), vagy egyszeri díjas Skillpakként, min. 6 hónap folyamatos frissítéssel és 30 napos pénzvisszafizetési garanciával.","image":{"@id":"https://ai-csapat.genmarketer.hu/#primaryimage"},"brand":{"@type":"Brand","name":"GENmarketer"},"category":"AI marketing training","mainEntityOfPage":{"@id":"https://ai-csapat.genmarketer.hu/"},"offers":[{"@type":"Offer","name":"Standard előfizetés – havi","availability":"https://schema.org/InStock","seller":{"@id":"https://genmarketer.hu/#org"},"url":"https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992&variation_id=2342&attribute_szamlazasi-ciklus=Havi","category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"9990","priceCurrency":"HUF","billingDuration":1,"billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Standard előfizetés – éves","availability":"https://schema.org/InStock","seller":{"@id":"https://genmarketer.hu/#org"},"url":"https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992&variation_id=2343&attribute_szamlazasi-ciklus=%C3%89ves","category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"99900","priceCurrency":"HUF","billingDuration":1,"billingIncrement":1,"unitCode":"ANN"}},{"@type":"Offer","name":"Pro előfizetés – havi","availability":"https://schema.org/InStock","seller":{"@id":"https://genmarketer.hu/#org"},"url":"https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993&variation_id=2344&attribute_szamlazasi-ciklus=Havi","category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"19990","priceCurrency":"HUF","billingDuration":1,"billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro előfizetés – éves","availability":"https://schema.org/InStock","seller":{"@id":"https://genmarketer.hu/#org"},"url":"https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993&variation_id=2345&attribute_szamlazasi-ciklus=%C3%89ves","category":"subscription","priceSpecification":{"@type":"UnitPriceSpecification","price":"199900","priceCurrency":"HUF","billingDuration":1,"billingIncrement":1,"unitCode":"ANN"}},{"@type":"Offer","name":"Skillpakk – egyszeri díj","price":"34990","priceCurrency":"HUF","availability":"https://schema.org/InStock","seller":{"@id":"https://genmarketer.hu/#org"},"url":"https://tudastar.genmarketer.hu/checkout/?add-to-cart=872","category":"one-off purchase","hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"HU","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":30,"returnFees":"https://schema.org/FreeReturn","refundType":"https://schema.org/FullRefund"}}]},
     {"@type":"FAQPage","@id":"https://ai-csapat.genmarketer.hu/#faq","mainEntity":[
@@ -584,54 +594,54 @@
       <!-- gm:hu-roster:html:start -->
       <noscript>
         <div class="gm-mc__roster">
-        <p>A fenti interaktív csapatrács JavaScriptet igényel. Itt ugyanez a csapat sima szövegként — név, szerep, és mit csinál neked.</p>
+        <p>A fenti interaktív csapatrács JavaScriptet igényel. Itt ugyanez a csapat sima szövegként — név, szerep, mit csinál neked, és milyen lépésekben dolgozik.</p>
         <h3>Vezetés és stratégia</h3>
         <ul>
-          <li><strong>ATLASZ</strong> — a csapatvezető. Egyszer megismeri a vállalkozásodat, és onnantól minden feladatra a megfelelő szakértőt hívja be – neked csak vele kell beszélned.</li>
-          <li><strong>ATHÉNÉ</strong> — a stratégiai partner. Végiggondolja veled a következő nagy lépésed – mintha lenne egy saját igazgatótanácsod.</li>
-          <li><strong>SUN TZU</strong> — a versenytárs-elemző. Feltérképezi a versenytársaidat, hogy mindig egy lépéssel előttük járj.</li>
-          <li><strong>SHERLOCK</strong> — a piackutató. Pontosan megmondja, kik a vevőid és mi fáj nekik – hogy ne a sötétben lövöldözz.</li>
+          <li><strong>ATLASZ</strong> — a csapatvezető. Egyszer megismeri a vállalkozásodat, és onnantól minden feladatra a megfelelő szakértőt hívja be – neked csak vele kell beszélned. <em>Munkamenet: profil → irányítás → forgatókönyv</em></li>
+          <li><strong>ATHÉNÉ</strong> — a stratégiai partner. Végiggondolja veled a következő nagy lépésed – mintha lenne egy saját igazgatótanácsod. <em>Munkamenet: helyzet → opciók → döntés</em></li>
+          <li><strong>SUN TZU</strong> — a versenytárs-elemző. Feltérképezi a versenytársaidat, hogy mindig egy lépéssel előttük járj. <em>Munkamenet: felderítés → hirdetés-figyelés → rés</em></li>
+          <li><strong>SHERLOCK</strong> — a piackutató. Pontosan megmondja, kik a vevőid és mi fáj nekik – hogy ne a sötétben lövöldözz. <em>Munkamenet: kutatás → avatar → üzenet</em></li>
         </ul>
         <h3>Hirdetés</h3>
         <ul>
-          <li><strong>KEPLER</strong> — a hirdetéstervező. Kitalálja a kampányodat, amelyik megállítja a görgető ujjat a hírfolyamban.</li>
-          <li><strong>CYRANO</strong> — a hirdetés-szövegíró. Megírja a hirdetésszövegeidet, amikre tényleg kattintanak – nem görgetnek tovább.</li>
-          <li><strong>AURORA</strong> — a Facebook Ads-szakértő. Úgy kezeli a Meta-kampányaidat, hogy olcsóbb leadeket és több vásárlót hozzanak.</li>
-          <li><strong>APOLLÓN</strong> — a Google Ads-hirdetéskezelő. Beállítja és pörgeti a Google-hirdetéseidet, hogy ne égjen el feleslegesen a kereted.</li>
+          <li><strong>KEPLER</strong> — a hirdetéstervező. Kitalálja a kampányodat, amelyik megállítja a görgető ujjat a hírfolyamban. <em>Munkamenet: felismerés → szög → koncepció</em></li>
+          <li><strong>CYRANO</strong> — a hirdetés-szövegíró. Megírja a hirdetésszövegeidet, amikre tényleg kattintanak – nem görgetnek tovább. <em>Munkamenet: horog → törzs → CTA</em></li>
+          <li><strong>AURORA</strong> — a Facebook Ads-szakértő. Úgy kezeli a Meta-kampányaidat, hogy olcsóbb leadeket és több vásárlót hozzanak. <em>Munkamenet: célzás → kreatív → skálázás</em></li>
+          <li><strong>APOLLÓN</strong> — a Google Ads-hirdetéskezelő. Beállítja és pörgeti a Google-hirdetéseidet, hogy ne égjen el feleslegesen a kereted. <em>Munkamenet: struktúra → licit → riport</em></li>
         </ul>
         <h3>Landoló oldal</h3>
         <ul>
-          <li><strong>MIDÁSZ</strong> — a landolóoldal-szakértő. Megtervezi a landoló oldaladat, amelyik a látogatóidból tényleg vevőt csinál.</li>
+          <li><strong>MIDÁSZ</strong> — a landolóoldal-szakértő. Megtervezi a landoló oldaladat, amelyik a látogatóidból tényleg vevőt csinál. <em>Munkamenet: vázlat → szöveg → szekciók</em></li>
         </ul>
         <h3>Design és Figma</h3>
         <ul>
-          <li><strong>LEONARDO</strong> — a kreatív designer. Megtervezi a hirdetési kreatívjaidat, amik kitűnnek a végtelen hírfolyamból.</li>
-          <li><strong>MATISSE</strong> — a Figma-tervező. Profi dizájnt tervez neked Figmában, grafikus felvétele nélkül.</li>
-          <li><strong>NEXUS</strong> — a Figma–kód híd. A dizájnodból működő kódot csinál – fejlesztő nélkül.</li>
-          <li><strong>SENTRY</strong> — a Figma QA-ellenőr. Kiszúrja a dizájnod hibáit, mielőtt a vevőidnek szúrnának szemet.</li>
-          <li><strong>VECTOR</strong> — a képátméretező. Egy kész hirdetésből platformkész 1:1, 4:5, 9:16, 16:9 és 2:3 változatokat készít, levágás és széthúzás nélkül.</li>
+          <li><strong>LEONARDO</strong> — a kreatív designer. Megtervezi a hirdetési kreatívjaidat, amik kitűnnek a végtelen hírfolyamból. <em>Munkamenet: koncepció → vizuál → variáns</em></li>
+          <li><strong>MATISSE</strong> — a Figma-tervező. Profi dizájnt tervez neked Figmában, grafikus felvétele nélkül. <em>Munkamenet: feladatkiírás → dizájn → átadás</em></li>
+          <li><strong>NEXUS</strong> — a Figma–kód híd. A dizájnodból működő kódot csinál – fejlesztő nélkül. <em>Munkamenet: Figma → komponens → kód</em></li>
+          <li><strong>SENTRY</strong> — a Figma QA-ellenőr. Kiszúrja a dizájnod hibáit, mielőtt a vevőidnek szúrnának szemet. <em>Munkamenet: audit → jelölés → javítás</em></li>
+          <li><strong>VECTOR</strong> — a képátméretező. Egy kész hirdetésből platformkész 1:1, 4:5, 9:16, 16:9 és 2:3 változatokat készít, levágás és széthúzás nélkül. <em>Munkamenet: forráskép → újratördelés → betű-QA</em></li>
         </ul>
         <h3>Videó</h3>
         <ul>
-          <li><strong>GULLIVER</strong> — a videós adatgyűjtő. Összeszedi neked, mi működik a piacodon, hogy abból építkezz.</li>
-          <li><strong>SEHEREZÁDÉ</strong> — a videós forgatókönyvíró. Megírja a videóid forgatókönyvét, ami az első másodperctől fogva tartja a néződ.</li>
-          <li><strong>LUMIÈRE</strong> — az UGC videó-producer. Elkészíti a hiteles UGC-videóidat, amik tényleg vásárlót hoznak.</li>
-          <li><strong>KRONOSZ</strong> — a videóvágó. Pörgős, figyelemmegtartó videóvá vágja a nyersanyagodat.</li>
-          <li><strong>GUTENBERG</strong> — a videó-renderelő. Legenerálja a maximálisan konvertáló hirdetési videóidat – kamera, stáb és forgatás nélkül.</li>
+          <li><strong>GULLIVER</strong> — a videós adatgyűjtő. Összeszedi neked, mi működik a piacodon, hogy abból építkezz. <em>Munkamenet: gyűjtés → átirat → minta</em></li>
+          <li><strong>SEHEREZÁDÉ</strong> — a videós forgatókönyvíró. Megírja a videóid forgatókönyvét, ami az első másodperctől fogva tartja a néződ. <em>Munkamenet: horog → ív → CTA</em></li>
+          <li><strong>LUMIÈRE</strong> — az UGC videó-producer. Elkészíti a hiteles UGC-videóidat, amik tényleg vásárlót hoznak. <em>Munkamenet: forgatókönyv → felvétel → vágás</em></li>
+          <li><strong>KRONOSZ</strong> — a videóvágó. Pörgős, figyelemmegtartó videóvá vágja a nyersanyagodat. <em>Munkamenet: nyersanyag → vágás → exportálás</em></li>
+          <li><strong>GUTENBERG</strong> — a videó-renderelő. Legenerálja a maximálisan konvertáló hirdetési videóidat – kamera, stáb és forgatás nélkül. <em>Munkamenet: prompt → jelenet → renderelés</em></li>
         </ul>
         <h3>SEO</h3>
         <ul>
-          <li><strong>KOLUMBUSZ</strong> — a kulcsszó-kutató. Megtalálja neked a kulcsszavakat, amikre a vevőid tényleg rákeresnek.</li>
-          <li><strong>PARETO</strong> — a tartalom-optimalizáló. Úgy írja át a szövegeidet, hogy a Google is és az olvasóid is szeressék.</li>
-          <li><strong>MERIDIAN</strong> — a technikai SEO-szakértő. Kijavítja az oldalad technikai hibáit, amik hátráltatják a rangsorolásodat.</li>
-          <li><strong>VERITAS</strong> — a SEO-auditor. Megmondja, miért nem talál meg a Google – és pontosan mit javíts az oldaladon.</li>
-          <li><strong>ARTEMISZ</strong> — a helyi SEO-szakértő. Felhozza a cégedet a helyi keresésben és a Google Térképen.</li>
+          <li><strong>KOLUMBUSZ</strong> — a kulcsszó-kutató. Megtalálja neked a kulcsszavakat, amikre a vevőid tényleg rákeresnek. <em>Munkamenet: kutatás → szándék → térkép</em></li>
+          <li><strong>PARETO</strong> — a tartalom-optimalizáló. Úgy írja át a szövegeidet, hogy a Google is és az olvasóid is szeressék. <em>Munkamenet: vázlat → írás → optimalizálás</em></li>
+          <li><strong>MERIDIAN</strong> — a technikai SEO-szakértő. Kijavítja az oldalad technikai hibáit, amik hátráltatják a rangsorolásodat. <em>Munkamenet: audit → javítás → mérés</em></li>
+          <li><strong>VERITAS</strong> — a SEO-auditor. Megmondja, miért nem talál meg a Google – és pontosan mit javíts az oldaladon. <em>Munkamenet: bejárás → audit → teendők</em></li>
+          <li><strong>ARTEMISZ</strong> — a helyi SEO-szakértő. Felhozza a cégedet a helyi keresésben és a Google Térképen. <em>Munkamenet: GBP → idézet → értékelés</em></li>
         </ul>
         <h3>Ügyfélkapcsolat és bevétel</h3>
         <ul>
-          <li><strong>HERMÉSZ</strong> — az e-mail-szakértő. Megírja az e-mail-sorozataidat, amik eladnak helyetted – akkor is, amikor alszol.</li>
-          <li><strong>PERPETUUM</strong> — az előfizetés-szakértő. Felépíti neked a visszatérő bevételt, hogy ne kelljen minden hónapban nulláról indulnod.</li>
-          <li><strong>FIGARO</strong> — a LinkedIn-specialista. Felépíti a LinkedIn-jelenléted és ügyfeleket hoz – a profiltól a posztokon át a kapcsolatfelvételig.</li>
+          <li><strong>HERMÉSZ</strong> — az e-mail-szakértő. Megírja az e-mail-sorozataidat, amik eladnak helyetted – akkor is, amikor alszol. <em>Munkamenet: tárgysor → szekvencia → ütemezés</em></li>
+          <li><strong>PERPETUUM</strong> — az előfizetés-szakértő. Felépíti neked a visszatérő bevételt, hogy ne kelljen minden hónapban nulláról indulnod. <em>Munkamenet: ajánlat → tagság → megtartás</em></li>
+          <li><strong>FIGARO</strong> — a LinkedIn-specialista. Felépíti a LinkedIn-jelenléted és ügyfeleket hoz – a profiltól a posztokon át a kapcsolatfelvételig. <em>Munkamenet: profil → tartalom → megkeresés</em></li>
         </ul>
         </div>
       </noscript>
