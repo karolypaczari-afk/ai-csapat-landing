@@ -388,7 +388,15 @@
 
     box.addEventListener("click", function (ev) {
       var b = ev.target.closest("button[data-cycle]");
-      if (b) apply(b.dataset.cycle);
+      if (!b) return;
+      apply(b.dataset.cycle);
+      // MIÉRT MÉRJÜK: az éves ág két hónapnyi kedvezményt ad, és a kapcsoló a
+      // legolcsóbb árbevétel-emelő elemünk — de eddig semmi nem mondta meg,
+      // hányan nyúlnak hozzá egyáltalán. A `begin_checkout` már a kapcsolás
+      // UTÁNI hrefet viszi, tehát a szándékot nem, csak az eredményt látjuk.
+      // Metára NEM megy: a ciklusválasztás elemzési kérdés (mennyien akarnak
+      // éveset), nem közönség — a szándékot a `PricingReached` már lefedi.
+      signal("gm_cycle_switch", { billing_cycle: b.dataset.cycle }, { clarityKey: "billing_cycle", clarityValue: b.dataset.cycle });
     });
   }
   function wireCtas() {
@@ -524,9 +532,22 @@
   /* ---- Spec-sheet modal ---- */
   var modal = document.getElementById("gm-modal");
   var lastFocus = null;
+  var specialistOpens = 0;
   function openModal(code) {
     lastFocus = document.activeElement;
     var a = AGENTS.filter(function (x) { return x.code === code; })[0]; if (!a || !modal) return;
+    // MIÉRT MÉRJÜK: a csapatrács a landoló legtöbbet nyitogatott felülete, és a
+    // termékfejlesztésnek is ez a legjobb inputja — melyik szakember érdekli
+    // ténylegesen a vevőt a vásárlás ELŐTT. Ma erről nulla adatunk van.
+    // Metára CSAK az ELSŐ nyitás megy látogatónként: a kártyákat sorban szokás
+    // végignézni, tehát a 6. megnyitás már nem új szándék, csak böngészés.
+    specialistOpens += 1;
+    signal("gm_specialist_open", {
+      specialist_code: a.code, specialist_name: a.name || a.code, specialist_open_order: specialistOpens
+    }, {
+      meta: specialistOpens === 1 ? "SpecialistOpen" : null,
+      clarityKey: "specialist_open", clarityValue: a.code
+    });
     var panel = modal.querySelector(".gm-modal__panel");
     panel.style.setProperty("--c", a.color);
     modal.querySelector(".gm-modal__av img").src = AV + a.code + ".webp";
@@ -629,9 +650,122 @@
       });
     });
   }
+  /* ---- Viselkedés-jelzés: GA4 + Meta + Clarity + dataLayer ----
+   * KÖZÖS jelzőfüggvény a nem-konverziós eseményekhez. Négy csatorna, mindegyik
+   * más munkára — és szándékosan NEM mind a négyre megy minden jel:
+   *
+   * · **dataLayer** — mindig. Ez a nyers csatorna: a GTM-ből bárhova
+   *   továbbköthető később anélkül, hogy a landolóhoz hozzá kellene nyúlni.
+   * · **GA4** (`gtag('event', …)` `send_to`-val) — mindig. Egyedi esemény, NEM
+   *   kulcsesemény: az elemzés helye, de a konverziós riportot nem hígítja.
+   *   Az Ads-optimalizálásba sem szól bele, mert `conversion`-t nem küldünk.
+   * · **Meta Pixel** (`trackCustom`) — CSAK a hirdetési szempontból értékes,
+   *   ALACSONY darabszámú jelekre (`meta` mező). Ez a szűrés nem óvatosság,
+   *   hanem üzemtan: a szekció-nézettség látogatónként ~12-szer sülne el, és
+   *   egy ilyen mennyiségű egyedi esemény a Meta-oldalon zaj, nem célközönség.
+   *   Amit átadunk, abból viszont VALÓDI remarketing-közönség épül: „megnyitotta
+   *   az árazási kifogást, de nem vásárolt".
+   * · **Clarity-címke** — a FELVÉTELT teszi szűrhetővé: „mutasd azokat, akik a
+   *   »költhet a pénzemből« kérdést nyitották meg". Ebből kiderül, mi állította
+   *   meg őket; a puszta darabszámból nem.
+   *
+   * Nem lassíthat: nincs új script-betöltés, nincs `scroll`-figyelő, minden
+   * listener passzív vagy IntersectionObserver, és egyik hívásra sem VÁRUNK —
+   * ha egy címke nincs betöltve, a jel némán kimarad (`typeof` őr + try/catch).
+   */
+  function signal(event, data, opt) {
+    opt = opt || {};
+    var payload = {};
+    for (var k in data) if (Object.prototype.hasOwnProperty.call(data, k)) payload[k] = data[k];
+
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(Object.assign({ event: event }, payload));
+    } catch (e) {}
+
+    try {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", event, Object.assign({ send_to: GA4_ID }, payload));
+      }
+    } catch (e) {}
+
+    if (opt.meta) {
+      try { if (typeof window.fbq === "function") window.fbq("trackCustom", opt.meta, payload); } catch (e) {}
+    }
+    if (opt.clarityKey) {
+      try { if (typeof window.clarity === "function") window.clarity("set", opt.clarityKey, String(opt.clarityValue)); } catch (e) {}
+    }
+  }
+
   function wireFaq() {
     var items = document.querySelectorAll(".gm-faq__item");
-    items.forEach(function (item) { item.addEventListener("toggle", function () { if (!item.open) return; items.forEach(function (o) { if (o !== item) o.open = false; }); }); });
+    var opened = 0;
+    items.forEach(function (item) {
+      item.addEventListener("toggle", function () {
+        if (!item.open) return;
+        items.forEach(function (o) { if (o !== item) o.open = false; });
+        // MIÉRT MÉRJÜK: a GYIK a fizetés előtti utolsó kifogás-felület, és eddig
+        // NÉMA volt — nem tudtuk, melyik kérdés állítja meg a vevőt, tehát a
+        // következő copy-kör találgatásból dolgozott volna. A `faq_id` STABIL
+        // azonosító (content/faq.*.json), nem a kérdés szövege: egy fogalmazási
+        // javítás nem esik szét a riportban két külön sorra.
+        opened += 1;
+        var q = item.querySelector("summary");
+        var id = item.getAttribute("data-faq-id") || "?";
+        // Metára IS megy: egy megnyitott GYIK-tétel kimondott kifogás, tehát a
+        // legpontosabb remarketing-jelünk a vásárlás előtti pillanatból — az
+        // „árazást nézte" közönségre más hirdetés való, mint a „biztonságot".
+        signal("gm_faq_open", {
+          faq_id: id,
+          faq_category: item.getAttribute("data-faq-cat") || null,
+          faq_question: q ? (q.textContent || "").trim() : null,
+          faq_open_order: opened
+        }, { meta: "FAQOpen", clarityKey: "faq_open", clarityValue: id });
+      });
+    });
+  }
+
+  /* ---- Szekció-láthatóság: meddig jutott el a látogató ----
+   * Ez váltja ki a klasszikus 25/50/75/100%-os görgetés-mérést, és többet mond
+   * nála: a százalék az oldal HOSSZÁTÓL függ (egy szekció betoldásától
+   * elcsúszik minden korábbi adat), a szekció-azonosító viszont ugyanaz marad.
+   * Így megválaszolható a landoló legfontosabb kérdése: hányan érnek el
+   * egyáltalán az árazásig — és melyik szekció előtt fordulnak vissza.
+   *
+   * Egy megfigyelő, szekciónként EGY jel, találat után azonnal `unobserve`:
+   * a fő szálon mérhetetlen a költsége.
+   *
+   * ☠️ MIÉRT SÁV (`rootMargin`) ÉS NEM KÜSZÖB (`threshold`) — mérve, nem elméletben.
+   * Az első változat `threshold: 0.35`-tel indult, ami egy rövid szekción helyes.
+   * Csakhogy az `IntersectionRatio` a CÉLELEM területéhez viszonyít, a landoló
+   * szekciói pedig sokszorosan magasabbak a képernyőnél: `use-casek` 11 351 px,
+   * `gyik` 6 606 px, `arazas` 4 958 px. Egy 800 px-es ablakban az `arazas` 35%-a
+   * 1 735 px — SOHA nem fér bele, tehát a jel sosem sült volna el. Pont a
+   * legfontosabb szekciókról maradtunk volna némák, miközben a rövid `hero`-ra
+   * működik: a mérés „félig jó" lett volna, ami rosszabb a nyilvánvalóan rossznál.
+   * A sávos megoldás magasság-független: a szekció akkor számít megnézettnek, ha
+   * belelóg a képernyő középső 50%-ába. */
+  function wireSectionViews() {
+    var secs = document.querySelectorAll("section[id]");
+    if (!secs.length || !("IntersectionObserver" in window)) return;
+    var seen = 0;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        seen += 1;
+        signal("gm_section_view", { section_id: e.target.id, section_order: seen });
+        // Metára CSAK az árazás megy, és látogatónként egyszer: ez az egyetlen
+        // szekció, ami önmagában szándékot jelent. „Eljutott az árazásig, de nem
+        // vásárolt" — ebből épül a legerősebb remarketing-közönségünk. A többi
+        // 11 szekció-nézet a Meta-oldalon csak zaj lenne (ld. a `signal` fejét).
+        if (e.target.id === "arazas") {
+          try { if (typeof window.fbq === "function") window.fbq("trackCustom", "PricingReached", { section_order: seen }); } catch (err) {}
+          try { if (typeof window.clarity === "function") window.clarity("set", "reached_pricing", "1"); } catch (err) {}
+        }
+      });
+    }, { rootMargin: "-25% 0px -25% 0px", threshold: 0 });
+    secs.forEach(function (s) { io.observe(s); });
   }
 
   /* ---- Oldaltérkép-menü (fejléc) ---- */
@@ -1037,6 +1171,7 @@
     wireSmoothScroll();
     wireScrollState();
     wireFaq();
+    wireSectionViews();
     wireHeaderMenu();
     wireLazyPosters();
     wireVideos();

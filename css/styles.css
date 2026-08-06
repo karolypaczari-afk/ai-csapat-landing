@@ -717,6 +717,19 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 
 /* ---- GYIK ---- */
 .gm-faq { max-width: 780px; margin-inline: auto; display: grid; gap: 0.8rem; }
+
+/* ---- GYIK-kategóriák (2026-08-06) --------------------------------------
+   A 28 tétel kategóriák nélkül egyetlen, végeérhetetlen harmonika lenne: a
+   vevő a saját kérdését nem keresné meg benne, csak legörgetne. A csoportcím
+   NEM dekoráció — ez a beolvasási pont, ezért kap saját ritmust (nagyobb felső
+   köz) és halk aranyszínű indexet. A `<h3>` szándékos: a szekció `<h2>`-je alá
+   tartozik, tehát a fejléc-hierarchia lineáris marad (a11y + SEO), és a
+   crawler is látja, hogy a kérdések csoportokba állnak. */
+.gm-faq__group { display: grid; gap: 0.8rem; }
+.gm-faq__group + .gm-faq__group { margin-top: 1.5rem; }
+.gm-faq__cat { margin: 0; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gm-violet); display: flex; align-items: center; gap: 0.7rem; }
+.gm-faq__cat::after { content: ""; flex: 1; height: 1px; background: var(--gm-line); }
+
 .gm-faq__item { background: #fff; border: 1px solid var(--gm-line); border-radius: var(--gm-r); padding: 0; overflow: hidden; }
 .gm-faq__item summary { cursor: pointer; padding: 1.1rem 1.4rem; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
 .gm-faq__item summary::-webkit-details-marker { display: none; }
