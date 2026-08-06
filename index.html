@@ -232,6 +232,26 @@
           <span class="gm-lang__cur" aria-current="true">HU</span>
           <a class="gm-lang__alt" href="/en/" hreflang="en" lang="en" aria-label="English version">EN</a>
         </nav>
+        <!-- Oldaltérkép-menü — a genmarketer.hu főmenüjének 5 pontja, LENYITVA rejtve.
+             Szándékosan nem vízszintes navigáció: egy landolón minden kifelé mutató
+             link konkurenciája a CTA-nak. Így elérhető marad (a visszatérő látogató és
+             a kereső is látja a statikus <a>-kat), de nem versenyez az „Előfizetek"-kel.
+             <details> = JS nélkül is működik; az app.js csak a kívülre kattintást és az
+             Escape-et teszi hozzá. -->
+        <details class="gm-menu" id="gm-menu">
+          <summary class="gm-menu__btn" aria-label="Menü megnyitása" title="Menü">
+            <span class="gm-menu__icon" aria-hidden="true"></span>
+            <span class="gm-menu__label">Menü</span>
+          </summary>
+          <nav class="gm-menu__panel" aria-label="GENmarketer oldaltérkép">
+            <a class="gm-menu__link is-current" href="/" aria-current="page">Legyen saját AI csapatod</a>
+            <a class="gm-menu__link" href="https://genmarketer.hu/kurzusok/hirdetesek-keszitese-ai-al/">Hirdetések készítése AI-al kurzus</a>
+            <a class="gm-menu__link" href="https://tudastar.genmarketer.hu/wp-login.php">Tudástár belépés</a>
+            <a class="gm-menu__link" href="https://genmarketer.hu/konzultacio/">Konzultáció</a>
+            <a class="gm-menu__link" href="https://genmarketer.hu/blog/">Blog</a>
+            <a class="gm-menu__link gm-menu__link--home" href="https://genmarketer.hu/">genmarketer.hu — főoldal</a>
+          </nav>
+        </details>
         <a class="gm-btn gm-btn--primary" href="#arazas" data-gm-cta="header" data-gm-package="planner">Előfizetek</a>
       </div>
     </div>

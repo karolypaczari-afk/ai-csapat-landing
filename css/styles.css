@@ -134,6 +134,70 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-logo__mark { color: var(--gm-cyan); }
 .gm-header .gm-btn { padding: 0.6em 1.2em; font-size: 0.92rem; }
 
+/* ---- Oldaltérkép-menü (a genmarketer.hu főmenüje, diszkréten) ----
+   Vizuális elv: a fejlécben EGY hangsúlyos elem lehet, az „Előfizetek". A menü
+   ezért csendes: szürke szöveg, alig látszó keret, ikon-elsődleges. Csak nyitva
+   kap kontrasztot. A `<details>` natív, tehát JS nélkül is nyílik-csukódik. */
+.gm-menu { position: relative; }
+.gm-menu__btn {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  padding: 0.45em 0.8em; border-radius: 999px;
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  color: #8C89A8; font-family: var(--gm-mono); font-size: 0.8rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; list-style: none; user-select: none;
+  transition: color 0.2s var(--gm-ease), border-color 0.2s var(--gm-ease), background 0.2s var(--gm-ease);
+}
+.gm-menu__btn::-webkit-details-marker { display: none; }
+.gm-menu__btn:hover, .gm-menu__btn:focus-visible { color: #fff; border-color: var(--gm-cyan); }
+.gm-menu[open] > .gm-menu__btn { color: #fff; border-color: var(--gm-cyan); background: rgba(0, 212, 255, 0.08); }
+/* Hamburger — 3 vonal, `currentColor`-ral, hogy a hoverrel együtt világosodjon. */
+.gm-menu__icon { position: relative; display: block; width: 15px; height: 1.5px; background: currentColor; border-radius: 2px; }
+.gm-menu__icon::before, .gm-menu__icon::after {
+  content: ""; position: absolute; left: 0; width: 100%; height: 100%;
+  background: currentColor; border-radius: 2px; transition: transform 0.2s var(--gm-ease);
+}
+.gm-menu__icon::before { top: -5px; }
+.gm-menu__icon::after { top: 5px; }
+/* Nyitva ✕ — a záró művelet ugyanazon a gombon, keresgélés nélkül. */
+.gm-menu[open] .gm-menu__icon { background: transparent; }
+.gm-menu[open] .gm-menu__icon::before { transform: translateY(5px) rotate(45deg); }
+.gm-menu[open] .gm-menu__icon::after { transform: translateY(-5px) rotate(-45deg); }
+
+.gm-menu__panel {
+  position: absolute; top: calc(100% + 0.7rem); right: 0; z-index: 60;
+  min-width: 292px; display: flex; flex-direction: column;
+  padding: 0.5rem; border-radius: 14px;
+  background: var(--gm-navy-950);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.55);
+}
+.gm-menu__link {
+  padding: 0.62em 0.85em; border-radius: 9px;
+  color: #B8B5D4; font-size: 0.92rem; font-weight: 600; line-height: 1.35;
+  transition: color 0.18s var(--gm-ease), background 0.18s var(--gm-ease);
+}
+.gm-menu__link:hover, .gm-menu__link:focus-visible { color: #fff; background: rgba(124, 58, 237, 0.22); }
+/* Az aktuális oldal marad kattintható (a menü JS nélkül is teljes), de a cyan
+   jel megmondja, hol vagy — így a menü nem ígér új tartalmat oda, ahol már állsz. */
+.gm-menu__link.is-current { color: #8C89A8; }
+.gm-menu__link.is-current::before { content: "▸ "; color: var(--gm-cyan); }
+.gm-menu__link--home {
+  margin-top: 0.35rem; padding-top: 0.75em;
+  border-top: 1px solid rgba(124, 58, 237, 0.22);
+  font-size: 0.84rem; font-weight: 500; color: #8C89A8;
+  border-radius: 0 0 9px 9px;
+}
+/* Kis kijelzőn a felirat lekerül — a fejlécben az „Előfizetek" a prioritás. */
+@media (max-width: 600px) {
+  .gm-menu__label { display: none; }
+  .gm-menu__btn { padding: 0.5em 0.62em; }
+  .gm-menu__panel { min-width: min(292px, calc(100vw - 2.2rem)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gm-menu__btn, .gm-menu__link, .gm-menu__icon::before, .gm-menu__icon::after { transition: none; }
+}
+
 /* ---- Reveal (GSAP felülírja desktopon; IO fallback no-JS-hez) ---- */
 /* Reveal-effekt eltávolítva: a blokkok azonnal láthatóak (nincs görgetésre-fade, nincs üres pillanat) */
 .gm-reveal { opacity: 1; transform: none; }

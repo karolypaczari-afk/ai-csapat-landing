@@ -634,6 +634,38 @@
     items.forEach(function (item) { item.addEventListener("toggle", function () { if (!item.open) return; items.forEach(function (o) { if (o !== item) o.open = false; }); }); });
   }
 
+  /* ---- Oldaltérkép-menü (fejléc) ---- */
+  // A nyitás/zárás NATÍV (<details>), tehát JS nélkül is teljes értékű. Itt csak a
+  // két hiányzó zárási mód kerül rá — kívülre kattintás és Escape —, plusz a
+  // kifelé mutató kattintás mérése.
+  //
+  // Miért mérjük: a menü szándékosan diszkrét, mert egy landolón minden kifelé
+  // mutató link a CTA konkurenciája. Ha ez a döntés rossz, azt látni akarjuk —
+  // e nélkül a „nem tereli el a figyelmet" hiedelem marad, nem állítás. A jel
+  // TARTALOMMENTES dataLayer-push (nincs gtag/fbq hívás): a menü nem tölcsér-esemény,
+  // és nem szabad, hogy beleszóljon a konverziós riportba.
+  function wireHeaderMenu() {
+    var menu = document.getElementById("gm-menu");
+    if (!menu) return;
+    document.addEventListener("click", function (ev) {
+      if (menu.open && !menu.contains(ev.target)) menu.open = false;
+    });
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key !== "Escape" || !menu.open) return;
+      menu.open = false;
+      var btn = menu.querySelector("summary");
+      if (btn) btn.focus();
+    });
+    menu.querySelectorAll(".gm-menu__link").forEach(function (a) {
+      a.addEventListener("click", function () {
+        try {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: "gm_nav_click", nav_target: a.getAttribute("href"), nav_label: (a.textContent || "").trim() });
+        } catch (e) {}
+      });
+    });
+  }
+
   /* ---- Demó-videók (.gm-video): --loop in-view, --click poszteres ---- */
   // A `preload="none"` a POSZTERT nem tartja vissza: azt a böngésző azonnal lehúzza,
   // amint a <video> layoutba kerül. Mérve 2026-08-05-én: 5 hajtás alatti poszter
@@ -1001,6 +1033,7 @@
     wireSmoothScroll();
     wireScrollState();
     wireFaq();
+    wireHeaderMenu();
     wireLazyPosters();
     wireVideos();
     wireCarousels();
