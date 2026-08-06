@@ -64,6 +64,11 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-container { width: 100%; max-width: var(--gm-maxw); margin-inline: auto; padding-inline: clamp(1.1rem, 4vw, 2.5rem); }
 .gm-narrow { max-width: 860px; }
 .gm-text-center { text-align: center; }
+/* Csak képernyőolvasónak — a `display:none` NEM jó, azt az AT is átugorja. */
+.gm-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 
 .gm-section { padding-block: clamp(3.4rem, 7vw, 7rem); position: relative; }
 .gm-section--light { background: var(--gm-off); }
@@ -166,7 +171,7 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 
 .gm-menu__panel {
   position: absolute; top: calc(100% + 0.7rem); right: 0; z-index: 60;
-  min-width: 292px; display: flex; flex-direction: column;
+  min-width: 312px; display: flex; flex-direction: column;
   padding: 0.5rem; border-radius: 14px;
   background: var(--gm-navy-950);
   border: 1px solid rgba(124, 58, 237, 0.35);
@@ -182,17 +187,38 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
    jel megmondja, hol vagy — így a menü nem ígér új tartalmat oda, ahol már állsz. */
 .gm-menu__link.is-current { color: #8C89A8; }
 .gm-menu__link.is-current::before { content: "▸ "; color: var(--gm-cyan); }
+/* „Új lapon nyílik" a látónak. Az attribútum-szelektor a HTML-hez kötődik, nem egy
+   kézzel karbantartott osztályhoz — így egy új menüpont MAGÁTÓL megkapja a jelet. */
+.gm-menu__link[target="_blank"]::after {
+  content: "↗"; margin-left: 0.4em; font-size: 0.8em; opacity: 0.45; vertical-align: 1px;
+}
+.gm-menu__link[target="_blank"]:hover::after,
+.gm-menu__link[target="_blank"]:focus-visible::after { opacity: 0.9; }
 .gm-menu__link--home {
   margin-top: 0.35rem; padding-top: 0.75em;
   border-top: 1px solid rgba(124, 58, 237, 0.22);
   font-size: 0.84rem; font-weight: 500; color: #8C89A8;
   border-radius: 0 0 9px 9px;
 }
-/* Kis kijelzőn a felirat lekerül — a fejlécben az „Előfizetek" a prioritás. */
+/* Kis kijelzőn a felirat lekerül — a fejlécben az „Előfizetek" a prioritás.
+   ÉS: a panel a FEJLÉCHEZ horgonyzódik, nem a gombhoz. A gomb jobb széle mobilon
+   ~250 px-nél van (mögötte az „Előfizetek"), tehát egy `right:0`-ás, 292–312 px
+   széles panel a viewport BAL oldalán túllógna — és mivel a `.gm-lp`-n
+   `overflow-x: clip` van, nem scrollozhatóan, hanem LEVÁGVA. Ezért lett a
+   `.gm-menu` itt `position: static`: a panel containing blockja a sticky
+   `.gm-header` lesz, a `left`/`right` pedig a `.gm-container` belső paddingjével
+   egyezik, így pontosan a tartalom széleihez igazodik.
+   ⚠ A „nincs vízszintes scroll" assert erre VAK — a clip épp attól zöld, hogy
+   eltünteti a túllógást. A tényleges kapu: tests/verify.mjs panel-bal-él állítása. */
 @media (max-width: 600px) {
   .gm-menu__label { display: none; }
   .gm-menu__btn { padding: 0.5em 0.62em; }
-  .gm-menu__panel { min-width: min(292px, calc(100vw - 2.2rem)); }
+  .gm-menu { position: static; }
+  .gm-menu__panel {
+    min-width: 0;
+    left: clamp(1.1rem, 4vw, 2.5rem);
+    right: clamp(1.1rem, 4vw, 2.5rem);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .gm-menu__btn, .gm-menu__link, .gm-menu__icon::before, .gm-menu__icon::after { transition: none; }

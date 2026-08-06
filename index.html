@@ -243,13 +243,20 @@
             <span class="gm-menu__icon" aria-hidden="true"></span>
             <span class="gm-menu__label">Menü</span>
           </summary>
+          <!-- MINDEN kifelé mutató pont ÚJ LAPON nyílik (Károly, 2026-08-06): a landoló
+               nyitva marad a látogató mögött, tehát a menü megnézése nem szakítja meg a
+               vásárlási utat. Az `is-current` sor KIVÉTEL — az maga ez az oldal, ott az
+               új lap csak duplikátumot csinálna.
+               A `rel="noopener"` kötelező: enélkül a megnyíló lap `window.opener`-en
+               keresztül elérné ezt az ablakot. A képernyőolvasónak a `.gm-sr` szöveg
+               mondja meg előre, hogy új lap jön; a látónak a ↗ jel (CSS ::after). -->
           <nav class="gm-menu__panel" aria-label="GENmarketer oldaltérkép">
             <a class="gm-menu__link is-current" href="/" aria-current="page">Legyen saját AI csapatod</a>
-            <a class="gm-menu__link" href="https://genmarketer.hu/kurzusok/hirdetesek-keszitese-ai-al/">Hirdetések készítése AI-al kurzus</a>
-            <a class="gm-menu__link" href="https://tudastar.genmarketer.hu/wp-login.php">Tudástár belépés</a>
-            <a class="gm-menu__link" href="https://genmarketer.hu/konzultacio/">Konzultáció</a>
-            <a class="gm-menu__link" href="https://genmarketer.hu/blog/">Blog</a>
-            <a class="gm-menu__link gm-menu__link--home" href="https://genmarketer.hu/">genmarketer.hu — főoldal</a>
+            <a class="gm-menu__link" href="https://genmarketer.hu/kurzusok/hirdetesek-keszitese-ai-al/" target="_blank" rel="noopener">Hirdetések készítése AI-al kurzus<span class="gm-sr"> (új lapon nyílik)</span></a>
+            <a class="gm-menu__link" href="https://tudastar.genmarketer.hu/wp-login.php" target="_blank" rel="noopener">Tudástár belépés<span class="gm-sr"> (új lapon nyílik)</span></a>
+            <a class="gm-menu__link" href="https://genmarketer.hu/konzultacio/" target="_blank" rel="noopener">Konzultáció<span class="gm-sr"> (új lapon nyílik)</span></a>
+            <a class="gm-menu__link" href="https://genmarketer.hu/blog/" target="_blank" rel="noopener">Blog<span class="gm-sr"> (új lapon nyílik)</span></a>
+            <a class="gm-menu__link gm-menu__link--home" href="https://genmarketer.hu/" target="_blank" rel="noopener">genmarketer.hu — főoldal<span class="gm-sr"> (új lapon nyílik)</span></a>
           </nav>
         </details>
         <a class="gm-btn gm-btn--primary" href="#arazas" data-gm-cta="header" data-gm-package="planner">Előfizetek</a>

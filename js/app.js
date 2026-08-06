@@ -662,6 +662,10 @@
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: "gm_nav_click", nav_target: a.getAttribute("href"), nav_label: (a.textContent || "").trim() });
         } catch (e) {}
+        // A `target="_blank"` óta ez az oldal NEM navigál el, tehát a panel nyitva
+        // maradna a látogató mögött — és nyitva is fogadná, amikor visszavált erre
+        // a fülre. Bezárjuk, de a fókuszt NEM mozgatjuk: az új lap veszi át.
+        menu.open = false;
       });
     });
   }
