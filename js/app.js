@@ -158,13 +158,43 @@
   function eventId(name, pkg) {
     return ["gm", name, pkg || "unknown", Date.now(), Math.random().toString(36).slice(2, 10)].join("-");
   }
-  function metaPayload(item, value, metaCookies) {
+  // A Meta `content_ids` SZÁNDÉKOSAN eltér a GA4 `item_id`-tól.
+  //
+  // 2026-08-07, élesben mérve: a tudástár pénztárán a PixelYourSite a Woo VARIÁCIÓ-ID-t
+  // küldi (`content_ids: ["2342"]`), a landoló viszont a saját slugját
+  // (`ai-csapatod-elofizetes-planner`). Ugyanaz a vevő, ugyanaz a termék — a Metának
+  // KÉT KÜLÖNBÖZŐ termék. Ezért sem a tartalom-alapú közönség, sem a dinamikus hirdetés
+  // nem tud a landoló jeléről a pénztár jelére illeszkedni.
+  //
+  // A GA4 `item_id`-hoz NEM nyúlunk: az a riport-folytonosságot hordozza (a 872 sora
+  // hetek óta `ai-csapatod-basic`), és egy csere két sorra hasítaná ugyanazt a terméket.
+  // A kettő két külön rendszer kulcsa — a Metáé a Woo-ID, a GA4-é a beszédes slug.
+  var META_CONTENT_ID = EN
+    ? { planner: "46", autopilot: "49", onetime: "51" }
+    : { planner: "2342", autopilot: "2344", onetime: "872" };
+  // A GOMBON ÁLLÓ href az igazság, nem a konstans: a ciklusváltó átírja (havi 2342 →
+  // éves 2343), és a kosárba is az kerül — ugyanaz az elv, mint a `checkoutTarget`-nél.
+  // A konstans csak ott kell, ahol nincs pénztár-href (anchor-CTA, `ViewContent`);
+  // ilyenkor a HAVI variáció a helyes alapértelmezés, mert a markup is azt viseli.
+  function metaContentId(pkg, el) {
+    try {
+      var href = el && el.getAttribute && el.getAttribute("href");
+      if (href) {
+        var q = new URL(href, location.href).searchParams;
+        var v = q.get("variation_id") || q.get("add-to-cart");
+        if (v) return String(v);
+      }
+    } catch (e) {}
+    return META_CONTENT_ID[pkg] || META_CONTENT_ID[PKG_DEFAULT];
+  }
+  function metaPayload(item, value, metaCookies, contentId) {
+    var cid = contentId || item.item_id;
     return {
       content_name: item.item_name,
       content_category: item.item_category,
-      content_ids: [item.item_id],
+      content_ids: [cid],
       content_type: "product",
-      contents: [{ id: item.item_id, quantity: 1, item_price: value }],
+      contents: [{ id: cid, quantity: 1, item_price: value }],
       num_items: 1,
       value: value,
       currency: CURRENCY,
@@ -259,10 +289,11 @@
     }
     return out;
   }
-  function track(pkg, ctaId, isCheckout) {
+  function track(pkg, ctaId, isCheckout, el) {
     var meta = PKG[pkg] || PKG[PKG_DEFAULT];
     var value = PRICE[pkg] || 0, label = meta.label;
     var itemId = meta.itemId, cartEid = eventId("add_to_cart", pkg), eid = eventId("initiate_checkout", pkg);
+    var contentId = metaContentId(pkg, el);
     var metaCookies = ensureMetaCookies();
     var adAttrib = ensureAdAttribution();
     // A `source` regisztrált GA4 custom dimension, de eddig csak a `config` hívásban
@@ -276,18 +307,29 @@
       if (!FUNNEL_OWNED_DOWNSTREAM) {
         try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: [item] }, adAttrib)); } catch (e) {}
         try { if (typeof window.gtag === "function") window.gtag("event", "conversion", Object.assign({ send_to: ADS_ADD_TO_CART_SEND_TO, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout" }, adAttrib)); } catch (e) {}
-        try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies), { eventID: cartEid }); } catch (e) {}
+        try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies, contentId), { eventID: cartEid }); } catch (e) {}
       }
     }
     try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_cta_click", event_id: eid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
-    if (FUNNEL_OWNED_DOWNSTREAM) {
-      // A landoló-oldali CTA-kattintás CRO-jele megmarad, de SAJÁT néven: egy
-      // `begin_checkout` itt összeadódna a pénztárban tüzelő igazival. A `gm_cta_click`
-      // nem szabványos ecommerce-esemény, tehát nem folyik bele a tölcsér-riportba.
+    // ☠️ 2026-08-07, élesben mérve: a 18 CTA-ból 12 CSAK a `#arazas`-ra görget
+    // (`hero`, `header`, `sticky`, `modal`, 8× `usecase-*`) — és mindegyik
+    // `InitiateCheckout`-ot + `begin_checkout`-ot tüzelt. „Görgess az árakhoz" ≠
+    // „megkezdtem a fizetést": a látogató el sem hagyta a landolót.
+    //
+    // Ez nem riport-szépséghiba. Az aktív adset `custom_event_type` értéke
+    // `INITIATED_CHECKOUT` (10 000 Ft/nap), tehát a Meta PONTOSAN erre a jelre
+    // optimalizált — és a jel nagyobb része görgetés volt. A számok, amikből ez
+    // kiderült: Meta 08-01→08-07 `add_to_cart` 43 vs. `initiate_checkout` 105;
+    // GA4 ugyanebben a szeletben `CartFlows_checkout` 111 vs. `begin_checkout` 445.
+    //
+    // A CRO-jel NEM vész el: a görgető CTA-k ugyanazt a `gm_cta_click` eseményt
+    // kapják, amit az angol ág már használ — csak nem szabványos ecommerce néven,
+    // tehát nem hígítja a tölcsér-riportot és nem tanítja félre az optimalizálót.
+    if (FUNNEL_OWNED_DOWNSTREAM || !isCheckout) {
       try { if (typeof window.gtag === "function") window.gtag("event", "gm_cta_click", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", package: pkg }, adAttrib)); } catch (e) {}
     } else {
       try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }, adAttrib)); } catch (e) {}
-      try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies), { eventID: eid }); } catch (e) {}
+      try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies, contentId), { eventID: eid }); } catch (e) {}
     }
   }
   // A landoló URL marketing-paramjait átvisszük a tudástár-checkoutra, hogy a
@@ -404,7 +446,7 @@
       var key = el.getAttribute("data-gm-checkout");
       if (key && CHECKOUT[key]) el.setAttribute("href", withAttribution(CHECKOUT[key]));
       el.addEventListener("click", function (ev) {
-        track(el.getAttribute("data-gm-package") || PKG_DEFAULT, el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]));
+        track(el.getAttribute("data-gm-package") || PKG_DEFAULT, el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]), el);
         if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = checkoutTarget(el, key); }
       });
     });
@@ -1124,13 +1166,22 @@
   // termék-érdeklődést tud építeni (remarketing-közönség, DPA), és nélküle a tölcsér
   // első valódi foka hiányzott. A pénztár-aldomain ezt NEM pótolja: oda csak az jut el,
   // aki már kattintott, tehát pont az érdeklődő-réteg veszett el.
-  // Kizárólag az angol ágon fut: a magyar landoló mérése stabil, nem nyúlunk hozzá.
+  // 2026-08-07 óta MINDKÉT nyelven fut. A korábbi „a magyar landoló mérése stabil,
+  // nem nyúlunk hozzá" indoklás óvatosságnak látszott, valójában rést hagyott: a magyar
+  // oldal ~3900 látogatójából a Meta 20 nap alatt 8 `view_content`-et látott, és az a 8
+  // is a PÉNZTÁRRÓL jött. Vagyis a tölcsér első foka a fizetős forgalmunk fő oldalán
+  // egyáltalán nem létezett — nem volt miből érdeklődő-remarketing közönséget építeni,
+  // és a kosárelhagyó-közönségnek sem volt előzménye.
   function trackViewContent() {
-    if (!FUNNEL_OWNED_DOWNSTREAM) return;
     try {
       var metaCookies = ensureMetaCookies();
       var adAttrib = ensureAdAttribution();
-      var ids = Object.keys(PKG).map(function (k) { return PKG[k].itemId; });
+      // A Metának a Woo-ID kell (ld. `META_CONTENT_ID`), és lehetőleg az ÉLŐ árazás-CTA
+      // hrefjéből, hogy a ciklusváltó utáni állapotot vigye — különben a `ViewContent`
+      // havi variációt hirdetne egy éves nézetben.
+      var ids = Object.keys(PKG).map(function (k) {
+        return metaContentId(k, document.querySelector('[data-gm-cta="pricing-' + k + '"]'));
+      });
       var value = PRICE[PKG_DEFAULT] || 0;
       var items = Object.keys(PKG).map(function (k) {
         return { item_id: PKG[k].itemId, item_name: "Az AI csapatod - " + PKG[k].label, item_brand: "GENmarketer", item_category: "AI marketing training", price: PRICE[k] || 0, quantity: 1 };
