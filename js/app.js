@@ -69,18 +69,26 @@
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
   var PRICE = EN ? { planner: 29, autopilot: 59, onetime: 189 } : { planner: 9990, autopilot: 19990, onetime: 34990 };
   var CURRENCY = EN ? "EUR" : "HUF";
-  // Az angol CTA egy TELJESEN MŰSZEREZETT WooCommerce-pénztárba visz
-  // (`vip.genmarketer.eu`, PixelYourSite Pro 12.6.0). 2026-08-03-án élőben mérve, a
-  // pénztár `window.pysOptions.staticEvents`-éből: a VIP maga tüzeli az
-  // `InitiateCheckout`-ot (Meta, EUR, saját eventID-vel) és a `begin_checkout`-ot (GA4).
-  // Ha a landoló is tüzelné ugyanezeket a CTA-kattintásra, a Meta és a GA4 KÉT
-  // eseményt látna egyetlen vevői szándékra — a dedup nem fog, mert az `event_id`-k
-  // különböznek (más rendszer generálja őket).
-  //
-  // A magyar úton NINCS ilyen átfedés: ott a landoló a CartFlows-pénztárba visz, és a
-  // kosár-esemény a landolón keletkezik. Ezért a kapcsoló nyelvhez kötött, és a magyar
-  // ág viselkedése bájtra változatlan.
-  var FUNNEL_OWNED_DOWNSTREAM = EN;
+  /* ── KI A TULAJDONOSA A TÖLCSÉR-ESEMÉNYNEK: a landoló vagy a pénztár? ─────────
+   *
+   * Mindkét nyelv pénztára WooCommerce + PixelYourSite Pro, és a pénztár MAGA is
+   * tüzeli a kosár- és pénztár-eseményt. Ha a landoló is tüzelné, a platform KÉT
+   * eseményt látna egyetlen vevői szándékra — és a dedup elvileg sem foghatna, mert
+   * az `event_id`-ket más rendszer generálja.
+   *
+   * ☠️ DE EZT PLATFORMONKÉNT KELL ELDÖNTENI, NEM EGYBEN. 2026-08-07-én élőben mérve
+   * a `wp_pys_options` visszaolvasásával: a tudástár PYS-e a Metát (browser + CAPI)
+   * ÉS a GA4-et küldi — a **`pys_google_ads`** blokkjában viszont a `conversion_id`
+   * és a `conversion_label` ÜRES, és egyetlen `AW-` azonosító sincs benne. Vagyis a
+   * Google Ads add-to-cart konverziónak a landoló az EGYETLEN forrása. Egy közös
+   * boolean tehát a duplikációval együtt a teljes Ads-mérést is kikapcsolta volna.
+   *
+   * A `meta`/`ga4` a pénztáré (ott browser+szerver párban, közös dedup-kulccsal megy,
+   * tehát ERŐSEBB jel), az `ads` a landolóé, amíg a pénztár nem küldi.
+   * A tábla mellé gépi kapu áll: `tests/funnel-ownership.mjs`. */
+  var DOWNSTREAM_OWNS = EN
+    ? { meta: true, ga4: true, ads: true }
+    : { meta: true, ga4: true, ads: false };
   // Csomagcímke és GA4 `item_id`. Az `item_id` szándékosan UGYANAZ, mint az
   // aicsapat.genmarketer.hu előfizetéses landolón (`ai-csapatod-elofizetes-<pkg>`):
   // ugyanaz a Woo-termék (1992/1993), tehát a termék-szintű riport ne hasadjon
@@ -304,9 +312,16 @@
     var item = { item_id: itemId, item_name: "Az AI csapatod - " + label, item_brand: "GENmarketer", item_category: "AI marketing training", price: value, quantity: 1 };
     if (isCheckout) {
       try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
-      if (!FUNNEL_OWNED_DOWNSTREAM) {
+      if (!DOWNSTREAM_OWNS.ga4) {
         try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: [item] }, adAttrib)); } catch (e) {}
+      }
+      // A Google Ads konverzió KÜLÖN ágon dől el: a tudástár PYS-ében nincs Ads
+      // conversion ID, tehát a magyar ágon ez az EGYETLEN forrás. Ha ezt a
+      // Meta/GA4 kapcsolóval együtt némítanánk, a teljes Ads-mérés eltűnne.
+      if (!DOWNSTREAM_OWNS.ads) {
         try { if (typeof window.gtag === "function") window.gtag("event", "conversion", Object.assign({ send_to: ADS_ADD_TO_CART_SEND_TO, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout" }, adAttrib)); } catch (e) {}
+      }
+      if (!DOWNSTREAM_OWNS.meta) {
         try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies, contentId), { eventID: cartEid }); } catch (e) {}
       }
     }
@@ -325,10 +340,18 @@
     // A CRO-jel NEM vész el: a görgető CTA-k ugyanazt a `gm_cta_click` eseményt
     // kapják, amit az angol ág már használ — csak nem szabványos ecommerce néven,
     // tehát nem hígítja a tölcsér-riportot és nem tanítja félre az optimalizálót.
-    if (FUNNEL_OWNED_DOWNSTREAM || !isCheckout) {
-      try { if (typeof window.gtag === "function") window.gtag("event", "gm_cta_click", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", package: pkg }, adAttrib)); } catch (e) {}
-    } else {
+    //
+    // 2026-08-07, második kör: a magyar ágon a PÉNZTÁR is tüzeli ugyanezt
+    // (`woo_initiate_checkout` → Meta `InitiateCheckout` + GA4 `begin_checkout`,
+    // saját PYS-GUID-dal), tehát a valódi pénztár-CTA is duplázott. Innentől a
+    // pénztár az igazság-forrás, és a landoló MINDEN CTA-ra a `gm_cta_click`-et
+    // küldi — a CRO-mérés így teljes marad, tölcsér-torzítás nélkül.
+    if (isCheckout && !DOWNSTREAM_OWNS.ga4) {
       try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }, adAttrib)); } catch (e) {}
+    } else {
+      try { if (typeof window.gtag === "function") window.gtag("event", "gm_cta_click", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", package: pkg }, adAttrib)); } catch (e) {}
+    }
+    if (isCheckout && !DOWNSTREAM_OWNS.meta) {
       try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies, contentId), { eventID: eid }); } catch (e) {}
     }
   }
@@ -1187,12 +1210,22 @@
         return { item_id: PKG[k].itemId, item_name: "Az AI csapatod - " + PKG[k].label, item_brand: "GENmarketer", item_category: "AI marketing training", price: PRICE[k] || 0, quantity: 1 };
       });
       var eid = eventId("view_content", PKG_DEFAULT);
+      // 2026-08-07: a landoló EGYETLEN Meta tölcsér-eseménye a `ViewContent` lett
+      // (a kosár- és pénztár-eseményt a pénztár PYS-e küldi, browser+CAPI párban),
+      // ezért ez a jel kapja a maximumot, amit egy szerver nélküli oldal adhat:
+      // `contents` tömb per csomag (a Dynamic Ads ezt kéri, nem csak a `content_ids`-t),
+      // `num_items`, és a teljes első-fél azonosító-hármas (external_id/fbp/fbc).
+      var contents = Object.keys(PKG).map(function (k, i) {
+        return { id: ids[i], quantity: 1, item_price: PRICE[k] || 0 };
+      });
       if (typeof window.fbq === "function") {
         window.fbq("track", "ViewContent", {
           content_name: document.title,
           content_category: "AI marketing training",
           content_ids: ids,
           content_type: "product",
+          contents: contents,
+          num_items: contents.length,
           value: value,
           currency: CURRENCY,
           action_source: "website",
