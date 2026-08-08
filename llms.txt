@@ -86,7 +86,7 @@ Everything below is a factual statement about the product as sold today. Prices 
 
 <!-- gm:faq:start -->
 ## Frequently asked questions
-- These are the questions and answers published on the English landing page. The Hungarian page at https://ai-csapat.genmarketer.hu/ carries its own FAQ (29 questions), which covers the same ground plus Hungary-specific billing; the two are maintained separately and may differ.
+- These are the questions and answers published on the English landing page. The Hungarian page at https://ai-csapat.genmarketer.hu/ carries its own FAQ (33 questions), which covers the same ground plus Hungary-specific billing; the two are maintained separately and may differ.
 ### Is this for me?
 - I am not an AI person. Will this work for me? — Yes. There is no coding and no prompt engineering: you talk to the specialists in chat, in your own words, the way you would brief a colleague. They ask you for what they need to know – your job is to answer, not to phrase a command. Installation comes with an illustrated walkthrough, and if you get stuck, write to us.
 - I already work with an agency. Does this still make sense? — Yes, and not instead of them. Start with the audit: the team goes through your ad accounts, your tracking and your emails, and shows you what made money and what did not. That does not make your agency worse – it makes you a better client, because you know exactly what to ask for. What you keep in-house and what you outsource stays your call.
