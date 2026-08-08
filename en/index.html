@@ -161,7 +161,13 @@
         lang: (document.documentElement.lang || 'hu').slice(0, 2).toLowerCase(),
         content_group: 'landing-ai-csapatod',
         page_category: 'landing',
-        source: 'ai-csapat-landing',
+        // ☠️ 2026-08-08: ez a kulcs `source` volt — és a GA4-ben FELÜLÍRTA a valódi
+        // forgalmi forrást. A `source`/`medium`/`campaign`/`term`/`content` a GA4-nek
+        // FOGLALT (manual traffic source), nem szabad custom dimenziónak használni.
+        // A HU oldalon mérve: `sessionSource = ai-csapat-landing` 653 munkamenet vs.
+        // `meta` 4. Az EN oldal ugyanezt a hibát hordozta — a javítás mindkét nyelven
+        // egyszerre megy ([[feedback_port_the_fix_to_the_sibling_language]]).
+        gm_source: 'ai-csapat-landing',
         service_category: 'ai-marketing-training',
         service_slug: 'ai-csapatod',
         cookie_domain: 'genmarketer.hu'

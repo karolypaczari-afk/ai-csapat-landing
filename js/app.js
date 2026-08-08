@@ -144,8 +144,35 @@
   function uid() {
     return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2);
   }
+  /* ☠️ 2026-08-08 — a `creation_time` MÁSODPERCBEN ment, a Meta MILLISZEKUNDUMOT ír elő.
+   *
+   * A specifikáció: `fb.<subdomain_index>.<creation_time>.<fbclid>`, ahol a creation_time
+   * „the UNIX time since epoch **in milliseconds**" — a doksi példája 13 jegyű
+   * (`fb.1.1554763741205.…`). A kódunk `Math.floor(Date.now()/1000)`-rel 10 jegyűt írt.
+   *
+   * Miért nem kozmetika: a Meta a `_fbc`-ből olvassa ki a kattintás IDEJÉT az attribúciós
+   * ablakhoz. Egy másodperc-alapú bélyeg ezredére kisebb, azaz 1970 közelére esik —
+   * vagyis pont az a mező romlik el, ami a kattintást a konverzióhoz kötné. Ez a 2026-08-08-i
+   * audit fő leletének (a Meta 7 rendelésből 1-et attribuált) egyik valószínű társ-oka.
+   *
+   * A tesztek VAKON voltak rá: a `tests/meta-pixel.mjs` csak az `^fb\.1\.` prefixet és az
+   * fbclid meglétét nézte, a bélyeg nagyságrendjét soha — ugyanaz a minta, mint
+   * [[reference_landing_test_asserted_the_tracking_defect]]. A javítással együtt megy a kapu.
+   *
+   * A ROMLOTT sütit migráljuk: a doksi szerint a `_fbc`-t csak akkor szabad újraírni, ha
+   * nincs cookie VAGY az URL fbclid-je eltér a tároltól — de egy hibás formátumú bélyeg
+   * rosszabb, mint egy reset, ezért azt is javítjuk. Jól formált sütit nem bántunk. */
+  var FB_COOKIE_RE = /^fb\.\d+\.(\d+)\.(.+)$/;
+  function fbCookieMalformed(value) {
+    var m = FB_COOKIE_RE.exec(String(value || ""));
+    return !m || String(m[1]).length < 13; // < 13 jegy = másodperc-alapú, romlott
+  }
+  function fbCookieClickId(value) {
+    var m = FB_COOKIE_RE.exec(String(value || ""));
+    return m ? m[2] : "";
+  }
   function ensureMetaCookies() {
-    var now = Math.floor(Date.now() / 1000), qs = new URLSearchParams(location.search);
+    var now = Date.now(), qs = new URLSearchParams(location.search); // MILLISZEKUNDUM
     var externalId = readCookie(META_EXT_COOKIE);
     if (!externalId) {
       externalId = "gm_" + uid();
@@ -155,10 +182,20 @@
     if (!fbp) {
       fbp = "fb.1." + now + "." + Math.floor(Math.random() * 10000000000);
       writeCookie("_fbp", fbp, 390);
+    } else if (fbCookieMalformed(fbp)) {
+      // A véletlen utótagot MEGTARTJUK — csak a hibás bélyeget javítjuk, hogy a
+      // böngésző-azonosító a lehető legkevesebbet mozduljon.
+      fbp = "fb.1." + now + "." + (fbCookieClickId(fbp) || Math.floor(Math.random() * 10000000000));
+      writeCookie("_fbp", fbp, 390);
     }
     var fbc = readCookie("_fbc"), fbclid = qs.get("fbclid");
-    if (fbclid) {
+    // Doksi: csak akkor írjuk, ha nincs süti, VAGY az URL fbclid-je eltér a tároltól.
+    // Plusz: a romlott (másodperc-alapú) bélyeget akkor is javítjuk, ha nincs új fbclid.
+    if (fbclid && (!fbc || fbCookieClickId(fbc) !== fbclid || fbCookieMalformed(fbc))) {
       fbc = "fb.1." + now + "." + fbclid;
+      writeCookie("_fbc", fbc, 90);
+    } else if (fbc && fbCookieMalformed(fbc)) {
+      fbc = "fb.1." + now + "." + fbCookieClickId(fbc);
       writeCookie("_fbc", fbc, 90);
     }
     return { fbp: fbp, fbc: fbc, externalId: externalId };
@@ -304,11 +341,18 @@
     var contentId = metaContentId(pkg, el);
     var metaCookies = ensureMetaCookies();
     var adAttrib = ensureAdAttribution();
-    // A `source` regisztrált GA4 custom dimension, de eddig csak a `config` hívásban
-    // (page_view scope) szerepelt, ezért a konverziós eseményeken 0%-ban volt kitöltve
-    // (2026-07-27 audit: 62 érintett form/purchase esemény). Eseményszinten is átadjuk,
-    // hogy a lead- és vásárlásforrás bontható legyen.
-    adAttrib = Object.assign({ source: adAttrib.utm_source || "ai-csapat-landing" }, adAttrib);
+    // A landoló saját forrás-címkéje custom dimensionként megy — hogy a lead- és
+    // vásárlásforrás eseményszinten is bontható legyen (2026-07-27 audit: 62 érintett
+    // form/purchase esemény volt forrás nélkül).
+    //
+    // ☠️ 2026-08-08: a kulcs `source` volt, és ez FELÜLÍRTA a GA4 valódi forgalmi
+    //    forrását. A `source`/`medium`/`campaign`/`term`/`content` a GA4-nek FOGLALT
+    //    név (manual traffic source) — custom dimensionnek tilos. Mérve: a landoló
+    //    munkameneteinek `sessionSource`-a 653-ban `ai-csapat-landing`, 4-ben `meta`,
+    //    miközben a `utm_medium`/`campaign`/`content` helyesen átjött, és a kontroll
+    //    host (genmarketer.hu, nincs rajta ilyen kulcs) normálisan attribuál.
+    //    A prefix ezért nem stílus-kérdés: ez a védelem maga.
+    adAttrib = Object.assign({ gm_source: adAttrib.utm_source || "ai-csapat-landing" }, adAttrib);
     var item = { item_id: itemId, item_name: "Az AI csapatod - " + label, item_brand: "GENmarketer", item_category: "AI marketing training", price: value, quantity: 1 };
     if (isCheckout) {
       try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
