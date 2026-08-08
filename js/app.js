@@ -61,8 +61,31 @@
     // Az attribútum-SLUG ékezet nélküli (a WP `sanitize_title()`-je transzliterál),
     // az ÉRTÉK viszont ékezetes, ezért URL-kódolva megy. Rossz slug nem 404-et adna,
     // hanem némán a HAVI (alapértelmezett) variációt tenné a kosárba.
-    planner:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1992&variation_id=2342&attribute_szamlazasi-ciklus=Havi",
-    autopilot: "https://tudastar.genmarketer.hu/checkout/?add-to-cart=1993&variation_id=2344&attribute_szamlazasi-ciklus=Havi",
+    //
+    // ☠️ 2026-08-08 — A RÉGI `?add-to-cart=<szülő>&variation_id=<v>` FORMA ELDOBTA A
+    //    KAMPÁNY-PARAMÉTEREKET. Nem a variációs termék hibája, és nem a WooCommerce-é
+    //    (`woocommerce_cart_redirect_after_add = no`): az 1992/1993 terméken rajta van a
+    //    `cartflows_redirect_flow_id` meta, ezért a CartFlows a
+    //    `woocommerce_add_to_cart_redirect` szűrőn (prio 99) `get_permalink()`-ből ÚJ
+    //    URL-t épít — és egyetlen eredeti query paramétert sem visz át. Mérve:
+    //    `?add-to-cart=1992&variation_id=2342` → 302 → `/penztar/` query NÉLKÜL, míg
+    //    `?add-to-cart=872` (nincs rajta a meta) → 200. Vagyis TERMÉK-BEÁLLÍTÁS, nem
+    //    terméktípus-viselkedés.
+    //
+    //    Következmény: a WooCommerce rendelés-attribúciója (sourcebuster, URL-ből
+    //    dolgozik) a hirdetésből érkező vevőt is `referral`-nak látta — 7 rendelésből
+    //    5-öt. (A Meta `fbc`-jét ez NEM érintette: az a `.genmarketer.hu`-scope-os
+    //    sütiben él, és élő szondával igazoltan átér a pénztár-aldomainre.)
+    //
+    //    A CartFlows NATÍV formája (`?wcf-add-to-cart=<VARIÁCIÓ-ID>`) meg sem hívja a Woo
+    //    add-to-cart handlerét → nincs redirect, a paraméterek megmaradnak. A variáció
+    //    SAJÁT ID-jét kell megadni, nem a szülőét. Mind a négy variáció élesben igazolva:
+    //    200 + a HELYES ár a kosárban (2342→9 990 · 2343→99 900 · 2344→19 990 · 2345→199 900).
+    //
+    //    A `onetime` (872) SZÁNDÉKOSAN marad a régi formán: nincs rajta CartFlows-meta,
+    //    tehát 200-at ad és megőrzi a paramétereket — amit nem tör el, azt nem alakítjuk.
+    planner:   "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2342&wcf-qty=1",
+    autopilot: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2344&wcf-qty=1",
     onetime:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=872"
   };
   var GA4_ID = "G-1EV18K1256";
