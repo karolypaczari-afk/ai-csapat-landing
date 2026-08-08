@@ -97,13 +97,13 @@
         metrics: [{ label: "szekció", labelEn: "section", target: 9 }, { label: "konverzió", labelEn: "conversion", target: 34, suffix: "%↑" }],
         proof: PF + "proof-landing.webp", spec: { pipeline: "vázlat → szöveg → szekciók", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "outline → copy → sections", cadence: "on demand", scheduler: "ready" } },
-      { code: "ROBINSON", name: "ROBINSON", role: "a landolóoldal-építő", roleEn: "the landing page builder", slug: "genmarketer-landing-page-builder", status: "soon",
+      { code: "ROBINSON", name: "ROBINSON", role: "a landolóoldal-építő", roleEn: "the landing page builder", slug: "genmarketer-web-builder", status: "live",
         benefit: "Kódba önti a kész landolódat – anélkül, hogy fejlesztőt kéne fizetned.",
         benefitEn: "Turns your finished landing page into code – without paying a developer.",
-        currentTask: "készenlétben – hamarosan indul", currentTaskEn: "on standby – coming soon",
-        metrics: [{ label: "komponens", labelEn: "component", target: 0 }],
-        proof: null, spec: { pipeline: "dizájn → kód → publikálás", cadence: "—", scheduler: "hamarosan" },
-        specEn: { pipeline: "design → code → publish", cadence: "—", scheduler: "coming soon" } }
+        currentTask: "a szekciókat kóddá építi és leteszteli…", currentTaskEn: "Building your sections into code and testing them…",
+        metrics: [{ label: "komponens", labelEn: "component", target: 24 }, { label: "QA-teszt", labelEn: "QA check", target: 7 }],
+        proof: null, spec: { pipeline: "dizájn → kód → publikálás", cadence: "igény szerint", scheduler: "készen áll" },
+        specEn: { pipeline: "design → code → publish", cadence: "on demand", scheduler: "ready" } }
     ]},
     { cat: "Design és Figma", catEn: "Design & Figma", color: "#9B6DFF", members: [
       { code: "LEONARDO", name: "LEONARDO", role: "a kreatív designer", roleEn: "the creative designer", slug: "genmarketer-ad-creative-design", status: "live",
