@@ -489,6 +489,19 @@
    * A havi értékeket az ELSŐ kapcsoláskor jegyezzük meg, nem betöltéskor: addigra a
    * `wireCtas` már ráírta a hrefre a marketing-attribúciót, és azt az éves ágnak is
    * meg kell tartania. */
+  /* Létszám-tengely (2026-08-11). Ugyanaz az elv, mint a ciklusváltónál: minden
+   * értéket a MARKUP deklarál (`data-seat-offer` a CTA-n, `data-seat-price` az
+   * áron), a script nem számol és nem alakít sztringet — a per-férőhelyes ár
+   * NEM lineáris, tehát bármilyen számolás néma tévedést gyártana.
+   * Csak ott jelenik meg, ahol a markup kéri: a magyar landolón nincs
+   * `[data-gm-seats]`, ezért ott ez a teljes ág holt kód marad. */
+  function seatEntry(el, key, n) {
+    var raw = el.dataset[key];
+    if (!raw) return null;
+    if (!el._gmSeat) { try { el._gmSeat = JSON.parse(raw); } catch (e) { el._gmSeat = {}; } }
+    var hit = el._gmSeat[n];
+    return hit && hit.monthly && hit.yearly ? hit : null;
+  }
   function wireBillingCycle() {
     var box = document.querySelector("[data-gm-cycle]");
     if (!box) return;
@@ -497,18 +510,39 @@
     document.querySelectorAll("[data-gm-price][data-yearly]").forEach(function (x) { amounts.push(x); });
     if (!links.length) return;
 
+    /* FAIL-CLOSED a létszámra is: ha akár EGY ajánlott férőhelyhez hiányzik a
+     * deklaráció bármelyik CTA-n vagy áron, a választót ELTÁVOLÍTJUK. Egy
+     * vezérlő, ami néha rossz kosarat nyit, rosszabb, mint a hiánya. */
+    var seatBox = document.querySelector("[data-gm-seats]");
+    var seats = "1";
+    if (seatBox) {
+      var offered = [];
+      seatBox.querySelectorAll("button[data-seats]").forEach(function (b) { offered.push(b.dataset.seats); });
+      var complete = offered.length > 1 && offered.every(function (n) {
+        if (n === "1") return true;
+        return links.every(function (a) { return !!seatEntry(a, "seatOffer", n); })
+            && amounts.every(function (x) { return !!seatEntry(x, "seatPrice", n); });
+      });
+      if (!complete) { if (seatBox.parentNode) seatBox.parentNode.removeChild(seatBox); seatBox = null; }
+    }
+
     function apply(cycle) {
       var yearly = cycle === "yearly";
       links.forEach(function (a) {
+        // A megjegyzés MINDIG az első: ekkor a DOM még az 1 fős értéket tartja,
+        // és a `wireCtas` attribúciója már rajta van.
         if (!a.dataset.monthlyHref) a.dataset.monthlyHref = a.getAttribute("href");
         if (!a.dataset.monthlyLabel) a.dataset.monthlyLabel = a.innerHTML;
-        a.setAttribute("href", yearly ? a.dataset.yearlyHref : a.dataset.monthlyHref);
-        var label = yearly ? a.dataset.yearlyLabel : a.dataset.monthlyLabel;
+        var pick = seats !== "1" ? seatEntry(a, "seatOffer", seats) : null;
+        pick = pick ? pick[cycle] : null;
+        a.setAttribute("href", pick ? pick.href : (yearly ? a.dataset.yearlyHref : a.dataset.monthlyHref));
+        var label = pick ? pick.label : (yearly ? a.dataset.yearlyLabel : a.dataset.monthlyLabel);
         if (label) a.innerHTML = label;
       });
       amounts.forEach(function (x) {
         if (!x.dataset.monthly) x.dataset.monthly = x.innerHTML;
-        x.innerHTML = yearly ? x.dataset.yearly : x.dataset.monthly;
+        var sp = seats !== "1" ? seatEntry(x, "seatPrice", seats) : null;
+        x.innerHTML = sp ? sp[cycle] : (yearly ? x.dataset.yearly : x.dataset.monthly);
       });
       box.querySelectorAll("button[data-cycle]").forEach(function (b) {
         var on = b.dataset.cycle === cycle;
@@ -530,6 +564,24 @@
       // éveset), nem közönség — a szándékot a `PricingReached` már lefedi.
       signal("gm_cycle_switch", { billing_cycle: b.dataset.cycle }, { clarityKey: "billing_cycle", clarityValue: b.dataset.cycle });
     });
+
+    if (seatBox) {
+      seatBox.addEventListener("click", function (ev) {
+        var b = ev.target.closest("button[data-seats]");
+        if (!b) return;
+        seats = b.dataset.seats;
+        seatBox.querySelectorAll("button[data-seats]").forEach(function (x) {
+          var on = x.dataset.seats === seats;
+          x.classList.toggle("is-on", on);
+          x.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        seatBox.setAttribute("data-gm-seats", seats);
+        apply(box.getAttribute("data-gm-cycle") || "monthly");
+        // MIÉRT MÉRJÜK: a férőhely a legnagyobb kosárérték-emelő, és eddig
+        // semmi nem mondta meg, hányan gondolkodnak egynél több licencben.
+        signal("gm_seats_switch", { seats: seats }, { clarityKey: "seats", clarityValue: seats });
+      });
+    }
   }
   function wireCtas() {
     document.querySelectorAll("[data-gm-cta]").forEach(function (el) {
