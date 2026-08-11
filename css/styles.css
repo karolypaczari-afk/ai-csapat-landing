@@ -689,7 +689,18 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-price__list li.is-off { color: #9B98B6; }
 .gm-price__list li.is-off::before { content: "–"; color: #6F6C8C; }
 .gm-price--gold .gm-price__list li.is-off::before { color: #6F6C8C; }
-.gm-price .gm-btn { width: 100%; margin-top: auto; }
+/* A kártya-CTA felirata ÁRAT hordoz („Ezt választom – 23 950 Ft/hó"), és a
+   létszám-tengely óta a leghosszabb változat két sorba tört. A gomb `width:100%`,
+   tehát a nagy vízszintes padding csak a SZÖVEG helyét vette el — ezért a
+   `nowrap` mellé a paddingot szűkítjük, nem a kártyát növeljük. A `clamp` a
+   legszűkebb kártyán is bent tartja; a `min-width:0` engedi a grid-cellának
+   zsugorodni, enélkül a `nowrap` kitolná a rácsot. */
+.gm-price .gm-btn {
+  width: 100%; margin-top: auto; min-width: 0;
+  white-space: nowrap;
+  padding-inline: 0.9em;
+  font-size: clamp(0.82rem, 1.35vw, 1.02rem);
+}
 
 /* ---- Pricing: két ajánlat-csoport egymás mellett (előfizetés + egyszeri) ----
    A HU oldal 2026-08-01 óta MINDKÉT ajánlatot mutatja. A súlyozás szándékos:
@@ -817,6 +828,12 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
    Mindkét nyelv használja (HU gyökér + /en/ → genmarketer.eu). A logika a
    js/app.js `wireBillingCycle`-jében él, a ciklus-függő értékeket pedig a
    markup deklarálja (data-yearly-href / data-yearly-label / data-yearly). */
+/* A két választó (Számlázás × Létszám) EGY SORBAN — a design_19 `.controls`
+   mintája. Külön blokként egymás alá kerültek, és egy inline `margin-top:-14px`
+   hackkel voltak közelítve; a sor-konténer ezt kiváltja. Szűk kijelzőn a
+   `flex-wrap` továbbra is enged tördelni — ott az egymás alatti forma a jó. */
+.gm-cycle-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 26px; margin: 0 0 26px; }
+.gm-cycle-row .gm-cycle { margin: 0; }
 .gm-cycle { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 0 26px; flex-wrap: wrap; }
 .gm-cycle__label { font-size: .72rem; letter-spacing: 1.6px; text-transform: uppercase; color: var(--gm-muted, #8b8f98); font-weight: 600; }
 .gm-cycle__seg { display: inline-flex; background: rgba(0,0,0,.28); border: 1px solid var(--gm-line, #2a2d36); border-radius: 999px; padding: 3px; gap: 2px; }
@@ -824,6 +841,17 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-cycle__seg button:hover { background: rgba(255,255,255,.07); }
 .gm-cycle__seg button.is-on { background: var(--gm-grad, linear-gradient(135deg,#6d28d9,#2563eb)); color: #fff; box-shadow: 0 10px 30px rgba(64,0,153,.35); }
 .gm-cycle__save { display: inline-block; margin-left: 8px; font-size: .7rem; font-weight: 800; color: #1A1A2E; background: var(--gm-gold, #f5b301); padding: 2px 8px; border-radius: 999px; vertical-align: 1px; }
+/* ☠️ A SZORÍTÓ ABLAK: 1000–1150px. Megmérve (HU): a két pirula 708px-t kér, a
+   konténer 1024px-en már csak 606 — 102px-szel túllóg, ezért tördelt. 900px
+   ALATT viszont a kártya-rács egyoszlopos lesz, a konténer 828px-re NŐ, tehát
+   ott újra fér: a probléma nem „kis kijelző", hanem egy szűk sáv a kettő között.
+   Ezért itt csak a belső méreteket húzzuk össze (gap + gombpadding ≈ 134px
+   nyereség), betűméretet és jelentést nem áldozunk föl. */
+@media (max-width: 1150px) {
+  .gm-cycle-row { gap: 10px 14px; }
+  .gm-cycle { gap: 8px; }
+  .gm-cycle__seg button { padding: 8px 11px; }
+}
 @media (max-width: 420px) {
   .gm-cycle__seg button { padding: 8px 12px; font-size: .88rem; }
   .gm-cycle__save { display: block; margin: 3px 0 0; }

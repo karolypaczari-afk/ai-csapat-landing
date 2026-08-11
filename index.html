@@ -92,7 +92,7 @@
        harmadik-fél-origint tett a kritikus útba. Recept + régi-eszköz fallback: assets/fonts/README.md -->
   <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20260805a">
+  <link rel="stylesheet" href="/css/styles.css?v=20260811a">
   <link rel="stylesheet" href="/css/hud.css">
 
   <!-- GA4 — localhoston KI (prod paritás); éles hoston pörög.
@@ -776,21 +776,23 @@
                A ciklus VARIÁCIÓ ugyanazon a Woo-terméken (1992/1993), ezért a link
                soha nem lehet csupasz `?add-to-cart=1992`: az variáció nélkül semmit
                nem tesz a kosárba. -->
-          <div class="gm-cycle gm-reveal" data-gm-cycle="monthly">
-            <span class="gm-cycle__label">Számlázás</span>
-            <div class="gm-cycle__seg" role="group" aria-label="Számlázási ciklus">
-              <button type="button" class="is-on" data-cycle="monthly" aria-pressed="true">Havi</button>
-              <button type="button" data-cycle="yearly" aria-pressed="false">Éves<span class="gm-cycle__save">2 hónap ingyen</span></button>
+          <div class="gm-cycle-row">
+            <div class="gm-cycle gm-reveal" data-gm-cycle="monthly">
+              <span class="gm-cycle__label">Számlázás</span>
+              <div class="gm-cycle__seg" role="group" aria-label="Számlázási ciklus">
+                <button type="button" class="is-on" data-cycle="monthly" aria-pressed="true">Havi</button>
+                <button type="button" data-cycle="yearly" aria-pressed="false">Éves<span class="gm-cycle__save">2 hónap ingyen</span></button>
+              </div>
             </div>
-          </div>
-          <div class="gm-cycle gm-reveal" data-gm-seats="1" style="margin-top:-14px">
-            <span class="gm-cycle__label">Létszám</span>
-            <div class="gm-cycle__seg" role="group" aria-label="Hány főre">
-              <button type="button" class="is-on" data-seats="1" aria-pressed="true">1</button>
-              <button type="button" data-seats="2" aria-pressed="false">2</button>
-              <button type="button" data-seats="3" aria-pressed="false">3</button>
-              <button type="button" data-seats="4" aria-pressed="false">4</button>
-              <button type="button" data-seats="5" aria-pressed="false">5</button>
+            <div class="gm-cycle gm-reveal" data-gm-seats="1">
+              <span class="gm-cycle__label">Létszám</span>
+              <div class="gm-cycle__seg" role="group" aria-label="Hány főre">
+                <button type="button" class="is-on" data-seats="1" aria-pressed="true">1</button>
+                <button type="button" data-seats="2" aria-pressed="false">2</button>
+                <button type="button" data-seats="3" aria-pressed="false">3</button>
+                <button type="button" data-seats="4" aria-pressed="false">4</button>
+                <button type="button" data-seats="5" aria-pressed="false">5</button>
+              </div>
             </div>
           </div>
           <p class="gm-text-center gm-reveal" style="margin:-12px 0 22px;color:#8b8f98;font-size:.85rem">Minden további belépő külön fiók – és olcsóbb, mint az előző. A 2–5. belépőt a vásárlás után mi állítjuk be neked. Öt főnél többen vagytok? <a href="mailto:info@genmarketer.hu?subject=Csapatlicenc" style="color:inherit;text-decoration:underline">Kérj egyedi ajánlatot</a>.</p>

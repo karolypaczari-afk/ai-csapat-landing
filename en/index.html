@@ -142,7 +142,7 @@
   <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/fonts.css">
 
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css?v=20260811a">
   <link rel="stylesheet" href="/css/hud.css">
 
   <!-- GA4 — localhoston KI (prod paritás); éles hoston pörög.
@@ -811,30 +811,23 @@
                only rewrites them. Each button click adds the right variation to
                the cart and opens the checkout in one step, exactly like the
                Hungarian side. -->
-          <style>
-            .gm-cycle{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 26px}
-            .gm-cycle__label{font-size:.72rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--gm-muted,#8b8f98);font-weight:600}
-            .gm-cycle__seg{display:inline-flex;background:rgba(0,0,0,.28);border:1px solid var(--gm-line,#2a2d36);border-radius:999px;padding:3px;gap:2px}
-            .gm-cycle__seg button{background:none;border:none;color:inherit;font:inherit;font-weight:700;font-size:.95rem;padding:8px 18px;border-radius:999px;cursor:pointer;transition:.15s}
-            .gm-cycle__seg button:hover{background:rgba(255,255,255,.07)}
-            .gm-cycle__seg button.is-on{background:var(--gm-grad,linear-gradient(135deg,#6d28d9,#2563eb));color:#fff;box-shadow:0 10px 30px rgba(64,0,153,.35)}
-            .gm-cycle__save{display:inline-block;margin-left:8px;font-size:.7rem;font-weight:800;color:#1A1A2E;background:var(--gm-gold,#f5b301);padding:2px 8px;border-radius:999px;vertical-align:1px}
-          </style>
-          <div class="gm-cycle gm-reveal" data-gm-cycle="monthly">
-            <span class="gm-cycle__label">Billing</span>
-            <div class="gm-cycle__seg" role="group" aria-label="Billing period">
-              <button type="button" class="is-on" data-cycle="monthly" aria-pressed="true">Monthly</button>
-              <button type="button" data-cycle="yearly" aria-pressed="false">Yearly<span class="gm-cycle__save">2 months free</span></button>
+          <div class="gm-cycle-row">
+            <div class="gm-cycle gm-reveal" data-gm-cycle="monthly">
+              <span class="gm-cycle__label">Billing</span>
+              <div class="gm-cycle__seg" role="group" aria-label="Billing period">
+                <button type="button" class="is-on" data-cycle="monthly" aria-pressed="true">Monthly</button>
+                <button type="button" data-cycle="yearly" aria-pressed="false">Yearly<span class="gm-cycle__save">2 months free</span></button>
+              </div>
             </div>
-          </div>
-          <div class="gm-cycle gm-reveal" data-gm-seats="1" style="margin-top:-14px">
-            <span class="gm-cycle__label">Seats</span>
-            <div class="gm-cycle__seg" role="group" aria-label="Number of seats">
-              <button type="button" class="is-on" data-seats="1" aria-pressed="true">1</button>
-              <button type="button" data-seats="2" aria-pressed="false">2</button>
-              <button type="button" data-seats="3" aria-pressed="false">3</button>
-              <button type="button" data-seats="4" aria-pressed="false">4</button>
-              <button type="button" data-seats="5" aria-pressed="false">5</button>
+            <div class="gm-cycle gm-reveal" data-gm-seats="1">
+              <span class="gm-cycle__label">Seats</span>
+              <div class="gm-cycle__seg" role="group" aria-label="Number of seats">
+                <button type="button" class="is-on" data-seats="1" aria-pressed="true">1</button>
+                <button type="button" data-seats="2" aria-pressed="false">2</button>
+                <button type="button" data-seats="3" aria-pressed="false">3</button>
+                <button type="button" data-seats="4" aria-pressed="false">4</button>
+                <button type="button" data-seats="5" aria-pressed="false">5</button>
+              </div>
             </div>
           </div>
           <p class="gm-text-center gm-reveal" style="margin:-12px 0 22px;color:#8b8f98;font-size:.85rem">Every extra seat is a separate login &ndash; and costs less than the one before. Need more than five? <a href="mailto:hello@genmarketer.eu?subject=Team%20licence" style="color:inherit;text-decoration:underline">Ask us for a quote</a>.</p>
