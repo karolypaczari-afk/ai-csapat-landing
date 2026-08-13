@@ -179,13 +179,15 @@
       function uid() {
         return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(36).slice(2);
       }
-      var qs = new URLSearchParams(location.search), now = Math.floor(Date.now() / 1000);
+      function fbCookieClickId(value) { var m = /^fb\.\d+\.\d+\.(.+)$/.exec(String(value || '')); return m ? m[1] : ''; }
+      function fbCookieMalformed(value) { var m = /^fb\.\d+\.(\d+)\./.exec(String(value || '')); return !!value && (!m || m[1].length !== 13); }
+      var qs = new URLSearchParams(location.search), now = Date.now();
       var externalId = readCookie('gm_meta_ext_id');
       if (!externalId) { externalId = 'gm_' + uid(); writeCookie('gm_meta_ext_id', externalId, 390); }
       var fbclid = qs.get('fbclid'), fbc = readCookie('_fbc');
-      if (fbclid) { fbc = 'fb.1.' + now + '.' + fbclid; writeCookie('_fbc', fbc, 90); }
+      if (fbclid && (!fbc || fbCookieClickId(fbc) !== fbclid || fbCookieMalformed(fbc))) { fbc = 'fb.1.' + now + '.' + fbclid; writeCookie('_fbc', fbc, 90); }
       var fbp = readCookie('_fbp');
-      if (!fbp) { fbp = 'fb.1.' + now + '.' + Math.floor(Math.random() * 10000000000); writeCookie('_fbp', fbp, 390); }
+      if (!fbp || fbCookieMalformed(fbp)) { fbp = 'fb.1.' + now + '.' + (fbCookieClickId(fbp) || Math.floor(Math.random() * 10000000000)); writeCookie('_fbp', fbp, 390); }
       var pageViewEventId = 'gm-pageview-' + uid();
       var pagePayload = {
         content_name: document.title,

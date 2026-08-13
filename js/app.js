@@ -29,22 +29,16 @@
   // Mindkét nyelv árul előfizetést (2026-07-31 óta), de KÜLÖN pénztáron — és ez a
   // szétválasztás a vezérlő tervezési elv, nem kényelmi kérdés:
   //   HU → a tudástár WooCommerce/CartFlows pénztára, forintban (1992/1993);
-  //   EN → a saját EUR-os Stripe-pénztár a /en/checkout/-on (Woo 2197/2198).
-  //
-  // Az angol vevő azért NEM mehet a Woo-pénztárra, mert a bolt pénzneme HUF és
-  // nincs multi-currency plugin: ott a 29 az 29 FORINT lenne. Az EUR-os
-  // ismétlődő fizetés ezért Stripe-natív, és a WooCommerce csak kész tényt kap
-  // (docs/30 §14/b „A" út). A magyar út egyetlen sort sem lát ebből.
+  //   EN → a vip.genmarketer.eu saját EUR-os WooCommerce/CartFlows pénztára.
+  // A két bolt külön WordPress/Woo környezet, ezért a termék-, variáció- és
+  // pénznem-igazság nem keverhető közöttük.
   //
   // MINDKÉT nyelv 2026-08-01 óta HÁROM ajánlatot visz: a két előfizetés mellett
-  // visszakerült az EGYSZERI díjas csomag (min. 6 hónap frissítés + 30 napos garancia).
+  // visszakerült az EGYSZERI díjas csomag (fix pillanatkép + 30 napos garancia).
   //   HU „Skillpakk"  → Woo 872, 34 990 Ft, ugyanaz a bizonyított tudástár Woo/CartFlows
   //                  útvonal, mint a két előfizetésé (a termék végig `publish` maradt,
   //                  csak a landolóról nem volt elérhető — docs/30 D14);
-  //   EN „Training" → 189 €, a SAJÁT Stripe-pénztár egyszeri (PaymentIntent) ága az
-  //                  `https://vip.genmarketer.eu/checkout/?add-to-cart=51`-en. A `training` slug szándékosan a
-  //                  régi: az `api/_lib.php` `GM_EN_PRICES` és a `create-intent.php` ezt
-  //                  a nevet ismeri, és a szerver dönti el az összeget, nem a böngésző.
+  //   EN „Training" → Woo 51, 189 €, frissítések nélküli egyszeri csomag.
   var CHECKOUT = EN ? {
     planner:   "https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly",
     autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly",
@@ -328,7 +322,7 @@
   // Ez a függvény csak akkor pótol, ha az érték hiányzik vagy önmagát nevezi meg —
   // valódi, kézzel címkézett kampány-UTM-et soha nem ír felül.
   var CLICK_ID_SOURCE = {
-    fbclid: { utm_source: "facebook", utm_medium: "paid_social" },
+    fbclid: { utm_source: "meta", utm_medium: "paid_social" },
     gclid: { utm_source: "google", utm_medium: "cpc" },
     gbraid: { utm_source: "google", utm_medium: "cpc" },
     wbraid: { utm_source: "google", utm_medium: "cpc" },
@@ -430,6 +424,20 @@
       var metaCookies = ensureMetaCookies();
       var adAttrib = ensureAdAttribution();
       var out = new URL(url, location.href);
+      // A VIP CartFlows natív variation-linkje megőrzi a teljes query stringet.
+      // A Woo szülő+variation formája előbb tiszta /checkout/ URL-re irányított,
+      // és a redirect során a Woo/PYS forrásolvasó már (direct)/(none) értéket látott.
+      // A magyar pénztár is ezt a natív formát használja; a VIP-en élőben mérve
+      // ugyanígy a helyes terméket teszi kosárba, redirect nélkül.
+      if (EN && out.hostname === "vip.genmarketer.eu" && out.pathname === "/checkout/" && out.searchParams.get("variation_id")) {
+        var variationId = out.searchParams.get("variation_id");
+        out.searchParams.delete("add-to-cart");
+        out.searchParams.delete("variation_id");
+        out.searchParams.delete("attribute_billing-period");
+        out.searchParams.delete("attribute_seats");
+        out.searchParams.set("wcf-add-to-cart", variationId);
+        out.searchParams.set("wcf-qty", "1");
+      }
       ATTR_KEYS.forEach(function (k) {
         // A normalizált tárolt érték az erősebb: az `ensureAdAttribution` már
         // beolvasztotta az aktuális URL paramjait ÉS helyreállította a hiányzó vagy
@@ -535,7 +543,12 @@
         if (!a.dataset.monthlyLabel) a.dataset.monthlyLabel = a.innerHTML;
         var pick = seats !== "1" ? seatEntry(a, "seatOffer", seats) : null;
         pick = pick ? pick[cycle] : null;
-        a.setAttribute("href", pick ? pick.href : (yearly ? a.dataset.yearlyHref : a.dataset.monthlyHref));
+        // A markupban deklarált ciklus-/seat-cél csak az ajánlat paramétereit
+        // tartalmazza. Minden újraválasztás után vissza kell tenni a landing
+        // attribúcióját is; különben a kapcsoló ledobja az UTM-et, click ID-ket
+        // és a Meta match kulcsait még a pénztárba lépés előtt.
+        var target = pick ? pick.href : (yearly ? a.dataset.yearlyHref : a.dataset.monthlyHref);
+        a.setAttribute("href", withAttribution(target));
         var label = pick ? pick.label : (yearly ? a.dataset.yearlyLabel : a.dataset.monthlyLabel);
         if (label) a.innerHTML = label;
       });
@@ -1069,7 +1082,9 @@
           video.muted = !video.muted;
           muteBtn.classList.toggle("is-on", !video.muted);
           muteBtn.setAttribute("aria-pressed", video.muted ? "false" : "true");
-          muteBtn.setAttribute("aria-label", video.muted ? "Hang bekapcsolása" : "Hang kikapcsolása");
+          muteBtn.setAttribute("aria-label", video.muted
+            ? tr("Hang bekapcsolása", "Turn sound on")
+            : tr("Hang kikapcsolása", "Mute sound"));
           if (!video.muted && video.paused) video.play().catch(function () {});
         });
       }
@@ -1104,7 +1119,7 @@
           var pill = document.createElement("button");
           pill.type = "button";
           pill.className = "gm-carousel__pill";
-          pill.setAttribute("aria-label", (i + 1) + ". dia megjelenítése");
+          pill.setAttribute("aria-label", tr((i + 1) + ". dia megjelenítése", "Show slide " + (i + 1)));
           if (s.id) pill.setAttribute("aria-controls", s.id);
           pill.addEventListener("click", function () { goTo(i); });
           pillsWrap.appendChild(pill);
