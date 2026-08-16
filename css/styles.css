@@ -747,6 +747,22 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-faq__item summary::after { content: "+"; color: var(--gm-violet); font-weight: 900; transition: transform 0.25s var(--gm-ease); }
 .gm-faq__item[open] summary::after { transform: rotate(45deg); }
 .gm-faq__item p { padding: 0 1.4rem 1.2rem; color: var(--gm-grey); font-size: 0.96rem; }
+/* A válaszokba 2026-08-16 óta kerülhet `mailto:` link (kapcsolat, csapatlicenc).
+   Enélkül a link a bekezdés szövegszínét örökölné és nem is látszana linknek. */
+.gm-faq__item p a { color: var(--gm-violet); text-decoration: underline; text-underline-offset: 2px; }
+.gm-faq__item p a:hover, .gm-faq__item p a:focus-visible { color: var(--gm-cyan-700); }
+
+/* Kapcsolat-sáv a GYIK alján (2026-08-16). Szándékosan HALK: nem CTA-konkurencia,
+   hanem a „végigolvastam és nem találtam meg" út vége. Ezért nincs gomb és nincs
+   saját szekció — egy keskeny, keretezett sor a lista után. */
+.gm-faq__contact {
+  margin-top: 1.6rem; padding: 1.1rem 1.4rem;
+  border: 1px dashed var(--gm-line); border-radius: var(--gm-r);
+  background: #fff; color: var(--gm-grey); font-size: 0.94rem; line-height: 1.65;
+}
+.gm-faq__contact strong { color: var(--gm-ink); }
+.gm-faq__contact a { color: var(--gm-violet); text-decoration: underline; text-underline-offset: 2px; font-weight: 700; }
+.gm-faq__contact a:hover, .gm-faq__contact a:focus-visible { color: var(--gm-cyan-700); }
 
 /* ---- Founder / Guarantee ---- */
 .gm-founder { display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: center; max-width: 820px; margin-inline: auto; }
