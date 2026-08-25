@@ -813,35 +813,65 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-faq__contact a { color: var(--gm-violet); text-decoration: underline; text-underline-offset: 2px; font-weight: 700; }
 .gm-faq__contact a:hover, .gm-faq__contact a:focus-visible { color: var(--gm-cyan-700); }
 
-/* ---- Nem csak marketing / munkaköri tehermentesítés ----
-   A gyakorlatban-blokk után a látott folyamatot hétköznapi munkakörökre fordítja.
-   Minden kártyán külön látszik az elkészített munka és az embernél maradó döntés. */
+/* ---- Nem csak marketing / hét teljes munkakör ----
+   A gazdag kártya egyszerre mutat kész eredményt, konkrét szakembereket,
+   kibontható képességleltárt, piaci viszonyítást és emberi döntési határt. */
 .gm-role-relief {
   border-block: 1px solid var(--gm-line);
   background: linear-gradient(180deg, var(--gm-off) 0%, #fff 46%, var(--gm-off) 100%);
 }
-.gm-relief-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.gm-relief-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; align-items: stretch; }
 .gm-relief-card {
-  min-width: 0; padding: clamp(1.25rem, 2.4vw, 1.7rem);
+  min-width: 0; overflow: hidden;
   border: 1px solid var(--gm-line); border-radius: var(--gm-r);
   background: #fff; box-shadow: var(--gm-shadow);
-  display: flex; flex-direction: column; gap: 0.75rem;
+  display: flex; flex-direction: column;
+  transition: transform 0.25s var(--gm-ease), box-shadow 0.25s var(--gm-ease);
 }
+.gm-relief-card:hover { transform: translateY(-3px); box-shadow: 0 16px 38px rgba(11,11,22,0.12); }
+.gm-relief-card--wide { grid-column: 1 / -1; width: calc(50% - 0.625rem); justify-self: center; }
+.gm-relief-card__media { margin: 0; aspect-ratio: 16 / 7.4; overflow: hidden; background: var(--gm-sand); border-bottom: 1px solid var(--gm-line); }
+.gm-relief-card__media img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.gm-relief-card__body { flex: 1; display: flex; flex-direction: column; gap: 0.9rem; padding: clamp(1.2rem, 2vw, 1.55rem); }
+.gm-relief-card__title { display: flex; align-items: center; gap: 0.8rem; }
 .gm-relief-card__icon {
-  display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
+  flex: 0 0 auto; display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
   border-radius: 12px; background: var(--gm-sand); font-size: 1.25rem;
 }
-.gm-relief-card h3 { color: var(--gm-ink); font-size: 1.08rem; line-height: 1.28; }
+.gm-relief-card h3 { color: var(--gm-ink); font-size: clamp(1.08rem, 1.7vw, 1.24rem); line-height: 1.24; }
 .gm-relief-card p { color: var(--gm-grey); font-size: 0.94rem; line-height: 1.58; overflow-wrap: anywhere; }
 .gm-relief-card p strong { color: var(--gm-ink); }
+.gm-relief-card__highlights { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.gm-relief-card__highlights li { position: relative; padding-left: 1.25rem; color: var(--gm-grey); font-size: 0.94rem; line-height: 1.5; }
+.gm-relief-card__highlights li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--gm-cyan-700); font-weight: 900; }
+.gm-relief-team { padding-top: 0.85rem; border-top: 1px solid var(--gm-line); }
+.gm-relief-team > strong { display: block; margin-bottom: 0.6rem; color: var(--gm-ink); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.07em; }
+.gm-relief-team__people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.45rem; }
+.gm-relief-person { min-width: 0; display: flex; align-items: center; gap: 0.55rem; padding: 0.45rem 0.55rem; border: 1px solid var(--gm-line); border-radius: 12px; background: var(--gm-off); cursor: pointer; transition: border-color 0.2s var(--gm-ease), background 0.2s var(--gm-ease), transform 0.2s var(--gm-ease); }
+.gm-relief-person::after { content: "›"; flex: 0 0 auto; margin-left: auto; color: var(--gm-violet); font-size: 1.15rem; font-weight: 900; line-height: 1; }
+.gm-relief-person:hover { border-color: var(--gm-cyan-600); background: #fff; transform: translateY(-1px); }
+.gm-relief-person:focus-visible { outline: 3px solid rgba(6,182,212,0.35); outline-offset: 2px; border-color: var(--gm-cyan-700); }
+.gm-relief-person img { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+.gm-relief-person > span { min-width: 0; display: grid; }
+.gm-relief-person b { overflow: hidden; color: var(--gm-ink); font-family: var(--gm-mono); font-size: 0.76rem; text-overflow: ellipsis; white-space: nowrap; }
+.gm-relief-person small { overflow: hidden; color: var(--gm-grey); font-size: 0.7rem; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+.gm-relief-card__caps { border: 1px solid var(--gm-line); border-radius: 12px; background: #fff; }
+.gm-relief-card__caps summary { cursor: pointer; padding: 0.75rem 0.9rem; color: var(--gm-violet); font-weight: 800; font-size: 0.9rem; }
+.gm-relief-card__caps summary::marker { color: var(--gm-cyan-700); }
+.gm-relief-card__caps[open] summary { border-bottom: 1px solid var(--gm-line); }
+.gm-relief-card__caps p { margin: 0 !important; padding: 0.85rem 0.9rem; font-size: 0.88rem; line-height: 1.55; }
+.gm-relief-card__market { display: grid; gap: 0.2rem; margin-top: auto !important; padding: 0.8rem 0.9rem; border-left: 3px solid var(--gm-cyan-600); border-radius: 0 10px 10px 0; background: var(--gm-sand); }
+.gm-relief-card__market strong { color: var(--gm-cyan-700) !important; font-family: var(--gm-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .gm-relief-card__approval {
-  margin-top: auto !important; padding-top: 0.75rem;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--gm-line);
 }
+.gm-relief-source { max-width: 880px; margin: 1.45rem auto 0 !important; color: var(--gm-grey); font-size: 0.78rem; line-height: 1.55; text-align: center; }
 .gm-relief-note {
-  max-width: 760px; margin: 1.7rem auto 0 !important; text-align: center;
-  color: var(--gm-grey); font-weight: 700;
+  max-width: 760px; margin: 0.85rem auto 0 !important; text-align: center;
+  color: var(--gm-grey);
 }
+.gm-relief-note strong { color: var(--gm-ink); }
 
 /* ---- Founder / Guarantee ---- */
 .gm-founder { display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: center; max-width: 820px; margin-inline: auto; }
@@ -912,8 +942,13 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
   .gm-proofbar__item + .gm-proofbar__item::before { display: none; }
   .gm-proofbar__item strong { font-size: clamp(1.5rem, 6vw, 2rem); }
 }
-@media (max-width: 520px) {
+@media (max-width: 760px) {
   .gm-relief-grid { grid-template-columns: 1fr; }
+  .gm-relief-card--wide { grid-column: auto; width: 100%; }
+}
+@media (max-width: 520px) {
+  .gm-relief-team__people { grid-template-columns: 1fr; }
+  .gm-relief-card__media { aspect-ratio: 16 / 8.5; }
   .gm-hero__ctawrap { width: auto; }
   .gm-hero__cta { flex-direction: column; align-items: stretch; }
   .gm-hero__cta .gm-btn { width: 100%; }

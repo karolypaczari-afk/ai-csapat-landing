@@ -806,6 +806,30 @@
     });
   }
 
+  /* ---- A munkaköri blokk szakember-kártyái ----
+     Ugyanazt az adatlapot nyitják, mint a teljes csapatrács. A data-code-ot az
+     avatar kanonikus ASCII fájlnevéből képezzük, így a látható ékezetes név és
+     az AGENTS adatkulcsa nem tud szétcsúszni. */
+  function wireRoleReliefPeople() {
+    document.querySelectorAll("#munkakorok .gm-relief-person").forEach(function (card) {
+      var img = card.querySelector("img");
+      var code = img ? (img.getAttribute("src") || "").split("/").pop().replace(/\.webp$/i, "") : "";
+      if (!code || !AGENTS.some(function (agent) { return agent.code === code; })) return;
+      var label = card.querySelector("b");
+      card.setAttribute("data-code", code);
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-haspopup", "dialog");
+      card.setAttribute("aria-label", (label ? label.textContent : code) + " szakember részleteinek megnyitása");
+      card.addEventListener("click", function () { openModal(code); });
+      card.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openModal(code);
+      });
+    });
+  }
+
   /* ---- Filter chipek (Flip) ---- */
   function wireFilters() {
     var chips = document.querySelectorAll(".gm-chip"); if (!chips.length) return;
@@ -1480,6 +1504,7 @@
     boot();
     applyRevealState();
     renderAgents();
+    wireRoleReliefPeople();
     wireFilters();
     wireCtas();
     wireBillingCycle();
