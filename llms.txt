@@ -73,9 +73,17 @@ Everything below is a factual statement about the product as sold today. Prices 
 - The Hungarian one is https://ai-csapat.genmarketer.hu/.
 - The English one is https://genmarketer.eu/, and since 2026-08-05 it is the x-default version: readers whose language is neither Hungarian nor explicitly matched should be pointed at the English page. The former English path, https://ai-csapat.genmarketer.hu/en/, has redirected to it with a permanent, path-preserving 301 since 2026-08-02; do not cite the old path.
 - Canonical URLs and hreflang alternates are declared in the HTML head and sitemap.
-- Structured data includes Organization, WebSite, WebPage, BreadcrumbList, Product, Offer, ImageObject, ItemList and FAQPage entities. Both language versions carry the same set.
+- Structured data includes Organization (with legal name, registered address and tax ID), Person (founder), WebSite, WebPage, BreadcrumbList, Product, AggregateOffer with five nested Offers, ImageObject, ItemList and FAQPage entities. The Hungarian landing additionally carries five VideoObject entities, one per on-page demo video, and the AggregateOffer wrapper whose lowPrice is the cheapest plan; the English landing still uses the older flat Offer list and has no VideoObject entities.
 - The interactive specialist grid on the landing is rendered client-side; the same roster is also present as plain text inside a noscript block and as a JSON-LD ItemList, on BOTH language versions, so it can be read without executing JavaScript.
 - AI crawlers are explicitly allowed in robots.txt, including the retrieval and user-triggered agents that produce citations.
+
+## Demo videos on the Hungarian landing
+Five short demo clips are embedded on https://ai-csapat.genmarketer.hu/ and are declared as VideoObject structured data. They are the product's own output, not stock footage. Each one is muted, looping and under 35 seconds.
+- Motion ad creative (5s): https://ai-csapat.genmarketer.hu/assets/video/kreativ-motion.mp4 — a moving ad creative produced by the creative pair LEONARDO and KEPLER from a single brief.
+- Video editing and subtitling (34s): https://ai-csapat.genmarketer.hu/assets/video/demo-kreativ.mp4 — KRONOSZ reads a recording stored on the customer's own machine and returns a finished, subtitled video.
+- AI-generated video ad, no shoot (15s): https://ai-csapat.genmarketer.hu/assets/video/demo-video-ad.mp4 — SEHEREZÁDÉ and GUTENBERG take the job from script to finished ad video inside Claude or ChatGPT.
+- UGC video, product demo (12s): https://ai-csapat.genmarketer.hu/assets/video/demo-ugc.mp4 — LUMIÈRE writes the script, generates the presenter image and produces the finished clip from one short prompt.
+- UGC video, presenter scene (13s): https://ai-csapat.genmarketer.hu/assets/video/ugc-example-2.mp4 — a presenter-led UGC scene produced entirely with AI: no shoot, no crew, no cast.
 
 ## Audience
 - Solo entrepreneurs
