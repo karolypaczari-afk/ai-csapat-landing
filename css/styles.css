@@ -302,6 +302,55 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-benefit-list li { display: flex; gap: 0.8rem; align-items: flex-start; }
 .gm-benefit-list li::before { content: "▸"; color: var(--gm-cyan-600); font-weight: 900; margin-top: 0.1em; }
 
+/* ---- Egy hétköznapi reggel — stabil magasságú munkanapló ---- */
+.gm-morning {
+  min-width: 0; margin: 0; padding: 1.2rem 1.2rem 1rem;
+  color: #EAE9F5; background: linear-gradient(155deg, rgba(18, 18, 31, 0.98), rgba(33, 23, 65, 0.98));
+  border: 1px solid rgba(124, 58, 237, 0.28); border-radius: var(--gm-r-lg);
+  box-shadow: 0 28px 65px rgba(39, 24, 76, 0.28);
+}
+.gm-feed__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.7rem; }
+.gm-feed__label {
+  font-family: var(--gm-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #B9B6D0; display: flex; align-items: center; gap: 0.5rem;
+}
+.gm-feed__dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #37D67A; flex: none;
+  box-shadow: 0 0 0 3px rgba(55, 214, 122, 0.18); animation: gm-feed-pulse 2.4s var(--gm-ease) infinite;
+}
+@keyframes gm-feed-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.gm-feed__count { font-family: var(--gm-mono); font-size: 0.78rem; color: #B9B6D0; white-space: nowrap; }
+.gm-feed__progress { height: 3px; border-radius: 999px; background: rgba(255, 255, 255, 0.10); overflow: hidden; margin-bottom: 0.9rem; }
+.gm-feed__progress i { display: block; height: 100%; width: 20%; background: var(--gm-grad-soft); transition: width 0.5s var(--gm-ease); }
+.gm-feed__list {
+  list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; overflow: hidden;
+  align-content: start; grid-auto-rows: var(--gm-feed-row-h, auto);
+  block-size: var(--gm-feed-window-h, auto); transition: none;
+}
+.gm-feed__row {
+  display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 0.7rem; align-items: center;
+  block-size: var(--gm-feed-row-h, auto); min-block-size: 0; padding: 0.7rem 0.8rem;
+  background: rgba(255, 255, 255, 0.055); border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 14px;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.45s var(--gm-ease), transform 0.45s var(--gm-ease), border-color 0.45s var(--gm-ease);
+}
+.gm-feed__row.is-on { opacity: 1; transform: none; }
+.gm-feed__row time { font-family: var(--gm-mono); font-size: 0.78rem; color: #AAA7C5; }
+.gm-feed__row img { width: 34px; height: 34px; border-radius: 10px; background: #fff; object-fit: cover; }
+.gm-feed__row span { display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
+.gm-feed__row b { font-size: 0.8rem; font-weight: 800; color: #fff; letter-spacing: 0.03em; }
+.gm-feed__row small { font-size: 0.85rem; color: #D0CEE1; text-wrap: pretty; }
+.gm-feed__row i {
+  font-style: normal; font-size: 0.7rem; font-weight: 800; white-space: nowrap;
+  padding: 0.28em 0.6em; border-radius: 999px; background: rgba(55, 214, 122, 0.16); color: #86E9AE;
+}
+.gm-feed__row i.is-waiting { background: rgba(255, 196, 0, 0.16); color: #FFD976; }
+.gm-feed__note { margin-top: 0.85rem; font-size: 0.76rem; color: #AAA7C5; }
+@media (max-width: 520px) {
+  .gm-feed__row { grid-template-columns: auto 1fr auto; row-gap: 0.4rem; }
+  .gm-feed__row span { grid-column: 1 / -1; }
+}
+
 /* ---- Use-case / Érték kártyák ---- */
 .gm-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; }
 .gm-tile { background: #fff; border: 1px solid var(--gm-line); border-radius: var(--gm-r-lg); padding: 1.6rem; box-shadow: var(--gm-shadow); transition: transform 0.3s var(--gm-ease), box-shadow 0.3s var(--gm-ease); }
@@ -808,6 +857,8 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 @media (prefers-reduced-motion: reduce) {
   .gm-reveal { opacity: 1 !important; transform: none !important; }
   .gm-hero__scroll::after { animation: none; }
+  .gm-feed__row { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .gm-feed__dot { animation: none; }
   * { scroll-behavior: auto !important; }
 }
 

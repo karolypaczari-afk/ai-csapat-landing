@@ -142,7 +142,7 @@
   <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/fonts.css">
 
-  <link rel="stylesheet" href="/css/styles.css?v=20260811a">
+  <link rel="stylesheet" href="/css/styles.css?v=20260825a">
   <link rel="stylesheet" href="/css/hud.css">
 
   <!-- GA4 — localhoston KI (prod paritás); éles hoston pörög.
@@ -279,7 +279,7 @@
        after first paint (loadGsap), when idle; if they never arrive, the page is intact. -->
   <script defer src="/js/data.js"></script>
   <script defer src="/js/dashboards.js"></script>
-  <script defer src="/js/app.js"></script>
+  <script defer src="/js/app.js?v=20260825a"></script>
 </head>
 <body>
 <div class="gm-lp">
@@ -380,7 +380,22 @@
           <div class="gm-orch__step" style="margin-top:1.3rem"><h3 class="gm-h2" style="font-size:1.35rem">As a team, on one task</h3><p class="gm-lead">Several specialists can work together on a single problem.</p></div>
           <div class="gm-orch__step" style="margin-top:1.3rem"><h3 class="gm-h2" style="font-size:1.35rem">End-to-end workflows</h3><p class="gm-lead">The team can guide multi-step workflows – from audit and planning to drafts, setup and review.</p></div>
         </div>
-        <figure class="gm-reveal" style="margin:0"><img src="/assets/img/team-v2.webp" alt="From one goal the AI automatically calls in several specialists and returns finished work" style="border-radius:24px;border:1px solid var(--gm-line)" loading="lazy" width="1086" height="859"></figure>
+        <div class="gm-morning gm-reveal" data-gm-feed data-gm-feed-window="3" aria-label="Illustrative work log from a typical weekday morning">
+          <div class="gm-feed__head">
+            <p class="gm-feed__label"><span class="gm-feed__dot" aria-hidden="true"></span>A typical weekday morning</p>
+            <span class="gm-feed__count" data-gm-feed-count aria-live="polite">1 / 5</span>
+          </div>
+          <div class="gm-feed__progress" aria-hidden="true"><i data-gm-feed-progress></i></div>
+          <ol class="gm-feed__list" data-gm-feed-list>
+            <li class="gm-feed__row is-on">
+              <time datetime="07:12">07:12</time>
+              <img src="/assets/img/avatars/SUN-TZU.webp" width="34" height="34" alt="SUN TZU" decoding="async">
+              <span><b>SUN TZU</b><small>Reviewed 4 competitors and 38 live ads. You can see what is working.</small></span>
+              <i>Done ✓</i>
+            </li>
+          </ol>
+          <p class="gm-feed__note">Illustrative example. Your numbers come from your own accounts.</p>
+        </div>
       </div>
     </div>
   </section>

@@ -629,6 +629,105 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function fmtNum(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
 
+  /* ---- „Egy hétköznapi reggel" — animált, méretstabil munkanapló ---- */
+  var MORNING_FEED = [
+    { time: "07:12", agent: "SUN-TZU", hu: "Átnézett 4 versenytársat és 38 futó hirdetést. Megvan, mi működik.", en: "Reviewed 4 competitors and 38 live ads. You can see what is working.", chipHu: "Kész ✓", chipEn: "Done ✓" },
+    { time: "07:26", agent: "AURORA", hu: "Leállított 3 hirdetést, amely 94 000 Ft-ot költött vásárlás nélkül.", en: "Paused 3 ads that spent 94,000 Ft without producing a purchase.", chipHu: "Éles ✓", chipEn: "Applied ✓" },
+    { time: "07:41", agent: "CYRANO", hu: "9 hirdetésszöveg elkészült három különböző megközelítéssel.", en: "9 ad-copy variants are ready across three different approaches.", chipHu: "Átnézésre vár", chipEn: "Ready to review", wait: true },
+    { time: "07:55", agent: "HERMESZ", hu: "A háromrészes kosárelhagyó levélsorozat időzítésre kész.", en: "The three-part abandoned-cart email sequence is ready to schedule.", chipHu: "Jóváhagyásra vár", chipEn: "Awaiting approval", wait: true },
+    { time: "08:08", agent: "GULLIVER", hu: "A heti riport megmutatja, melyik csatorna hozta a bevétel 71%-át.", en: "The weekly report shows which channel produced 71% of revenue.", chipHu: "Kész ✓", chipEn: "Done ✓" }
+  ];
+
+  function feedAgentName(code) {
+    for (var i = 0; i < AGENTS.length; i++) if (AGENTS[i].code === code) return AGENTS[i].name;
+    return code === "SUN-TZU" ? "SUN TZU" : code;
+  }
+
+  function wireMorningFeed() {
+    var host = document.querySelector("[data-gm-feed]");
+    if (!host || !MORNING_FEED.length) return;
+    var list = host.querySelector("[data-gm-feed-list]");
+    var count = host.querySelector("[data-gm-feed-count]");
+    var bar = host.querySelector("[data-gm-feed-progress]");
+    if (!list) return;
+
+    list.innerHTML = MORNING_FEED.map(function (row, i) {
+      return '<li class="gm-feed__row' + (i === 0 ? " is-on" : "") + '" data-i="' + i + '">' +
+        '<time datetime="' + esc(row.time) + '">' + esc(row.time) + '</time>' +
+        '<img src="' + AV + esc(row.agent) + '.webp" width="34" height="34" alt="' + esc(feedAgentName(row.agent)) + '" loading="eager" decoding="async">' +
+        '<span><b>' + esc(feedAgentName(row.agent)) + '</b><small>' + esc(EN ? row.en : row.hu) + '</small></span>' +
+        '<i class="' + (row.wait ? "is-waiting" : "") + '">' + esc(EN ? row.chipEn : row.chipHu) + '</i></li>';
+    }).join("");
+
+    var items = list.querySelectorAll(".gm-feed__row");
+    var shown = 1, timer = null;
+    var windowSize = Math.max(1, Number(host.getAttribute("data-gm-feed-window")) || 3);
+
+    function sizeWindow() {
+      var width = list.getBoundingClientRect().width;
+      if (!width) return;
+      var max = 0;
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var old = { display: item.style.display, position: item.style.position, visibility: item.style.visibility, width: item.style.width, blockSize: item.style.blockSize };
+        item.style.display = "grid";
+        item.style.position = "absolute";
+        item.style.visibility = "hidden";
+        item.style.width = width + "px";
+        item.style.blockSize = "auto";
+        max = Math.max(max, item.getBoundingClientRect().height);
+        item.style.display = old.display;
+        item.style.position = old.position;
+        item.style.visibility = old.visibility;
+        item.style.width = old.width;
+        item.style.blockSize = old.blockSize;
+      }
+      var gap = parseFloat(getComputedStyle(list).rowGap) || 0;
+      max = Math.ceil(max);
+      list.style.setProperty("--gm-feed-row-h", max + "px");
+      list.style.setProperty("--gm-feed-window-h", Math.ceil(max * windowSize + gap * (windowSize - 1)) + "px");
+    }
+
+    function render() {
+      var from = Math.max(0, shown - windowSize);
+      for (var i = 0; i < items.length; i++) {
+        var on = i < shown && i >= from;
+        items[i].classList.toggle("is-on", on);
+        items[i].style.display = on ? "" : "none";
+      }
+      if (count) count.textContent = shown + " / " + MORNING_FEED.length;
+      if (bar) bar.style.width = Math.round((shown / MORNING_FEED.length) * 100) + "%";
+      host.setAttribute("data-gm-feed-shown", String(shown));
+    }
+
+    function tick() { shown = shown >= MORNING_FEED.length ? 1 : shown + 1; render(); }
+    function start() {
+      sizeWindow();
+      render();
+      if (REDUCE) { shown = MORNING_FEED.length; render(); return; }
+      if (timer) clearInterval(timer);
+      timer = setInterval(function () { if (!document.hidden) tick(); }, 2100);
+    }
+
+    host.addEventListener("gm-feed-tick", tick);
+    var resizeTimer = null;
+    window.addEventListener("resize", function () {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { sizeWindow(); render(); }, 120);
+    });
+    sizeWindow();
+    render();
+
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { if (entry.isIntersecting) { start(); io.disconnect(); } });
+      }, { threshold: 0.25 });
+      io.observe(host);
+    } else {
+      start();
+    }
+  }
+
   /* ---- Count-up ---- */
   function countUp(el, target, suffix) {
     if (REDUCE || !isFinite(target) || target <= 0) { el.textContent = fmtNum(target) + (suffix || ""); return; }
@@ -1386,6 +1485,7 @@
     wireBillingCycle();
     trackViewContent();
     wireProofbar();
+    wireMorningFeed();
     wireSmoothScroll();
     wireScrollState();
     wireFaq();
