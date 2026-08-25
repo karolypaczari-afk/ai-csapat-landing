@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>DÚDOLÓ - Teljes go-to-market playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tej:#FBF7F1; --homok:#E8DCC8; --homok-vil:#F3EBDD;
+  --zsalya:#8C9E82; --zsalya-sot:#6E7F66;
+  --agyag:#C4795C; --agyag-sot:#A85F44;
+  --levendula:#9B8FB4;
+  --ej:#2C3540; --ej-vil:#4A5866;
+  --szurke:#7A8290; --vonal:#E2D9CB;
+  --piros:#B4453C; --zold:#4F7A52;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:var(--tej); color:var(--ej);
+  line-height:1.65; font-size:15px;
+}
+.layout{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.side{
+  width:270px;flex-shrink:0;background:var(--ej);color:var(--homok-vil);
+  position:sticky;top:0;height:100vh;overflow-y:auto;padding:26px 0;
+}
+.side-brand{padding:0 22px 20px;border-bottom:1px solid rgba(232,220,200,.15);margin-bottom:14px}
+.side-brand .mark{display:flex;align-items:flex-end;gap:5px;margin-bottom:10px;height:26px}
+.side-brand .dot{width:6px;height:6px;border-radius:50%;background:var(--agyag)}
+.side-brand .dot:nth-child(2){opacity:.75;margin-bottom:5px}
+.side-brand .dot:nth-child(3){opacity:.5;margin-bottom:10px}
+.side-brand .arc{width:38px;height:19px;border:2px solid var(--homok);border-bottom:none;border-radius:38px 38px 0 0;margin-left:4px}
+.side-brand h1{font-family:'Fraunces',serif;font-size:20px;letter-spacing:.14em;font-weight:600;color:#fff}
+.side-brand p{font-size:11px;color:var(--zsalya);letter-spacing:.05em;margin-top:4px;text-transform:uppercase}
+.side nav a{
+  display:block;padding:7px 22px;color:rgba(232,220,200,.72);text-decoration:none;
+  font-size:13px;border-left:3px solid transparent;transition:.15s
+}
+.side nav a:hover{background:rgba(255,255,255,.05);color:#fff;border-left-color:var(--agyag)}
+.side nav .grp{
+  padding:16px 22px 5px;font-size:10px;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--zsalya);font-weight:600
+}
+
+/* MAIN */
+main{flex:1;min-width:0;padding:0 0 90px}
+.wrap{max-width:880px;margin:0 auto;padding:0 40px}
+.hero{
+  background:linear-gradient(150deg,var(--ej) 0%,#3A4653 100%);
+  color:var(--tej);padding:60px 0 52px;margin-bottom:44px
+}
+.hero .wrap{max-width:880px}
+.hero .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--zsalya);margin-bottom:14px}
+.hero h1{font-family:'Fraunces',serif;font-size:42px;line-height:1.12;font-weight:600;margin-bottom:16px;color:#fff}
+.hero p{font-size:17px;color:rgba(251,247,241,.82);max-width:640px}
+.hero .meta{display:flex;gap:26px;margin-top:30px;flex-wrap:wrap}
+.hero .meta div{font-size:12px;color:rgba(251,247,241,.6)}
+.hero .meta strong{display:block;font-size:16px;color:var(--homok);font-weight:600;margin-top:2px}
+
+section{margin-bottom:58px;scroll-margin-top:20px}
+h2{
+  font-family:'Fraunces',serif;font-size:29px;font-weight:600;line-height:1.2;
+  margin-bottom:8px;padding-top:14px
+}
+h2 .num{
+  display:inline-block;font-family:'Inter';font-size:11px;font-weight:700;
+  background:var(--agyag);color:#fff;padding:3px 9px;border-radius:20px;
+  vertical-align:middle;margin-right:11px;letter-spacing:.06em
+}
+.lead{font-size:16px;color:var(--ej-vil);margin-bottom:24px;max-width:700px}
+h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:32px 0 10px}
+h4{font-size:15px;font-weight:700;margin:22px 0 8px;color:var(--ej)}
+p{margin-bottom:13px}
+ul,ol{margin:0 0 15px 20px}
+li{margin-bottom:6px}
+strong{font-weight:600}
+a{color:var(--agyag-sot)}
+code{background:var(--homok-vil);padding:2px 6px;border-radius:4px;font-size:13px;font-family:ui-monospace,monospace}
+
+table{width:100%;border-collapse:collapse;margin:16px 0 22px;font-size:13.5px}
+th{
+  background:var(--ej);color:var(--homok-vil);text-align:left;padding:9px 12px;
+  font-weight:600;font-size:12px;letter-spacing:.03em
+}
+td{padding:9px 12px;border-bottom:1px solid var(--vonal);vertical-align:top}
+tr:nth-child(even) td{background:rgba(232,220,200,.22)}
+
+.card{background:#fff;border:1px solid var(--vonal);border-radius:10px;padding:20px 22px;margin:18px 0}
+.card h4{margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.callout{border-left:4px solid var(--agyag);background:#fff;padding:16px 20px;margin:20px 0;border-radius:0 8px 8px 0}
+.callout.warn{border-left-color:var(--piros);background:#FDF4F3}
+.callout.ok{border-left-color:var(--zold);background:#F4F8F4}
+.callout.info{border-left-color:var(--levendula);background:#F8F6FB}
+.callout .t{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.callout.warn .t{color:var(--piros)}
+.callout.ok .t{color:var(--zold)}
+.callout.info .t{color:#6B5D8A}
+.callout p:last-child{margin-bottom:0}
+
+.quote{
+  border-left:3px solid var(--levendula);padding:2px 0 2px 16px;margin:10px 0;
+  font-style:italic;color:var(--ej-vil);font-size:14px
+}
+.quote cite{display:block;font-style:normal;font-size:11.5px;color:var(--szurke);margin-top:3px}
+
+.pill{
+  display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;
+  font-weight:600;letter-spacing:.03em;margin:0 4px 4px 0
+}
+.pill.blue{background:#E3EDF5;color:#2C5474}
+.pill.purple{background:#EEE8F5;color:#5B4A79}
+.pill.orange{background:#FAEADF;color:#9A5533}
+.pill.yellow{background:#FBF3D9;color:#8A6A16}
+.pill.green{background:#E6F0E4;color:#3F6641}
+.pill.grey{background:var(--homok);color:var(--ej-vil)}
+
+.brief{background:#fff;border:1px solid var(--vonal);border-radius:10px;padding:18px 20px;margin-bottom:14px}
+.brief .bh{font-family:'Fraunces',serif;font-size:17px;font-weight:600;margin-bottom:9px}
+.brief .bt{margin-bottom:11px}
+.brief .row{font-size:13.5px;margin-bottom:7px}
+.brief .row b{color:var(--ej);font-weight:600}
+.brief .tech{font-size:11.5px;color:var(--szurke);border-top:1px solid var(--vonal);padding-top:9px;margin-top:11px}
+
+.copy{
+  background:#FCFAF6;border:1px dashed var(--vonal);border-radius:8px;
+  padding:15px 18px;margin:12px 0;font-size:14px;white-space:pre-wrap;line-height:1.6
+}
+.copy .lbl{
+  display:block;font-family:'Inter';font-size:10px;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--agyag);margin-bottom:8px;white-space:normal
+}
+.prompt{
+  background:var(--ej);color:#D8E4D4;border-radius:8px;padding:15px 18px;margin:12px 0;
+  font-family:ui-monospace,monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;overflow-x:auto
+}
+.prompt .lbl{
+  display:block;font-family:'Inter';font-size:10px;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--zsalya);margin-bottom:9px;white-space:normal
+}
+
+.swatches{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 22px}
+.sw{width:110px}
+.sw .chip{height:66px;border-radius:8px;border:1px solid rgba(0,0,0,.08)}
+.sw .nm{font-size:12px;font-weight:600;margin-top:7px}
+.sw .hex{font-size:11px;color:var(--szurke);font-family:ui-monospace,monospace}
+
+.logo-demo{
+  background:#fff;border:1px solid var(--vonal);border-radius:10px;
+  padding:40px;text-align:center;margin:18px 0
+}
+.logo-demo .mark{display:inline-flex;align-items:flex-end;gap:7px;height:34px;margin-bottom:14px}
+.logo-demo .dot{width:9px;height:9px;border-radius:50%;background:var(--agyag)}
+.logo-demo .dot:nth-child(2){opacity:.7;margin-bottom:7px}
+.logo-demo .dot:nth-child(3){opacity:.45;margin-bottom:14px}
+.logo-demo .arc{width:56px;height:28px;border:2.5px solid var(--ej);border-bottom:none;border-radius:56px 56px 0 0;margin-left:6px}
+.logo-demo .wm{font-family:'Fraunces',serif;font-size:30px;letter-spacing:.22em;font-weight:600;color:var(--ej)}
+.logo-demo .tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--szurke);margin-top:8px}
+
+.tl{border-left:2px solid var(--homok);padding-left:22px;margin:20px 0}
+.tl-item{position:relative;margin-bottom:26px}
+.tl-item::before{
+  content:'';position:absolute;left:-28px;top:5px;width:11px;height:11px;
+  border-radius:50%;background:var(--agyag);border:2px solid var(--tej)
+}
+.tl-item .w{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--agyag);margin-bottom:4px}
+.tl-item .ti{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:6px}
+
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+@media(max-width:900px){.kpi{grid-template-columns:repeat(2,1fr)}}
+.kpi .k{background:#fff;border:1px solid var(--vonal);border-radius:9px;padding:15px}
+.kpi .k .v{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--agyag-sot);line-height:1.1}
+.kpi .k .l{font-size:11.5px;color:var(--szurke);margin-top:5px}
+
+.foot{border-top:1px solid var(--vonal);margin-top:50px;padding-top:24px;font-size:12.5px;color:var(--szurke)}
+.src{font-size:12px;color:var(--szurke)}
+.src a{color:var(--szurke)}
+@media(max-width:820px){
+  .side{display:none} .wrap{padding:0 22px} .hero h1{font-size:31px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<aside class="side">
+  <div class="side-brand">
+    <div class="mark"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="arc"></span></div>
+    <h1>DÚDOLÓ</h1>
+    <p>Go-to-market playbook</p>
+  </div>
+  <nav>
+    <div class="grp">Stratégia</div>
+    <a href="#s1">1 · Vezetői összefoglaló</a>
+    <a href="#s2">2 · Piaci helyzetkép</a>
+    <a href="#s3">3 · Jogi keret és claim-lista</a>
+    <a href="#s4">4 · ICP és vevőhang</a>
+    <div class="grp">Márka és termék</div>
+    <a href="#s5">5 · Márkakoncepció</a>
+    <a href="#s6">6 · Logó és arculat</a>
+    <a href="#s7">7 · Csomagolás és fotó</a>
+    <a href="#s8">8 · Termékvonal és ajánlat</a>
+    <a href="#s9">9 · Árazás és marzs</a>
+    <div class="grp">Kampány</div>
+    <a href="#s10">10 · Landing page</a>
+    <a href="#s11">11 · Hirdetésterv (15 brief)</a>
+    <a href="#s12">12 · Kész hirdetésszövegek</a>
+    <a href="#s13">13 · Kreatív promptok</a>
+    <a href="#s14">14 · Email marketing</a>
+    <a href="#s15">15 · Organikus social</a>
+    <a href="#s16">16 · Influencer program</a>
+    <a href="#s17">17 · Viszonteladói (B2B) csomag</a>
+    <a href="#s18">18 · SEO alapok</a>
+    <div class="grp">Végrehajtás</div>
+    <a href="#s19">19 · 90 napos launch terv</a>
+    <a href="#s20">20 · KPI, mérés, budget</a>
+    <a href="#s21">21 · Kockázatok</a>
+    <a href="#s22">22 · Következő lépések</a>
+  </nav>
+</aside>
+
+<main>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Teljes go-to-market terv · 2026. augusztus</div>
+    <h1>DÚDOLÓ</h1>
+    <p>Kézzel varrt gyógynövényes sópárna 0-5 éves korig. Márkakoncepció, arculat, ajánlat, kampány és 90 napos bevezetési terv - A-tól Z-ig.</p>
+    <div class="meta">
+      <div>Pozicionálás<strong>Prémium kézműves</strong></div>
+      <div>Árszint<strong>9 900 - 13 900 Ft</strong></div>
+      <div>Csatornák<strong>Webshop · Social · B2B</strong></div>
+      <div>Készítette<strong>GENmarketer AI csapat</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+<h2><span class="num">01</span>Vezetői összefoglaló</h2>
+<p class="lead">A kutatás egy dolgot mondott ki élesen: prémium áron ezt a terméket <strong>nem lehet a kólikás szülőnek eladni</strong>. Az ajándékozónak és a rituálé-építő szülőnek viszont igen - és ott nincs verseny.</p>
+
+<h3>A három megállapítás, amire az egész terv épül</h3>
+
+<div class="card">
+<h4>1. A „sópárna" kategória árban le van horgonyozva 2-3 ezer forintra</h4>
+<p>A magyar piacon a baba- és gyerek sópárna egységesen 1 980 - 3 790 Ft (Manami, SalAura, Sóasztal, Bogi Levendulái, Boróka Műhely). Aki „sópárnát" árul 12 000 Ft-ért, az egy 3 000 Ft-os termék drága változatát árulja. Ezt a keretet el kell hagyni.</p>
+<p>Egyetlen szereplő lépett ki belőle: a <strong>Boróka Róka</strong> 18 990 Ft-ért ad plüss rókát kivehető sópárnával. Nem sópárnát árul, hanem <em>ajándékot</em>. Ez a bizonyíték, hogy a prémium sáv létezik.</p>
+</div>
+
+<div class="card">
+<h4>2. A fórumokon a szülő nem terméket keres, hanem megkönnyebbülést - és fatalista</h4>
+<p>A domináns hangulat: <em>„nincs megoldás, illetve de: megvárni míg elmúlik"</em>, <em>„Túl kell élni."</em> A legnagyobb versenytárs nem egy másik párna, hanem az a meggyőződés, hogy semmi nem segít. Ehhez jön két konverziógyilkos:</p>
+<ul>
+<li><strong>800 Ft-os árhorgony</strong> - „a dm-es szőlőmagpárna kb 800 ft körül van"</li>
+<li><strong>Hiedelem</strong> - „mivel a babának nem lehet sót"</li>
+</ul>
+<p>Ha a hirdetés a hasfájásról szól, ezzel a két ellenvetéssel kell megküzdenie egy 12 000 Ft-os terméknek. Rossz csata.</p>
+</div>
+
+<div class="card">
+<h4>3. Az ajándékozó viszont pontosan ezt keresi, és nem talál semmit</h4>
+<p>A babalátogató-ajándék sáv 3 000 - 6 000 Ft, de a keresztszülői és babaváró sáv feljebb megy. A visszatérő panasz: <em>„8 hetes babara mar mindenuk megvan"</em>, <em>„születéskor minden van dögivel plüssökből is egy halom"</em>. Amit keresnek: <em>„olyan kellene, ami maradandó, szép emlék lenne neki sokáig"</em>, <em>„nem szeretnék drágát, ám bár hasznosat, egyedit, maradandót"</em>.</p>
+<p>Egy névvel hímzett, dobozos, kézzel varrt tárgy, amiből biztosan nincs neki - ez pontosan ez a rés.</p>
+</div>
+
+<h3>A stratégiai döntés</h3>
+<div class="callout">
+<div class="t">Pozicionálás egy mondatban</div>
+<p><strong>A DÚDOLÓ nem hasfájás elleni párna. A DÚDOLÓ az esti rituálé tárgya</strong> - meleg, súly és levendulaillat egy kézzel varrt, névre hímzett darabban, ajándékdobozban. A szülő rituálét vesz, az ajándékozó emléket vesz.</p>
+</div>
+
+<p>Ez a döntés három dolgot old meg egyszerre: (a) kilép a 3 000 Ft-os sópárna-kategóriából, (b) elkerüli a jogilag tiltott gyógyhatás-állításokat, (c) megnyitja az ajándékpiacot, ahol az ár nem a fő ellenvetés.</p>
+
+<h3>Amit ez a playbook tartalmaz</h3>
+<div class="grid2">
+<div class="card"><h4>Márka</h4><p>Név, sztori, tagline, logókoncepció, színpaletta, tipográfia, csomagolás, termékfotó-irány, kész AI promptokkal.</p></div>
+<div class="card"><h4>Ajánlat</h4><p>3 termékváltozat, value stack, garancia, bónuszok, upsell, utántöltő-modell, árazás és becsült marzs.</p></div>
+<div class="card"><h4>Kampány</h4><p>Teljes landing page copy, 15 hirdetéskoncepció, 6 kész hirdetésszöveg, 4 email szekvencia, 30 napos social naptár.</p></div>
+<div class="card"><h4>Végrehajtás</h4><p>90 napos fázisolt terv, KPI-k, 3 budget-forgatókönyv, B2B csomag, SEO alapok, kockázati lista.</p></div>
+</div>
+
+<div class="callout warn">
+<div class="t">Amit előbb el kell dönteni</div>
+<p>A 0-12 hónapos célzás jogilag és biztonságilag a legkockázatosabb pont. A terv ezt úgy kezeli, hogy a legkisebb méretnél a kommunikált használat <strong>nem a babán</strong> van, hanem a pólya és a pelenkázó előmelegítésén. A részleteket a 3. fejezet írja le - ezt a részt indulás előtt jogásszal validáld.</p>
+</div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+<h2><span class="num">02</span>Piaci helyzetkép</h2>
+<p class="lead">Zsúfolt olcsó sáv, üres prémium sáv, és egy kulcsszó, amit senki nem birtokol.</p>
+
+<h3>Közvetlen versenytársak - baba és gyerek sópárna</h3>
+<table>
+<tr><th>Márka</th><th>Termék</th><th>Ár</th><th>Mit tanulunk</th></tr>
+<tr><td><strong>Manami Babatextil</strong></td><td>14×17 cm, 500 g parajdi só + levendula, levehető huzat</td><td>3 000 Ft<br><span class="src">(akciós 2 490)</span></td><td>A kézműves minőség önmagában nem emel árat</td></tr>
+<tr><td><strong>SalAura</strong></td><td>11 gyerekminta, 1,5 kg himalája só</td><td>2 990 - 3 690 Ft</td><td>Kuponoldalon 2 490-ért adta - nincs márkaerő</td></tr>
+<tr><td><strong>Sóasztal</strong></td><td>Parajdi 1-1,5 kg, licencminták (Bing, Mancs őrjárat)</td><td>2 790 - 3 790 Ft</td><td>Licenc = gyerekfigyelem, de nem prémium</td></tr>
+<tr><td><strong>Babaágyneműbolt</strong></td><td>„Happy sópárna", 20 minta</td><td>2 890 Ft</td><td>Egységár, választék-alapú verseny</td></tr>
+<tr><td><strong>Bogi Levendulái</strong></td><td>16×24 cm, 500 g só + 20 g bio levendula</td><td>1 980 Ft</td><td>Sok minta elfogyott - van kereslet</td></tr>
+<tr><td><strong>Boróka Róka</strong></td><td>41 cm plüss róka + kivehető 200 g gyógynövényes sópárna</td><td><strong>18 990 Ft</strong></td><td><strong>A prémium sáv bizonyítéka</strong> - HU/EN/DE oldal, exportra épít</td></tr>
+</table>
+
+<h3>Helyettesítő termékek - magpárna</h3>
+<table>
+<tr><th>Termék</th><th>Ár</th><th>Csatorna</th></tr>
+<tr><td>dm szőlőmagpárna <span class="src">(a fórumok árhorgonya)</span></td><td>kb. 800 Ft</td><td>Drogéria</td></tr>
+<tr><td>Móka Shop meggymag párna 250 g</td><td>3 890 Ft</td><td>Webshop</td></tr>
+<tr><td>BABYJEM meggymag övpárna</td><td>3 490 Ft</td><td>Bababolt</td></tr>
+<tr><td>Popolini cseresznyemag párna</td><td>4 990 - 6 990 Ft</td><td>Bio bababolt</td></tr>
+<tr><td>Novetex baba-mama meggymag 20×40 cm</td><td>7 790 Ft</td><td>Webshop</td></tr>
+<tr><td>Prana Baby meggymagpárna</td><td>8 920 Ft</td><td>Patika-webshop</td></tr>
+<tr><td>Fellhof gyapjú bárány cseresznyemag párna</td><td>11 900 Ft</td><td>Bio bababolt</td></tr>
+</table>
+
+<div class="callout ok">
+<div class="t">Fontos következtetés</div>
+<p>A 8-12 ezer forintos árat a magyar piac <strong>már ma megfizeti</strong> - de csak import márkanévért (Prana, Fellhof) vagy plüss-formáért (Boróka Róka). A magyar kézműves sópárna azért olcsó, mert <em>sópárnaként</em> adja el magát. A forma és a kategórianév a döntő, nem a származás.</p>
+</div>
+
+<h3>Export-rés</h3>
+<p>Etsy-n a „Kirschkernkissen" / „cherry stone baby pillow" kategória 13-21 EUR (kb. 5 200 - 8 400 Ft), és skálázható: egy német Etsy-bolt 27 100 eladást ért el 7 év alatt, 4,8-as értékeléssel. A DACH tömegpiacon a Rossmann ugyanezt orvostechnikai eszközként (Medizinprodukt) sorolja be. A magyar kézműves árszint ennek a töredéke. <strong>Ha a márka HU/DE/EN nyelven indul, a német piacon az itthoni prémium ár normál ár.</strong></p>
+
+<h3>Csatorna-térkép</h3>
+<table>
+<tr><th>Csatorna</th><th>Állapot</th><th>Javaslat</th></tr>
+<tr><td>Saját webshop</td><td>Domináns modell (Manami, Sóasztal, SalAura, Boróka)</td><td><strong>Elsődleges.</strong> Itt épül a márka és a marzs</td></tr>
+<tr><td>Meska.hu</td><td>Van dedikált sópárna és meggymagpárna kategória</td><td>Másodlagos, ingyenes kereslettesztre jó</td></tr>
+<tr><td>Árukereső / ÁrGép</td><td>Csak import márkák, kézműves nincs</td><td>Kerülendő - tiszta árverseny</td></tr>
+<tr><td>Patika-webshopok</td><td>Csak CE-jelölt márkás termék (Prana 9-11 e Ft)</td><td>Csak ha később elmész az orvostechnikai irányba - most nem</td></tr>
+<tr><td>Bio- és bababoltok</td><td>Mamami Bolt, Kangaboo, Tégel</td><td><strong>Fő B2B cél.</strong> Ott már van 5-12 e Ft-os polc</td></tr>
+<tr><td>Offline vásár</td><td>Pici Piac (Fény utcai piac, 50+ magyar márka), BabaMama Expo</td><td><strong>Kötelező.</strong> Itt igazolod az árat élőben</td></tr>
+<tr><td>Vatera / FB Marketplace</td><td>Nincs érdemi kínálat</td><td>Nem releváns</td></tr>
+</table>
+
+<h3>A szabad kulcsszó</h3>
+<p>Nincs magyar webshop, amelyik a <strong>„kólika / hasfájás elleni párna"</strong> kifejezésre optimalizálna - a keresés gyógyszerekre és cumisüvegre fut ki. Ez SEO-szempontból nyitott, <em>de</em> a 3. fejezet szerint erre a kifejezésre hirdetni és rá optimalizálni jogilag tilos. Amit szabad: a szülő <em>problémanyelvét</em> a blogon és a tanácsadó tartalomban használni, a terméket viszont rituálé- és ajándéknyelven eladni.</p>
+
+<div class="callout info">
+<div class="t">Amit nem sikerült megállapítani</div>
+<p>Konkrét magyar keresési volumen-adat egyik kulcsszóra sem publikus. Indulás előtt futtass Google Keyword Plannert a saját fiókodból, és a Search Console-t az első 60 nap után nézd meg - a valós adat felülírja az itteni becsléseket.</p>
+</div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+<h2><span class="num">03</span>Jogi keret és claim-lista</h2>
+<p class="lead">Ez a fejezet fontosabb, mint a hirdetésszöveg. Egy rossz mondat a terméket orvostechnikai eszközzé minősítheti, vagy fogyasztóvédelmi eljárást hozhat.</p>
+
+<div class="callout warn">
+<div class="t">Nem jogi tanács</div>
+<p>Az alábbi összefoglaló nyilvános forrásokból készült, tájékoztató jelleggel. Indulás előtt jogásszal és megfelelőségi tanácsadóval validáld - különösen a játék-minősítést és a 0-12 hónapos célzást.</p>
+</div>
+
+<h3>3.1 · Mit szabad és mit tilos állítani</h3>
+<div class="grid2">
+<div class="card" style="border-left:4px solid var(--piros)">
+<h4 style="color:var(--piros)">TILOS - egyik sem mehet ki</h4>
+<ul>
+<li>„kólika ellen", „hasfájásra", „puffadás megszüntetésére"</li>
+<li>„gyógyítja", „kezeli", „csillapítja a fájdalmat"</li>
+<li>„görcsoldó", „fülfájásra", „megfázás ellen"</li>
+<li>„segít elaludni", „alvászavarra"</li>
+<li>„klinikailag bizonyított", „orvosok ajánlják"</li>
+<li>„biztonságos csecsemőknek"</li>
+<li>bármely betegség- vagy tünetnév</li>
+</ul>
+</div>
+<div class="card" style="border-left:4px solid var(--zold)">
+<h4 style="color:var(--zold)">SZABAD - erre épül a copy</h4>
+<ul>
+<li>„melegíthető és hűthető párna textilhuzatban"</li>
+<li>„kellemes, enyhe levendulaillat"</li>
+<li>„a meleg érzet sokak számára kellemes"</li>
+<li>„a párna súlya finom, egyenletes nyomást ad"</li>
+<li>„természetes alapanyagok: parajdi só és szárított levendula"</li>
+<li>„mosható huzat, kézzel varrva Magyarországon"</li>
+<li>„esti rituálé része, felnőtt felügyelete mellett"</li>
+</ul>
+</div>
+</div>
+
+<p><strong>Miért ilyen szigorú:</strong> az Fttv. (2008. évi XLVII. tv.) melléklet 17. pontja szerint <em>per se</em> tisztességtelen annak állítása, hogy egy áru alkalmas betegségek gyógyítására. A GVH nem azt vizsgálja, hat-e a termék, hanem hogy a kommunikáció gyógyhatást sugall-e. Ezen felül az MDR (2017/745) szerint ha a <strong>gyártó rendeltetése</strong> betegség enyhítése, a termék orvostechnikai eszközzé válik - CE-jelöléssel, klinikai értékeléssel, EUDAMED-regisztrációval. Ez egy kézműves márkának vállalhatatlan.</p>
+
+<div class="callout">
+<div class="t">Vásárlói vélemények is kockázatot jelentenek</div>
+<p>Ha egy vevő azt írja értékelésben, hogy „elmúlt tőle a hasfájás", és te ezt kiemeled a landing oldalra, az a te állításod lesz. <strong>Moderálni kell.</strong> Az értékeléskérő emailben irányítsd a kérdést: „Milyen lett nálatok az esti rituálé?" - ne azt kérdezd, segített-e valamin.</p>
+</div>
+
+<h3>3.2 · Játék-e a termék?</h3>
+<p>A 2009/48/EK irányelv (magyar átültetés: 38/2011. NGM rendelet) szerint játék minden, ami 14 év alatti gyermek játékára szánt - akár nem kizárólagosan is. A Bizottság „play value" tesztje szerint <strong>plüss figura, arc, 3D elem, csörgő = játékérték = játék</strong>, ami CE-jelölést, EN 71-1/2/3 vizsgálatot és EU megfelelőségi nyilatkozatot követel.</p>
+
+<div class="callout warn">
+<div class="t">Tervezési döntés, aminek ára van</div>
+<p>Ha a párna <strong>plüss állat formájú arccal</strong> (mint a Boróka Róka), az nagy eséllyel játéknak minősül, és a teljes EN 71 tesztcsomagot végig kell vinni. Ha <strong>egyszerű, arc nélküli, geometrikus vagy sziluett-mintás textilpárna</strong>, akkor jó eséllyel nem játék - de a „Nem játék" felirat önmagában nem mentesít, ha a megjelenés és a marketing játékszerű.</p>
+<p><strong>Javaslat:</strong> indulj arc nélküli, nyomott mintás textilpárnával (a márka a mintában él, nem a formában). Ha később bejön az üzlet, a plüss vonalat külön, EN 71-tanúsítással hozd ki.</p>
+</div>
+
+<p>Új fejlemény: az (EU) 2025/2509 játékbiztonsági rendelet 2026. 01. 01-jén hatályba lépett, általánosan 2030. 08. 01-től alkalmazandó, és kiterjeszti a definíciót az ésszerűen előrelátható használatra, plusz digitális termékútlevelet vezet be. Tervezéskor már ezzel is számolj.</p>
+
+<h3>3.3 · GPSR - a kötelező minimum</h3>
+<p>Az (EU) 2023/988 általános termékbiztonsági rendelet 2024. 12. 13-tól alkalmazandó. Ha te varratod vagy saját néven forgalmazod, <strong>gyártónak minősülsz</strong>.</p>
+<table>
+<tr><th>Kötelezettség</th><th>Mit jelent a gyakorlatban</th></tr>
+<tr><td>Belső kockázatelemzés + műszaki dokumentáció</td><td>Írásos dosszié: termékleírás, anyagok, kockázatok, alkalmazott szabványok. Nem kell hatóságnak beküldeni, de kérésre elő kell adni</td></tr>
+<tr><td>Terméken / csomagoláson</td><td>Tétel- vagy sorozatszám, a gyártó neve, postai cím ÉS elektronikus elérhetőség</td></tr>
+<tr><td>Használati és biztonsági információ</td><td>Magyarul, közérthetően, a terméken vagy mellékelve</td></tr>
+<tr><td>19. cikk - online ajánlat</td><td>A termékoldalon <strong>már vásárlás előtt</strong> látszódjon: gyártó neve, postai és e-elérhetőség, termékkép, típus, azonosító, figyelmeztetések</td></tr>
+<tr><td>20. cikk - baleset-bejelentés</td><td>Safety Business Gateway</td></tr>
+<tr><td>Panasznyilvántartás</td><td>Vezetni kell; visszahívásnál közvetlen vevőértesítés</td></tr>
+</table>
+
+<h3>3.4 · Kötelező figyelmeztetéscsomag</h3>
+<p>Ez menjen a terméken varrt címkére, a csomagolásra és a webshop termékoldalára is:</p>
+<div class="copy"><span class="lbl">Biztonsági kártya - szó szerint felhasználható</span>Nem játék. Kizárólag felnőtt felügyelete mellett használható.
+Ne tedd a kiságyba, és ne aludjon vele a gyermek.
+Ne érintkezzen közvetlenül a bőrrel - mindig legyen alatta ruha vagy takaró.
+Melegítés: mikrohullámú sütőben 600 W-on legfeljebb 45 másodperc. Ne lépd túl.
+Használat előtt mindig ellenőrizd a hőmérsékletet a saját csuklódon.
+Újramelegítés csak teljes kihűlés után.
+Ne takard le melegítés után, és ne hagyd ágyneműben.
+Sérült varrat esetén azonnal selejtezd.
+Ne nedvesítsd - a huzat mosható, a belső betét nem.</div>
+
+<div class="callout warn">
+<div class="t">A tűzkockázat valós, dokumentált</div>
+<p>A BBC beszámolt mikrós búzapárna okozta halálos háztűzről; a londoni tűzoltóság szerint a párna takaró alatt hőt halmoz és meggyulladhat. Nincs harmonizált EU-szabvány melegíthető magpárnákra - az Egyesült Királyságban a <strong>BS 8433:2004</strong> a referencia, érdemes önkéntesen alkalmazni és ezt a marketingben is felhasználni („a brit BS 8433 ajánlás szerint tervezve" - ez tényállítás, nem gyógyhatás).</p>
+</div>
+
+<h3>3.5 · Gyógynövény-választás</h3>
+<table>
+<tr><th>Növény</th><th>Státusz</th><th>Forrás-indok</th></tr>
+<tr><td>Menta / mentol</td><td style="color:var(--piros)"><strong>KIZÁRVA</strong></td><td>EMA: 2 év alatt ellenjavallt - reflexes apnoé és laryngospasmus kockázata</td></tr>
+<tr><td>Eukaliptusz</td><td style="color:var(--piros)"><strong>KIZÁRVA</strong></td><td>EMA: 30 hónap alatt tilos</td></tr>
+<tr><td>Kámfor, rozmaring illóolaj</td><td style="color:var(--piros)"><strong>KIZÁRVA</strong></td><td>Azonos hatásmechanizmus (1,8-cineol)</td></tr>
+<tr><td>Levendula (szárított virág)</td><td style="color:var(--zold)"><strong>Alap</strong></td><td>Kevésbé kockázatos, de nem „igazoltan biztonságos" - alacsony arányban</td></tr>
+<tr><td>Kamilla</td><td>Óvatosan</td><td>Asteraceae - allergia lehetséges. Tüntesd fel allergénként</td></tr>
+<tr><td>Citromfű</td><td style="color:var(--zold)">Használható</td><td>Enyhe, ismert</td></tr>
+<tr><td>Bármely illóolaj a töltetben</td><td style="color:var(--piros)"><strong>KIZÁRVA</strong></td><td>Csak szárított növényi rész, koncentrátum soha</td></tr>
+</table>
+
+<div class="callout ok">
+<div class="t">Ezt viszont marketingelni lehet</div>
+<p>„Csak szárított levendulavirág, illóolaj nélkül" - ez egy erős, igaz, ellenőrizhető differenciátor, ami egyben a legfontosabb szülői aggodalmat is oldja. Tedd a termékoldal első harmadába.</p>
+</div>
+
+<h3>3.6 · Webshop kötelező elemek</h3>
+<ul>
+<li><strong>45/2014. (II. 26.) Korm. rendelet</strong> - előzetes tájékoztatás, 14 napos elállási jog, elállási mintanyilatkozat. A higiéniai kivétel (29. § (1) e) csak zárt csomagolású terméknél él, és külön kialakítást igényel - a huzat visszaküldhetőségét külön kezeld</li>
+<li><strong>Eker. tv. (2001. évi CVIII.)</strong> - szolgáltatói adatok, ÁSZF</li>
+<li><strong>GDPR</strong> - adatkezelési tájékoztató, cookie-kezelés, Consent Mode v2</li>
+<li><strong>Fgytv.</strong> - panaszkezelés, békéltető testületi tájékoztatás</li>
+<li><strong>Az EU ODR platform 2025. 07. 20-án megszűnt</strong> ((EU) 2024/3228) - az ODR-linket ki kell venni az ÁSZF-ből, helyette békéltető testület és határon átnyúló ügyben az Európai Fogyasztói Központ</li>
+<li><strong>1007/2011/EU</strong> - textil szálösszetétel-címkézés a huzatra</li>
+</ul>
+
+<p class="src"><strong>Források:</strong> <a href="https://eur-lex.europa.eu/HU/legal-content/summary/general-product-safety-regulation-2023.html">GPSR összefoglaló</a> · <a href="https://net.jogtar.hu/jogszabaly?docid=a1100038.ngm">38/2011. NGM rendelet</a> · <a href="https://ec.europa.eu/docsroom/documents/37341">Bizottság Guidance No 19 (play value)</a> · <a href="https://net.jogtar.hu/jogszabaly?docid=a0800047.tv">Fttv.</a> · <a href="https://www.ema.europa.eu/en/documents/herbal-monograph/european-union-herbal-monograph-mentha-x-piperita-l-aetheroleum-revision-1_en.pdf">EMA borsmenta monográfia</a> · <a href="https://www.london-fire.gov.uk/news/2015-news/firefighters-wheat-bag-warning-after-woman-left-hospitalised">London Fire Brigade</a> · <a href="https://net.jogtar.hu/jogszabaly?docid=a1400045.kor">45/2014. Korm. rendelet</a> · <a href="https://nkfh.gov.hu/hirek/megszunik_odr_platform">NKFH - ODR megszűnése</a></p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+<h2><span class="num">04</span>ICP és vevőhang</h2>
+<p class="lead">Négy szegmens, két prioritás. A pénz nem ott van, ahol a fájdalom a legnagyobb.</p>
+
+<h3>A négy szegmens</h3>
+<table>
+<tr><th>Szegmens</th><th>Ki</th><th>Mit vesz</th><th>Prioritás</th></tr>
+<tr>
+<td><strong>P1 - Kimerült Kata</strong></td>
+<td>28-38, első baba 0-12 hó, kialvatlan, mindent kipróbált</td>
+<td>Megkönnyebbülést keres. Árérzékeny, szkeptikus, a dm 800 Ft-os párnájához hasonlít</td>
+<td><span class="pill grey">Nem elsődleges</span></td>
+</tr>
+<tr>
+<td><strong>P2 - Ajándékozó Anna</strong></td>
+<td>30-55, nagymama, keresztanya, kolléga, testvér</td>
+<td>Emléket és „amiből biztosan nincs neki" tárgyat. Ár nem fő ellenvetés</td>
+<td><span class="pill orange">1. prioritás</span></td>
+</tr>
+<tr>
+<td><strong>P3 - Rituálé Rita</strong></td>
+<td>30-40, 1-4 éves gyerek, tudatos szülő, természetes anyagok, képernyőmentes esték</td>
+<td>Rituálét és tárgyi minőséget. Visszatérő vevő, utántöltőt vesz</td>
+<td><span class="pill orange">1. prioritás</span></td>
+</tr>
+<tr>
+<td><strong>P4 - Apa Ádám</strong></td>
+<td>32-42, ő az „esti műszak", fürdetés-altatás</td>
+<td>Egyszerű, működő eszközt a saját rutinjához. Ajándékozóként is aktív (anyák napja, szülinap)</td>
+<td><span class="pill yellow">2. prioritás</span></td>
+</tr>
+<tr>
+<td><strong>P5 - B2B beszerző</strong></td>
+<td>Bio- és bababolt, design shop, dúla, szülésznő</td>
+<td>Polcra tehető, magyar, jól csomagolt terméket, ami elad magát</td>
+<td><span class="pill yellow">2. prioritás</span></td>
+</tr>
+</table>
+
+<div class="callout">
+<div class="t">Miért nem P1 az elsődleges</div>
+<p>Kata a legnagyobb fájdalommal él, de nála három dolog van egyszerre: (1) jogilag nem szabad neki azt ígérni, amit hallani akar, (2) 800 Ft-os árhorgony, (3) fatalizmus. Kata <strong>később</strong> jön: ha Anna megveszi neki ajándékba, Kata lesz a márka szószólója. A tölcsér iránya tehát Anna → Kata, nem fordítva.</p>
+</div>
+
+<h3>Vevőhang - valódi idézetek, hirdetésszövegbe emelhetők</h3>
+
+<h4>A kimerültség nyelve</h4>
+<div class="quote">„3 éve nem aludtam végig egy éjszakát"<cite>gyakorikerdesek.hu/3886755</cite></div>
+<div class="quote">„most 7 hónapja fél órás részletekbe alszom"<cite>gyakorikerdesek.hu/3886755</cite></div>
+<div class="quote">„Este 17.30-20.00 között volt a legszörnyűbb része a napnak."<cite>gyakorikerdesek.hu/1311851</cite></div>
+<div class="quote">„kezdünk teljesen kikészülni"<cite>gyakorikerdesek.hu/2274196</cite></div>
+
+<h4>A fatalizmus - a fő versenytárs</h4>
+<div class="quote">„Túl kell élni."<cite>gyakorikerdesek.hu/2274196</cite></div>
+<div class="quote">„nincs megoldás. Illetve de, megvárni míg elmúlik"<cite>gyakorikerdesek.hu</cite></div>
+
+<h4>Az ellenvetések - ezekre kell válasz a landingen</h4>
+<table>
+<tr><th>Ellenvetés</th><th>Szó szerint</th><th>Válasz a landingen</th></tr>
+<tr><td>Túlhevülés</td><td>„Arra vigyázz, hogy nem melegítsd túl, mert nagyon forró tud lenni."</td><td>Fix melegítési idő a címkén + hőmérséklet-ellenőrző rituálé + BS 8433 hivatkozás</td></tr>
+<tr><td>Súly a babán</td><td>„az a dm-es párna nem túl nehéz egy kisbabának?"</td><td>Méretezett termékvonal: a legkisebb 200 g, és nem a babán használjuk</td></tr>
+<tr><td><strong>„Babának nem lehet só"</strong></td><td>„mi felnőttek is meleg sót szoktunk, de mivel a babának nem lehet sót"</td><td><strong>Külön blokk:</strong> a só a zárt belső betétben van, nem érintkezik bőrrel, nem étkezési célú</td></tr>
+<tr><td>Hatástalanság</td><td>„sajnos nekünk nem vált be"</td><td>30 napos, feltétel nélküli visszavásárlási garancia</td></tr>
+<tr><td><strong>Ár-horgony</strong></td><td>„kb 800 ft körül van" (dm)</td><td>Ne védekezz - <strong>váltsd le a kategóriát:</strong> ez nem magpárna, hanem ajándékdobozos, névre hímzett rituálé-tárgy</td></tr>
+<tr><td>Használati bizonytalanság</td><td>„csak erre nem tudom ráfektetni. Vagy nem is kell?"</td><td>3 lépéses rituálékártya a dobozban + 40 mp-es videó a termékoldalon</td></tr>
+</table>
+
+<h4>Az ajándékozó fájdalma</h4>
+<div class="quote">„8 hetes babara mar mindenuk megvan... Teljesen felesleges barmit venni"<cite>gyakorikerdesek.hu/12322705</cite></div>
+<div class="quote">„vagy kinőtte már vagy amellett van még 80 body-ja"<cite>gyakorikerdesek.hu/3973896</cite></div>
+<div class="quote">„Olyan kellene, ami maradandó, szép emlék lenne neki sokáig, akár felnőtt koráig."<cite>gyakorikerdesek.hu/4364932</cite></div>
+<div class="quote">„Nem szeretnék drágát, ám bár hasznosat, egyedit, maradandót"<cite>gyakorikerdesek.hu/4364932</cite></div>
+<div class="quote">„Muszlin pelenka! En mindenkitol azt kertem ajandekba, imadom, picit dragabb kategoria"<cite>gyakorikerdesek.hu/12322705</cite></div>
+
+<div class="callout ok">
+<div class="t">Ez az öt idézet a teljes ajándék-pozicionálás</div>
+<p>„Mindenük megvan" + „maradandó, szép emlék" + „egyedi" + „picit drágább kategória, de imádom". A DÚDOLÓ pontosan ezt a négy szót teljesíti: <strong>nincs neki ilyen, névre szól, kézzel varrt, és 12 ezer forint.</strong> Az ár itt nem hátrány, hanem a jelzés, hogy komolyan gondoltad.</p>
+</div>
+
+<h4>A vágy nyelve - headline-ba emelhető</h4>
+<div class="quote">„ettől megnyugodtak, már aludtak is."<cite>gyakorikerdesek.hu/2037279</cite></div>
+<div class="quote">„Nekünk bevált."<cite>gyakorikerdesek.hu/2037279</cite></div>
+<div class="quote">„nem csak melegít, hanem a súlya miatt nyomja egy picit"<cite>gyakorikerdesek.hu/44146</cite></div>
+
+<div class="callout info">
+<div class="t">Két nyelvi felfedezés</div>
+<p><strong>1. A „bevált" a legerősebb magyar social-proof szó ebben a kategóriában.</strong> Nem „hatásos", nem „ajánlom" - hanem „bevált". Építsd ez köré az értékeléskérést és a vélemény-blokk címét: „Kiknél vált be".</p>
+<p><strong>2. A súly ugyanolyan fontos, mint a meleg.</strong> A szülők maguktól mondják ki. A legtöbb konkurens csak a melegről beszél. A DÚDOLÓ három érzékről: <strong>meleg, súly, illat.</strong> Ez a mechanizmus, ami elmagyarázza, miért nem ugyanaz, mint egy dm-es magpárna.</p>
+</div>
+
+<h4>Nem várt használati módok - bővítsd ki velük a termékoldalt</h4>
+<ul>
+<li>„ágymelegítőként használtam a kiságyba" (a baba lefektetése <em>előtt</em>, majd kivéve - ez biztonságos és kommunikálható)</li>
+<li>„az angol pólyát is előmelegítettük ezzel"</li>
+<li>„a babakocsiban a pocakjára teszem"</li>
+</ul>
+<p>A <strong>pólya- és pelenkázó-előmelegítés</strong> a legkisebb méret fő kommunikált használata: valós, a szülők maguktól csinálják, biztonságos, és teljesen claim-mentes.</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+<h2><span class="num">05</span>Márkakoncepció</h2>
+<p class="lead">Öt névjavaslat, egy ajánlott, teljes márkarendszerrel.</p>
+
+<h3>Névjavaslatok</h3>
+<table>
+<tr><th>Név</th><th>Jelentés / logika</th><th>Erősség</th><th>Kockázat</th></tr>
+<tr>
+<td><strong>DÚDOLÓ</strong> <span class="pill orange">ajánlott</span></td>
+<td>Aki dúdol - az esti altatódal megszemélyesítve</td>
+<td>Mélyen magyar, meleg, tulajdonolható, nulla gyógyhatás-utalás, jól hangzik gyerekszájban is</td>
+<td>Export: a „dudolo" ejtése idegen nyelven kicsit esetleges, de kiejthető</td>
+</tr>
+<tr>
+<td><strong>SÓHAJ</strong></td>
+<td>Só + sóhaj - a megkönnyebbülés hangja</td>
+<td>Zseniális szójáték, azonnal megjegyezhető, benne van a termék</td>
+<td>Kizárólag magyarul működik. A „sóhaj" enyhén melankolikus felhangot is hordoz</td>
+</tr>
+<tr>
+<td><strong>MELENGŐ</strong></td>
+<td>Ami melenget</td>
+<td>Leíró, azonnal érthető, meleg hangzás</td>
+<td>Túl leíró - nehezebb védjegyezni, könnyebb másolni</td>
+</tr>
+<tr>
+<td><strong>HAMVASKA</strong></td>
+<td>Hamvas + kicsinyítő képző - népmesei</td>
+<td>Egyedi, mesés, prémium kézműves hangulat</td>
+<td>Nem magyarázza el magát, több brand-építést igényel</td>
+</tr>
+<tr>
+<td><strong>LULLA &amp; SÓ</strong></td>
+<td>Lullaby + só</td>
+<td>Export-barát, HU/EN/DE piacon egyaránt működik</td>
+<td>Kevésbé egyedi, sok „Lulla" márka létezik nemzetközileg</td>
+</tr>
+</table>
+
+<div class="callout">
+<div class="t">Miért a DÚDOLÓ</div>
+<p>Egyetlen szóban benne van a teljes pozicionálás: <strong>nem a tünetről szól, hanem az esti pillanatról</strong>. Nem lehet belőle gyógyhatást olvasni, tehát jogilag tiszta. Kimondva meleg és személyes. És a legfontosabb: egy nagymama, aki ajándékot keres, azonnal érti, mit vesz - nem terméket, hanem esti dúdolást.</p>
+</div>
+
+<div class="callout warn">
+<div class="t">Mielőtt véglegesíted</div>
+<p>Ellenőrizd a <strong>dudolo.hu</strong> domaint, az Instagram és Facebook kezelőnevet, és futtass védjegykutatást az SZTNH online adatbázisában (Nizzai 24. és 20. osztály, esetleg 28.). Ezt még nem tudtam ellenőrizni - ez a legelső gyakorlati lépésed.</p>
+</div>
+
+<h3>Márkasztori-keret</h3>
+<div class="callout warn">
+<div class="t">Csak igaz sztori mehet ki</div>
+<p>Az alábbi egy <strong>váz</strong>, amit a saját, valós történeteddel kell kitöltened. Kitalált nagymama-sztori vagy nem létező kézműves műhely fogyasztóvédelmi és hitelességi kockázat - és a baba-mama közösség kíméletlenül kiszúrja.</p>
+</div>
+
+<div class="card">
+<h4>A sztori három rétege</h4>
+<ol>
+<li><strong>Az eredet</strong> - honnan jött az ötlet. A legjobb, ha valós személyes helyzet: egy este, egy gyerek, egy megoldás. Konkrét, nem általános.</li>
+<li><strong>A mesterség</strong> - ki varrja, hol, miből. Név, arc, hely. Ez a legdrágább része a prémium árnak, és ez nem hazudható.</li>
+<li><strong>Az elv</strong> - amit szándékosan NEM teszünk bele: illóolaj, menta, plüss arc, műanyag. A „mit hagytunk ki" gyakran erősebb, mint a „mit tettünk bele".</li>
+</ol>
+</div>
+
+<h3>Tagline-ok</h3>
+<div class="grid2">
+<div class="card">
+<h4>Fő tagline (érzelmi)</h4>
+<p style="font-family:'Fraunces',serif;font-size:22px;color:var(--agyag-sot)">„A nap utolsó ölelése."</p>
+<p class="src">Erre épül a hero, a csomagolás és a márkanyelv. Nulla claim, teljes érzelem.</p>
+</div>
+<div class="card">
+<h4>Funkcionális alcím</h4>
+<p style="font-family:'Fraunces',serif;font-size:18px;color:var(--ej)">„Meleg. Súly. Levendula.<br>Kézzel varrva Magyarországon."</p>
+<p class="src">Ez megy a hirdetésekbe és a termékoldalra - három érzék, egy származás, ellenőrizhető állítások.</p>
+</div>
+</div>
+
+<h3>Márkahang</h3>
+<table>
+<tr><th>Így beszélünk</th><th>Így nem</th></tr>
+<tr><td>Csendes, konkrét, felnőtthöz szóló</td><td>Cukiskodó, gügyögős, felkiáltójeles</td></tr>
+<tr><td>„A párna súlya finom nyomást ad."</td><td>„Csodálatos nyugalmat hoz a kis pocakodnak!"</td></tr>
+<tr><td>Elmondja, mit nem teszünk bele</td><td>Túlígér vagy sejtet</td></tr>
+<tr><td>A szülő kimerültségét ismeri, de nem sajnálja</td><td>Bűntudatot kelt („minden jó szülő...")</td></tr>
+<tr><td>Rövid mondatok, sok fehér tér</td><td>Zsúfolt, felsorolásokkal teli</td></tr>
+</table>
+
+<h4>Tiltott szólista</h4>
+<p><span class="pill grey">csodálatos</span><span class="pill grey">forradalmi</span><span class="pill grey">a mai rohanó világban</span><span class="pill grey">garantáltan</span><span class="pill grey">azonnali megoldás</span><span class="pill grey">minden anyuka álma</span><span class="pill grey">gyógyít</span><span class="pill grey">csillapít</span><span class="pill grey">segít elaludni</span><span class="pill grey">emoji a hirdetésszövegben</span></p>
+
+<h4>Preferált szólista</h4>
+<p><span class="pill green">esti rituálé</span><span class="pill green">meleg</span><span class="pill green">súly</span><span class="pill green">levendulaillat</span><span class="pill green">kézzel varrva</span><span class="pill green">parajdi só</span><span class="pill green">mosható</span><span class="pill green">bevált</span><span class="pill green">illóolaj nélkül</span><span class="pill green">felnőtt felügyelettel</span><span class="pill green">ajándékdobozban</span><span class="pill green">névre hímezve</span></p>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+<h2><span class="num">06</span>Logó és arculat</h2>
+<p class="lead">A logó legfontosabb technikai követelménye: <strong>hímezhetőnek kell lennie egy színnel, 2 cm-en.</strong> Ez a textiltermék, nem a képernyő, dönti el a formát.</p>
+
+<h3>Logókoncepció - „A dúdolás jele"</h3>
+<div class="logo-demo">
+  <div class="mark"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="arc"></span></div>
+  <div class="wm">DÚDOLÓ</div>
+  <div class="tag">A nap utolsó ölelése</div>
+</div>
+
+<div class="card">
+<h4>A jel felépítése</h4>
+<p><strong>Egy lágy ív</strong> - egy alvó gyerek hátának görbéje, egyben a párna sziluettje. Fölötte <strong>három emelkedő pont</strong> - a dúdolás („hmm-hmm-hmm") vizuális jele, ereszkedő telítettséggel, mintha elhalkulna.</p>
+<p>Miért ez működik:</p>
+<ul>
+<li><strong>Hímezhető</strong> - négy zárt forma, nincs gradiens, nincs vékony vonal. 2 cm-en is olvasható</li>
+<li><strong>Tulajdonolható</strong> - nem hold, nem felhő, nem maci. Senki nem használ ilyet a kategóriában</li>
+<li><strong>Skálázható jelentés</strong> - a három pont visszatér a csomagoláson, a rituálékártyán (3 lépés) és a termékvonalon (3 méret)</li>
+<li><strong>Nem játékszerű</strong> - a jogi fejezet miatt fontos: nincs arc, nincs figura</li>
+</ul>
+</div>
+
+<h4>Logóváltozatok, amiket le kell gyártani</h4>
+<table>
+<tr><th>Változat</th><th>Használat</th><th>Formátum</th></tr>
+<tr><td>Elsődleges, vízszintes (jel + szóvédjegy)</td><td>Weboldal fejléc, számla, névjegy</td><td>SVG + PNG (2x, 3x)</td></tr>
+<tr><td>Álló (jel fölött szóvédjegy)</td><td>Csomagolás, Instagram profilkép, banderol</td><td>SVG + PNG</td></tr>
+<tr><td>Csak jel</td><td>Hímzés a párnán, favicon, pecsét</td><td>SVG, 1 színű</td></tr>
+<tr><td>Egyszínű negatív</td><td>Sötét háttéren, kraft dobozon</td><td>SVG</td></tr>
+<tr><td>Hímzésfájl</td><td>Varroda</td><td>DST / PES, 20 mm és 35 mm</td></tr>
+</table>
+
+<h3>Színpaletta</h3>
+<div class="swatches">
+  <div class="sw"><div class="chip" style="background:#FBF7F1"></div><div class="nm">Tejfehér</div><div class="hex">#FBF7F1</div></div>
+  <div class="sw"><div class="chip" style="background:#E8DCC8"></div><div class="nm">Homok</div><div class="hex">#E8DCC8</div></div>
+  <div class="sw"><div class="chip" style="background:#C4795C"></div><div class="nm">Agyag</div><div class="hex">#C4795C</div></div>
+  <div class="sw"><div class="chip" style="background:#8C9E82"></div><div class="nm">Zsálya</div><div class="hex">#8C9E82</div></div>
+  <div class="sw"><div class="chip" style="background:#9B8FB4"></div><div class="nm">Levendula</div><div class="hex">#9B8FB4</div></div>
+  <div class="sw"><div class="chip" style="background:#2C3540"></div><div class="nm">Éjkék</div><div class="hex">#2C3540</div></div>
+</div>
+
+<table>
+<tr><th>Szín</th><th>Szerep</th><th>Arány</th></tr>
+<tr><td>Tejfehér</td><td>Alap háttér mindenhol</td><td>50%</td></tr>
+<tr><td>Homok</td><td>Másodlagos felületek, csomagolás, kártyák</td><td>25%</td></tr>
+<tr><td>Éjkék</td><td>Szöveg, logó, kontraszt</td><td>15%</td></tr>
+<tr><td><strong>Agyag</strong></td><td><strong>Egyetlen akcentus: CTA gombok, kiemelés, banderol</strong></td><td>7%</td></tr>
+<tr><td>Zsálya, Levendula</td><td>Termékvonal-megkülönböztetés, illusztráció</td><td>3%</td></tr>
+</table>
+
+<div class="callout">
+<div class="t">Miért nem pasztell baba-rózsaszín és babakék</div>
+<p>Az egész kategória abban úszik. A meleg, földes semlegesek (homok, agyag, zsálya) azonnal a „kézműves, felnőtt ízlésű ajándék" polcra teszik a terméket - és pontosan az ajándékozónak szólnak, aki nem gyereknek, hanem <em>szülőnek</em> vesz valami szépet. Egyetlen szín viszi az akciót: az agyag. Ha minden kiemelt, semmi nincs kiemelve.</p>
+</div>
+
+<h3>Tipográfia</h3>
+<div class="grid2">
+<div class="card">
+<h4 style="font-family:'Fraunces',serif;font-size:24px;font-weight:600">Fraunces</h4>
+<p><strong>Címsorok, szóvédjegy, árak.</strong> Változó vastagságú szerif, „soft" optikai tengellyel. Meleg, kicsit régies, de nem nosztalgikus. Google Fonts, teljes magyar ékezetkészlet.</p>
+<p class="src">Súlyok: 400 (idézet), 600 (címsor), 700 (szóvédjegy)</p>
+</div>
+<div class="card">
+<h4 style="font-size:20px;font-weight:600">Inter</h4>
+<p><strong>Folyószöveg, gomb, űrlap, címke.</strong> Semleges, kiváló képernyőolvashatóság kis méretben is, teljes magyar ékezetkészlet. Ingyenes, webre optimalizált.</p>
+<p class="src">Súlyok: 400 (szöveg), 500 (kiemelés), 600-700 (gomb, címke)</p>
+</div>
+</div>
+
+<h4>Tipográfiai skála</h4>
+<table>
+<tr><th>Elem</th><th>Betűtípus</th><th>Méret (desktop / mobil)</th></tr>
+<tr><td>Hero címsor</td><td>Fraunces 600</td><td>48 / 30 px</td></tr>
+<tr><td>Szekció címsor</td><td>Fraunces 600</td><td>32 / 24 px</td></tr>
+<tr><td>Alcím</td><td>Inter 500</td><td>19 / 17 px</td></tr>
+<tr><td>Folyószöveg</td><td>Inter 400</td><td>16 / 16 px</td></tr>
+<tr><td>Gomb</td><td>Inter 600</td><td>16 px, 0.02em betűköz</td></tr>
+<tr><td>Apró (jogi, címke)</td><td>Inter 400</td><td>13 px</td></tr>
+</table>
+
+<h3>Mintavilág</h3>
+<p>A termék felülete a márka fő vizuális hordozója. Három nyomott minta, mindegyik <strong>arc nélküli</strong> (jogi ok, lásd 3.2):</p>
+<div class="grid3">
+<div class="card"><h4>Levendulamező</h4><p>Finom, ismétlődő levendulaágak zsálya és levendula színben, tejfehér alapon. A „nyugalom" minta.</p></div>
+<div class="card"><h4>Éjszakai ív</h4><p>Ismétlődő, elhalványuló ívek és pontok - a logójel mint mintázat. Éjkék, homok alapon. A „rituálé" minta.</p></div>
+<div class="card"><h4>Sókristály</h4><p>Geometrikus, hatszöges sókristály-raszter agyag színben. A „mesterség" minta, B2B és férfi ajándékozónak.</p></div>
+</div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+<h2><span class="num">07</span>Csomagolás és termékfotó</h2>
+<p class="lead">Prémium áron a doboz nem költség, hanem a termék fele. Az ajándékozó a dobozt adja át, nem a párnát.</p>
+
+<h3>Csomagolás</h3>
+<div class="card">
+<h4>Külső - merevfalú kraftdoboz</h4>
+<ul>
+<li>Matt, natúr kraft, mágneses vagy szalagos zárás. Méret a párnához igazítva, 3-4 cm mélyedéssel</li>
+<li><strong>Kivágott ablak a logó ívének formájában</strong> - átlátszó fólia nélkül, csak forma. Kilátszik belőle a párna mintája</li>
+<li>Agyag színű <strong>banderol</strong> körben: logó, méretnév („Bagoly · 1-3 év"), és a tagline</li>
+<li>Hátoldalon: GPSR-kötelező adatok, összetétel, mosási útmutató, tételszám</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>Belső - amit kinyitáskor lát</h4>
+<ol>
+<li><strong>Selyempapír</strong> homok színben, agyag pecséttel lezárva (a logójel mint pecsét)</li>
+<li><strong>A párna</strong> a huzatában</li>
+<li><strong>Rituálékártya</strong> - a legfontosabb darab. Három lépés, három pont (a logójel három pontja): <em>1. Melegítsd · 2. Öleld át · 3. Dúdolj</em>. Hátoldalon egy magyar altatódal szövege</li>
+<li><strong>Biztonsági kártya</strong> - külön lapon, a 3.4 fejezet szövegével. Ne rejtsd el: a szülő ettől bízik meg benned</li>
+<li><strong>Utántöltő-kupon</strong> - QR-kód, 15% az első gyógynövény-utántöltőre. Ez indítja a visszatérő vásárlást</li>
+</ol>
+</div>
+
+<div class="callout">
+<div class="t">Az „unboxing" a marketingeszközöd</div>
+<p>Ha a doboz jó, a vevő maga fotózza le és teszi ki. Ez az egyetlen olyan marketingköltség, ami a vevő zsebéből fizeti a következő vevőt. A rituálékártya és a pecsét együtt kb. 300-500 Ft, és ez a két elem hozza a legtöbb organikus posztot.</p>
+</div>
+
+<h3>Termékfotó-irány</h3>
+<table>
+<tr><th>Típus</th><th>Darab</th><th>Leírás</th></tr>
+<tr><td>Csendélet (packshot)</td><td>3 / termék</td><td>Tejfehér vagy homok háttér, lágy oldalfény, hosszú puha árnyék. A párna enyhén gyűrött ágyneműn</td></tr>
+<tr><td>Részlet</td><td>2 / termék</td><td>Makró a varrásról, a hímzett névről, a huzat textúrájáról. Ez igazolja a kézműves árat</td></tr>
+<tr><td>Alapanyag</td><td>3 összesen</td><td>Parajdi só szórva, szárított levendula csokorban, a nyers pamut. Felülnézet, sötét éjkék alapon</td></tr>
+<tr><td>Kontextus</td><td>4 összesen</td><td>Esti szoba, meleg lámpafény, szülő keze a párnán. <strong>Gyerekarc nélkül</strong> vagy csak hátulról</td></tr>
+<tr><td>Csomagolás</td><td>3 összesen</td><td>Zárt doboz, félig nyitott doboz, kicsomagolt tartalom lapos elrendezésben</td></tr>
+<tr><td>Méretösszehasonlítás</td><td>1</td><td>Mindhárom méret egymás mellett, felnőtt kézzel</td></tr>
+</table>
+
+<div class="callout warn">
+<div class="t">Fotózási szabály, ami jogi is</div>
+<p>Ne fotózz olyat, hogy a párna a <strong>babán</strong> vagy a <strong>kiságyban alvó gyerek mellett</strong> van. Ez ellentmond a saját biztonsági kártyádnak, és egy panasz esetén ellened fordul. A kontextusfotón a párna a szülő kezében, a pelenkázón vagy a lefektetés előtti ágyon legyen - gyerek nélkül vagy felnőtt felügyeletet mutatva.</p>
+</div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+<h2><span class="num">08</span>Termékvonal és ajánlat</h2>
+<p class="lead">Három méret, három korosztály, három használat. A legkisebbnél a kommunikált használat nem a babán van - ez oldja meg a jogi és biztonsági problémát egyszerre.</p>
+
+<h3>A termékvonal</h3>
+<table>
+<tr><th>Termék</th><th>Kor</th><th>Méret / töltet</th><th>Kommunikált használat</th><th>Ár</th></tr>
+<tr>
+<td><strong>DÚDOLÓ Süni</strong></td>
+<td>0-1 év</td>
+<td>13×17 cm · 200 g parajdi só + 10 g levendula</td>
+<td><strong>A pólya és a pelenkázó előmelegítése.</strong> Nem a babán - a textilt melegíti fel, hogy a pucérkodás ne legyen hideg sokk</td>
+<td>9 900 Ft</td>
+</tr>
+<tr>
+<td><strong>DÚDOLÓ Bagoly</strong></td>
+<td>1-3 év</td>
+<td>18×22 cm · 400 g só + 20 g levendula</td>
+<td>Az esti rituálé tárgya: ölben, mese közben, felnőtt felügyelettel</td>
+<td>11 900 Ft</td>
+</tr>
+<tr>
+<td><strong>DÚDOLÓ Róka</strong></td>
+<td>3-5 év</td>
+<td>22×26 cm · 600 g só + 30 g levendula</td>
+<td>Esti rituálé + hűtve a koccanásokra, hasra, tarkóra</td>
+<td>13 900 Ft</td>
+</tr>
+</table>
+
+<div class="callout ok">
+<div class="t">A Süni a legokosabb termék a vonalban</div>
+<p>Egy 0-1 éves babánál semmilyen melegítő párnát nem lehet felelősen a gyerekre tenni. De a szülők maguktól ezt csinálják: <em>„az angol pólyát is előmelegítettük ezzel"</em>. A Süni ezt a valós, biztonságos használatot teszi hivatalossá. Így a 0-1 sáv is eladható - és ez pont az a korosztály, ahova az ajándék megy.</p>
+</div>
+
+<h3>Kiegészítők és utántöltők</h3>
+<table>
+<tr><th>Tétel</th><th>Ár</th><th>Szerep</th></tr>
+<tr><td>Névhímzés (max 12 karakter)</td><td>+2 490 Ft</td><td><strong>A legfontosabb upsell.</strong> Ez teszi „maradandó emlékké", ez indokolja az árat, és ez zárja ki a visszaküldést</td></tr>
+<tr><td>Gyógynövény-utántöltő betét</td><td>2 990 Ft</td><td>Visszatérő bevétel. 6-9 havonta ajánlott csere</td></tr>
+<tr><td>Pótuzat (mosáshoz)</td><td>3 490 Ft</td><td>Praktikus indok, magas marzs</td></tr>
+<tr><td>Ajándékkártya kézírásos üzenettel</td><td>ingyenes</td><td>Súrlódáscsökkentő az ajándékozónak</td></tr>
+</table>
+
+<h3>Csomagok</h3>
+<div class="grid2">
+<div class="card">
+<h4>Testvérszett (2 db, tetszőleges méret)</h4>
+<p><strong>21 900 Ft</strong> <span class="src">helyette 23 800 - 25 800 Ft</span></p>
+<p>Célja nem a kedvezmény, hanem a felismerés: a második gyereknek is kell. Erős karácsonyi és keresztelői ajánlat.</p>
+</div>
+<div class="card">
+<h4>Babaváró ajándékdoboz</h4>
+<p><strong>16 900 Ft</strong></p>
+<p>Süni + muszlin kendő + rituálé-könyvecske (7 esti szokás) + kézírásos kártya, egy nagyobb dobozban. Ez a P2 Anna fő terméke - az AOV-t 9 900-ról 16 900-ra emeli.</p>
+</div>
+</div>
+
+<h3>Value stack - amit valójában megvesz</h3>
+<table>
+<tr><th>Elem</th><th>Érzékelt érték</th><th>Mit old meg</th></tr>
+<tr><td>Kézzel varrt párna, parajdi só + magyar levendula</td><td>7 000 Ft</td><td>A termék maga</td></tr>
+<tr><td>Levehető, mosható bio pamut huzat</td><td>3 500 Ft</td><td>„Meddig bírja?" - higiénia</td></tr>
+<tr><td>Névhímzés</td><td>2 490 Ft</td><td>„Maradandó, egyedi" - az ajándékozó fő kritériuma</td></tr>
+<tr><td>Ajándékdoboz, selyempapír, pecsét</td><td>2 000 Ft</td><td>„Nem kell becsomagolni" - átadható állapot</td></tr>
+<tr><td>Rituálékártya + altatódal</td><td>1 500 Ft</td><td>„Nem tudom, hogyan használjam" - használati bizonytalanság</td></tr>
+<tr><td>Biztonsági kártya + BS 8433 szerinti tervezés</td><td>-</td><td>„Nem lesz túl forró?" - a fő biztonsági ellenvetés</td></tr>
+<tr><td><strong>30 napos, feltétel nélküli visszavásárlás</strong></td><td>-</td><td>„Nekünk nem vált be" - a hatástalanság-kockázat</td></tr>
+<tr><td><strong>Összesen</strong></td><td><strong>16 490 Ft</strong></td><td>Ár névhímzéssel: 14 390 Ft</td></tr>
+</table>
+
+<h3>Garancia</h3>
+<div class="callout">
+<div class="t">„Az első hét estére" garancia</div>
+<p><strong>Próbáld ki hét estén át. Ha nem lett a rutinotok része, az első 30 napban visszavesszük, és visszautaljuk a teljes árat - a névhímzéses darabot is.</strong></p>
+<p>Miért így: (a) nem eredményt ígér, tehát jogilag tiszta, (b) a „hét este" konkrét és kipróbálható, (c) a névhímzés visszavétele merész, de éppen ezért hihető - és a gyakorlatban alig élnek vele, mert a személyre szólt tárgyat nem szokás visszaküldeni. A visszaküldött darabokat ne értékesítsd újra, hanem add szülészetnek vagy babamama-egyesületnek: ez PR-értéket termel.</p>
+</div>
+
+<h3>Bónuszok - kifogáshoz rendelve</h3>
+<table>
+<tr><th>Kifogás</th><th>Bónusz</th><th>Hol jelenik meg</th></tr>
+<tr><td>„Nem tudom, hogyan használjam"</td><td>Rituálékártya + 40 mp-es videó</td><td>Dobozban és a termékoldalon</td></tr>
+<tr><td>„Mit adjak még mellé ajándékba?"</td><td>Ajándékkártya kézírásos üzenettel, ingyen</td><td>Kosárban választható</td></tr>
+<tr><td>„Meddig tart ki az illat?"</td><td>15% kupon az első utántöltőre</td><td>Dobozban QR-kóddal</td></tr>
+<tr><td>„Túl drága"</td><td>Testvérszett és bundle-ár</td><td>Termékoldal, kosár upsell</td></tr>
+<tr><td>„Nem érek rá becsomagolni"</td><td>Közvetlen ajándékküldés a címzettnek, feladó nélkül</td><td>Pénztár opció</td></tr>
+</table>
+
+<h3>Szűkösség - csak valós</h3>
+<ul>
+<li><strong>Kapacitás:</strong> „Ezen a héten 40 darab készül." Ha kézműves gyártás, ez igaz - mondd ki, és tartsd be</li>
+<li><strong>Névhímzés határidő:</strong> „Karácsonyra december 12-ig leadott rendelést vállalunk." Valós logisztikai korlát</li>
+<li><strong>Szezonális minta:</strong> limitált mintasorozat, ami tényleg elfogy és nem tér vissza</li>
+</ul>
+<div class="callout warn">
+<div class="t">Amit ne csinálj</div>
+<p>Hamis visszaszámláló, „már csak 2 db" ha nem igaz, örökké tartó „akció". A baba-mama közösség egymásnak szól, és ez a fajta trükk itt gyorsabban terjed, mint bárhol máshol.</p>
+</div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+<h2><span class="num">09</span>Árazás és marzs</h2>
+<p class="lead">A számok becslések, amiket a saját beszállítói ajánlataiddal kell felülírni. A logika viszont áll.</p>
+
+<div class="callout warn">
+<div class="t">Ezeket a számokat validálni kell</div>
+<p>Nem ismerem a valós anyagáraidat és a bérvarrási díjadat. Az alábbi tartományok piaci becslések. <strong>Kérj be három ajánlatot</strong> varrodától, doboz-nyomdától és sóbeszállítótól, és írd felül a táblázatot - a teljes hirdetési stratégia a fedezeti számon áll vagy bukik.</p>
+</div>
+
+<h3>Becsült önköltség - DÚDOLÓ Bagoly (11 900 Ft)</h3>
+<table>
+<tr><th>Tétel</th><th>Becsült költség</th></tr>
+<tr><td>Külső anyag (bio pamut / muszlin), kb. 0,3 m²</td><td>900 - 1 400 Ft</td></tr>
+<tr><td>Belső töltőzsák anyag</td><td>200 - 300 Ft</td></tr>
+<tr><td>Bérvarrás (belső betét + levehető huzat)</td><td>1 500 - 2 500 Ft</td></tr>
+<tr><td>Parajdi só, 400 g</td><td>120 - 250 Ft</td></tr>
+<tr><td>Szárított levendula, 20 g</td><td>250 - 450 Ft</td></tr>
+<tr><td>Címke, mosási + biztonsági + rituálékártya</td><td>250 - 400 Ft</td></tr>
+<tr><td>Ajándékdoboz, banderol, selyempapír, pecsét</td><td>700 - 1 200 Ft</td></tr>
+<tr><td>Szállítási csomagolás</td><td>200 - 350 Ft</td></tr>
+<tr><td><strong>Összes önköltség</strong></td><td><strong>4 120 - 6 850 Ft</strong> (közép: kb. 5 500 Ft)</td></tr>
+</table>
+
+<h3>Fedezet-számítás</h3>
+<div class="kpi">
+<div class="k"><div class="v">11 900 Ft</div><div class="l">Bruttó fogyasztói ár</div></div>
+<div class="k"><div class="v">9 370 Ft</div><div class="l">Nettó árbevétel (27% áfa)</div></div>
+<div class="k"><div class="v">~5 500 Ft</div><div class="l">Becsült önköltség</div></div>
+<div class="k"><div class="v">~3 870 Ft</div><div class="l">Fedezet (41%)</div></div>
+</div>
+
+<div class="callout">
+<div class="t">Amit ez a hirdetésről mond</div>
+<p>3 870 Ft fedezetnél a <strong>nulla nyereségű CAC 3 870 Ft</strong>. Ha 30%-os nyereséget akarsz a fedezetből, a cél-CAC kb. <strong>2 500 Ft</strong> - és ebben még nincs benne a visszáru, a bankköltség és a te időd.</p>
+<p>Ez szűk, de nem lehetetlen. Három dolog tágítja ki:</p>
+<ul>
+<li><strong>AOV emelés.</strong> Névhímzés (+2 490) és bundle-ök nélkül a matek nem működik. Cél-AOV: <strong>16 000 - 18 000 Ft</strong>. Ekkor a fedezet kb. 6 500 - 7 500 Ft, a cél-CAC 4 000 - 4 500 Ft-ra tágul</li>
+<li><strong>Ismétlődő vétel.</strong> Utántöltő (2 990 Ft) és pótuzat (3 490 Ft) magas marzsú, hirdetési költség nélkül. Ez emeli az LTV-t</li>
+<li><strong>Nem fizetett csatorna.</strong> B2B, vásár, influencer-seeding és organikus - ezeknél nincs CAC, csak idő- és termékköltség</li>
+</ul>
+</div>
+
+<h3>B2B / viszonteladói ár</h3>
+<table>
+<tr><th>Szint</th><th>Kedvezmény</th><th>Nettó egységár (Bagoly)</th><th>Feltétel</th></tr>
+<tr><td>Kiskereskedő</td><td>50%</td><td>4 685 Ft</td><td>Min. 10 db vegyes, ajánlott fogyasztói ár tartása</td></tr>
+<tr><td>Kiemelt partner</td><td>55%</td><td>4 217 Ft</td><td>Min. 30 db / negyedév, display-doboz kihelyezés</td></tr>
+<tr><td>Bizományos</td><td>40%</td><td>5 622 Ft</td><td>Csak első együttműködésnél, 60 napos elszámolás</td></tr>
+</table>
+<p>50%-os viszonteladói áron a fedezet Bagoly esetén kb. -800 Ft a jelenlegi önköltséggel. <strong>Ez így nem működik.</strong> B2B-hez kötelező egy egyszerűsített csomagolás (banderol dobozon nélkül, gyűjtőben szállítva), ami kb. 1 200 - 1 800 Ft-ot leszed az önköltségből, plusz 30+ darabos szériában olcsóbb bérvarrás. <strong>B2B-t csak akkor indíts, ha a nagyszériás önköltséged 3 200 Ft alá megy.</strong></p>
+
+<h3>Export-árazás (DACH)</h3>
+<p>Az Etsy-referencia 13-21 EUR. A DÚDOLÓ Bagoly 11 900 Ft ≈ 30 EUR (kb. 395 Ft/EUR mellett) - ez a felső Etsy-sáv, de névhímzéssel és dobozzal indokolható; a Fellhof 11 900 Ft-os magyar ára mutatja, hogy a német márkák itt is ebben a sávban vannak. Javasolt DACH-ár: <strong>34,90 EUR</strong> (Bagoly), ingyenes szállítással 60 EUR felett. Ez a magyar árnál magasabb fedezetet ad, és fedezi a nemzetközi szállítást.</p>
+<p class="src">Az árfolyam a playbook készítésekor becsült - a tényleges kalkulációt aktuális árfolyamon futtasd.</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+<h2><span class="num">10</span>Landing page - teljes copy</h2>
+<p class="lead">Egy oldal, két belépő: az ajándékozó és a szülő. A struktúra sorrendje a kifogások sorrendje.</p>
+
+<h3>Oldalszerkezet</h3>
+<table>
+<tr><th>#</th><th>Blokk</th><th>Cél</th></tr>
+<tr><td>1</td><td>Hero</td><td>3 másodperc alatt: mi ez, kinek, miért más</td></tr>
+<tr><td>2</td><td>A három érzék</td><td>Mechanizmus - miért nem ugyanaz, mint egy magpárna</td></tr>
+<tr><td>3</td><td>Termékválasztó (3 méret)</td><td>Korosztály szerinti önbesorolás</td></tr>
+<tr><td>4</td><td>„Mi van benne, és mi nincs"</td><td>Az illóolaj- és a só-ellenvetés</td></tr>
+<tr><td>5</td><td>Biztonság</td><td>A hőmérséklet- és fulladás-aggodalom</td></tr>
+<tr><td>6</td><td>Az esti rituálé (3 lépés)</td><td>Használati bizonytalanság</td></tr>
+<tr><td>7</td><td>Ajándékként</td><td>P2 Anna külön útja</td></tr>
+<tr><td>8</td><td>A műhely</td><td>Az ár indoklása - kézműves bizonyíték</td></tr>
+<tr><td>9</td><td>„Kiknél vált be"</td><td>Social proof</td></tr>
+<tr><td>10</td><td>Garancia</td><td>Kockázatmegfordítás</td></tr>
+<tr><td>11</td><td>GYIK</td><td>Maradék kifogások</td></tr>
+<tr><td>12</td><td>Záró CTA</td><td>Konverzió</td></tr>
+</table>
+
+<h3>1 · Hero</h3>
+<div class="copy"><span class="lbl">H1</span>Meleg. Súly. Levendula.
+Az esti rituálé, amit a gyereked meg fog várni.</div>
+<div class="copy"><span class="lbl">Alcím</span>Kézzel varrt gyógynövényes sópárna 0-5 éves korig. Parajdi só, magyar levendula, mosható bio pamut huzat. Névre hímezve, ajándékdobozban.</div>
+<div class="copy"><span class="lbl">Bizalmi sáv a CTA alatt</span>Illóolaj nélkül  ·  Kézzel varrva Magyarországon  ·  30 napos visszavásárlás  ·  2-3 munkanap</div>
+<div class="copy"><span class="lbl">Elsődleges CTA</span>Válaszd ki a méretet</div>
+<div class="copy"><span class="lbl">Másodlagos CTA</span>Ajándékba adom →</div>
+
+<h3>2 · A három érzék</h3>
+<div class="copy"><span class="lbl">Szekció címsor</span>Nem attól működik, hogy meleg.</div>
+<div class="copy"><span class="lbl">Bevezető</span>A legtöbb magpárna egy dolgot tud: melegít. A DÚDOLÓ hármat - és a szülők maguktól mondják ki, hogy melyik számít igazán.
+
+MELEG
+A parajdi só lassan adja le a hőt, nem hirtelen. 45 másodperc a mikróban, és kb. 20 percig marad kellemes.
+
+SÚLY
+400 gramm. Elég ahhoz, hogy érezni lehessen, kevés ahhoz, hogy nyomjon. Egy anyuka így írta le egy fórumon: „nem csak melegít, hanem a súlya miatt nyomja egy picit".
+
+LEVENDULA
+Húsz gramm szárított magyar levendulavirág. Nem illóolaj, nem parfüm, nem aromaolaj - csak a virág, ahogy megszárítottuk.</div>
+
+<h3>3 · Termékválasztó</h3>
+<div class="copy"><span class="lbl">Szekció címsor</span>Három méret, három korosztály</div>
+<div class="copy"><span class="lbl">Süni kártya</span>DÚDOLÓ SÜNI · 0-1 év · 9 900 Ft
+13×17 cm, 200 g
+
+A pólyát és a pelenkázót melegíti fel, mielőtt a baba rákerül. Nem a babán használjuk - a textilt melegíti, hogy az átöltözés ne legyen hideg.</div>
+<div class="copy"><span class="lbl">Bagoly kártya</span>DÚDOLÓ BAGOLY · 1-3 év · 11 900 Ft
+18×22 cm, 400 g
+
+Az esti rituálé darabja. Mese közben ölben, lefekvés előtt az ágyon - mindig felnőtt felügyelettel.</div>
+<div class="copy"><span class="lbl">Róka kártya</span>DÚDOLÓ RÓKA · 3-5 év · 13 900 Ft
+22×26 cm, 600 g
+
+A legnagyobb. Melegen az esti rituáléhoz, hűtve a napközbeni koccanásokhoz.</div>
+
+<h3>4 · Mi van benne, és mi nincs</h3>
+<div class="copy"><span class="lbl">Szekció címsor</span>Négy összetevő. És egy lista arról, mit hagytunk ki.</div>
+<div class="copy"><span class="lbl">Bal oszlop</span>AMI BENNE VAN
+
+Parajdi só  ·  Erdélyi bányasó, szemcsés, tisztított
+Szárított levendula  ·  Magyar termesztésű virág, egészben
+Bio pamut belső betét  ·  Dupla varrással, zárt
+Mosható külső huzat  ·  100% pamut, 40 fokon mosható</div>
+<div class="copy"><span class="lbl">Jobb oszlop</span>AMIT SZÁNDÉKOSAN KIHAGYTUNK
+
+Illóolaj  ·  Semmilyen. Csak a szárított virág
+Menta és eukaliptusz  ·  Az EMA szerint kisgyerekeknél ellenjavallt
+Műanyag mikrogyöngy  ·  Nem szagol, nem tart hőt, és nem lebomló
+Plüss arc és figura  ·  Ez egy párna, nem játék - és így is címkézzük</div>
+<div class="copy"><span class="lbl">A só-ellenvetés blokkja (kiemelt doboz)</span>„De hát a babának nem lehet sót."
+
+Így van. Ezért nem is érintkezik vele. A só egy dupla varrott, zárt belső betétben van, amit még egy levehető pamut huzat is fed. A gyerek soha nem ér hozzá a sóhoz, és nem is szabad. A só itt hőtárolóként dolgozik, nem élelmiszerként.</div>
+
+<h3>5 · Biztonság</h3>
+<div class="copy"><span class="lbl">Szekció címsor</span>Amit nem szabad vele csinálni - és ezt mi mondjuk el elsőként.</div>
+<div class="copy"><span class="lbl">Törzsszöveg</span>A melegíthető párnák valós kockázatot hordoznak: túlmelegítve égési sérülést okozhatnak, takaró alatt hőt halmoznak. Ezért a DÚDOLÓ minden dobozában külön biztonsági kártya van, és ugyanez rá van varrva a párnára is.
+
+Nem játék. Kizárólag felnőtt felügyelete mellett.
+Ne tedd a kiságyba, és ne aludjon vele a gyermek.
+Ne érintkezzen közvetlenül a bőrrel.
+Mikróban 600 W-on legfeljebb 45 másodperc.
+Használat előtt ellenőrizd a hőmérsékletet a csuklódon.
+Újramelegítés csak teljes kihűlés után.
+
+A párnát a brit BS 8433 melegíthető párnákra vonatkozó ajánlás figyelembevételével terveztük.</div>
+
+<h3>6 · Az esti rituálé</h3>
+<div class="copy"><span class="lbl">Szekció címsor</span>Három lépés. Minden este ugyanaz.</div>
+<div class="copy"><span class="lbl">Lépések</span>1 · MELEGÍTSD
+45 másodperc a mikróban, amíg a fogmosás tart. Csuklóra tenni, ellenőrizni.
+
+2 · ÖLELD ÁT
+A párna az ágyra kerül a takaró alá, amíg meséltek. Mire a gyerek lefekszik, az ágy meleg. A párnát ilyenkor kivesszük.
+
+3 · DÚDOLJ
+A doboz hátoldalán van egy altatódal. Nem kell szépen énekelni. Ez a rész nem rólad szól.</div>
+
+<h3>7 · Ajándékként</h3>
+<div class="copy"><span class="lbl">Szekció címsor</span>„Nekik már mindenük megvan."</div>
+<div class="copy"><span class="lbl">Törzsszöveg</span>Ez a leggyakoribb mondat, amit babalátogató előtt hallani. És általában igaz: a nyolcvanadik body és a huszadik plüss után nehéz olyat vinni, aminek tényleg örülnek.
+
+A DÚDOLÓ három dolgot tud, amit a legtöbb babaajándék nem:
+
+Nincs neki ilyen. Ez nem kategória, amiből öt van a szekrényben.
+A nevét hordja. Hímzett név, 12 karakterig, felár ellenében.
+Nem a babának szól elsősorban, hanem a szülőnek. Egy este, ami kicsit könnyebb.
+
+Ajándékdobozban, selyempapírba csomagolva, kézírásos kártyával érkezik. Ha kéred, egyenesen a címzettnek küldjük, feladó nélkül, hogy meglepetés maradjon.</div>
+<div class="copy"><span class="lbl">CTA</span>Ajándékdoboz összeállítása →</div>
+
+<h3>8 · A műhely</h3>
+<div class="callout warn">
+<div class="t">Ezt a blokkot neked kell megírnod</div>
+<p>Ide a valós műhely, a valós varrónő, a valós hely kerül - névvel és fotóval. Ez a blokk indokolja a 11 900 Ft-ot. Ha kitalált vagy általános („kis magyar műhelyünkben"), az egész oldal hitelessége esik vele. <strong>Amit ide kell tenni:</strong> egy arc, egy hely, egy szám (hány darab készül hetente), és egy kézzel írt mondat arról, miért csinálod.</p>
+</div>
+
+<h3>9 · Kiknél vált be</h3>
+<div class="copy"><span class="lbl">Szekció címsor</span>Kiknél vált be</div>
+<div class="callout warn">
+<div class="t">Moderálási szabály</div>
+<p>Csak olyan vélemény kerülhet ki, ami <strong>nem tartalmaz gyógyhatás-állítást</strong>. Ha a vevő azt írja, „elmúlt tőle a hasfájás", azt ne tedd ki - az a te állításod lesz. Az értékeléskérő emailben ezt kérdezd: <em>„Milyen lett nálatok az esti rituálé?"</em> - így eleve használható válaszok érkeznek.</p>
+</div>
+
+<h3>10 · Garancia</h3>
+<div class="copy"><span class="lbl">Szekció</span>Az első hét estére
+
+Próbáld ki hét estén át. Ha nem lett a rutinotok része, az első 30 napban visszavesszük, és visszautaljuk a teljes árat. A névre hímzett darabot is.
+
+A visszaküldött párnákat nem adjuk el újra - szülészeteknek és babamama-egyesületeknek adjuk tovább.</div>
+
+<h3>11 · GYIK</h3>
+<table>
+<tr><th>Kérdés</th><th>Válasz</th></tr>
+<tr><td>Hány hónapos kortól használható?</td><td>A Süni méret 0 hónapos kortól - de a pólya és a pelenkázó melegítésére, nem a babán. A Bagoly 1 éves kortól, a Róka 3 éves kortól, mindig felnőtt felügyelettel.</td></tr>
+<tr><td>Nem lesz túl forró?</td><td>600 W-on 45 másodperc a maximum, és minden használat előtt csuklóra téve ellenőrizni kell. A címkén ugyanez szerepel. Ne lépd túl az időt, és ne melegítsd újra, amíg teljesen ki nem hűlt.</td></tr>
+<tr><td>Mosható?</td><td>A külső huzat 40 fokon, gépben. A belső betét soha nem érintkezhet vízzel.</td></tr>
+<tr><td>Meddig tart ki a levendulaillat?</td><td>Használattól függően 6-9 hónap. Utána utántöltő betétet lehet rendelni, 2 990 Ft.</td></tr>
+<tr><td>Mi van, ha allergiás a levendulára?</td><td>Kérésre levendula nélkül, csak sóval is elkészítjük. Írd meg a rendelés megjegyzésébe.</td></tr>
+<tr><td>Hűteni is lehet?</td><td>Igen. Zacskóban, hűtőben 1 órán át. A Rókánál ez külön kommunikált használat.</td></tr>
+<tr><td>Mennyi idő alatt érkezik?</td><td>Névhímzés nélkül 2-3 munkanap, hímzéssel 4-6 munkanap.</td></tr>
+<tr><td>Ajándékba küldhető közvetlenül?</td><td>Igen, feladó nélkül, kézírásos kártyával. A pénztárnál jelöld be.</td></tr>
+</table>
+
+<h3>12 · Záró CTA</h3>
+<div class="copy"><span class="lbl">Blokk</span>Ma este is lesz lefekvés.
+
+Válaszd ki a méretet  →
+
+Kézzel varrva Magyarországon  ·  30 napos visszavásárlás  ·  Ajándékdobozban érkezik</div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+<h2><span class="num">11</span>Hirdetésterv - 15 koncepció</h2>
+<p class="lead">A Diversity Formula szerint: <strong>Awareness × Formátum × Szög × Perszóna</strong>. Két ötlet csak akkor különböző, ha legalább egy dimenzióban eltér - ugyanaz a kép más headline-nal nem új hirdetés, mert az algoritmus 90%-ban ugyanazoknak mutatja.</p>
+
+<div class="card">
+<h4>Összefoglaló</h4>
+<p><strong>Ajánlat:</strong> kézzel varrt gyógynövényes sópárna 0-5 évig, 9 900 - 13 900 Ft, névhímzéssel, ajándékdobozban<br>
+<strong>Célközönség:</strong> P2 Ajándékozó Anna (elsődleges), P3 Rituálé Rita (elsődleges), P4 Apa Ádám, P1 Kimerült Kata (retargeting)<br>
+<strong>Platform:</strong> Meta (Facebook + Instagram), később Pinterest és Google Shopping<br>
+<strong>Piaci érettség (Theriot):</strong> <strong>3. fokozat - mechanizmus.</strong> A kategória létezik, a piac szkeptikus („nekünk nem vált be"), tehát azt kell elmagyarázni, HOGYAN más. Ezért van minden koncepcióban jelen a „meleg + súly + illat" hármas<br>
+<strong>Awareness megoszlás:</strong> 🔵 2 &nbsp;|&nbsp; 🟣 4 &nbsp;|&nbsp; 🟠 4 &nbsp;|&nbsp; 🟡 3 &nbsp;|&nbsp; 🟢 2<br>
+<strong>Formátum megoszlás:</strong> 🖼️ 5 &nbsp;|&nbsp; 🎥 4 &nbsp;|&nbsp; 🎠 3 &nbsp;|&nbsp; 📱 3</p>
+</div>
+
+<div class="callout warn">
+<div class="t">Ajánlat-audit a koncepciók előtt</div>
+<p><strong>Erős:</strong> tiszta differenciátor (illóolaj nélkül, három érzék), névhímzés, ajándékdoboz, valós garancia, világos termékvonal.<br>
+<strong>Gyenge pont:</strong> a fedezet (41%) szűk hirdetésre. A 9 900 Ft-os belépő önmagában nem hirdethető nyereségesen - <strong>minden hirdetés a 16 900 Ft-os ajándékdobozra vagy a névhímzéses konfigurációra vigyen</strong>, ne a legolcsóbb SKU-ra.<br>
+<strong>Hiányzik indulásnál:</strong> social proof. Az első 30 nap seedingje (lásd 16. fejezet) nélkül a 🟠 és 🟡 szintű hirdetések nem fognak működni.</p>
+</div>
+
+<div class="brief">
+<div class="bh">#1 - „Nyolcvan body és húsz plüss. Mit viszel nyolcvanegyediknek?"</div>
+<div class="bt"><span class="pill purple">🟣 Problem-aware</span><span class="pill grey">🖼️ Statikus</span><span class="pill grey">🧭 Ajándék-dilemma</span></div>
+<div class="row"><b>Perszóna:</b> P2 Ajándékozó Anna</div>
+<div class="row"><b>CTA:</b> Nézd meg az ajándékdobozt</div>
+<div class="row"><b>Megközelítés:</b> Nem a terméket vezeti be, hanem az ajándékozó szégyenkezését: hogy megint valami feleslegeset visz. A felismerés maga a horog.</div>
+<div class="row"><b>Üzenet:</b> „A babalátogató legnehezebb része nem az út, hanem a bolt. Mert tényleg mindenük megvan. A DÚDOLÓ egy dolgot tud, amit a nyolcvanadik body nem: a nevét hordja, és nem a babának szól elsősorban, hanem a szülőnek."</div>
+<div class="row"><b>Vizuál:</b> Felülnézet: egy halom összehajtott body és plüss, halvány, kifakult tónusban - és mellette egyetlen kraftdoboz, éles fókuszban, agyag banderollal.</div>
+<div class="tech">Technika: contrast framing · social identity · problem agitation</div>
+</div>
+
+<div class="brief">
+<div class="bh">#2 - „Nem attól működik, hogy meleg"</div>
+<div class="bt"><span class="pill orange">🟠 Solution-aware</span><span class="pill grey">🎥 Videó</span><span class="pill grey">🧭 Mechanizmus</span></div>
+<div class="row"><b>Perszóna:</b> P3 Rituálé Rita</div>
+<div class="row"><b>CTA:</b> Ismerd meg a három érzéket</div>
+<div class="row"><b>Megközelítés:</b> A 3. érettségi fokozat klasszikus lépése: a piac ismeri a magpárnát, de nem hisz benne. A mechanizmus magyarázata a hit forrása.</div>
+<div class="row"><b>Üzenet:</b> „A legtöbb magpárna egy dolgot tud. Ez hármat: a meleget lassan adja le, a súlya érezhető nyomást ad, és a levendula nem illóolajból van, hanem virágból. A szülők egyébként maguktól mondják ki, hogy a súly számít a legjobban."</div>
+<div class="row"><b>Vizuál:</b> 20 mp, három vágás. 1: kéz a párnán, gőz nélkül, lassú. 2: a párna leesik egy takaróra - a súlya látszik a benyomódáson. 3: makró a szárított levendulán. Feliratozva, hang nélkül is érthető.</div>
+<div class="tech">Technika: unique mechanism · sensory specificity · benefit laddering</div>
+</div>
+
+<div class="brief">
+<div class="bh">#3 - „De hát a babának nem lehet sót"</div>
+<div class="bt"><span class="pill orange">🟠 Solution-aware</span><span class="pill grey">🖼️ Statikus</span><span class="pill grey">🧭 Ellenvetés-kezelés</span></div>
+<div class="row"><b>Perszóna:</b> P1 Kimerült Kata / P3 Rita</div>
+<div class="row"><b>CTA:</b> Nézd meg, hogyan épül fel</div>
+<div class="row"><b>Megközelítés:</b> Egy valós fórum-ellenvetést tesz headline-ná. Aki ezt gondolta, azonnal megáll rajta, mert a saját mondatát látja.</div>
+<div class="row"><b>Üzenet:</b> „Így van. Ezért nem is érintkezik vele. A só dupla varrott, zárt belső betétben van, azon még egy levehető pamut huzat is. A gyerek soha nem ér hozzá. Itt a só hőtároló, nem élelmiszer."</div>
+<div class="row"><b>Vizuál:</b> Robbantott ábra: huzat, belső betét, só + levendula - három réteg egymás alatt, nyilakkal, tiszta tejfehér háttéren. Illusztráció, nem fotó.</div>
+<div class="tech">Technika: objection as headline · transparency · exploded view</div>
+</div>
+
+<div class="brief">
+<div class="bh">#4 - „Az esti negyven perc, ami mindenki életében ugyanaz"</div>
+<div class="bt"><span class="pill blue">🔵 Unaware</span><span class="pill grey">🎥 Videó</span><span class="pill grey">🧭 Rituálé / életkép</span></div>
+<div class="row"><b>Perszóna:</b> P3 Rituálé Rita, P4 Apa Ádám</div>
+<div class="row"><b>CTA:</b> Tudj meg többet</div>
+<div class="row"><b>Megközelítés:</b> Nem árul semmit az első 8 másodpercben. Egy felismerhető esti jelenetet mutat, amiben a néző magára ismer - a termék csak a végén jelenik meg.</div>
+<div class="row"><b>Üzenet:</b> „Fürdés. Pizsama. Fogmosás. A harmadik mese. Aztán a rész, amikor már senkinek nincs energiája, de még van hátra tíz perc. Erre a tíz percre találtuk ki."</div>
+<div class="row"><b>Vizuál:</b> 25 mp, meleg lámpafény, kézikamera. Csak részletek: vizes hajvég, pizsamagomb, egy kéz a villanykapcsolón. Az utolsó 5 mp-ben kerül elő a párna. Gyerekarc nincs.</div>
+<div class="tech">Technika: pattern recognition · delayed reveal · emotional resonance</div>
+</div>
+
+<div class="brief">
+<div class="bh">#5 - „Ami a dobozban van"</div>
+<div class="bt"><span class="pill yellow">🟡 Product-aware</span><span class="pill grey">🎠 Carousel</span><span class="pill grey">🧭 Value stack</span></div>
+<div class="row"><b>Perszóna:</b> P2 Anna</div>
+<div class="row"><b>CTA:</b> Rendeld meg ajándékba</div>
+<div class="row"><b>Megközelítés:</b> Az ajándékozónak nem a párnát adjuk el, hanem az átadás pillanatát. Minden lap egy dolog, amit kicsomagol.</div>
+<div class="row"><b>Üzenet:</b> Lapok: 1) zárt doboz banderollal, 2) selyempapír pecséttel, 3) a párna hímzett névvel, 4) rituálékártya, 5) biztonsági kártya, 6) ár + „ingyenes kézírásos üzenet".</div>
+<div class="row"><b>Vizuál:</b> Hat felülnézeti fotó, ugyanaz a fényelés, ugyanaz a homok háttér - egy folyamatos kicsomagolás lapozva.</div>
+<div class="tech">Technika: unboxing sequence · value stacking · gift framing</div>
+</div>
+
+<div class="brief">
+<div class="bh">#6 - „Ma este 40 darab készül el"</div>
+<div class="bt"><span class="pill purple">🟣 Problem-aware</span><span class="pill grey">📱 UGC</span><span class="pill grey">🧭 Kézműves eredet</span></div>
+<div class="row"><b>Perszóna:</b> P3 Rita, P2 Anna</div>
+<div class="row"><b>CTA:</b> Nézd meg a műhelyt</div>
+<div class="row"><b>Megközelítés:</b> Nem hirdetésnek néz ki. A készítő beszél kamerába, telefonnal felvéve, munka közben. Ez igazolja a prémium árat, amit egy stúdiófotó soha nem tud.</div>
+<div class="row"><b>Üzenet:</b> Első személyben, a valós készítő szájából: mennyi idő egy darab, mi a legnehezebb rész, miért nem gépesíthető. Konkrét szám, konkrét kéz.</div>
+<div class="row"><b>Vizuál:</b> Függőleges telefonvideó, 30-40 mp, természetes fény, varrógép hangja. Nulla utómunka, égetett felirat.</div>
+<div class="tech">Technika: founder authenticity · lo-fi over polished · process transparency</div>
+</div>
+
+<div class="brief">
+<div class="bh">#7 - „800 forint vagy 11 900. A különbség nem a só."</div>
+<div class="bt"><span class="pill orange">🟠 Solution-aware</span><span class="pill grey">🖼️ Statikus</span><span class="pill grey">🧭 Ár-indoklás / összehasonlítás</span></div>
+<div class="row"><b>Perszóna:</b> P3 Rita, P1 Kata (retargeting)</div>
+<div class="row"><b>CTA:</b> Nézd meg, mi a különbség</div>
+<div class="row"><b>Megközelítés:</b> Frontálisan kimondja az árat és a fő ellenvetést. Aki drágának tartja, itt vagy meggyőződik, vagy kiszűri magát - mindkettő hasznos.</div>
+<div class="row"><b>Üzenet:</b> „Igen, van 800 forintos magpárna. Ebben nem a só drága. Hanem a levehető, mosható huzat, a névhímzés, a doboz, a hét varrás és az, hogy tudod, ki varrta. Ha csak melegre van szükséged, vedd a nyolcszázasat. Ha ajándékba adnád, nézd meg ezt."</div>
+<div class="row"><b>Vizuál:</b> Két oszlop, egyszerű tipográfia, kép nélkül vagy egy minimál termékfotóval. Szöveg-domináns statikus.</div>
+<div class="tech">Technika: price anchoring reversal · qualification · radical honesty</div>
+</div>
+
+<div class="brief">
+<div class="bh">#8 - „Nem tesszük bele. Egyiket sem."</div>
+<div class="bt"><span class="pill purple">🟣 Problem-aware</span><span class="pill grey">🖼️ Statikus</span><span class="pill grey">🧭 Anti-lista / biztonság</span></div>
+<div class="row"><b>Perszóna:</b> P3 Rita (tudatos szülő)</div>
+<div class="row"><b>CTA:</b> Nézd meg az összetevőket</div>
+<div class="row"><b>Megközelítés:</b> A „mit hagytunk ki" gyakran erősebb, mint a „mit tettünk bele" - főleg olyan szülőnél, aki már összetevőlistákat olvas.</div>
+<div class="row"><b>Üzenet:</b> „Nincs benne illóolaj. Nincs benne menta - az EMA szerint két év alatt ellenjavallt. Nincs benne eukaliptusz. Nincs benne műanyag mikrogyöngy. Négy összetevő van benne, és mind a négyet ki tudjuk mondani."</div>
+<div class="row"><b>Vizuál:</b> Áthúzott szavak listája sötét éjkék alapon, alatta a négy megmaradt összetevő agyag színnel. Tipográfiai hirdetés, termékfotó nélkül.</div>
+<div class="tech">Technika: negative differentiation · authority citation · ingredient transparency</div>
+</div>
+
+<div class="brief">
+<div class="bh">#9 - „Az anyós is ezt keresi"</div>
+<div class="bt"><span class="pill yellow">🟡 Product-aware</span><span class="pill grey">📱 UGC</span><span class="pill grey">🧭 Vevői vélemény</span></div>
+<div class="row"><b>Perszóna:</b> P2 Anna (nagymama-szegmens)</div>
+<div class="row"><b>CTA:</b> Rendelj ajándékba</div>
+<div class="row"><b>Megközelítés:</b> Nem a szülő beszél, hanem az ajándékozó. Ez a szegmens ritkán lát magához szóló hirdetést a babapiacon - itt van a legkisebb verseny a figyelemért.</div>
+<div class="row"><b>Üzenet:</b> Egy 55-65 éves nő mondja el, mit szokott vinni unokalátogatóba, miért nehéz, és miért ezt választotta. Konkrétan az átadás pillanatáról beszél.</div>
+<div class="row"><b>Vizuál:</b> Telefonvideó, otthoni környezet, a dobozzal a kezében. Nem szereplő, hanem valódi vevő - seedingből.</div>
+<div class="tech">Technika: unexpected spokesperson · segment mirroring · testimonial</div>
+</div>
+
+<div class="brief">
+<div class="bh">#10 - „Mielőtt lefekteted"</div>
+<div class="bt"><span class="pill orange">🟠 Solution-aware</span><span class="pill grey">🎥 Videó</span><span class="pill grey">🧭 Használati mód / how-to</span></div>
+<div class="row"><b>Perszóna:</b> P4 Apa Ádám</div>
+<div class="row"><b>CTA:</b> Nézd meg a három lépést</div>
+<div class="row"><b>Megközelítés:</b> A „nem tudom, hogyan használjam" ellenvetést oldja. Apának szól, aki gyakorlati leírást akar, nem érzelmet.</div>
+<div class="row"><b>Üzenet:</b> „Negyvenöt másodperc a mikróban, amíg a fogmosás tart. Csuklóra, ellenőrizni. Az ágyra, a takaró alá, amíg mesélsz. Mire lefekszik, meleg az ágy - a párnát pedig kivesszük. Ennyi."</div>
+<div class="row"><b>Vizuál:</b> 18 mp, három vágás, valós idejű mozdulatok. Konyha, fürdő, hálószoba. Férfi kéz. Számláló a képernyőn.</div>
+<div class="tech">Technika: demonstration · effort reduction · specificity</div>
+</div>
+
+<div class="brief">
+<div class="bh">#11 - „Hét este. Utána eldöntöd."</div>
+<div class="bt"><span class="pill yellow">🟡 Product-aware</span><span class="pill grey">🖼️ Statikus</span><span class="pill grey">🧭 Kockázatmegfordítás</span></div>
+<div class="row"><b>Perszóna:</b> P1 Kata, P3 Rita (retargeting: oldalt nézte, nem vett)</div>
+<div class="row"><b>CTA:</b> Próbáld ki kockázat nélkül</div>
+<div class="row"><b>Megközelítés:</b> A „nekünk nem vált be" félelemre válaszol. Nem eredményt ígér, hanem a döntés kockázatát veszi le.</div>
+<div class="row"><b>Üzenet:</b> „Nem ígérjük, hogy be fog válni. Néhány gyereknél nem válik be, és ezt nem lehet előre tudni. Ezért: próbáld ki hét estén át. Ha nem lett a rutinotok része, 30 napon belül visszavesszük - a névre hímzett darabot is."</div>
+<div class="row"><b>Vizuál:</b> Nagy, egyszerű tipográfia homok alapon, alatta hét apró pont sorban (a hét este). Minimál.</div>
+<div class="tech">Technika: risk reversal · negative claim · trial framing</div>
+</div>
+
+<div class="brief">
+<div class="bh">#12 - „Amit a fórumokon írnak róla"</div>
+<div class="bt"><span class="pill purple">🟣 Problem-aware</span><span class="pill grey">🎠 Carousel</span><span class="pill grey">🧭 Vevőhang / felismerés</span></div>
+<div class="row"><b>Perszóna:</b> P1 Kata, P3 Rita</div>
+<div class="row"><b>CTA:</b> Olvasd el, hogyan működik</div>
+<div class="row"><b>Megközelítés:</b> Nem a márka beszél, hanem szülők - a saját szavaikkal. Az első lap egy olyan mondat, amit a néző maga is gondolt már.</div>
+<div class="row"><b>Üzenet:</b> Lapok: 1) „Este 17.30-20.00 között volt a legszörnyűbb része a napnak." 2) „Túl kell élni." 3) „nem csak melegít, hanem a súlya miatt nyomja egy picit" 4) A DÚDOLÓ bemutatása 5) CTA.</div>
+<div class="row"><b>Vizuál:</b> Idézetlapok tejfehér alapon, Fraunces szedéssel, forrásmegjelöléssel. Az utolsó két lap termékfotó.</div>
+<div class="tech">Technika: voice of customer · pattern recognition · quote card</div>
+</div>
+<div class="callout warn" style="margin-top:-4px">
+<div class="t">A #12-höz</div>
+<p>Nyilvános fórumidézet forrásmegjelöléssel általában felhasználható, de a jogi kockázat nem nulla. <strong>Biztonságosabb út:</strong> ugyanezeket a mondatokat a saját vevőidtől szerezd be seedingből, és azokat idézd névvel vagy monogrammal. Egyeztesd jogásszal, mielőtt fórumidézetet teszel hirdetésbe.</p>
+</div>
+
+<div class="brief">
+<div class="bh">#13 - „A második gyereknek is kell"</div>
+<div class="bt"><span class="pill green">🟢 Most-aware</span><span class="pill grey">🎠 Carousel</span><span class="pill grey">🧭 Testvér / bővítés</span></div>
+<div class="row"><b>Perszóna:</b> Meglévő vevő (retargeting 60-180 nap)</div>
+<div class="row"><b>CTA:</b> Testvérszett - 21 900 Ft</div>
+<div class="row"><b>Megközelítés:</b> A legolcsóbb konverzió: aki már vett. Az érv nem az ár, hanem a testvérek közti igazságosság - amit minden szülő ismer.</div>
+<div class="row"><b>Üzenet:</b> „A nagyobbnak már van. Tudod, mi következik. A testvérszettben két darab van, két névvel, egy dobozban - 1 900 forinttal olcsóbban, mint külön."</div>
+<div class="row"><b>Vizuál:</b> Két párna egymás mellett, két hímzett névvel. Ugyanaz a minta, két méret.</div>
+<div class="tech">Technika: existing customer expansion · sibling fairness · bundle</div>
+</div>
+
+<div class="brief">
+<div class="bh">#14 - „December 12-ig vállalunk névhímzést"</div>
+<div class="bt"><span class="pill green">🟢 Most-aware</span><span class="pill grey">🖼️ Statikus</span><span class="pill grey">🧭 Valós határidő / szezon</span></div>
+<div class="row"><b>Perszóna:</b> P2 Anna, P4 Ádám (karácsonyi vásárló)</div>
+<div class="row"><b>CTA:</b> Rendeld meg karácsonyra</div>
+<div class="row"><b>Megközelítés:</b> Valós logisztikai korlát, nem kitalált sürgetés. A névhímzés miatt tényleg van határidő - ezt ki kell mondani.</div>
+<div class="row"><b>Üzenet:</b> „A névhímzés kézzel készül, és nem gyorsítható. Karácsonyra december 12-ig leadott rendelést tudunk vállalni. Utána már csak hímzés nélküli darab megy ki időben."</div>
+<div class="row"><b>Vizuál:</b> Naptárlap-szerű, tiszta tipográfiai statikus, agyag akcentussal. Nincs mikulássapka, nincs piros-zöld.</div>
+<div class="tech">Technika: genuine scarcity · deadline · seasonal</div>
+</div>
+
+<div class="brief">
+<div class="bh">#15 - „Az első hűvös este"</div>
+<div class="bt"><span class="pill blue">🔵 Unaware</span><span class="pill grey">📱 UGC</span><span class="pill grey">🧭 Szezonális pillanat</span></div>
+<div class="row"><b>Perszóna:</b> P3 Rita, P4 Ádám</div>
+<div class="row"><b>CTA:</b> Nézd meg</div>
+<div class="row"><b>Megközelítés:</b> Egy évszakváltó pillanathoz köti a terméket - szeptember végén, amikor először kell este betakarni. Kategórián kívüli belépő.</div>
+<div class="row"><b>Üzenet:</b> „Az első este, amikor már be kell csukni az ablakot. Mi ilyenkor kezdjük melegíteni az ágyat lefekvés előtt - nem a gyereken, csak a takaró alatt, amíg mesélünk."</div>
+<div class="row"><b>Vizuál:</b> Telefonnal felvett, hangulatos: becsukódó ablak, lámpafény, a párna az ágyon. Rövid, 12-15 mp, hangalámondással.</div>
+<div class="tech">Technika: seasonal trigger · lo-fi authenticity · category entry point</div>
+</div>
+
+<h3>Lefedettségi ellenőrzés</h3>
+<table>
+<tr><th>Kritérium</th><th>Eredmény</th></tr>
+<tr><td>Legalább 3 awareness szint</td><td>5 szint lefedve</td></tr>
+<tr><td>Legalább 4 formátum</td><td>4 formátum (statikus, videó, carousel, UGC)</td></tr>
+<tr><td>Legalább 5 különböző szög</td><td>13 különböző szög</td></tr>
+<tr><td>Nincs két azonos awareness × formátum × szög kombináció</td><td>Rendben</td></tr>
+<tr><td>„Eredmény nehézség nélkül" legalább 2-3 ötletben</td><td>#10, #11, #14</td></tr>
+</table>
+
+<div class="callout info">
+<div class="t">Tesztelési sorrend</div>
+<p><strong>1. hullám (0-30 nap, 5 kreatív):</strong> #1, #2, #6, #7, #10 - ez a legkisebb social proof-igényű ötös.<br>
+<strong>2. hullám (30-60 nap):</strong> #3, #5, #8, #11, #12 - ekkorra már van vélemény és seeding-anyag.<br>
+<strong>3. hullám (60-90 nap):</strong> #4, #9, #13, #14, #15 - retargeting és szezonális.<br>
+A kreatív 7-10 nap alatt fárad skálán - ez nem egy nyertes keresése, hanem folyamatos utánpótlás.</p>
+</div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="s12">
+<h2><span class="num">12</span>Kész hirdetésszövegek</h2>
+<p class="lead">Hat, azonnal használható Meta hirdetésszöveg. Mindegyik átment a claim-ellenőrzésen: nincs bennük gyógyhatás-utalás.</p>
+
+<h3>#1 alapján - Ajándék-dilemma (statikus)</h3>
+<div class="copy"><span class="lbl">Elsődleges szöveg</span>Nyolcvan body és húsz plüss.
+
+Ez a babalátogató legnehezebb része: tényleg mindenük megvan. A nyolcvanegyedik body-nak senki nem örül igazán, és ezt te is tudod, miközben a boltban állsz.
+
+A DÚDOLÓ egy kézzel varrt gyógynövényes sópárna, ami három dolgot tud, amit a legtöbb babaajándék nem:
+
+· Nincs neki ilyen. Ez nem az a kategória, amiből öt van a szekrényben.
+· A nevét hordja. Hímzett név, 12 karakterig.
+· Nem elsősorban a babának szól, hanem a szülőnek.
+
+Parajdi só, magyar levendula, mosható bio pamut huzat. Illóolaj nélkül. Ajándékdobozban, selyempapírba csomagolva, kézírásos kártyával.
+
+9 900 Ft-tól. Ha kéred, egyenesen a címzettnek küldjük.</div>
+<div class="copy"><span class="lbl">Címsor</span>Amiből biztosan nincs neki</div>
+<div class="copy"><span class="lbl">Leírás</span>Kézzel varrva Magyarországon · Névre hímezve · Ajándékdobozban</div>
+
+<h3>#2 alapján - Mechanizmus (videó)</h3>
+<div class="copy"><span class="lbl">Elsődleges szöveg</span>A legtöbb magpárna egy dolgot tud: melegít.
+
+A DÚDOLÓ hármat.
+
+MELEG. A parajdi só lassan adja le a hőt, nem hirtelen. 45 másodperc a mikróban, és kb. 20 percig marad kellemes.
+
+SÚLY. 400 gramm. Elég ahhoz, hogy érezni lehessen, kevés ahhoz, hogy nyomjon. Egy anyuka egy fórumon így írta le: „nem csak melegít, hanem a súlya miatt nyomja egy picit".
+
+LEVENDULA. Húsz gramm szárított magyar levendulavirág. Nem illóolaj, nem parfüm - csak a virág, ahogy megszárítottuk.
+
+Kézzel varrva, levehető mosható huzatban, 0-5 éves korig három méretben. Kizárólag felnőtt felügyelete mellett használható.</div>
+<div class="copy"><span class="lbl">Címsor</span>Meleg. Súly. Levendula.</div>
+<div class="copy"><span class="lbl">Leírás</span>Nézd meg, miből van - és miből nincs</div>
+
+<h3>#7 alapján - Ár-indoklás (statikus)</h3>
+<div class="copy"><span class="lbl">Elsődleges szöveg</span>Igen, van 800 forintos magpárna a drogériában.
+
+És ha csak melegre van szükséged, vedd meg azt. Komolyan.
+
+Ebben nem a só drága. Hanem:
+· a levehető, 40 fokon mosható pamut huzat
+· a dupla varrott belső betét, ami nem szakad ki
+· a hímzett név, amit kézzel csinálunk
+· a doboz, amit nem kell becsomagolni
+· és az, hogy tudod, ki varrta
+
+11 900 Ft. Ez nem impulzusvásárlás, hanem ajándék.
+
+Ha nem lett a rutinotok része hét este alatt, 30 napon belül visszavesszük - a névre hímzett darabot is.</div>
+<div class="copy"><span class="lbl">Címsor</span>800 forint vagy 11 900. A különbség nem a só.</div>
+<div class="copy"><span class="lbl">Leírás</span>Nézd meg, mi van az árban</div>
+
+<h3>#8 alapján - Anti-lista (statikus)</h3>
+<div class="copy"><span class="lbl">Elsődleges szöveg</span>Nincs benne illóolaj.
+Nincs benne menta - az Európai Gyógyszerügynökség szerint két év alatt ellenjavallt.
+Nincs benne eukaliptusz.
+Nincs benne műanyag mikrogyöngy.
+Nincs rajta plüss arc - ez párna, nem játék, és így is címkézzük.
+
+Négy összetevő van benne, és mind a négyet ki tudjuk mondani:
+parajdi só, szárított magyar levendulavirág, bio pamut belső betét, mosható pamut huzat.
+
+DÚDOLÓ - kézzel varrt gyógynövényes sópárna, 0-5 éves korig, három méretben.
+Kizárólag felnőtt felügyelete mellett használható.</div>
+<div class="copy"><span class="lbl">Címsor</span>Négy összetevő. És egy lista arról, mit hagytunk ki.</div>
+<div class="copy"><span class="lbl">Leírás</span>Illóolaj nélkül · Kézzel varrva Magyarországon</div>
+
+<h3>#10 alapján - Használati mód (videó, apáknak)</h3>
+<div class="copy"><span class="lbl">Elsődleges szöveg</span>Negyvenöt másodperc a mikróban, amíg a fogmosás tart.
+Csuklóra, ellenőrizni.
+Az ágyra, a takaró alá, amíg mesélsz.
+Mire lefekszik, meleg az ágy. A párnát pedig kivesszük.
+
+Ennyi. Nincs több lépés, nincs mit beállítani, nem kell hozzá alkalmazás.
+
+DÚDOLÓ - kézzel varrt gyógynövényes sópárna. Parajdi só, magyar levendula, mosható huzat.
+
+Fontos: nem játék, nem kerül a kiságyba, és nem alszik vele a gyerek. A doboz mellett külön biztonsági kártya érkezik.</div>
+<div class="copy"><span class="lbl">Címsor</span>Három lépés, tizennyolc másodperc</div>
+<div class="copy"><span class="lbl">Leírás</span>Nézd meg, hogyan használjuk</div>
+
+<h3>#11 alapján - Kockázatmegfordítás (retargeting)</h3>
+<div class="copy"><span class="lbl">Elsődleges szöveg</span>Nem ígérjük, hogy be fog válni.
+
+Van gyerek, akinél nem. Ezt nem lehet előre tudni, és nem is fogunk úgy tenni, mintha tudnánk.
+
+Amit ígérünk: próbáld ki hét estén át. Ha nem lett a rutinotok része, az első 30 napban visszavesszük, és visszautaljuk a teljes árat. A névre hímzett darabot is.
+
+A visszaküldött párnákat nem adjuk el újra - szülészeteknek és babamama-egyesületeknek adjuk tovább.
+
+DÚDOLÓ - 9 900 Ft-tól, három méretben, 0-5 éves korig.</div>
+<div class="copy"><span class="lbl">Címsor</span>Hét este. Utána eldöntöd.</div>
+<div class="copy"><span class="lbl">Leírás</span>30 napos visszavásárlás, a hímzett darabra is</div>
+
+<div class="callout warn">
+<div class="t">Meta hirdetéspolitika</div>
+<p>A Meta korlátozza a személyes tulajdonságokra utaló hirdetéseket („Kimerült vagy?", „A te babád is sír?"). A fenti szövegek szándékosan <strong>nem szólítják meg a nézőt az állapotán keresztül</strong> - harmadik személyben vagy általánosan beszélnek. Ezt tartsd meg minden új változatban is.</p>
+</div>
+</section>
+
+<!-- ============ 13 ============ -->
+<section id="s13">
+<h2><span class="num">13</span>Kreatív promptok</h2>
+<p class="lead">Copy-paste promptok logóhoz, csomagoláshoz, termékfotóhoz és hirdetési kreatívokhoz. Nano Banana / GPT Image / Flux / Midjourney kompatibilis, angolul - a modellek angolul pontosabbak.</p>
+
+<div class="callout info">
+<div class="t">Munkamenet</div>
+<p><strong>1.</strong> Logó és minta generálása → kiválasztás → vektorizálás (SVG) → hímzésfájl.<br>
+<strong>2.</strong> A valós termék legyártása után <strong>igazi termékfotó</strong> készül - AI-képet nem szabad valós termékfotóként használni, ez fogyasztóvédelmi kockázat.<br>
+<strong>3.</strong> AI-t a hangulatképekhez, a hátterekhez, a mintákhoz és a moodboardhoz használj.</p>
+</div>
+
+<h3>Logó</h3>
+<div class="prompt"><span class="lbl">Logó - elsődleges jel</span>Minimalist single-color logo mark for a Hungarian handmade baby brand. A soft, wide arc resembling the curved back of a sleeping child, drawn with a smooth 2.5pt stroke, rounded ends. Above and to the left of the arc, three small solid circles ascending in a gentle diagonal, decreasing in opacity from left to right - representing the sound of humming a lullaby. Extremely simple, geometric, embroidery-ready. Deep navy ink (#2C3540) on warm off-white (#FBF7F1). Flat vector style, no gradient, no texture, no shading, generous negative space, centered composition, square canvas.</div>
+
+<div class="prompt"><span class="lbl">Logó - teljes lockup</span>Complete logo lockup for a premium Hungarian handmade baby brand named "DÚDOLÓ". Top: a minimal single-color mark - a soft wide arc (sleeping child's back) with three small ascending dots above it in decreasing opacity. Below: the wordmark "DÚDOLÓ" set in a warm humanist serif with soft terminals, uppercase, wide letterspacing (0.2em), deep navy #2C3540. Below that, in small uppercase sans-serif with wide tracking: "A NAP UTOLSÓ ÖLELÉSE". Warm off-white background #FBF7F1. Clean, editorial, Scandinavian-Hungarian craft aesthetic. Flat vector, no gradients, no 3D, no mockup, plenty of white space. IMPORTANT: render the Hungarian accented characters Ú and Ó correctly.</div>
+
+<h3>Textilminták</h3>
+<div class="prompt"><span class="lbl">Minta 1 - Levendulamező</span>Seamless repeating textile pattern for organic cotton baby fabric. Delicate hand-drawn lavender sprigs, thin ink linework, scattered in a loose irregular grid with generous spacing. Two colors only: sage green (#8C9E82) and dusty lavender (#9B8FB4), on a warm off-white ground (#FBF7F1). Botanical illustration style, matte, slightly imperfect hand-drawn quality, no outlines around the tile, flat, no shading. Calm, adult-taste, NOT cartoonish, no faces, no characters. Seamless tile.</div>
+
+<div class="prompt"><span class="lbl">Minta 2 - Éjszakai ív</span>Seamless repeating textile pattern. Rows of soft wide arcs, each with three small ascending dots above it, fading in opacity. Arranged in an offset brick grid with generous breathing room. Single ink color: deep navy (#2C3540) on a warm sand ground (#E8DCC8). Minimal, geometric, calm, Scandinavian textile design. Flat, matte, no gradient, no shading, no outlines around the tile. Seamless tile.</div>
+
+<div class="prompt"><span class="lbl">Minta 3 - Sókristály</span>Seamless repeating textile pattern of abstract salt crystal geometry. Fine hexagonal and cubic crystal lattice line drawing, thin uniform stroke, irregular organic placement, generous negative space. Single color: terracotta clay (#C4795C) on warm off-white (#FBF7F1). Scientific-illustration meets minimal craft textile. Flat, matte, no gradients, no shading. Seamless tile.</div>
+
+<h3>Csomagolás</h3>
+<div class="prompt"><span class="lbl">Csomagolás - doboz mockup</span>Product photography of a premium rigid kraft gift box on a warm off-white linen surface. The box is matte natural brown kraft, closed, with a wide terracotta-colored paper band wrapped around the middle. On the band: a small minimal logo mark (a soft arc with three ascending dots) and clean uppercase serif type. The box lid has a die-cut opening shaped like a soft wide arc, revealing a hint of sage-green patterned fabric inside. Soft directional daylight from the left, long gentle shadow, shallow depth of field. Muted warm palette: kraft brown, terracotta, sage, off-white. Editorial craft-brand aesthetic, no props, no text overlay, no people. Square format.</div>
+
+<div class="prompt"><span class="lbl">Csomagolás - kicsomagolás flat lay</span>Overhead flat-lay photograph of an unboxed premium handmade baby product on a warm sand-colored linen background. Arranged with generous spacing: an open kraft gift box, crumpled off-white tissue paper with a small terracotta wax seal, a small rectangular cotton pillow with a subtle sage-green botanical print (no face, no character, simple rectangular shape), a cream card with minimal typography, and a few loose dried lavender sprigs. Soft even daylight, gentle shadows, muted earthy palette. Slow-craft editorial photography, shot from directly above, no hands, no people, no text overlay.</div>
+
+<h3>Hangulat- és hirdetési képek</h3>
+<div class="prompt"><span class="lbl">Esti hangulat (a #4 videókoncepcióhoz)</span>Intimate evening interior photograph of a child's bedroom, shot with warm tungsten lamp light and deep soft shadows. Focus on a small rectangular cotton pillow with a subtle sage botanical print resting on a rumpled linen bedsheet, next to a folded muslin cloth. A bedside lamp glows warm in the soft-focus background. No people, no faces, no toys. Muted, warm, film-photography look with gentle grain, shallow depth of field, 35mm feel. Quiet, calm, unstyled, real-home atmosphere. Horizontal 4:5 format.</div>
+
+<div class="prompt"><span class="lbl">Alapanyagok</span>Overhead macro photograph on a deep navy matte surface. Three separated small piles arranged with generous spacing: coarse pink-grey rock salt crystals, dried whole lavender flowers, and a folded piece of raw natural cotton fabric. Hard directional side light creating crisp defined shadows, high texture detail, no props, no hands, no text. Rich, tactile, editorial ingredient photography. Muted palette: navy, salt pink-grey, dusty lavender, cream. Square format.</div>
+
+<div class="prompt"><span class="lbl">Kézműves műhely (a #6 UGC koncepcióhoz)</span>Documentary-style photograph of a small home sewing workshop. Close crop on a woman's hands guiding warm off-white cotton fabric under an old sewing machine. Sage-green patterned fabric offcuts, a jar of dried lavender and a bowl of coarse salt sit on the wooden table nearby, slightly out of focus. Natural window light from the side, soft and warm. Slightly imperfect, lived-in, real workshop, not staged. Muted earthy palette, film grain, 50mm. No text, face not visible.</div>
+
+<div class="prompt"><span class="lbl">Robbantott ábra (a #3 koncepcióhoz)</span>Clean minimal exploded-view technical illustration on a warm off-white background (#FBF7F1). Three layers stacked vertically with generous spacing between them, connected by thin dotted lines: top layer - a rectangular pillow cover in sage-green botanical print; middle layer - a plain cream inner fabric pouch with visible double stitching; bottom layer - a scatter of coarse salt crystals and dried lavender flowers. Flat vector illustration style, thin uniform navy linework (#2C3540), limited palette of sage, cream, terracotta. Educational diagram aesthetic, no text labels, no shading, no 3D perspective. Square format.</div>
+
+<h3>Kreatív-adaptáció</h3>
+<table>
+<tr><th>Formátum</th><th>Méret</th><th>Hol</th></tr>
+<tr><td>1:1</td><td>1080×1080</td><td>Feed statikus, carousel</td></tr>
+<tr><td>4:5</td><td>1080×1350</td><td>Feed - a legnagyobb képernyőterület, elsődleges</td></tr>
+<tr><td>9:16</td><td>1080×1920</td><td>Stories, Reels. Safe zone: felül 250 px, alul 420 px</td></tr>
+<tr><td>2:3</td><td>1000×1500</td><td>Pinterest</td></tr>
+<tr><td>16:9</td><td>1920×1080</td><td>YouTube, weboldal hero</td></tr>
+</table>
+<p class="src">Adaptációhoz a <code>genmarketer-ad-resize</code> specialista való: layout re-flow, nem vágás vagy outpaint. A magyar ékezetek betűre pontos átvitele nála kötelező QA-lépés.</p>
+</section>
+
+<!-- ============ 14 ============ -->
+<section id="s14">
+<h2><span class="num">14</span>Email marketing</h2>
+<p class="lead">Négy szekvencia. A lead magnet nem alvást ígér - rituálét ad, és ezzel jogilag is tiszta marad.</p>
+
+<h3>Lead magnet</h3>
+<div class="card">
+<h4>„Az esti lecsengés - 7 szokás, ami rendet tesz a lefekvés előtti órában"</h4>
+<p>8 oldalas PDF, 0-5 éves korosztályra. Nem alvástanács, nem orvosi anyag - <strong>rituálé-építés</strong>: sorrend, fény, hang, hőmérséklet, átmenetek. Az utolsó oldalon a DÚDOLÓ mint a rituálé egyik tárgya.</p>
+<p><strong>Miért ez a jó lead magnet:</strong> (a) claim-mentes, (b) a P3 Rita szegmens pontosan ezt keresi, (c) a terméket nem megoldásként, hanem eszközként pozicionálja, (d) a rituálé-nyelv az egész márka alapja, tehát az anyag maga is márkaépítés.</p>
+</div>
+
+<h3>1 · Welcome szekvencia (5 email)</h3>
+<table>
+<tr><th>#</th><th>Időzítés</th><th>Tárgy</th><th>Cél</th></tr>
+<tr><td>1</td><td>azonnal</td><td>Itt az esti lecsengés</td><td>Kézbesítés + a márkahang bemutatása. Nincs eladás</td></tr>
+<tr><td>2</td><td>+1 nap</td><td>A hetedik szokás, amiről nem írtam a PDF-ben</td><td>Extra érték: a hőmérséklet-átmenet. Első puha említés</td></tr>
+<tr><td>3</td><td>+3 nap</td><td>Miért nem attól működik, hogy meleg</td><td>Mechanizmus: a három érzék. Termékbemutatás</td></tr>
+<tr><td>4</td><td>+5 nap</td><td>Négy összetevő, és egy lista arról, mit hagytunk ki</td><td>Bizalom: illóolaj, menta, biztonság. Kifogáskezelés</td></tr>
+<tr><td>5</td><td>+8 nap</td><td>Hét este</td><td>Ajánlat + garancia. Első valódi CTA, kedvezmény nélkül</td></tr>
+</table>
+
+<div class="copy"><span class="lbl">Welcome #3 - teljes szöveg</span>Tárgy: Miért nem attól működik, hogy meleg
+
+Szia!
+
+A legtöbb magpárna egy dolgot tud. Melegít. Aztán kihűl.
+
+Amikor elkezdtünk ezzel foglalkozni, végigolvastam pár száz szülői hozzászólást fórumokon. Az volt a legmeglepőbb, hogy a szülők maguktól, minden marketing nélkül, ugyanazt a három dolgot említik - és a meleg csak az egyik.
+
+Az egyik anyuka így írta le:
+„nem csak melegít, hanem a súlya miatt nyomja egy picit"
+
+Ezt szinte soha nem mondja el egy termékleírás.
+
+Szóval három dolog:
+
+A MELEG. A parajdi só lassan adja le a hőt. 45 másodperc a mikróban, és kb. húsz percig marad kellemes. Nem forró, nem langyos.
+
+A SÚLY. 400 gramm a középső méretnél. Elég ahhoz, hogy érezni lehessen, kevés ahhoz, hogy nyomjon.
+
+A LEVENDULA. Húsz gramm szárított magyar levendulavirág. Nem illóolaj, nem parfüm. A virág, ahogy megszárítottuk.
+
+Ez a három együtt más, mint bármelyik külön.
+
+Holnapután írok arról, mit NEM tettünk bele, és miért - abban lesz egy-két dolog, ami valószínűleg meglep.
+
+Üdv,
+[NÉV]
+DÚDOLÓ
+
+Ui.: a párna kizárólag felnőtt felügyelete mellett használható, és nem kerül a kiságyba. Erről külön kártya van minden dobozban.</div>
+
+<h3>2 · Kosárelhagyás (3 email)</h3>
+<table>
+<tr><th>#</th><th>Időzítés</th><th>Tárgy</th><th>Fókusz</th></tr>
+<tr><td>1</td><td>+1 óra</td><td>Ott maradt a kosárban</td><td>Emlékeztető + a névhímzés határideje. Nincs kedvezmény</td></tr>
+<tr><td>2</td><td>+20 óra</td><td>„Nekünk nem vált be" - erre van egy válaszunk</td><td>Garancia. A hatástalanság-félelem a fő gát</td></tr>
+<tr><td>3</td><td>+72 óra</td><td>Ha ajándékba szántad</td><td>Ajándékdoboz, kézírásos kártya, közvetlen küldés. Utolsó CTA</td></tr>
+</table>
+<div class="callout">
+<div class="t">Ne adj kedvezményt kosárelhagyásra</div>
+<p>Prémium kézműves pozicionálásnál a 10%-os kupon a harmadik emailben megtanítja a vevőt arra, hogy mindig hagyja ott a kosarat. Kedvezmény helyett <strong>kockázatot vegyél le</strong> (garancia) vagy <strong>értéket adj hozzá</strong> (ingyenes kézírásos kártya, ingyenes szállítás).</p>
+</div>
+
+<h3>3 · Vásárlás utáni (4 email)</h3>
+<table>
+<tr><th>#</th><th>Időzítés</th><th>Tárgy</th><th>Cél</th></tr>
+<tr><td>1</td><td>rendelés után</td><td>Megkaptuk. Most varrjuk</td><td>Várakozási szorongás oldása, gyártási idő kimondása</td></tr>
+<tr><td>2</td><td>kézbesítés +1 nap</td><td>Három lépés, mielőtt először használnád</td><td><strong>Biztonsági onboarding.</strong> Ez a legfontosabb email az egész rendszerben</td></tr>
+<tr><td>3</td><td>+14 nap</td><td>Milyen lett nálatok az esti rituálé?</td><td>Értékeléskérés - így kérdezve claim-mentes válaszok jönnek</td></tr>
+<tr><td>4</td><td>+150 nap</td><td>A levendula mostanra elhalványult</td><td>Utántöltő, 15% kuponnal. Visszatérő bevétel</td></tr>
+</table>
+
+<div class="copy"><span class="lbl">Vásárlás utáni #2 - biztonsági onboarding</span>Tárgy: Három lépés, mielőtt először használnád
+
+Szia!
+
+Megérkezett. Mielőtt ma este először használnátok, három dolgot kérek.
+
+1. OLVASD EL A BIZTONSÁGI KÁRTYÁT
+A dobozban van, külön lapon. Nem formaság - a melegíthető párnák valós kockázatot hordoznak, ha rosszul használják őket.
+
+2. AZ ELSŐ MELEGÍTÉST CSINÁLD MEG GYEREK NÉLKÜL
+600 watton 45 másodperc. Nem több. Vedd ki, tedd a csuklódra, érezd meg, milyen. Így tudni fogod, mi a normális.
+
+3. JEGYEZD MEG A HÁROM TILTÁST
+Nem kerül a kiságyba. Nem alszik vele a gyerek. Nem érintkezik közvetlenül a bőrrel - mindig legyen alatta ruha vagy takaró.
+
+Ha ezt a hármat tartod, minden rendben lesz.
+
+A doboz hátoldalán van egy altatódal. Nem kell szépen énekelni.
+
+Üdv,
+[NÉV]
+DÚDOLÓ</div>
+
+<h3>4 · Ajándékszezon (5 email, november 5. - december 12.)</h3>
+<table>
+<tr><th>#</th><th>Dátum</th><th>Tárgy</th></tr>
+<tr><td>1</td><td>nov. 5.</td><td>Idén ne body legyen</td></tr>
+<tr><td>2</td><td>nov. 15.</td><td>Mit ír a hímzésre? (12 karakter)</td></tr>
+<tr><td>3</td><td>nov. 27.</td><td>A testvérszettről</td></tr>
+<tr><td>4</td><td>dec. 6.</td><td>Hat nap a hímzés határidejéig</td></tr>
+<tr><td>5</td><td>dec. 12.</td><td>Ma éjfélig vállalunk névhímzést</td></tr>
+</table>
+
+<h3>Technikai beállítás</h3>
+<ul>
+<li><strong>MailerLite</strong> (a GENmarketer connector támogatja) vagy ActiveCampaign. Automation: welcome, kosárelhagyás, post-purchase, szezonális kampány</li>
+<li><strong>Szegmensek:</strong> lead magnet feliratkozó · vásárló · ajándékozó (aki más címre kért szállítást) · 150+ napja vásárolt</li>
+<li><strong>Kézbesíthetőség:</strong> SPF, DKIM, DMARC beállítása az induláskor, saját domainről küldés</li>
+<li><strong>Feliratkozási pontok:</strong> lead magnet popup (exit intent, 20 mp után), termékoldal alatti sáv, pénztár melletti opt-in, dobozban QR-kód</li>
+</ul>
+</section>
+
+<!-- ============ 15 ============ -->
+<section id="s15">
+<h2><span class="num">15</span>Organikus social</h2>
+<p class="lead">Négy tartalompillér, heti 5 poszt. A BabyLion tanulsága: a telített babapiacon nem árban, hanem szakértői jelenléttel lehet nyerni - a tulajdonos személyesen szerepel.</p>
+
+<h3>Tartalompillérek</h3>
+<div class="grid2">
+<div class="card"><h4>1 · Műhely (35%)</h4><p>Varrás, anyagválasztás, hibás darabok, csomagolás, postázás. Arc és kéz. Ez épít prémium hitelességet, és ez a legkevésbé másolható.</p></div>
+<div class="card"><h4>2 · Rituálé (30%)</h4><p>Esti szokások, altatódalok, átmenetek, fény és hőmérséklet. Tanácsadó tartalom, ami soha nem ígér alvást - csak rendet ad.</p></div>
+<div class="card"><h4>3 · Alapanyag (20%)</h4><p>Parajdi só, levendulaszárítás, pamut, miért nincs benne illóolaj. Oktató és megkülönböztető.</p></div>
+<div class="card"><h4>4 · Közösség (15%)</h4><p>Vevői fotók, kérdés-válasz, „kiknél vált be", ajándékozói történetek.</p></div>
+</div>
+
+<h3>30 napos naptár</h3>
+<table>
+<tr><th>Nap</th><th>Platform / formátum</th><th>Pillér</th><th>Téma</th></tr>
+<tr><td>1</td><td>IG Reel + FB</td><td>Műhely</td><td>„Így készül egy DÚDOLÓ" - 40 mp-es teljes folyamat, gyorsítva</td></tr>
+<tr><td>2</td><td>IG Story sorozat</td><td>Rituálé</td><td>Szavazás: „Hánykor kezdődik nálatok a lefekvés?"</td></tr>
+<tr><td>3</td><td>IG carousel</td><td>Alapanyag</td><td>„Négy összetevő. És amit kihagytunk." - a 8-as hirdetéskoncepció organikusan</td></tr>
+<tr><td>4</td><td>FB poszt</td><td>Rituálé</td><td>Az esti lecsengés első szokása: a fényváltás</td></tr>
+<tr><td>5</td><td>IG Reel</td><td>Műhely</td><td>Hibás darab: miért dobtunk ki egy párnát ma</td></tr>
+<tr><td>6</td><td>IG Story</td><td>Közösség</td><td>Kérdésdoboz: „Mit kérdeznél a párnáról?"</td></tr>
+<tr><td>7</td><td>IG carousel</td><td>Rituálé</td><td>„Hét szokás" - a lead magnet első három pontja + link a bióban</td></tr>
+<tr><td>8</td><td>IG Reel</td><td>Alapanyag</td><td>Levendulaszárítás: honnan jön, hogyan szárítjuk</td></tr>
+<tr><td>9</td><td>FB poszt</td><td>Közösség</td><td>Első vevői visszajelzés (moderálva, claim nélkül)</td></tr>
+<tr><td>10</td><td>IG Story</td><td>Műhely</td><td>Postázás napja - hány doboz megy ki</td></tr>
+<tr><td>11</td><td>IG statikus</td><td>Rituálé</td><td>Idézetkártya: „Este 17.30-20.00 volt a legszörnyűbb része a napnak"</td></tr>
+<tr><td>12</td><td>IG Reel</td><td>Alapanyag</td><td>„De hát a babának nem lehet sót" - a réteges felépítés bemutatása</td></tr>
+<tr><td>13</td><td>FB csoport</td><td>Közösség</td><td>Válaszadás baba-mama csoportokban, link nélkül, szakértőként</td></tr>
+<tr><td>14</td><td>IG carousel</td><td>Rituálé</td><td>„Mi történik, ha minden este ugyanaz a sorrend"</td></tr>
+<tr><td>15</td><td>IG Reel</td><td>Műhely</td><td>A hímzés: hogyan kerül rá a név</td></tr>
+<tr><td>16</td><td>IG Story</td><td>Közösség</td><td>Vevői fotó megosztása (engedéllyel)</td></tr>
+<tr><td>17</td><td>FB poszt</td><td>Alapanyag</td><td>Miért nincs benne menta - EMA-hivatkozással</td></tr>
+<tr><td>18</td><td>IG statikus</td><td>Rituálé</td><td>Altatódal-kártya: a doboz hátoldalán lévő dal</td></tr>
+<tr><td>19</td><td>IG Reel</td><td>Műhely</td><td>Egy nap a műhelyben - reggeltől a postáig</td></tr>
+<tr><td>20</td><td>IG carousel</td><td>Közösség</td><td>„Kiknél vált be" - három vevői mondat</td></tr>
+<tr><td>21</td><td>IG Story</td><td>Rituálé</td><td>Szavazás: „Ki fekteti le nálatok? Anya / Apa / Váltva"</td></tr>
+<tr><td>22</td><td>FB poszt</td><td>Alapanyag</td><td>Parajdi só: miért ez, és nem himalája</td></tr>
+<tr><td>23</td><td>IG Reel</td><td>Rituálé</td><td>„Három lépés, tizennyolc másodperc" - a #10 koncepció organikusan</td></tr>
+<tr><td>24</td><td>IG statikus</td><td>Műhely</td><td>Hány darab készült el eddig - számláló poszt</td></tr>
+<tr><td>25</td><td>IG Story</td><td>Közösség</td><td>Behind the scenes: egy ajándékdoboz összeállítása</td></tr>
+<tr><td>26</td><td>IG carousel</td><td>Rituálé</td><td>„Amit nem szabad vele csinálni" - biztonsági poszt</td></tr>
+<tr><td>27</td><td>FB poszt</td><td>Közösség</td><td>Kérdés a közösséghez: „Mit kaptatok babalátogatóba, aminek tényleg örültetek?"</td></tr>
+<tr><td>28</td><td>IG Reel</td><td>Alapanyag</td><td>Mosás: hogyan újul meg a huzat</td></tr>
+<tr><td>29</td><td>IG statikus</td><td>Műhely</td><td>Portré: ki varrja</td></tr>
+<tr><td>30</td><td>IG carousel</td><td>Rituálé</td><td>Havi összefoglaló: a hónap három legjobb kérdése és válasza</td></tr>
+</table>
+
+<div class="callout">
+<div class="t">Facebook-csoportok - a legolcsóbb csatorna, a legszigorúbb szabályokkal</div>
+<p>A magyar baba-mama csoportok többsége tiltja a nyílt reklámot, és a moderátorok szigorúak. Az egyetlen működő út: <strong>heti 2-3 valódi, link nélküli szakmai válasz</strong> ott, ahol a kérdés a te területed (esti rutin, melegítés biztonsága, mit vigyek ajándékba). A profilod vezet a márkához. Ez lassú, de nulla forintos, és pont azt a bizalmat építi, amit egy hirdetés nem tud.</p>
+</div>
+
+<h3>Pinterest</h3>
+<p>Alulértékelt csatorna magyar babatermékeknél, és pont az ajándékozó szegmens keres ott. Havi 12-16 pin, 2:3 arányban: rituálékártya-grafikák, csomagolásfotók, „babaváró ajándék ötletek" táblák. Minden pin a termékoldalra vagy a lead magnetre vezet.</p>
+</section>
+
+<!-- ============ 16 ============ -->
+<section id="s16">
+<h2><span class="num">16</span>Influencer és seeding program</h2>
+<p class="lead">Az első 30 nap legfontosabb feladata nem az eladás, hanem a bizonyíték előállítása. Vélemény nélkül a 11 900 Ft-os hirdetés nem konvertál.</p>
+
+<h3>Seeding - 50 darab</h3>
+<table>
+<tr><th>Kinek</th><th>Darab</th><th>Mit kérünk cserébe</th></tr>
+<tr><td>Mikroinfluencer anyukák (2-15 e követő)</td><td>20</td><td>1 Story + 1 Reel vagy poszt, saját szavakkal. Nincs script</td></tr>
+<tr><td>Dúlák, szülésznők, védőnők</td><td>10</td><td>Vélemény, és engedély a nevük említésére. Nem szakmai ajánlás - használati tapasztalat</td></tr>
+<tr><td>Ismerős szülők, akik őszintén beszélnek</td><td>10</td><td>Írásos vélemény + fotó. Ők adják a landing „Kiknél vált be" blokkját</td></tr>
+<tr><td>Potenciális B2B partnerek (boltvezetők)</td><td>5</td><td>Kipróbálás, majd beszélgetés a listázásról</td></tr>
+<tr><td>Nagymamák és keresztanyák (P2 hitelesítés)</td><td>5</td><td>Videós vélemény az ajándékozó szemszögéből - a #9 koncepció alapanyaga</td></tr>
+</table>
+
+<div class="callout warn">
+<div class="t">Két szabály, amitől nem lehet eltérni</div>
+<p><strong>1. Együttműködés jelölése kötelező.</strong> Ha terméket adsz, az reklám: #együttműködés vagy #ajándék jelölés minden posztban. Ennek hiánya fogyasztóvédelmi ügy.</p>
+<p><strong>2. Adj brief-et arról, mit NEM mondhatnak.</strong> Egy influencer, aki jó szándékból leírja, hogy „elmúlt tőle a hasfájás", a te kockázatodat termeli. A brief tartalmazza a tiltott szólistát (3.1 fejezet) és a kötelező biztonsági mondatot.</p>
+</div>
+
+<div class="copy"><span class="lbl">Influencer brief - a kötelező rész</span>MIT KÉRÜNK
+
+Mutasd meg a saját esti rutinodban, a saját szavaiddal. Nem kérünk scriptet, és nem kérjük, hogy szeresd, ha nem szereted.
+
+MIT KELL FELTÜNTETNI
+· #együttműködés vagy #ajándék jelölés
+· Legalább egyszer: „kizárólag felnőtt felügyelete mellett"
+
+MIT NEM MONDHATSZ (jogi ok)
+· Hogy bármilyen panaszt, betegséget vagy tünetet enyhít, gyógyít vagy megszüntet
+· Hogy segít elaludni vagy alvásproblémára jó
+· Hogy „biztonságos csecsemőknek"
+· Hasfájás, kólika, puffadás, fogzás, fülfájás - ezek a szavak nem szerepelhetnek
+
+MIT MONDHATSZ NYUGODTAN
+· Milyen érzés fogni, mennyire meleg, mennyi ideig marad az
+· Hogy milyen illata van
+· Hogy hogyan illeszkedik az esti rutinotokba
+· Hogy tetszik-e a doboz, a hímzés, az anyag
+· Hogy szerinted jó ajándék-e</div>
+
+<h3>Affiliate program (60. naptól)</h3>
+<ul>
+<li><strong>15% jutalék</strong> az első vásárlás után, 30 napos cookie</li>
+<li>Egyedi kuponkód a követőnek (ne kedvezmény, hanem <strong>ingyenes névhímzés</strong> - így nem rontja az árat)</li>
+<li>Havi kifizetés, minimum 10 000 Ft-tól</li>
+<li>Célcsoport: az a 20 mikroinfluencer, aki a seedingből tényleg posztolt és tényleg használja</li>
+</ul>
+</section>
+
+<!-- ============ 17 ============ -->
+<section id="s17">
+<h2><span class="num">17</span>Viszonteladói (B2B) csomag</h2>
+<p class="lead">A bio- és bababoltokban már ma van 5-12 ezer forintos polc (Popolini, Fellhof, Prana). Oda kell felkerülni - de csak megfelelő önköltséggel.</p>
+
+<div class="callout warn">
+<div class="t">Belépési feltétel</div>
+<p>50%-os viszonteladói áron a jelenlegi becsült önköltséggel (5 500 Ft) a Bagoly <strong>veszteséges</strong>. B2B-t csak akkor indíts, ha a nagyszériás önköltséged 3 200 Ft alá megy: egyszerűsített csomagolás (dobozos banderol nélkül, gyűjtőben), 30+ darabos varrási széria, és nagyobb tételű anyagbeszerzés.</p>
+</div>
+
+<h3>Célpartnerek</h3>
+<table>
+<tr><th>Típus</th><th>Konkrét példák</th><th>Miért ők</th></tr>
+<tr><td>Bio bababolt</td><td>Mamami Bolt, Kangaboo, Tégel Babaszakáruház</td><td>Már van 5-12 e Ft-os magpárna-polcuk (Popolini, Fellhof)</td></tr>
+<tr><td>Design és ajándékbolt</td><td>Magyar kézműves boltok, múzeumshopok</td><td>Az ajándék-pozicionálás nekik szól, nem a babapiacnak</td></tr>
+<tr><td>Dúla- és szülésznő-hálózat</td><td>Egyéni szolgáltatók</td><td>Bizalmi ajánlás, nem polc. Affiliate-modell működik</td></tr>
+<tr><td>Szállodák, wellness gyerekprogrammal</td><td>Családbarát hotelek</td><td>Ajándéktárgy vagy szobai kihelyezés - niche, de magas marzs</td></tr>
+</table>
+
+<h3>Amit a partnernek küldeni kell</h3>
+<ol>
+<li><strong>Egyoldalas termékkártya</strong> - fotó, ár, viszonteladói ár, ajánlott fogyasztói ár, összetétel, GPSR-adatok, EAN-kód</li>
+<li><strong>Mintacsomag</strong> - 1 darab, valós ajándékdobozban. Ez adja el a terméket, nem a katalógus</li>
+<li><strong>Display-doboz</strong> - 6 darabos pultra tehető kraft kiállító, benne a rituálékártya megnagyítva</li>
+<li><strong>Polccímke</strong> - a három érzék és a „nem játék" felirat, hogy a boltos ne rosszul magyarázza el</li>
+<li><strong>Megfelelőségi dosszié</strong> - GPSR kockázatelemzés, textilcímkézés, biztonsági kártya. Ezt egy komoly bolt kérni fogja</li>
+</ol>
+
+<div class="copy"><span class="lbl">B2B megkereső email</span>Tárgy: Magyar kézműves sópárna - mintát küldenék a [BOLT NEVE]-nek
+
+Kedves [NÉV]!
+
+[BOLT NEVE] kínálatában láttam a Popolini és a Fellhof magpárnákat - ezért gondoltam, hogy releváns lehet.
+
+DÚDOLÓ néven kézzel varrt gyógynövényes sópárnát készítünk 0-5 éves korosztályra, Magyarországon. Három méret, parajdi só és magyar szárított levendula, levehető mosható bio pamut huzat, illóolaj nélkül. Ajándékdobozban, opcionális névhímzéssel.
+
+Ami miatt más, mint a polcon lévő magpárnák:
+· Nem játékként van kialakítva és címkézve - arc és figura nélkül, ezért nem esik a játékbiztonsági kategóriába
+· Külön biztonsági kártya minden dobozban, a brit BS 8433 ajánlás figyelembevételével tervezve
+· Teljes GPSR-dokumentáció rendelkezésre áll
+
+Ajánlott fogyasztói ár: 9 900 - 13 900 Ft. Viszonteladói ár: 50%, min. 10 db vegyes rendeléstől.
+
+Küldenék egy mintát, hogy kézbe vehesse - nem kérek érte semmit. Melyik címre küldhetem?
+
+Üdvözlettel,
+[NÉV]
+DÚDOLÓ · [telefon] · [weboldal]</div>
+
+<h3>Vásárok</h3>
+<table>
+<tr><th>Esemény</th><th>Miért</th><th>Mit visz</th></tr>
+<tr><td><strong>Pici Piac</strong> (Fény utcai piac)</td><td>50+ magyar kézműves márka, ingyenes belépés, évi több alkalom. A célközönség pontosan itt van</td><td>Élő árigazolás, első vevők, seeding, fotóanyag, B2B-kapcsolatok</td></tr>
+<tr><td><strong>BabaMama Expo</strong> (Budapest)</td><td>Nagy volumen, de drágább standdíj és zajosabb</td><td>Csak akkor, ha már van készleted 200+ darabra</td></tr>
+<tr><td>Advent és karácsonyi kézműves vásárok</td><td>Az ajándék-pozicionálás csúcsszezonja</td><td>Névhímzés a helyszínen - ez lesz a legerősebb attrakció</td></tr>
+</table>
+<p class="src">A vásáron a helyszíni névhímzés a legjobb befektetés: sorbaállást generál, tömeget vonz, és élőben mutatja meg, miért nem 3 000 forintos termék.</p>
+</section>
+
+<!-- ============ 18 ============ -->
+<section id="s18">
+<h2><span class="num">18</span>SEO alapok</h2>
+<p class="lead">Kétsávos stratégia: a termékoldalak claim-mentesek, a blog viszont használhatja a szülők problémanyelvét - tanácsadó tartalomként, terméket nem ígérve.</p>
+
+<div class="callout warn">
+<div class="t">A kritikus különbségtétel</div>
+<p>A „kólika elleni párna" kulcsszó szabad a piacon, <strong>de nem szabad rá terméket optimalizálni</strong> - az gyógyhatás-állítás lenne. Amit lehet: <strong>tanácsadó blogcikket</strong> írni a témáról, ami nem a terméket ajánlja megoldásként, hanem tájékoztat és a márkához vezet. A terméklinket ilyen cikkbe ne tedd be közvetlenül CTA-ként.</p>
+</div>
+
+<h3>Kulcsszócsoportok</h3>
+<table>
+<tr><th>Csoport</th><th>Kulcsszavak</th><th>Célzott oldal</th></tr>
+<tr><td><strong>Termék (biztonságos)</strong></td><td>sópárna babáknak · gyerek sópárna · gyógynövényes sópárna · kézműves sópárna · levendulás párna gyerekeknek · melegíthető párna gyerek</td><td>Termékoldalak, kategóriaoldal</td></tr>
+<tr><td><strong>Ajándék (legértékesebb)</strong></td><td>babaváró ajándék · babalátogató ajándék ötletek · keresztelő ajándék · egyedi babaajándék · névre szóló babaajándék · magyar kézműves babaajándék</td><td>Dedikált ajándék-landing + blog</td></tr>
+<tr><td><strong>Rituálé</strong></td><td>esti rutin baba · lefekvés előtti rituálé · esti rutin kisgyerek · altatódal magyar</td><td>Blog, lead magnet</td></tr>
+<tr><td><strong>Tanácsadó (óvatosan)</strong></td><td>melegítő párna biztonság · magpárna mikróban · cseresznyemag párna vs sópárna</td><td>Blog, összehasonlító cikk</td></tr>
+</table>
+
+<h3>Oldalstruktúra</h3>
+<ul>
+<li><code>/</code> - főoldal, a 10. fejezet landing copyjával</li>
+<li><code>/soparna-babaknak</code> - kategóriaoldal, mindhárom méret</li>
+<li><code>/soparna/suni</code>, <code>/soparna/bagoly</code>, <code>/soparna/roka</code> - termékoldalak</li>
+<li><code>/ajandek</code> - <strong>dedikált ajándék-landing</strong>, P2 Anna útja. Ez lesz a második legerősebb oldal</li>
+<li><code>/muhely</code> - a készítés, arc és hely. Ez az E-E-A-T alapja</li>
+<li><code>/biztonsag</code> - teljes biztonsági útmutató. SEO-ban is jó, bizalomban még jobb</li>
+<li><code>/blog</code> - tanácsadó tartalom</li>
+</ul>
+
+<h3>Első 10 blogcikk</h3>
+<ol>
+<li>Babaváró ajándék: 12 ötlet, amiből tényleg nincs neki (ajándék-kulcsszó, legmagasabb prioritás)</li>
+<li>Mit vigyél babalátogatóba, ha már mindenük megvan</li>
+<li>Esti rutin 1-3 éves korban: mi működik, mi nem</li>
+<li>Melegíthető párnák biztonsága: amit minden szülőnek tudnia kell</li>
+<li>Magpárna, sópárna, meggymagpárna - mi a különbség?</li>
+<li>Miért nem való a menta és az eukaliptusz kisgyerekekhez (EMA-források alapján)</li>
+<li>Parajdi só vs. himalája só: mit érdemes tudni</li>
+<li>Keresztelői ajándék, ami húsz év múlva is megvan</li>
+<li>Hogyan lesz egy esti szokásból rituálé</li>
+<li>A kézműves babatermékek ára: mi van benne valójában</li>
+</ol>
+
+<h3>Technikai alapok</h3>
+<ul>
+<li><strong>Schema:</strong> Product (ár, elérhetőség, értékelés), Organization, FAQPage a GYIK-hez, BreadcrumbList</li>
+<li><strong>Google Merchant Center</strong> - feed feltöltése, Shopping és Performance Max előkészítése. Figyelj: a babatermék-kategóriában a Google is szigorúan nézi az egészségügyi állításokat</li>
+<li><strong>Search Console</strong> - első naptól kösd be. 60 nap múlva ez lesz az egyetlen valós keresési adatod</li>
+<li><strong>Microsoft Clarity</strong> - ingyenes, session recording. A landing 4-5. blokkjánál (biztonság, só-ellenvetés) fogod látni, hol állnak meg</li>
+<li><strong>Core Web Vitals</strong> - a képek WebP-ben, a lehető legkisebb fájlmérettel, lazy loaddal</li>
+<li><strong>llms.txt</strong> - AI-keresőknek (ChatGPT, Perplexity) a márka és a termékvonal összefoglalása. Ez a kategóriában még senkinél nincs</li>
+</ul>
+</section>
+
+<!-- ============ 19 ============ -->
+<section id="s19">
+<h2><span class="num">19</span>90 napos launch terv</h2>
+<p class="lead">Az első 30 nap nem eladásról szól. Bizonyítékot gyártunk, mert anélkül a prémium ár nem védhető.</p>
+
+<div class="tl">
+
+<div class="tl-item">
+<div class="w">1-30. nap</div>
+<div class="ti">Alapozás - „nem adunk el semmit"</div>
+<p><strong>Jogi és megfelelőségi</strong></p>
+<ul>
+<li>Jogász: játék-minősítés, 0-1 éves célzás, claim-lista jóváhagyása</li>
+<li>GPSR kockázatelemzés és műszaki dokumentáció összeállítása</li>
+<li>Védjegykutatás (SZTNH), domain, közösségi kezelőnevek foglalása</li>
+<li>Biztonsági kártya és címkeszöveg véglegesítése</li>
+</ul>
+<p><strong>Termék és márka</strong></p>
+<ul>
+<li>Három beszállítói ajánlat: varroda, doboznyomda, só, levendula. <strong>Önköltség-táblázat felülírása valós adatokkal</strong></li>
+<li>Logó véglegesítése, SVG + hímzésfájl (DST/PES)</li>
+<li>Minta legyártása mindhárom méretben, 3 mintavariánssal</li>
+<li>Csomagolás legyártása, rituálékártya és biztonsági kártya nyomdába</li>
+<li>Első széria: 80 db (50 seedingre, 30 eladásra)</li>
+</ul>
+<p><strong>Infrastruktúra</strong></p>
+<ul>
+<li>Webshop (WooCommerce vagy Shopify), a 10. fejezet copyjával</li>
+<li>ÁSZF, adatkezelési tájékoztató, elállási tájékoztató - ODR-link nélkül</li>
+<li>GA4 + Consent Mode v2 + Meta Pixel + Conversions API + Search Console + Clarity</li>
+<li>MailerLite: welcome, kosárelhagyás, post-purchase automation</li>
+<li>Termékfotózás: 16 kép a 7. fejezet listája szerint</li>
+</ul>
+<p><strong>Seeding</strong></p>
+<ul>
+<li>50 darab kiküldése a 16. fejezet bontása szerint, brieffel</li>
+<li>Instagram és Facebook oldal indítása, első 10 organikus poszt</li>
+</ul>
+<p><strong>Kimenet a 30. napon:</strong> működő webshop, 50 kiküldött darab, 15-25 vélemény, 8-12 influencer-poszt, 300-600 követő.</p>
+</div>
+
+<div class="tl-item">
+<div class="w">31-60. nap</div>
+<div class="ti">Soft launch - az első fizetett forgalom</div>
+<p><strong>Hirdetés</strong></p>
+<ul>
+<li>1. kreatív hullám élesítése: #1, #2, #6, #7, #10</li>
+<li>Kampánystruktúra: 1 Advantage+ Shopping kampány, széles célzás, 5 kreatívval. Ne szabdald szét célközönségekre - a kreatív a célzás</li>
+<li>Napi keret: 8 000 - 12 000 Ft. Tanulási fázis: legalább 7-10 nap érintetlenül</li>
+<li>Retargeting kampány külön: #11 (garancia) a 30 napos oldallátogatókra</li>
+</ul>
+<p><strong>Organikus és közösség</strong></p>
+<ul>
+<li>Heti 5 poszt a 15. fejezet naptára szerint</li>
+<li>Heti 2-3 link nélküli szakmai válasz baba-mama csoportokban</li>
+<li>Pinterest indítása, első 20 pin</li>
+</ul>
+<p><strong>Email</strong></p>
+<ul>
+<li>Lead magnet PDF elkészítése és élesítése (exit intent popup)</li>
+<li>Welcome szekvencia élesítése</li>
+</ul>
+<p><strong>Első vásár</strong></p>
+<ul>
+<li>Pici Piac vagy hasonló kézműves vásár: stand, helyszíni névhímzés</li>
+<li>Cél nem a bevétel, hanem: 30+ élő beszélgetés, 5+ B2B kapcsolat, videóanyag</li>
+</ul>
+<p><strong>Kimenet a 60. napon:</strong> 25-50 eladás, mért CAC és AOV, 3-5 nyertes kreatív azonosítva, 500-1 200 email feliratkozó, 2-3 B2B tárgyalás folyamatban.</p>
+</div>
+
+<div class="tl-item">
+<div class="w">61-90. nap</div>
+<div class="ti">Skálázás és szezonfelkészülés</div>
+<p><strong>Hirdetés</strong></p>
+<ul>
+<li>2. kreatív hullám: #3, #5, #8, #11, #12. A fáradt kreatívok cseréje 7-10 naponta</li>
+<li>Budget emelés csak akkor, ha a CAC 30 rendelésen mérve stabilan a cél alatt van. Emelés lépcsőzetesen, 20-30%-onként</li>
+<li>Külön kampány az <code>/ajandek</code> landingre, P2 Anna célzással</li>
+</ul>
+<p><strong>Ajánlat</strong></p>
+<ul>
+<li>Testvérszett és Babaváró doboz élesítése - <strong>AOV-emelés, ez a fedezet kulcsa</strong></li>
+<li>Kosár-upsell: névhímzés és pótuzat a pénztárban</li>
+<li>Első utántöltő-kampány a 150+ napja vásárolt szegmensre (ha van már ilyen)</li>
+</ul>
+<p><strong>B2B</strong></p>
+<ul>
+<li>Termékkártya, display-doboz, megfelelőségi dosszié elkészítése</li>
+<li>20 megkeresés bio- és bababoltoknak, mintaküldéssel</li>
+<li>Cél: 3-5 listázott partner</li>
+</ul>
+<p><strong>Szezonfelkészülés</strong></p>
+<ul>
+<li>Karácsonyi készlet: a 90. napra legyen kész a november-decemberi mennyiség</li>
+<li>Ajándékszezon email-kampány beütemezése (nov. 5. - dec. 12.)</li>
+<li>#14 és #13 kreatívok előkészítése</li>
+<li>Affiliate program indítása a legjobb 20 seeding-partnerrel</li>
+</ul>
+<p><strong>Kimenet a 90. napon:</strong> stabil, mért egységgazdaságosság, 100-200 összes eladás, 3-5 B2B partner, karácsonyi készlet és kampány készen.</p>
+</div>
+
+</div>
+
+<div class="callout warn">
+<div class="t">Amit ez a terv feltételez</div>
+<p>Hogy a gyártási kapacitásod bírja. Egy kézműves varrási kapacitás gyorsan fal lesz: ha a Meta hoz napi 5 rendelést, az heti 35 darab. Ha ez nincs meg, a hirdetést állítsd le, ne a szállítási határidőt nyújtsd. <strong>A késés az egyetlen dolog, ami egy babatermék-márkát gyorsabban öl meg, mint a rossz termék.</strong></p>
+</div>
+</section>
+
+<!-- ============ 20 ============ -->
+<section id="s20">
+<h2><span class="num">20</span>KPI, mérés és budget</h2>
+<p class="lead">Az itteni célszámok kiindulópontok, nem benchmarkok. Magyar, kézműves babatermék-kategóriára nyilvános CPM- és CAC-adat nincs - a saját fiókod első 30 napja lesz az igazság.</p>
+
+<h3>Mit mérj, és mi a fontossági sorrend</h3>
+<table>
+<tr><th>#</th><th>Mutató</th><th>Kiinduló cél</th><th>Miért ez</th></tr>
+<tr><td>1</td><td><strong>AOV</strong></td><td>16 000 Ft</td><td>Ez a legfontosabb szám. 12 000 alatt a hirdetés matematikailag nem éri meg</td></tr>
+<tr><td>2</td><td><strong>CAC</strong></td><td>&lt; 4 000 Ft</td><td>16 000 Ft AOV mellett a fedezet kb. 6 500-7 500 Ft</td></tr>
+<tr><td>3</td><td>Névhímzés-arány</td><td>&gt; 40%</td><td>Az AOV fő hajtóereje. Ha alacsony, a kosárban rosszul van elhelyezve</td></tr>
+<tr><td>4</td><td>Landing konverzió</td><td>1,5 - 2,5%</td><td>Prémium ajándékterméknél ez reális. 1% alatt a copy vagy a bizonyíték hiányzik</td></tr>
+<tr><td>5</td><td>Kosárelhagyás</td><td>&lt; 70%</td><td>E-commerce átlag körül. 80% felett a szállítási költség vagy a fizetési mód a gond</td></tr>
+<tr><td>6</td><td>Visszáru-arány</td><td>&lt; 5%</td><td>A garancia miatt figyelni kell. 8% felett a termék vagy a várakozás rossz</td></tr>
+<tr><td>7</td><td>Ismételt vásárlás 180 napon belül</td><td>&gt; 12%</td><td>Utántöltő + testvérszett. Ez hozza az LTV-t</td></tr>
+<tr><td>8</td><td>Email feliratkozási ráta</td><td>&gt; 3%</td><td>Lead magnettel elérhető</td></tr>
+</table>
+
+<h3>Három budget-forgatókönyv</h3>
+<table>
+<tr><th></th><th>Óvatos</th><th>Alap</th><th>Gyors</th></tr>
+<tr><td><strong>Havi hirdetési keret</strong></td><td>150 000 Ft</td><td>400 000 Ft</td><td>1 000 000 Ft</td></tr>
+<tr><td>Napi keret</td><td>5 000 Ft</td><td>13 000 Ft</td><td>33 000 Ft</td></tr>
+<tr><td>Várható rendelés / hó (4 000 Ft CAC-nál)</td><td>~37</td><td>~100</td><td>~250</td></tr>
+<tr><td>Bevétel (16 000 Ft AOV)</td><td>~592 000 Ft</td><td>~1 600 000 Ft</td><td>~4 000 000 Ft</td></tr>
+<tr><td>Szükséges gyártási kapacitás / hét</td><td>~9 db</td><td>~25 db</td><td>~63 db</td></tr>
+<tr><td>Kreatív-utánpótlás / hó</td><td>3-4 új</td><td>6-8 új</td><td>12-16 új</td></tr>
+<tr><td>Mikor válaszd</td><td>Amíg a fedezet nincs validálva</td><td>Ha 30 rendelésen a CAC stabil</td><td>Csak szezonban, kész készlettel</td></tr>
+</table>
+<p class="src">A rendelésszámok a 4 000 Ft-os cél-CAC-ból visszaszámolt <strong>illusztrációk</strong>, nem előrejelzések. A valós CAC-ot csak a saját fiókod első 30 napja mutatja meg.</p>
+
+<h3>Mérési infrastruktúra</h3>
+<ul>
+<li><strong>GA4</strong> + Consent Mode v2, enhanced e-commerce eseményekkel (view_item, add_to_cart, begin_checkout, purchase)</li>
+<li><strong>Meta Pixel + Conversions API</strong> - a CAPI ma nem opcionális, nélküle 20-40% eseményveszteség. Dedup event_id-vel</li>
+<li><strong>Search Console</strong> - organikus keresési adat, a 18. fejezet kulcsszavainak validálása</li>
+<li><strong>Microsoft Clarity</strong> - ingyenes session recording és heatmap. Nézd meg, hol állnak meg a landing „só-ellenvetés" és „biztonság" blokkjainál</li>
+<li><strong>Egy táblázat</strong> - hetente: költés, rendelés, AOV, CAC, fedezet, készlet, gyártási sor. Ez fontosabb, mint bármelyik dashboard</li>
+</ul>
+
+<div class="callout info">
+<div class="t">Az egyetlen szám, amit hetente nézni kell</div>
+<p><strong>Fedezet mínusz hirdetési költés.</strong> Nem a ROAS, nem a CTR, nem a követőszám. Ha ez a szám pozitív és nő, minden más részletkérdés. Ha negatív, azonnal állítsd le a skálázást, és nézd meg az AOV-t először, nem a kreatívot.</p>
+</div>
+</section>
+
+<!-- ============ 21 ============ -->
+<section id="s21">
+<h2><span class="num">21</span>Kockázatok</h2>
+
+<table>
+<tr><th>Kockázat</th><th>Súly</th><th>Mit tegyél</th></tr>
+<tr>
+<td><strong>Játéknak minősítik a terméket</strong></td>
+<td><span class="pill orange">Magas</span></td>
+<td>Arc és figura nélküli forma, „Nem játék" címke, felnőtt-esztétikájú marketing. Jogász véleménye <strong>indulás előtt</strong>, írásban</td>
+</tr>
+<tr>
+<td><strong>Gyógyhatás-állítás miatti eljárás</strong></td>
+<td><span class="pill orange">Magas</span></td>
+<td>A 3.1 claim-lista minden szövegre. Influencer-brief tiltólistával. Vélemény-moderálás. Havi átfésülés a saját tartalmakon</td>
+</tr>
+<tr>
+<td><strong>Égési sérülés vagy tűzeset</strong></td>
+<td><span class="pill orange">Magas</span></td>
+<td>Konzervatív melegítési idő a címkén, külön biztonsági kártya, onboarding email, BS 8433 figyelembevétele. <strong>Termékfelelősség-biztosítás kötése</strong></td>
+</tr>
+<tr>
+<td><strong>A fedezet nem bírja el a hirdetést</strong></td>
+<td><span class="pill orange">Magas</span></td>
+<td>Valós beszállítói árakkal újraszámolni <em>a hirdetés indítása előtt</em>. Ha a fedezet 35% alatt van, előbb az önköltséget vagy az AOV-t kell javítani</td>
+</tr>
+<tr>
+<td><strong>Gyártási kapacitás fala</strong></td>
+<td><span class="pill yellow">Közepes</span></td>
+<td>Hirdetést leállítani, nem a határidőt nyújtani. Második varroda felkutatása a 60. napig</td>
+</tr>
+<tr>
+<td><strong>Nincs elég social proof az induláskor</strong></td>
+<td><span class="pill yellow">Közepes</span></td>
+<td>A 30 napos seeding nem opcionális. Enélkül a 2. hullám kreatívjai nem működnek</td>
+</tr>
+<tr>
+<td><strong>Árversenybe szorulás</strong></td>
+<td><span class="pill yellow">Közepes</span></td>
+<td>Ne menj Árukeresőre. Ne adj kosárelhagyási kupont. A kedvezmény helyett mindig értéket adj hozzá</td>
+</tr>
+<tr>
+<td><strong>Meta hirdetéstiltás</strong></td>
+<td><span class="pill yellow">Közepes</span></td>
+<td>Ne szólítsd meg a nézőt az állapotán keresztül. Harmadik személyű, általános megfogalmazás. Tartalék hirdetési fiók előkészítése</td>
+</tr>
+<tr>
+<td><strong>Szezonalitás - nyáron nem kell melegítő párna</strong></td>
+<td><span class="pill yellow">Közepes</span></td>
+<td>A hűtő használat kommunikálása (Róka), és nyáron az ajándék-pozicionálásra váltás (keresztelő, szülinap, babaváró - ezek egész évben vannak)</td>
+</tr>
+<tr>
+<td><strong>Másolás</strong></td>
+<td><span class="pill grey">Alacsony</span></td>
+<td>A terméket lemásolják, a műhelyt és az arcot nem. Ezért van a márkasztori és a személyes jelenlét a tervben</td>
+</tr>
+</table>
+
+<div class="callout warn">
+<div class="t">Amit még nem tudtunk ellenőrizni</div>
+<ul>
+<li>A <strong>dudolo.hu</strong> domain és a védjegy szabadsága</li>
+<li>Az EU Safety Gate célzott átnézése melegíthető só- és magpárna visszahívásokra</li>
+<li>Konkrét magyar keresési volumen a kulcsszavakra</li>
+<li>A te valós önköltséged - a 9. fejezet minden száma becslés</li>
+<li>Hogy a higiéniai elállási kivétel alkalmazható-e erre a termékre</li>
+</ul>
+</div>
+</section>
+
+<!-- ============ 22 ============ -->
+<section id="s22">
+<h2><span class="num">22</span>Következő lépések</h2>
+<p class="lead">Ebből a hét dologból kell most kettőt elkezdeni. A többi ezekre épül.</p>
+
+<div class="card">
+<h4>Ezen a héten</h4>
+<ol>
+<li><strong>Név-ellenőrzés.</strong> dudolo.hu, Instagram, Facebook, SZTNH védjegykutatás. Ha foglalt, a második választás a SÓHAJ</li>
+<li><strong>Három beszállítói ajánlat.</strong> Varroda, doboznyomda, só és levendula. Ez írja felül a 9. fejezet teljes matekját</li>
+<li><strong>Jogász-konzultáció.</strong> Két kérdés: játéknak minősül-e a tervezett forma, és vállalható-e a 0-1 éves célzás a leírt használattal</li>
+</ol>
+</div>
+
+<div class="card">
+<h4>A következő két hétben</h4>
+<ol start="4">
+<li><strong>Logó véglegesítése</strong> a 13. fejezet promptjaival, majd vektorizálás és hímzésfájl</li>
+<li><strong>Első minta legyártása</strong> mindhárom méretben. Kézbe kell venni, mielőtt bármit hirdetsz</li>
+<li><strong>A műhely-blokk megírása</strong> - a 10. fejezet 8. szekciója. Ezt csak te tudod megírni, és ez indokolja a 11 900 Ft-ot</li>
+<li><strong>Seeding-lista összeállítása</strong> - 50 név, kategóriánként</li>
+</ol>
+</div>
+
+<h3>Amiben a GENmarketer csapat tovább tud vinni</h3>
+<table>
+<tr><th>Feladat</th><th>Specialista</th></tr>
+<tr><td>A landing copy továbbfejlesztése és konverzió-audit</td><td><code>genmarketer-landing-page-expert</code></td></tr>
+<tr><td>A 15 koncepcióból kész, platformra szabott hirdetésszövegek</td><td><code>genmarketer-ad-copywriter</code></td></tr>
+<tr><td>A kreatívok legyártása termékfotóból, 49 sablonnal</td><td><code>genmarketer-ad-creative-design</code></td></tr>
+<tr><td>Meta kampánystruktúra és skálázás</td><td><code>genmarketer-facebook-ad-expert</code></td></tr>
+<tr><td>MailerLite szekvenciák beépítése</td><td><code>genmarketer-email-marketing-expert</code></td></tr>
+<tr><td>Konkurenciafigyelés - Meta Ad Library, ármonitoring, havi digest</td><td><code>genmarketer-competitor-intel</code></td></tr>
+<tr><td>Magyar copy publikálás előtti ellenőrzése, claim-kapu</td><td><code>genmarketer-hu-copy-qa</code></td></tr>
+<tr><td>Landing wireframe és hirdetés-makett Figmában</td><td><code>genmarketer-figma-builder</code></td></tr>
+</table>
+
+<div class="callout">
+<div class="t">Következő lépésnek ezt a kettőt ajánlom</div>
+<p>· <strong>A hirdetéskreatív designer</strong> (<code>genmarketer-ad-creative-design</code>) - a 15 koncepcióból kész statikus hirdetésvariációk, amint megvan az első valós termékfotó<br>
+· <strong>A magyar copy minőségőr</strong> (<code>genmarketer-hu-copy-qa</code>) - a teljes landing és hirdetésszöveg-csomag átvizsgálása claim-biztonságra és AkH-ra, mielőtt bármi kimegy</p>
+</div>
+
+<div class="foot">
+<p><strong>DÚDOLÓ go-to-market playbook</strong> · Készült 2026. augusztus 12-én, a GENmarketer AI marketing csapat specialistáival: <code>genmarketer-team</code>, <code>genmarketer-icp-researcher</code>, <code>genmarketer-offer-builder</code>, <code>genmarketer-ad-planner</code>, <code>genmarketer-landing-page-expert</code>, <code>genmarketer-competitor-intel</code>.</p>
+<p>A piaci, jogi és vevőhang-fejezetek nyilvános forrásokból, hivatkozásokkal készültek. A pénzügyi számok becslések, amelyeket valós beszállítói ajánlatokkal kell felülírni. A jogi összefoglaló tájékoztató jellegű, nem helyettesíti a szakértői véleményt.</p>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+</body>
+</html>

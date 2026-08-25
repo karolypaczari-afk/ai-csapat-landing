@@ -75,8 +75,21 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-section--sand { background: var(--gm-sand); }
 .gm-section--dark { background: var(--gm-navy); color: #EAE9F5; }
 .gm-section--dark .gm-h2 { color: var(--gm-white); }
-/* Lágy átmenet a világos és a homok háttér közt (#ujragondolas ↔ #gm-orch) — nincs éles határvonal */
-#gm-orch { background: linear-gradient(180deg, var(--gm-off) 0%, var(--gm-sand) 20%, var(--gm-sand) 80%, var(--gm-off) 100%); }
+/* #gm-orch: sötét „gépház"-szekció — kontraszt a két világos blokk között; lila derengés a mélységért.
+   A két blokk közti nagy térköz-érzet csökkentése: az ujragondolas alsó + az orch felső paddingje szűkebb. */
+#ujragondolas { padding-bottom: clamp(2.2rem, 4vw, 3.6rem); }
+#gm-orch { background: radial-gradient(ellipse at 24% 18%, rgba(124,58,237,0.2), transparent 52%), var(--gm-navy); padding-top: clamp(8.75rem, 11vw, 10.5rem); }
+/* pixel-rács átmenet az előző (világos) szekcióból: apró négyzetek az előző háttér színével, lefelé elhalványulva */
+#gm-orch::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 120px; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Crect width='4' height='4' fill='%23FAFAFB'/%3E%3C/svg%3E");
+  background-size: 9px 9px;
+  -webkit-mask-image: linear-gradient(#000, transparent); mask-image: linear-gradient(#000, transparent); }
+/* kiemelések az alcímben: fehér, vastag */
+#gm-orch .gm-lead strong { color: var(--gm-white); font-weight: 800; }
+/* a csapat-vizuál pontosan a kártya-oszlop magasságát veszi fel (átlátszó háttér, contain) */
+#gm-orch .gm-split { align-items: stretch; }
+.gm-orch__fig { display: flex; }
+.gm-orch__fig img { width: 100%; height: 100%; object-fit: contain; object-position: center top; }
 
 .gm-section-head { margin-bottom: clamp(2rem, 4vw, 3.2rem); }
 /* nagyobb térköz: tagline → címsor → alcím */
@@ -250,9 +263,9 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 }
 /* olvashatóság-scrim: balról sötét, jobbra átlátszó — a szöveg mögé */
 .gm-hero__scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: linear-gradient(100deg, rgba(11,11,22,0.92) 0%, rgba(11,11,22,0.8) 30%, rgba(11,11,22,0.35) 52%, rgba(11,11,22,0) 70%); }
+  background: linear-gradient(100deg, rgba(11,11,22,0.97) 0%, rgba(11,11,22,0.9) 38%, rgba(11,11,22,0.55) 60%, rgba(11,11,22,0) 80%); }
 .gm-hero__inner { position: relative; z-index: 3; width: 100%; padding-top: clamp(2.5rem, 8vh, 5rem); padding-bottom: clamp(0.8rem, 2vh, 1.4rem); }
-.gm-hero__copy { max-width: 620px; }
+.gm-hero__copy { max-width: 700px; }
 /* .gm-hero__copy prefix kell, hogy a base reset (.gm-lp h1/p { margin:0 }, 0,1,1) fölé kerüljön */
 .gm-hero__copy .gm-hero__h1 { font-size: calc(var(--gm-h1) * 0.9); font-weight: 900; line-height: 1.04; letter-spacing: -0.025em; text-wrap: balance; margin-bottom: 0.72em; text-shadow: 0 1px 3px rgba(0,0,0,0.92), 0 2px 14px rgba(0,0,0,0.85), 0 0 34px rgba(0,0,0,0.55); }
 .gm-hero__copy .gm-hero__sub { font-size: var(--gm-lead); color: #D7D5EA; max-width: 540px; margin-bottom: 2.05rem; text-shadow: 0 1px 2px rgba(0,0,0,0.92), 0 1px 10px rgba(0,0,0,0.82), 0 0 22px rgba(0,0,0,0.5); }
@@ -296,8 +309,68 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-compare .is-best { color: var(--gm-violet); font-weight: 700; background: rgba(124,58,237,0.05); }
 .gm-compare-wrap { overflow-x: auto; border: 1px solid var(--gm-line); border-radius: var(--gm-r); background: #fff; }
 
+/* Valódi demó: lusta brief → ~25 perc munka → kész playbook (ujragondolas szekció).
+   A 3 lépés vizuálisan is elkülönül: fehér kártya → sötét „munka-panel" → gradiens-keretes eredmény. */
+.gm-demo { display: grid; grid-template-columns: 1fr 1.05fr 1fr; gap: 1.8rem; align-items: stretch; }
+.gm-demo__col { position: relative; border-radius: var(--gm-r-lg); padding: 1.4rem 1.3rem; display: flex; flex-direction: column; }
+.gm-demo__col--brief { background: #fff; border: 1px solid var(--gm-line); box-shadow: var(--gm-shadow); }
+.gm-demo__col--work { background: var(--gm-navy); border: 1px solid var(--gm-navy); color: #EAE9F5; box-shadow: var(--gm-shadow); }
+.gm-demo__col--result { border: 2px solid transparent; background: linear-gradient(#fff, #fff) padding-box, var(--gm-grad) border-box; box-shadow: var(--gm-shadow-lg); }
+/* folyamat-nyíl a kártyák között: halvány, háttérbe simuló jel, függőlegesen középen */
+.gm-demo__col:not(:first-child)::before { content: "→"; position: absolute; left: -2.05rem; top: 50%; transform: translateY(-50%); color: rgba(124,58,237,0.28); font-weight: 800; font-size: 2.3rem; line-height: 1; pointer-events: none; }
+/* kártyafejléc: nagy címsor + mono alcím, elválasztóval — ránézésre olvasható hierarchia */
+.gm-demo__head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.1rem; padding-bottom: 0.9rem; border-bottom: 1px solid var(--gm-line); }
+.gm-demo__num { display: inline-flex; align-items: center; justify-content: center; width: 2.1rem; height: 2.1rem; border-radius: 50%; background: var(--gm-grad-soft); color: #fff; font-family: "Inter", sans-serif; font-size: 1.05rem; font-weight: 800; flex: none; }
+.gm-demo__title { margin: 0; font-size: 1.3rem; font-weight: 900; letter-spacing: -0.01em; line-height: 1.15; color: var(--gm-ink); }
+.gm-demo__sub { display: block; margin-top: 0.15rem; font-family: var(--gm-mono); font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gm-grey); }
+.gm-demo__col--work .gm-demo__head { border-bottom-color: rgba(255,255,255,0.16); }
+.gm-demo__col--work .gm-demo__title { color: #fff; }
+.gm-demo__col--work .gm-demo__sub { color: #A9ADC9; }
+.gm-demo__bubble { background: var(--gm-sand); border-radius: var(--gm-r) var(--gm-r) var(--gm-r) 4px; padding: 1.05rem 1.15rem; font-size: 0.97rem; line-height: 1.6; }
+/* magyarázó jegyzet: vizuálisan leválasztva a tartalomtól (kártya alja + elválasztó + dőlt szürke) */
+.gm-demo__note { font-size: 0.86rem; font-style: italic; color: var(--gm-grey); margin: 1rem 0 0; padding-top: 0.85rem; border-top: 1px solid var(--gm-line); margin-top: auto; }
+.gm-demo__col--brief .gm-demo__bubble { margin-bottom: 1rem; }
+.gm-demo__progress { list-style: none; margin: 0; padding: 0; font-size: 0.92rem; }
+.gm-demo__progress li { position: relative; padding: 0.44rem 0 0.44rem 1.75rem; border-bottom: 1px dashed rgba(255,255,255,0.16); }
+.gm-demo__progress li:last-child { border-bottom: none; }
+.gm-demo__progress li::before { content: "✓"; position: absolute; left: 0; top: 0.52rem; width: 1.15rem; height: 1.15rem; border-radius: 50%; background: var(--gm-grad-soft); color: #fff; font-size: 0.68rem; line-height: 1.15rem; text-align: center; font-weight: 700; }
+.gm-demo__doc { display: flex; flex-direction: column; gap: 0.55rem; background: linear-gradient(160deg, rgba(124,58,237,0.06), rgba(6,182,212,0.06)); border-radius: var(--gm-r); padding: 1.15rem 1.15rem 1.3rem; margin-bottom: 1rem; transition: transform 0.2s var(--gm-ease), box-shadow 0.2s var(--gm-ease); }
+.gm-demo__doc:hover { transform: translateY(-3px); box-shadow: var(--gm-shadow-lg); }
+.gm-demo__doc-icon { font-size: 1.6rem; line-height: 1; }
+.gm-demo__doc-title { font-weight: 800; font-size: 1.05rem; line-height: 1.3; }
+.gm-demo__doc-meta { font-size: 0.88rem; color: var(--gm-grey); line-height: 1.5; }
+.gm-demo__doc .gm-btn { margin-top: 0.5rem; align-self: flex-start; white-space: nowrap; padding-inline: 1.2rem; }
+/* kézírásos annotáció: a 3. kártya alá mutató nyíl + Caveat szöveg */
+.gm-demo__hand { display: flex; justify-content: flex-end; align-items: flex-start; gap: 0.5rem; margin-top: 1.1rem; padding-right: 2.2rem; color: var(--gm-violet); }
+.gm-demo__hand-text { font-family: 'Caveat', 'Segoe Script', cursive; font-size: 1.6rem; font-weight: 600; line-height: 1.15; max-width: 330px; text-align: right; transform: rotate(-2deg); }
+.gm-demo__hand-arrow { width: 52px; height: 52px; flex: none; margin-top: -0.6rem; }
+@media (max-width: 900px) {
+  .gm-demo { grid-template-columns: 1fr; gap: 1.7rem; }
+  .gm-demo__col:not(:first-child)::before { content: "↓"; left: 50%; top: -2rem; transform: translateX(-50%); font-size: 2rem; }
+  .gm-demo__hand { justify-content: center; padding-right: 0; }
+  .gm-demo__hand-text { font-size: 1.45rem; }
+}
+
 /* ---- Split (Megoldás / orchestration) ---- */
 .gm-split { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+
+/* Bekötés-animáció: önskálázó iframe (a stage 1000×700, maga méretezi magát a szélességhez) */
+.gm-connect__animwrap { display: flex; justify-content: center; margin-top: 0.5rem; }
+.gm-connect__anim { width: 100%; max-width: 1000px; aspect-ratio: 1000 / 730; display: block; border: 2px solid transparent; border-radius: var(--gm-r-lg); background: linear-gradient(#fff, #fff) padding-box, var(--gm-grad) border-box; box-shadow: var(--gm-shadow); }
+/* kézírásos megjegyzés az animáció alatt */
+.gm-connect__hand { font-family: 'Caveat', 'Segoe Script', cursive; font-size: 1.55rem; font-weight: 600; color: var(--gm-violet); text-align: center; margin: 1.1rem auto 0; transform: rotate(-1.5deg); }
+
+/* gm-orch: három réteg (tudás → karmester → kéz) üveghatású kártyákon + fehér őszinte-callout */
+.gm-orch__layers { display: flex; flex-direction: column; gap: 1.15rem; }
+.gm-orch__layer { display: flex; gap: 1rem; align-items: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.13); border-radius: var(--gm-r-lg); padding: 1.15rem 1.25rem; backdrop-filter: blur(4px); }
+.gm-orch__ic { display: inline-flex; align-items: center; justify-content: center; width: 2.4rem; height: 2.4rem; border-radius: 12px; background: var(--gm-grad-soft); color: #fff; flex: none; margin-top: 0.05rem; }
+.gm-orch__ic svg { width: 1.3rem; height: 1.3rem; }
+.gm-orch__lt { margin: 0 0 0.4rem; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; color: var(--gm-white); }
+.gm-orch__layer p { margin: 0; color: #B8B6CE; font-size: 0.97rem; line-height: 1.55; }
+.gm-orch__pro { display: inline-block; vertical-align: 0.12em; margin-left: 0.45rem; padding: 0.14rem 0.6rem; border-radius: 999px; background: var(--gm-gold); color: var(--gm-navy); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; }
+.gm-orch__honest { margin-top: clamp(1.6rem, 3.5vw, 2.4rem); background: linear-gradient(#fff, #fff) padding-box, var(--gm-grad) border-box; border: 2px solid transparent; border-radius: var(--gm-r-lg); padding: 1.6rem 1.9rem; box-shadow: var(--gm-shadow-lg); }
+.gm-orch__honest h3 { margin: 0 0 0.5rem; color: var(--gm-ink); font-size: 1.25rem; font-weight: 900; }
+.gm-orch__honest p { margin: 0; color: #3F4450; font-size: 1.02rem; line-height: 1.6; }
 .gm-benefit-list { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 1rem; }
 .gm-benefit-list li { display: flex; gap: 0.8rem; align-items: flex-start; }
 .gm-benefit-list li::before { content: "▸"; color: var(--gm-cyan-600); font-weight: 900; margin-top: 0.1em; }
@@ -990,3 +1063,14 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
   .gm-cycle__seg button { padding: 8px 12px; font-size: .88rem; }
   .gm-cycle__save { display: block; margin: 3px 0 0; }
 }
+
+/* ===== EN-őrző (2026-08-25): az angol oldal a fordítási körig a RÉGI szekciókat viszi —
+   a HU-átalakítás közös-CSS változásait itt állítjuk vissza az /en/ alatt, hogy az
+   angol megjelenés változatlan maradjon. A fordítási körben ez a blokk törölhető. ===== */
+html[lang="en"] .gm-hero__copy { max-width: 620px; }
+html[lang="en"] .gm-hero__scrim { background: linear-gradient(100deg, rgba(11,11,22,0.92) 0%, rgba(11,11,22,0.8) 30%, rgba(11,11,22,0.35) 52%, rgba(11,11,22,0) 70%); }
+html[lang="en"] #ujragondolas { padding-bottom: clamp(3.4rem, 7vw, 7rem); }
+html[lang="en"] #gm-orch { background: linear-gradient(180deg, var(--gm-off) 0%, var(--gm-sand) 20%, var(--gm-sand) 80%, var(--gm-off) 100%); padding-top: clamp(3.4rem, 7vw, 7rem); }
+html[lang="en"] #gm-orch::before { content: none; }
+html[lang="en"] #gm-orch .gm-split { align-items: center; }
+html[lang="en"] #gm-orch .gm-lead strong { color: inherit; font-weight: 700; }
