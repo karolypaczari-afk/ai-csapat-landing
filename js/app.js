@@ -478,10 +478,17 @@
       return withAttribution(live);
     } catch (e) { return withAttribution(built); }
   }
-  /* ── Havi ↔ éves számlázási ciklus ─────────────────────────────────────────
+  /* ── Havi ↔ hosszabb számlázási ciklus ─────────────────────────────────────
    *
    * EGY implementáció mindkét nyelvre, és MINDEN ciklus-függő értéket a MARKUP
    * DEKLARÁL — a script nem következtet, nem számol és nem alakít sztringet.
+   *
+   * ⚠️ A `yearly` KULCS, nem állítás (2026-08-27). A magyar landolón a hosszabb
+   * ciklus azóta 6 HÓNAP (négy havidíj), az angolon még 12 hónap. A kulcs azért
+   * marad `yearly`, mert a script úgysem tud róla semmit: a felirat, az ár és a
+   * kosárlink is a markupból jön. Átnevezni csak MINDKÉT nyelven, a tesztekkel
+   * és a telemetria-dimenzióval együtt szabad — a `gm_cycle_switch` eddigi
+   * sorai különben elszakadnának az utánuk jövőktől.
    *
    * ☠️ Miért nem sztring-átalakítás (az első, angol változat így indult):
    *  1. az árformátum nyelvfüggő. A `/(\d+)/` első találata a magyar

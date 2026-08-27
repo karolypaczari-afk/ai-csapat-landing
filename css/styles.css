@@ -1048,13 +1048,21 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-cycle__seg button:hover { background: rgba(255,255,255,.07); }
 .gm-cycle__seg button.is-on { background: var(--gm-grad, linear-gradient(135deg,#6d28d9,#2563eb)); color: #fff; box-shadow: 0 10px 30px rgba(64,0,153,.35); }
 .gm-cycle__save { display: inline-block; margin-left: 8px; font-size: .7rem; font-weight: 800; color: #1A1A2E; background: var(--gm-gold, #f5b301); padding: 2px 8px; border-radius: 999px; vertical-align: 1px; }
-/* ☠️ A SZORÍTÓ ABLAK: 1000–1150px. Megmérve (HU): a két pirula 708px-t kér, a
+/* ☠️ MÉRT, NEM BECSÜLT (2026-08-27): a magyar oldalon a hosszabb ciklus felirata
+   „Éves" helyett „6 havi", és a két pirula ettől 717px-t kér a 709px-es oszlopban.
+   Ez MINDEN kijelzőszélességen igaz — az oszlop 1200px fölött sem nő tovább —,
+   ezért a lenti 1200px-es szűkítés nem éri el; a térközt itt, feltétel nélkül
+   kell összehúzni. Nyereség 20px, betűméret és jelentés árán nem. Az angol
+   oldal felirata rövidebb (`Yearly`), ott a bőven elférő eredeti térköz marad. */
+html[lang="hu"] .gm-cycle-row { column-gap: 14px; }
+html[lang="hu"] .gm-cycle { gap: 10px; }
+/* ☠️ A SZORÍTÓ ABLAK: 1000–1200px. Megmérve (HU): a két pirula 708px-t kér, a
    konténer 1024px-en már csak 606 — 102px-szel túllóg, ezért tördelt. 900px
    ALATT viszont a kártya-rács egyoszlopos lesz, a konténer 828px-re NŐ, tehát
    ott újra fér: a probléma nem „kis kijelző", hanem egy szűk sáv a kettő között.
    Ezért itt csak a belső méreteket húzzuk össze (gap + gombpadding ≈ 134px
    nyereség), betűméretet és jelentést nem áldozunk föl. */
-@media (max-width: 1150px) {
+@media (max-width: 1200px) {
   .gm-cycle-row { gap: 10px 14px; }
   .gm-cycle { gap: 8px; }
   .gm-cycle__seg button { padding: 8px 11px; }
