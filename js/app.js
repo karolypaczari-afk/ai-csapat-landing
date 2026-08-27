@@ -221,6 +221,37 @@
   // éves 2343), és a kosárba is az kerül — ugyanaz az elv, mint a `checkoutTarget`-nél.
   // A konstans csak ott kell, ahol nincs pénztár-href (anchor-CTA, `ViewContent`);
   // ilyenkor a HAVI variáció a helyes alapértelmezés, mert a markup is azt viseli.
+  /* ☠️ A KONVERZIÓS ÉRTÉK a VARIÁCIÓ-ból jön, nem a csomag fix havidíjából.
+   *
+   * 2026-08-27-ig a `track()` a `PRICE[pkg]`-t küldte — vagyis MINDIG a havi árat,
+   * akkor is, ha a vevő 6 havit vagy több férőhelyet tett a kosárba. Mérve: egy
+   * Pro / 6 havi / 5 fős vásárlás 19 990-et jelentett 191 800 helyett — 9,6-szeres
+   * ALULMÉRÉS. Ez nem kozmetika: a Meta és a Google EZEN az értéken licitál, tehát
+   * az alulmért érték rosszabb ajánlatot és torz ROAS-t okoz.
+   *
+   * A kulcs a variáció-ID, mert az a CTA élő `href`-jében amúgy is ott van — a
+   * `metaContentId` már ma is onnan olvassa a `content_id`-t. Egy forrás, egy kulcs.
+   *
+   * NEM a látható árszövegből számolunk: a „Ft/6 hó" egység maga is tartalmaz
+   * számjegyet, és a nyers számjegy-szűrés pont ezen bukott el ma egy kapuban.
+   *
+   * Gépi kapu: tests/tracking-value.mjs — a markupban deklarált variáció↔ár párokat
+   * veti össze ezzel a térképpel, fail-closed. Ha egy ár változik és ez nem, PIROS. */
+  var VALUE_BY_VARIATION = EN ? { "46": 29, "47": 116, "49": 59, "50": 236, "337": 44, "338": 176, "339": 55, "340": 220, "341": 64, "342": 256, "343": 69, "344": 276, "345": 89, "346": 356, "347": 111, "348": 444, "349": 129, "350": 516, "351": 139, "352": 556 }
+                              : { "2342": 9990, "2343": 39960, "2344": 19990, "2345": 79960, "3494": 14980, "3495": 59920, "3496": 18970, "3497": 75880, "3498": 21960, "3499": 87840, "3500": 23950, "3501": 95800, "3502": 29980, "3503": 119920, "3504": 37970, "3505": 151880, "3506": 43960, "3507": 175840, "3508": 47950, "3509": 191800 };
+  function offerValue(pkg, el) {
+    try {
+      var href = el && el.getAttribute && el.getAttribute("href");
+      if (href) {
+        var q = new URL(href, location.href).searchParams;
+        var v = q.get("wcf-add-to-cart") || q.get("variation_id") || q.get("add-to-cart");
+        if (v && VALUE_BY_VARIATION[v] != null) return VALUE_BY_VARIATION[v];
+      }
+    } catch (e) {}
+    // Tartalék: a csomag havi ára. Rosszabb, mint a pontos érték, de nulla
+    // sosem lehet — egy 0 értékű konverzió a licitnek azt mondaná, hogy semmit sem ér.
+    return PRICE[pkg] || 0;
+  }
   function metaContentId(pkg, el) {
     try {
       var href = el && el.getAttribute && el.getAttribute("href");
@@ -336,7 +367,7 @@
   }
   function track(pkg, ctaId, isCheckout, el) {
     var meta = PKG[pkg] || PKG[PKG_DEFAULT];
-    var value = PRICE[pkg] || 0, label = meta.label;
+    var value = offerValue(pkg, el), label = meta.label;
     var itemId = meta.itemId, cartEid = eventId("add_to_cart", pkg), eid = eventId("initiate_checkout", pkg);
     var contentId = metaContentId(pkg, el);
     var metaCookies = ensureMetaCookies();
