@@ -33,16 +33,13 @@
   // A két bolt külön WordPress/Woo környezet, ezért a termék-, variáció- és
   // pénznem-igazság nem keverhető közöttük.
   //
-  // MINDKÉT nyelv 2026-08-01 óta HÁROM ajánlatot visz: a két előfizetés mellett
-  // visszakerült az EGYSZERI díjas csomag (fix pillanatkép + 30 napos garancia).
-  //   HU „Skillpakk"  → Woo 872, 34 990 Ft, ugyanaz a bizonyított tudástár Woo/CartFlows
-  //                  útvonal, mint a két előfizetésé (a termék végig `publish` maradt,
-  //                  csak a landolóról nem volt elérhető — docs/30 D14);
-  //   EN „Training" → Woo 51, 189 €, frissítések nélküli egyszeri csomag.
+  // MINDKÉT nyelv 2026-08-27 óta KÉT ajánlatot visz: Standard/Planner és Pro/Autopilot,
+  // mindkettő havi vagy 6 havi számlázással. Az EGYSZERI díjas csomag (HU „Skillpakk",
+  // EN „Training") ekkor kivezetésre került — a Woo-termékek draftba mentek, és a
+  // landolóról minden hivatkozása eltűnt.
   var CHECKOUT = EN ? {
     planner:   "https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly",
-    autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly",
-    onetime:   "https://vip.genmarketer.eu/checkout/?add-to-cart=51"
+    autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly"
   } : {
     // 2026-08-03 óta az 1992/1993 `variable-subscription`: EGY termék kezeli a havi
     // ÉS az éves ciklust (Károly döntése; a két külön éves terméket, a 2320/2321-et
@@ -63,7 +60,7 @@
     //    `woocommerce_add_to_cart_redirect` szűrőn (prio 99) `get_permalink()`-ből ÚJ
     //    URL-t épít — és egyetlen eredeti query paramétert sem visz át. Mérve:
     //    `?add-to-cart=1992&variation_id=2342` → 302 → `/penztar/` query NÉLKÜL, míg
-    //    `?add-to-cart=872` (nincs rajta a meta) → 200. Vagyis TERMÉK-BEÁLLÍTÁS, nem
+    //    a CartFlows-meta NÉLKÜLI termék `?add-to-cart=` → 200. Vagyis TERMÉK-BEÁLLÍTÁS, nem
     //    terméktípus-viselkedés.
     //
     //    Következmény: a WooCommerce rendelés-attribúciója (sourcebuster, URL-ből
@@ -74,17 +71,14 @@
     //    A CartFlows NATÍV formája (`?wcf-add-to-cart=<VARIÁCIÓ-ID>`) meg sem hívja a Woo
     //    add-to-cart handlerét → nincs redirect, a paraméterek megmaradnak. A variáció
     //    SAJÁT ID-jét kell megadni, nem a szülőét. Mind a négy variáció élesben igazolva:
-    //    200 + a HELYES ár a kosárban (2342→9 990 · 2343→99 900 · 2344→19 990 · 2345→199 900).
+    //    200 + a HELYES ár a kosárban (2342→9 990/hó · 2343→39 960/6 hó · 2344→19 990/hó · 2345→79 960/6 hó).
     //
-    //    A `onetime` (872) SZÁNDÉKOSAN marad a régi formán: nincs rajta CartFlows-meta,
-    //    tehát 200-at ad és megőrzi a paramétereket — amit nem tör el, azt nem alakítjuk.
     planner:   "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2342&wcf-qty=1",
-    autopilot: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2344&wcf-qty=1",
-    onetime:   "https://tudastar.genmarketer.hu/checkout/?add-to-cart=872"
+    autopilot: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2344&wcf-qty=1"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { planner: 29, autopilot: 59, onetime: 189 } : { planner: 9990, autopilot: 19990, onetime: 34990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990 };
   var CURRENCY = EN ? "EUR" : "HUF";
   /* ── KI A TULAJDONOSA A TÖLCSÉR-ESEMÉNYNEK: a landoló vagy a pénztár? ─────────
    *
@@ -117,21 +111,10 @@
   // tehát egy közös azonosító két különböző terméket olvasztana egy sorba.
   var PKG = EN ? {
     planner:   { label: "Planner subscription",   itemId: "ai-csapatod-en-elofizetes-planner" },
-    autopilot: { label: "Autopilot subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" },
-    // Az EN egyszeri csomag ÚJ, `-en-` tagelt azonosítót kap, NEM a régi közöset.
-    // 2026-07-31 előtt a HU és az EN egyszeri út UGYANAZT az `ai-csapatod-basic`
-    // azonosítót küldte — ez volt a hiba, amit a `-en-` tagelés javított: más a
-    // pénznem, más a fizetési út és más a termék, tehát egy közös azonosító két
-    // különböző ajánlat bevételét olvasztaná egy sorba.
-    onetime:   { label: "Training (one-off)",     itemId: "ai-csapatod-en-egyszeri-training" }
+    autopilot: { label: "Autopilot subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" }
   } : {
     planner:   { label: "Standard előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
-    autopilot: { label: "Pro előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" },
-    // Az egyszeri Skillpakk csomag SZÁNDÉKOSAN a régi `ai-csapatod-basic` azonosítót kapja
-    // vissza, nem újat: ugyanaz a Woo-termék (872), amit 2026-07-31-ig ezzel az
-    // item_id-val mértünk. Új azonosítóval a 872 termék-szintű riportja két sorra
-    // hasadna, és a visszahozatal előtti hetek forgalma elszakadna a mostanitól.
-    onetime:   { label: "Skillpakk (egyszeri díj)", itemId: "ai-csapatod-basic" }
+    autopilot: { label: "Pro előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" }
   };
   var PKG_DEFAULT = "planner";
   var ATTR_COOKIE = "gm_ads_attrib";
@@ -232,8 +215,8 @@
   // hetek óta `ai-csapatod-basic`), és egy csere két sorra hasítaná ugyanazt a terméket.
   // A kettő két külön rendszer kulcsa — a Metáé a Woo-ID, a GA4-é a beszédes slug.
   var META_CONTENT_ID = EN
-    ? { planner: "46", autopilot: "49", onetime: "51" }
-    : { planner: "2342", autopilot: "2344", onetime: "872" };
+    ? { planner: "46", autopilot: "49" }
+    : { planner: "2342", autopilot: "2344" };
   // A GOMBON ÁLLÓ href az igazság, nem a konstans: a ciklusváltó átírja (havi 2342 →
   // éves 2343), és a kosárba is az kerül — ugyanaz az elv, mint a `checkoutTarget`-nél.
   // A konstans csak ott kell, ahol nincs pénztár-href (anchor-CTA, `ViewContent`);
@@ -1024,6 +1007,94 @@
     }
   }
 
+
+  /* ── Menedzselt szint: érdeklődés-űrlap ────────────────────────────────────
+   *
+   * Az űrlap JS NÉLKÜL is működik: sima POST a végpontra, ami 302-vel viszi
+   * tovább a látogatót. A JS csak annyit tesz hozzá, hogy a lap nem ugrik el —
+   * a visszajelzés az űrlap HELYÉN jelenik meg —, és hogy mérünk.
+   *
+   * FAIL-OPEN a vevő felé: ha a fetch elhasal (hálózat, CORS, bármi), NEM
+   * nyelünk el semmit — engedjük a natív beküldést, hogy a vevő útja akkor is
+   * végigmenjen, ha a mi rétegünk hibázik.
+   */
+  function wireManagedForm() {
+    var form = document.getElementById("gm-managed-form");
+    if (!form) return;
+    var err = document.getElementById("gm-managed-err");
+    var started = false;
+
+    form.addEventListener("input", function () {
+      if (started) return;
+      started = true;
+      signal("gm_managed_start", { form: "managed-interest" });
+    });
+
+    // A szekció LÁTHATÓSÁGA, nem a DOM-beli léte: a lap alján ülő blokkot a
+    // látogatók nagy része sosem éri el, és ezt tudni kell a konverzió mellé.
+    var section = document.getElementById("managed");
+    if (section && "IntersectionObserver" in window) {
+      var seen = false;
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting || seen) return;
+          seen = true;
+          io2.disconnect();
+          signal("gm_managed_view", { section: "managed" }, { meta: "ManagedTierViewed" });
+        });
+      }, { threshold: 0.35 });
+      io2.observe(section);
+    }
+
+    form.addEventListener("submit", function (ev) {
+      if (!form.reportValidity()) { ev.preventDefault(); return; }
+      ev.preventDefault();
+      var btn = form.querySelector("button[type=submit]");
+      if (btn) { btn.disabled = true; }
+      if (err) { err.hidden = true; }
+
+      fetch(form.getAttribute("action"), {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "Accept": "application/json", "X-Requested-With": "fetch" },
+        credentials: "same-origin"
+      }).then(function (r) {
+        return r.json().catch(function () { return { ok: r.ok }; });
+      }).then(function (data) {
+        if (!data || !data.ok) throw new Error((data && data.error) || "failed");
+        signal("gm_managed_submit", { form: "managed-interest" }, { meta: "Lead" });
+        var done = document.createElement("div");
+        done.className = "gm-form__done";
+        done.setAttribute("role", "status");
+        var h = document.createElement("h3");
+        h.textContent = form.dataset.doneTitle || "Köszönjük — megkaptuk.";
+        var pEl = document.createElement("p");
+        pEl.textContent = form.dataset.doneText || "";
+        done.appendChild(h);
+        done.appendChild(pEl);
+        if (data.booking_url) {
+          var a = document.createElement("a");
+          a.className = "gm-btn gm-btn--gold";
+          a.href = data.booking_url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.setAttribute("data-gm-cta", "managed-booking");
+          a.textContent = form.dataset.doneCta || "Időpontot foglalok";
+          done.appendChild(a);
+        }
+        form.parentNode.replaceChild(done, form);
+      }).catch(function () {
+        // A mi hibánk nem a vevő hibája: visszaadjuk a gombot, és kimondjuk,
+        // mi történt — nem hagyjuk néma, letiltott gombbal állni.
+        if (btn) { btn.disabled = false; }
+        if (err) {
+          err.textContent = form.dataset.errText || "Nem sikerült elküldeni. Kérlek, próbáld újra.";
+          err.hidden = false;
+        }
+      });
+    });
+  }
+
   function wireFaq() {
     var items = document.querySelectorAll(".gm-faq__item");
     var opened = 0;
@@ -1515,6 +1586,7 @@
     wireFilters();
     wireCtas();
     wireBillingCycle();
+    wireManagedForm();
     trackViewContent();
     wireProofbar();
     wireMorningFeed();

@@ -1,6 +1,19 @@
 # ai-csapat.genmarketer.hu — PROD landoló („Az AI csapatod", MISSION CONTROL verzió)
 # Cutover-kész .htaccess. A deploy a repo-gyökérbe .htaccess-ként másolja.
 
+# --- A KIVEZETETT ÖNHOSZTOLT PÉNZTÁR (2026-08-27) ---------------------------
+# Ugyanaz a hibaosztály, mint az angolon, csak más státuszkóddal. A `/checkout/`
+# 200-at ad és kitölthető, de a mögötte lévő `hu-create-intent.php` a funnel-kapcsoló
+# miatt 409 `checkout_not_open`-nel felel (élőben mérve: `hu-health` → funnel_open:false).
+# Vagyis a vevő végigtölti az űrlapot, és a fizetésnél derül ki, hogy zárva van.
+#
+# A pénztár-lánc SZÁNDÉKOSAN marad a helyén (Károly 2026-08-03: tartalék út), csak a
+# KIRAKAT-ot zárjuk: aki idetéved, az ÉLŐ Woo-pénztárba kerül, nem egy zsákutcába.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^checkout(/.*)?$ https://tudastar.genmarketer.hu/penztar/ [R=301,L]
+</IfModule>
+
 Options -Indexes
 DirectoryIndex index.html
 AddDefaultCharset utf-8

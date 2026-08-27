@@ -810,7 +810,6 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
    (Károly, 2026-08-03). Halványabb szín is, hogy ránézésre elváljon. */
 .gm-price__list li.is-off { color: #9B98B6; }
 .gm-price__list li.is-off::before { content: "–"; color: #6F6C8C; }
-.gm-price--gold .gm-price__list li.is-off::before { color: #6F6C8C; }
 /* A kártya-CTA felirata ÁRAT hordoz („Ezt választom – 23 950 Ft/hó"), és a
    létszám-tengely óta a leghosszabb változat két sorba tört. A gomb `width:100%`,
    tehát a nagy vízszintes padding csak a SZÖVEG helyét vette el — ezért a
@@ -831,20 +830,13 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
    Az `/en/` út ezt a réteget NEM használja (ott egy sorban áll a két csomag). */
 .gm-pricing--split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 2.2rem; align-items: stretch; max-width: var(--gm-maxw); margin-inline: auto; }
 .gm-pgroup { position: relative; display: flex; flex-direction: column; }
-.gm-pgroup--once { padding-left: 2.2rem; }
-.gm-pgroup--once::before { content: ""; position: absolute; left: 0; top: 0.4rem; bottom: 0; width: 1px; background: linear-gradient(180deg, rgba(255,196,0,0.35), rgba(255,196,0,0)); }
 .gm-pgroup__head { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
 .gm-pgroup__head .gm-eyebrow { margin: 0; }
 .gm-pgroup__desc { font-size: 0.86rem; color: #8C89A8; }
 .gm-pgroup__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem; align-items: stretch; flex: 1; }
-.gm-pgroup--once .gm-pgroup__cards { grid-template-columns: minmax(0, 1fr); }
 .gm-pgroup__cards .gm-price { height: 100%; }
 
 /* Egyszeri csomag — borostyán variáns, hogy ránézésre elváljon az előfizetéstől. */
-.gm-price--gold { border-color: rgba(255,196,0,0.34); box-shadow: 0 0 0 1px rgba(255,196,0,0.18), 0 24px 60px rgba(255,196,0,0.12); }
-.gm-price--gold .gm-price__amount { color: var(--gm-gold); }
-.gm-price--gold .gm-price__list li::before { color: var(--gm-gold); }
-.gm-price__tag--gold { background: linear-gradient(135deg, #8A5A00 0%, #D99500 38%, #FFC400 78%, #FFDA6B 100%); color: #241800; }
 .gm-btn--gold { background: linear-gradient(135deg, #8A5A00 0%, #D99500 38%, #FFC400 78%, #FFDA6B 100%); color: #241800; box-shadow: 0 10px 30px rgba(180,130,0,0.35); }
 .gm-btn--gold:hover { transform: translateY(-2px); box-shadow: 0 18px 42px rgba(180,130,0,0.45); filter: brightness(1.06); }
 
@@ -1001,8 +993,6 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
   /* A két ajánlat-csoport egymás alá kerül; a bal oldali arany elválasztó
      ilyenkor értelmét veszti (nincs mit elválasztania vízszintesen). */
   .gm-pricing--split { grid-template-columns: 1fr; gap: 2.6rem; }
-  .gm-pgroup--once { padding-left: 0; }
-  .gm-pgroup--once::before { display: none; }
 }
 @media (max-width: 860px) {
   .gm-split { grid-template-columns: 1fr; }
@@ -1052,10 +1042,14 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
    „Éves" helyett „6 havi", és a két pirula ettől 717px-t kér a 709px-es oszlopban.
    Ez MINDEN kijelzőszélességen igaz — az oszlop 1200px fölött sem nő tovább —,
    ezért a lenti 1200px-es szűkítés nem éri el; a térközt itt, feltétel nélkül
-   kell összehúzni. Nyereség 20px, betűméret és jelentés árán nem. Az angol
-   oldal felirata rövidebb (`Yearly`), ott a bőven elférő eredeti térköz marad. */
-html[lang="hu"] .gm-cycle-row { column-gap: 14px; }
-html[lang="hu"] .gm-cycle { gap: 10px; }
+   kell összehúzni. Nyereség 20px, betűméret és jelentés árán nem.
+   ⚠ A szűkítés SZÁNDÉKOSAN nem nyelvre scope-olt: az angol felirat is hosszabb
+   lett („Yearly" → „6 months"), és ugyanabba a 709px-es oszlopba fut. Amíg
+   `html[lang="hu"]`-ra volt kötve, az EN eset NÉMÁN tördelt — a `pricing-layout`
+   EN ága csak akkor mér, ha az `eu` release-csatorna aktív, tehát a szünetelő
+   csatorna EL IS FEDTE a hibát. */
+.gm-cycle-row { column-gap: 14px; }
+.gm-cycle { gap: 10px; }
 /* ☠️ A SZORÍTÓ ABLAK: 1000–1200px. Megmérve (HU): a két pirula 708px-t kér, a
    konténer 1024px-en már csak 606 — 102px-szel túllóg, ezért tördelt. 900px
    ALATT viszont a kártya-rács egyoszlopos lesz, a konténer 828px-re NŐ, tehát
@@ -1082,3 +1076,71 @@ html[lang="en"] #gm-orch { background: linear-gradient(180deg, var(--gm-off) 0%,
 html[lang="en"] #gm-orch::before { content: none; }
 html[lang="en"] #gm-orch .gm-split { align-items: center; }
 html[lang="en"] #gm-orch .gm-lead strong { color: inherit; font-weight: 700; }
+
+/* ── Menedzselt réteg — érdeklődés-fogadó szekció (#managed) ──────────────────
+   MINDKÉT nyelv ugyanezt viszi; a nyelvi különbség csak a szövegben és az
+   űrlap `action`-jében van (`api/managed-interest.php` vs `hu-…`).
+
+   Miért NEM ár-kártya: ez nem pénztár. A menedzselt szint beszélgetésen át
+   megy, ezért a szekció ÉRDEKLŐDÉST gyűjt — az egyetlen konverzió az űrlap.
+   A minta a `landing-kulcsrakesz` jelentkezés-blokkja (docs/46 §10.4), ide
+   portolva; a mezőkészlet szándékosan RÖVIDEBB (4 mező), mert itt még csak
+   érdeklődés-jelzés a cél, nem felmérés. */
+.gm-section--managed {
+  background:
+    radial-gradient(1100px 520px at 88% -10%, rgba(255, 196, 0, 0.10), transparent 62%),
+    radial-gradient(900px 480px at 6% 106%, rgba(124, 58, 237, 0.22), transparent 60%),
+    var(--gm-navy-950);
+  color: #EAE9F5;
+  border-block: 1px solid rgba(255, 255, 255, 0.08);
+}
+.gm-section--managed .gm-h2 { color: var(--gm-white); }
+.gm-section--managed .gm-lead { color: #C3C1DA; }
+.gm-section--managed .gm-check li { color: #C9C7DE; }
+.gm-section--managed .gm-check li::before { color: var(--gm-gold); }
+.gm-section--managed .gm-check strong { color: #fff; }
+.gm-eyebrow--gold { color: var(--gm-gold); }
+
+.gm-apply { display: grid; gap: clamp(2rem, 4vw, 3.4rem); grid-template-columns: minmax(0, 1fr); align-items: start; }
+.gm-apply > * { min-width: 0; }
+@media (min-width: 940px) { .gm-apply { grid-template-columns: 1fr 1fr; } }
+.gm-apply__copy .gm-h2 { margin: 0.7rem 0 1rem; }
+.gm-apply__alt { margin-top: 1.6rem; font-size: 0.92rem; color: #A9A6C6; }
+
+.gm-form {
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--gm-r-lg); padding: clamp(1.4rem, 3vw, 2rem);
+  display: grid; gap: 0.95rem; grid-template-columns: repeat(2, minmax(0, 1fr));
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+}
+.gm-form__title { grid-column: 1 / -1; font-weight: 800; font-size: 1.05rem; color: #fff; margin: 0; }
+.gm-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.gm-field--wide { grid-column: 1 / -1; }
+@media (max-width: 620px) { .gm-form { grid-template-columns: 1fr; } .gm-field { grid-column: 1 / -1; } }
+.gm-field__label { font-size: 0.84rem; font-weight: 700; color: #D7D5EA; }
+.gm-field__label em { color: var(--gm-gold); font-style: normal; }
+.gm-field input, .gm-field select, .gm-field textarea {
+  font: inherit; font-size: 0.96rem; color: #fff; background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; padding: 0.75rem 0.85rem;
+  min-height: 48px; width: 100%; transition: border-color 0.2s var(--gm-ease);
+}
+.gm-field textarea { min-height: 96px; resize: vertical; }
+.gm-field input::placeholder, .gm-field textarea::placeholder { color: #7C799A; }
+.gm-field input:focus, .gm-field select:focus, .gm-field textarea:focus { border-color: var(--gm-gold); outline: none; }
+.gm-field select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #8C89A8 50%), linear-gradient(135deg, #8C89A8 50%, transparent 50%);
+  background-position: calc(100% - 19px) 50%, calc(100% - 13px) 50%;
+  background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-inline-end: 2.2rem;
+}
+.gm-field select option { background: #1A1A2E; color: #fff; }
+.gm-field.is-bad input, .gm-field.is-bad select, .gm-field.is-bad textarea { border-color: #FF6B6B; }
+/* Honeypot: a screenreader elől is elrejtve — valódi látogató sosem tölti ki. */
+.gm-hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.gm-form__err { grid-column: 1 / -1; color: #FFB4B4; font-size: 0.9rem; margin: 0; }
+.gm-form__submit { grid-column: 1 / -1; }
+.gm-form__fine { grid-column: 1 / -1; font-size: 0.8rem; color: #8C89A8; margin: 0; }
+/* Sikeres beküldés: a visszajelzés az űrlap HELYÉN marad, nem ugrik el a lap. */
+.gm-form__done { display: grid; gap: 0.9rem; justify-items: start; }
+.gm-form__done h3 { margin: 0; font-size: 1.15rem; color: #fff; }
+.gm-form__done p { margin: 0; color: #C3C1DA; font-size: 0.96rem; }
