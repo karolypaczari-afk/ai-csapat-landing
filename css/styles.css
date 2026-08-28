@@ -779,7 +779,11 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-upload__file { display: inline-block; margin-top: 0.9rem; font-family: var(--gm-mono); font-size: 0.8rem; background: rgba(124,58,237,0.2); color: var(--gm-cyan); padding: 0.3em 0.8em; border-radius: 6px; }
 
 /* ---- Pricing ---- */
-.gm-pricing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem; max-width: 880px; margin-inline: auto; }
+/* Egy ajanlat-csoport, teljes szelessegben. A racs KOZVETLEN gyereke ma egy
+   `.gm-pgroup` BUROK (nem maga a kartya), ezert a ket oszlop a burkot vagta
+   ketté: MERVE 1440px-en 201px-es kartyak es ket sorba tort ciklusvalaszto.
+   A kartyak sorrendezese eggyel beljebb, a `.gm-pgroup__cards`-ban tortenik. */
+.gm-pricing { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.6rem; max-width: 880px; margin-inline: auto; }
 .gm-price {
   position: relative; background: rgba(255,255,255,0.04); border: 1px solid rgba(124,58,237,0.3);
   border-radius: var(--gm-r-lg); padding: 2rem 1.8rem; display: flex; flex-direction: column;
@@ -823,12 +827,13 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
   font-size: clamp(0.82rem, 1.35vw, 1.02rem);
 }
 
-/* ---- Pricing: két ajánlat-csoport egymás mellett (előfizetés + egyszeri) ----
-   A HU oldal 2026-08-01 óta MINDKÉT ajánlatot mutatja. A súlyozás szándékos:
-   az előfizetés kap 2fr-t (két kártya), az egyszeri 1fr-t (egy kártya) —
-   az egyszeri út él és eladható, de nem az elsődleges ajánlat.
-   Az `/en/` út ezt a réteget NEM használja (ott egy sorban áll a két csomag). */
-.gm-pricing--split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 2.2rem; align-items: stretch; max-width: var(--gm-maxw); margin-inline: auto; }
+/* ---- Pricing: ajanlat-csoport ----
+   2026-08-27-ig itt egy `--split` racs allt (elofizetes 2fr + egyszeri 1fr),
+   mert KET ajanlat-csoport volt egymas mellett. Az egyszeri csomag kivezetese
+   utan egy csoport maradt - a racs viszont tovabbra is KET oszlopot deklaralt,
+   igy a jobb oldali uresen allt: 1440px-en MERVE 390px kihasznalatlan hely.
+   A kartyak nem tuntek el, csak a racs nem tudta, hogy mar nincs mit melléjuk
+   tenni. Egy csoportnal a helyes elrendezes a sima `.gm-pricing`. */
 .gm-pgroup { position: relative; display: flex; flex-direction: column; }
 .gm-pgroup__head { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
 .gm-pgroup__head .gm-eyebrow { margin: 0; }
@@ -992,7 +997,6 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
   .gm-relief-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* A két ajánlat-csoport egymás alá kerül; a bal oldali arany elválasztó
      ilyenkor értelmét veszti (nincs mit elválasztania vízszintesen). */
-  .gm-pricing--split { grid-template-columns: 1fr; gap: 2.6rem; }
 }
 @media (max-width: 860px) {
   .gm-split { grid-template-columns: 1fr; }
