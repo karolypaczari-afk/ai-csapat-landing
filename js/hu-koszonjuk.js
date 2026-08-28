@@ -113,7 +113,7 @@
         showError('Ez a fizetés nem ment át, és nem terheltünk meg. A pénztár oldalán újra megpróbálhatod.');
       })
       .catch(function () {
-        showError('Nem értük el a szerverünket a fizetés megerősítéséhez. Ha megterheltek, a hozzáférésed így is megérkezik e-mailben — semmi nem veszett el.');
+        showError('Nem értük el a szerverünket a fizetés megerősítéséhez. Ha megterheltek, a hozzáférésed így is megérkezik e-mailben – semmi nem veszett el.');
       });
   }
 

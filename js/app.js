@@ -900,9 +900,9 @@
     var rows = "";
     rows += '<dt>' + tr("Státusz", "Status") + '</dt><dd class="is-accent">' + (soon ? tr("HAMAROSAN", "STANDBY · soon") : tr("AKTÍV", "NOMINAL · active")) + '</dd>';
     rows += '<dt>' + tr("Aktuális feladat", "Current task") + '</dt><dd>' + esc(EN ? a.currentTaskEn : a.currentTask) + '</dd>';
-    rows += '<dt>' + tr("Folyamat", "Pipeline") + '</dt><dd>' + esc(spec.pipeline || "—") + '</dd>';
-    rows += '<dt>' + tr("Ütem", "Cadence") + '</dt><dd>' + esc(spec.cadence || "—") + '</dd>';
-    rows += '<dt>' + tr("Ütemező", "Scheduler") + '</dt><dd>' + esc(spec.scheduler || "—") + '</dd>';
+    rows += '<dt>' + tr("Folyamat", "Pipeline") + '</dt><dd>' + esc(spec.pipeline || "–") + '</dd>';
+    rows += '<dt>' + tr("Ütem", "Cadence") + '</dt><dd>' + esc(spec.cadence || "–") + '</dd>';
+    rows += '<dt>' + tr("Ütemező", "Scheduler") + '</dt><dd>' + esc(spec.scheduler || "–") + '</dd>';
     modal.querySelector(".gm-spec").innerHTML = rows;
     modal.querySelector(".gm-modal__benefit").textContent = EN ? a.benefitEn : a.benefit;
 
@@ -1098,7 +1098,7 @@
         done.className = "gm-form__done";
         done.setAttribute("role", "status");
         var h = document.createElement("h3");
-        h.textContent = form.dataset.doneTitle || "Köszönjük — megkaptuk.";
+        h.textContent = form.dataset.doneTitle || "Köszönjük – megkaptuk.";
         var pEl = document.createElement("p");
         pEl.textContent = form.dataset.doneText || "";
         done.appendChild(h);

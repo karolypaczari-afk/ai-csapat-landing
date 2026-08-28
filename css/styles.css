@@ -64,6 +64,14 @@ html, body { margin: 0; padding: 0; background: #0B0B16; }
 .gm-container { width: 100%; max-width: var(--gm-maxw); margin-inline: auto; padding-inline: clamp(1.1rem, 4vw, 2.5rem); }
 .gm-narrow { max-width: 860px; }
 .gm-text-center { text-align: center; }
+/* Sorkiegyenlites (Karoly, 2026-08-28). Desktopon tobb kozepre zart bekezdesunk
+   egy hosszu + egy nagyon rovid sorra tort ("...vagytok? Kerj egyedi ajanlatot."),
+   ami kozepre zart szovegnel kifejezetten zavaro. A `balance` a sorokat egyenlo
+   hosszra osztja, tehat a tores hamarabb, mondathataron tortenik.
+   MIERT NEM kezi <br>: az EGYETLEN szelessegre rogzitene a torest, es minden mas
+   nezetben rontana. A `pretty` fallback a regebbi Safarikon legalabb az arva
+   utolso SZOT megfogja; ahol egyik sincs, ott a mai viselkedes marad. */
+.gm-balance { text-wrap: pretty; text-wrap: balance; }
 /* Csak képernyőolvasónak — a `display:none` NEM jó, azt az AT is átugorja. */
 .gm-sr {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -797,7 +805,15 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-price__note { display: block; color: #8C89A8; font-size: 0.8rem; margin-bottom: 0.4rem; }
 .gm-price__amount { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; font-family: var(--gm-mono); color: var(--gm-cyan); line-height: 1; margin: 0.2rem 0 0.3rem; }
 .gm-price__cur { font-size: 1rem; color: #B8B6CE; }
-.gm-price__list { list-style: none; padding: 0; margin: 1.4rem 0; display: grid; gap: 0.7rem; font-size: 0.94rem; color: #D7D5EA; }
+/* A `padding-inline-start` (Karoly, 2026-08-28): a ✓ oszlop eddig pontosan a
+   kartya belso peremen ult, egy vonalban az arral es a CTA-val, ezert a lista
+   nem olvasodott sajat blokknak — a pipa "kilogott" a szoveg elol. Fel remmel
+   beljebb huzva a lista lathatoan behuzott felsorolas lesz, a ✓ pedig a
+   szoveghez tartozik, nem a kartya szelehez. A lista-elem sajat logo behuzasat
+   (1,3rem) ez NEM erinti: az a ✓ es a tobbsoros folytatas igazitasat tartja.
+   MERVE (Chromium, 390/768/1440px): a ✓ igy 12px-szel beljebb all a kartya-cim
+   bal szelenel, mindharom szelessegen azonosan. */
+.gm-price__list { list-style: none; padding: 0; padding-inline-start: 0.75rem; margin: 1.4rem 0; display: grid; gap: 0.7rem; font-size: 0.94rem; color: #D7D5EA; }
 /* Lógó behúzás, NEM flex. A `display:flex` minden inline gyereket (pl. egy
    mondat közepére tett <strong>-ot) ÖNÁLLÓ flex-elemmé tesz, és közéjük teszi
    a `gap`-et → a mondat szóközök helyett 0,6rem-es résekkel szakad szét, és
@@ -979,8 +995,19 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 /* Jogi + kapcsolat sor. SZÁNDÉKOSAN nem flex: egy inline sor tördelése kis kijelzőn
    magától jó, és nem érinti a `<strong>`-ös flex-lista csapdáját sem. A HU oldal ma
    nem használja ezt az osztályt — a szabály additív, a magyar felület bájtra változatlan. */
-.gm-footer__legal { margin-bottom: 0.75rem; line-height: 2; }
-.gm-footer__legal a { color: #B8B5D4; text-decoration: underline; text-underline-offset: 2px; }
+/* 2026-08-28: a lablec KET linkrol HATRA nott (blog + harom szabalyzat + e-mail +
+   fooldal). Ezert kap sajat max-width-et es sorkiegyenlitest: enelkul a hat elem
+   szeles kepernyon egyetlen 1100px-es sorba fut, keskenyen pedig egy arva
+   linkre torik. */
+.gm-footer__legal { margin-bottom: 0.75rem; line-height: 2; max-width: 720px; margin-inline: auto; text-wrap: pretty; text-wrap: balance; }
+/* MERVE 390px-en: a linkfelirat KETTETORT ("Altalanos szerzodesi / feltetelek", az
+   alahuzas is elszakadt), az elvalaszto `·` pedig SOR ELEJERE kerult. Mindketto
+   abbol jott, hogy a `·` onallo szovegcsomopont volt korulotte szokozokkel.
+   A `nowrap` a feliratot tartja egyben (a leghosszabb 200px, 390px-es kepernyon is
+   befer), a `::after` pedig az elozo linkhez ragasztja az elvalasztot nem-toro
+   szokozzel — igy a `·` sosem kezdhet sort. Az utolso utan nincs elvalaszto. */
+.gm-footer__legal a { color: #B8B5D4; text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.gm-footer__legal a:not(:last-of-type)::after { content: "\00a0·"; color: #8C89A8; text-decoration: none; display: inline-block; }
 .gm-footer__legal a:hover, .gm-footer__legal a:focus-visible { color: #FFFFFF; }
 
 /* ---- Reduced motion ---- */
