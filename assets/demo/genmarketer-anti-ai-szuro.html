@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — anti-AI szűrő animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .pair { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:16px 24px; box-shadow:0 6px 18px rgba(0,0,0,0.06); flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .pair.in { opacity:1; transform:none; }
+
+  .row { display:flex; align-items:center; gap:16px; font-size:25px; line-height:1.3; }
+  .ic { width:32px; height:32px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; }
+  .bad .ic { border:2px solid var(--red); color:var(--red); background:#faf1f1; opacity:0; transform:scale(.6); transition:opacity .3s, transform .3s; }
+  .bad.struck .ic { opacity:1; transform:none; }
+  .good .ic { background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; }
+
+  .btxt { position:relative; color:var(--tx); transition:color .4s; }
+  .btxt .caret { display:inline-block; width:2px; height:22px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .btxt::after { content:''; position:absolute; left:0; top:56%; height:2.5px; width:0; background:var(--red); transition:width .45s ease; }
+  .bad.struck .btxt { color:#9AA0A8; }
+  .bad.struck .btxt::after { width:100%; }
+  .btxt .hl { font-style:normal; font-weight:800; color:var(--red); background:#faf1f1; border-radius:5px; padding:0 6px; }
+
+  .good { opacity:0; transform:translateY(8px); transition:opacity .4s, transform .4s; font-weight:600; }
+  .good.in { opacity:1; transform:none; }
+  .good .hl { font-style:normal; font-weight:800; color:var(--violet); background:rgba(124,58,237,0.1); border-radius:5px; padding:0 6px; }
+  .swap { margin-left:auto; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:17px; font-weight:700; color:#1A1A2E; background:#FFC400; border-radius:999px; padding:4px 14px; white-space:nowrap; }
+
+  .pills { flex:none; display:flex; justify-content:center; gap:14px; padding:4px 0 2px; }
+  .pill { font-size:20px; font-weight:800; border-radius:999px; padding:9px 22px; color:#fff; opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s; white-space:nowrap; }
+  .pill.in { opacity:1; transform:none; }
+  .pill.p1 { background:var(--violet); }
+  .pill.p2 { background:var(--cyan); }
+  .pill.p3 { background:#FFC400; color:#1A1A2E; }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">ANTI-AI SZŰRŐ — minden szöveg átmegy rajta · HERMÉSZ</div>
+
+    <div class="pair" id="c1">
+      <div class="row bad" id="b1"><span class="ic">✕</span><span class="btxt" id="t1"><span class="caret"></span></span></div>
+      <div class="row good" id="g1"><span class="ic">✓</span><span>Rögtön a lényeg, üres udvariaskodás nélkül.</span></div>
+    </div>
+
+    <div class="pair" id="c2">
+      <div class="row bad" id="b2"><span class="ic">✕</span><span class="btxt" id="t2"><span class="caret"></span></span></div>
+      <div class="row good" id="g2"><span class="ic">✓</span><span>Konkrét dátum, konkrét szám, konkrét eset.</span></div>
+    </div>
+
+    <div class="pair" id="c3">
+      <div class="row bad" id="b3"><span class="ic">✕</span><span class="btxt" id="t3"><span class="caret"></span></span></div>
+      <div class="row good" id="g3"><span class="ic">✓</span><span>Egy biztos <b class="hl">-</b> ezt érdemes végigolvasni.</span><span class="swap">— helyett -</span></div>
+    </div>
+
+    <div class="pair" id="c4">
+      <div class="row bad" id="b4"><span class="ic">✕</span><span class="btxt" id="t4"><span class="caret"></span></span></div>
+      <div class="row good" id="g4"><span class="ic">✓</span><span>Írj vissza, ha érdekel.</span></div>
+    </div>
+
+    <div class="pills">
+      <span class="pill p1" id="p1">AI-mentesség</span>
+      <span class="pill p2" id="p2">magyar szórend és fogalmazás</span>
+      <span class="pill p3" id="p3">szakértői technikákkal</span>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var PAIRS = [
+    { bad: 'Remélem, jól van! Örömmel értesítem…' },
+    { bad: 'A mai gyorsan változó digitális világban…' },
+    { bad: 'Egy biztos — ezt a levelet érdemes végigolvasni.',
+      badHtml: 'Egy biztos <b class="hl">—</b> ezt a levelet érdemes végigolvasni.' },
+    { bad: 'Ne habozzon kapcsolatba lépni velünk!' }
+  ];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i).replace('<', '&lt;') + caret;
+      await sleep(20);
+    }
+    el.innerHTML = text;
+  }
+  function reset() {
+    for (var i = 1; i <= 4; i++) {
+      $('c' + i).classList.remove('in');
+      $('b' + i).classList.remove('struck');
+      $('g' + i).classList.remove('in');
+      $('t' + i).innerHTML = '<span class="caret"></span>';
+    }
+    ['p1','p2','p3'].forEach(function (id) { $(id).classList.remove('in'); });
+  }
+  function finalState() {
+    for (var i = 1; i <= 4; i++) {
+      $('c' + i).classList.add('in');
+      $('b' + i).classList.add('struck');
+      $('g' + i).classList.add('in');
+      $('t' + i).innerHTML = PAIRS[i - 1].badHtml || PAIRS[i - 1].bad;
+    }
+    ['p1','p2','p3'].forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 1; i <= 4; i++) {
+        var p = PAIRS[i - 1];
+        $('c' + i).classList.add('in');
+        await sleep(300);
+        await typeInto($('t' + i), p.bad);
+        await sleep(350);
+        if (p.badHtml) $('t' + i).innerHTML = p.badHtml;
+        $('b' + i).classList.add('struck');
+        await sleep(450);
+        $('g' + i).classList.add('in');
+        await sleep(400);
+      }
+      await sleep(300);
+      $('p1').classList.add('in'); await sleep(280);
+      $('p2').classList.add('in'); await sleep(280);
+      $('p3').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

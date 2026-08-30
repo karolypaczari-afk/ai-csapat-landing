@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — előfizetés-szakértő animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .kpis { display:flex; gap:14px; flex:none; }
+  .kpi { flex:1; background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 20px; box-shadow:0 4px 12px rgba(0,0,0,0.05); opacity:0; transform:translateY(10px); transition:opacity .4s, transform .4s; }
+  .kpi.in { opacity:1; transform:none; }
+  .kpi small { display:block; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:5px; }
+  .kpi b { font-size:32px; font-variant-numeric:tabular-nums; }
+  .kpi .warn { display:inline-block; margin-left:9px; font-size:15px; font-weight:800; color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); border-radius:999px; padding:2px 11px; vertical-align:5px; }
+
+  .q { flex:none; background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:14px; padding:13px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; align-items:center; gap:16px; }
+  .q small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; }
+  .q .txt { font-size:24px; font-weight:700; min-height:32px; }
+  .caret { display:inline-block; width:2px; height:22px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+
+  .plan { background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); flex:1; }
+  .plan h3 { font-size:21px; font-weight:800; margin-bottom:6px; }
+  .row { display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--line); opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
+  .row:last-child { border-bottom:none; }
+  .row.in { opacity:1; transform:none; }
+  .row .ok { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
+  .row .abars { flex:1; }
+  .row .abars i { display:block; height:11px; border-radius:999px; background:#E7E5F0; }
+  .row .abars i + i { margin-top:6px; width:58%; }
+  .row.short .abars i + i { display:none; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">ELŐFIZETÉS-SZAKÉRTŐ · PERPETUUM</div>
+
+    <div class="kpis">
+      <div class="kpi" id="k1"><small>MRR</small><b>2,4 M Ft</b></div>
+      <div class="kpi" id="k2"><small>Churn</small><b>6,8%<span class="warn">magas</span></b></div>
+      <div class="kpi" id="k3"><small>Retention · 90 nap</small><b>71%</b></div>
+    </div>
+
+    <div class="q"><small>A kérdésed</small><span class="txt" id="q"><span class="caret"></span></span></div>
+
+    <div class="plan">
+      <h3>PERPETUUM javaslatai</h3>
+      <div class="row" id="r1"><span class="ok">✓</span><span class="abars"><i></i><i></i></span></div>
+      <div class="row short" id="r2"><span class="ok">✓</span><span class="abars"><i style="width:78%"></i></span></div>
+      <div class="row" id="r3"><span class="ok">✓</span><span class="abars"><i style="width:92%"></i><i></i></span></div>
+      <div class="row short" id="r4"><span class="ok">✓</span><span class="abars"><i style="width:70%"></i></span></div>
+      <div class="row short" id="r5"><span class="ok">✓</span><span class="abars"><i style="width:84%"></i></span></div>
+    </div>
+
+    <div class="cap" id="cap"><b>MRR, churn, retention</b> — neki ez az anyanyelve.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var Q = 'A 3. hónapban ugrik meg a lemorzsolódás – mit tegyek?';
+  var kpis = ['k1','k2','k3'];
+  var rows = ['r1','r2','r3','r4','r5'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(20);
+    }
+    el.textContent = text;
+  }
+  function reset() {
+    kpis.forEach(function (id) { $(id).classList.remove('in'); });
+    rows.forEach(function (id) { $(id).classList.remove('in'); });
+    $('q').innerHTML = '<span class="caret"></span>';
+    $('cap').classList.remove('in');
+  }
+  function finalState() {
+    kpis.forEach(function (id) { $(id).classList.add('in'); });
+    rows.forEach(function (id) { $(id).classList.add('in'); });
+    $('q').textContent = Q;
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < kpis.length; i++) {
+        $(kpis[i]).classList.add('in');
+        await sleep(300);
+      }
+      await sleep(400);
+      await typeInto($('q'), Q);
+      await sleep(500);
+      for (var j = 0; j < rows.length; j++) {
+        $(rows[j]).classList.add('in');
+        await sleep(420);
+      }
+      await sleep(400);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

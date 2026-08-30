@@ -618,9 +618,21 @@
   window.addEventListener('resize', rescale);
   rescale();
 
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
 
   function centerOf(el, dx, dy) {
     var r = el.getBoundingClientRect();

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — ICP-kutatás animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .srcs { flex:none; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .src { background:var(--card); border:1.5px solid #C9CDD6; border-radius:12px; padding:26px 14px 11px; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.05); opacity:0; transform:translateY(10px); transition:opacity .4s, transform .4s; }
+  .src.in { opacity:1; transform:none; }
+  .src .tag { position:absolute; top:-12px; left:11px; font-size:13px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:#fff; border-radius:999px; padding:2px 11px; }
+  #sc1 .tag { background:#54595F; }
+  #sc2 .tag { background:var(--cyan); }
+  #sc3 .tag { background:var(--violet); }
+  #sc4 .tag { background:#FFC400; color:#1A1A2E; }
+  .src i { display:block; height:8px; border-radius:999px; background:#E7E5F0; margin-top:5px; }
+  .src i.s { width:58%; }
+
+  .report { background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:16px; padding:14px 22px; box-shadow:0 6px 18px rgba(0,0,0,0.08); flex:1; display:flex; flex-direction:column; opacity:0; transform:translateY(14px); transition:opacity .45s, transform .45s; }
+  .report.in { opacity:1; transform:none; }
+  .report h3 { font-size:21px; font-weight:800; margin-bottom:6px; }
+  .frow { display:flex; align-items:center; gap:16px; padding:10px 0; border-bottom:1px solid var(--line); flex:1; opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
+  .frow:last-child { border-bottom:none; }
+  .frow.in { opacity:1; transform:none; }
+  .flabel { width:225px; flex:none; font-size:16px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:#fff; border-radius:999px; padding:6px 0; text-align:center; }
+  .frow:nth-child(2) .flabel { background:var(--violet); }
+  .frow:nth-child(3) .flabel { background:var(--cyan); }
+  .frow:nth-child(4) .flabel { background:#dc2626; }
+  .frow:nth-child(5) .flabel { background:#54595F; }
+  .frow:nth-child(6) .flabel { background:#FFC400; color:#1A1A2E; }
+  .fbars { flex:1; display:flex; align-items:center; gap:10px; }
+  .fbars .qm { font-size:26px; font-weight:800; color:var(--cyan); line-height:1; flex:none; }
+  .fbars .bb { flex:1; }
+  .fbars .bb i { display:block; height:10px; border-radius:999px; background:#E7E5F0; }
+  .fbars .bb i + i { margin-top:6px; width:62%; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">ICP-KUTATÁS — mélyelemzés a vevőidről · SHERLOCK</div>
+
+    <div class="srcs">
+      <div class="src" id="sc1"><span class="tag">Értékelések</span><i></i><i class="s"></i></div>
+      <div class="src" id="sc2"><span class="tag">Kommentek</span><i></i><i class="s"></i></div>
+      <div class="src" id="sc3"><span class="tag">Fórumok</span><i></i><i class="s"></i></div>
+      <div class="src" id="sc4"><span class="tag">E-mailek</span><i></i><i class="s"></i></div>
+    </div>
+
+    <div class="report" id="report">
+      <h3>Amit megtudsz a vevőidről</h3>
+      <div class="frow" id="f1"><span class="flabel">Demográfia</span><span class="fbars"><span class="bb"><i></i></span></span></div>
+      <div class="frow" id="f2"><span class="flabel">Pszichográfia</span><span class="fbars"><span class="bb"><i></i><i></i></span></span></div>
+      <div class="frow" id="f3"><span class="flabel">Fő fájdalompontok</span><span class="fbars"><span class="bb"><i></i><i></i></span></span></div>
+      <div class="frow" id="f4"><span class="flabel">Gyakori kifejezéseik</span><span class="fbars"><span class="qm">„</span><span class="bb"><i></i></span><span class="qm">„</span><span class="bb"><i style="width:80%"></i></span></span></div>
+      <div class="frow" id="f5"><span class="flabel">Vágyaik</span><span class="fbars"><span class="bb"><i></i><i></i></span></span></div>
+    </div>
+
+    <div class="cap" id="cap"><b>Ha így ismered a vevőd</b> — sokkal hatékonyabban szólítod meg.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var srcs = ['sc1','sc2','sc3','sc4'];
+  var frows = ['f1','f2','f3','f4','f5'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    srcs.forEach(function (id) { $(id).classList.remove('in'); });
+    $('report').classList.remove('in');
+    frows.forEach(function (id) { $(id).classList.remove('in'); });
+    $('cap').classList.remove('in');
+  }
+  function finalState() {
+    srcs.forEach(function (id) { $(id).classList.add('in'); });
+    $('report').classList.add('in');
+    frows.forEach(function (id) { $(id).classList.add('in'); });
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < srcs.length; i++) {
+        $(srcs[i]).classList.add('in');
+        await sleep(280);
+      }
+      await sleep(450);
+      $('report').classList.add('in');
+      await sleep(500);
+      for (var j = 0; j < frows.length; j++) {
+        $(frows[j]).classList.add('in');
+        await sleep(480);
+      }
+      await sleep(450);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

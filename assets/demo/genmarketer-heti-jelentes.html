@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — heti versenytárs-jelentés animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .report { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; box-shadow:0 6px 18px rgba(0,0,0,0.07); flex:1; padding:18px 24px; display:flex; flex-direction:column; gap:4px; opacity:0; transform:translateY(14px); transition:opacity .45s, transform .45s; }
+  .report.in { opacity:1; transform:none; }
+  .rhead { display:flex; align-items:center; gap:14px; padding-bottom:12px; border-bottom:1.5px solid var(--line); margin-bottom:6px; }
+  .rhead b { font-size:24px; }
+  .rhead small { margin-left:auto; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:17px; color:var(--muted); }
+
+  .item { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(--line); font-size:21.5px; opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
+  .item:last-child { border-bottom:none; }
+  .item.in { opacity:1; transform:none; }
+  .mod { width:120px; flex:none; text-align:center; font-size:14px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 0; }
+  .mod.m1 { background:var(--violet); }
+  .mod.m2 { background:var(--cyan); }
+  .mod.m3 { background:#54595F; }
+  .mod.m4 { background:#FFC400; color:#1A1A2E; }
+  .imp { margin-left:auto; font-size:16px; font-weight:800; border-radius:999px; padding:4px 14px; white-space:nowrap; }
+  .imp.hi { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
+  .imp.mid { color:#1A1A2E; background:#FFC400; }
+  .imp.lo { color:#54595F; background:#f0eee8; border:1.5px solid #e0dcd2; }
+
+  .foot { flex:none; display:flex; align-items:center; justify-content:center; gap:14px; }
+  .sched { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); border-radius:999px; padding:9px 22px; opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s; }
+  .sched.in { opacity:1; transform:none; }
+  .sched i { width:11px; height:11px; border-radius:50%; background:#fff; font-style:normal; animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">HETI VERSENYTÁRS-JELENTÉS · SUN TZU</div>
+
+    <div class="report" id="rep">
+      <div class="rhead"><b>35. hét — mi változott?</b><small>3 versenytárs figyelve</small></div>
+      <div class="item" id="i1"><span class="mod m1">Hirdetés</span>Konkurens A: 2 új videó-kreatív, új üzenettel<span class="imp hi">fontos</span></div>
+      <div class="item" id="i2"><span class="mod m2">Árazás</span>Konkurens B: –10% akció indult a fő termékre<span class="imp hi">fontos</span></div>
+      <div class="item" id="i3"><span class="mod m3">Tartalom</span>Konkurens C: 3 új blogcikk a kulcstémádban<span class="imp mid">figyeld</span></div>
+      <div class="item" id="i4"><span class="mod m4">Hiring</span>Konkurens A: PPC-menedzsert keres — skálázni fog<span class="imp lo">jelzés</span></div>
+    </div>
+
+    <div class="foot"><span class="sched" id="sched"><i></i>minden hétfőn, magától</span></div>
+
+    <div class="cap" id="cap"><b>Egyszer állítod be</b> — onnantól csak olvasod.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var items = ['i1','i2','i3','i4'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    $('rep').classList.remove('in');
+    items.forEach(function (id) { $(id).classList.remove('in'); });
+    ['sched','cap'].forEach(function (id) { $(id).classList.remove('in'); });
+  }
+  function finalState() {
+    $('rep').classList.add('in');
+    items.forEach(function (id) { $(id).classList.add('in'); });
+    ['sched','cap'].forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      $('rep').classList.add('in');
+      await sleep(600);
+      for (var i = 0; i < items.length; i++) {
+        $(items[i]).classList.add('in');
+        await sleep(520);
+      }
+      await sleep(500);
+      $('sched').classList.add('in');
+      await sleep(600);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

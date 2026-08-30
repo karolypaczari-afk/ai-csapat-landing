@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — wireframe→design animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .grid { flex:1; display:grid; grid-template-columns:1fr 150px 1fr; gap:0; align-items:stretch; min-height:0; }
+
+  .pagew { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:34px 14px 14px; box-shadow:0 6px 16px rgba(0,0,0,0.07); display:flex; flex-direction:column; gap:9px; position:relative; }
+  .pagew .tag { position:absolute; top:-14px; left:14px; font-size:14px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:3px 13px; }
+  #wf .tag { background:#54595F; color:#fff; }
+  #hf .tag { background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; }
+
+  .wsec { border-radius:8px; background:#EFEDF6; border:1.5px dashed #C9CDD6; display:flex; align-items:center; justify-content:center; color:#9AA0A8; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14px; letter-spacing:.06em; text-transform:uppercase; }
+  .wsec.h { flex:2.2; } .wsec.m { flex:1.3; } .wsec.s { flex:1; }
+
+  .dsec { border-radius:8px; opacity:0; transform:translateY(8px); transition:opacity .45s, transform .45s; padding:10px 12px; }
+  .dsec.in { opacity:1; transform:none; }
+  .dsec.h { flex:2.2; background:linear-gradient(135deg,#150033,#3A049A); color:#fff; display:flex; flex-direction:column; justify-content:center; gap:8px; }
+  .dsec.h b { font-size:20px; line-height:1.3; }
+  .dsec.h .cta { align-self:flex-start; font-size:13.5px; font-weight:800; color:#fff; background:linear-gradient(90deg,#7C3AED,#06B6D4); border-radius:999px; padding:5px 14px; }
+  .dsec.m { flex:1.3; background:#fff; border:1.5px solid var(--line); display:flex; align-items:center; gap:8px; }
+  .dsec.m i { width:44px; height:16px; border-radius:4px; background:#EFEDF6; }
+  .dsec.m b { font-size:12.5px; color:var(--violet); white-space:nowrap; }
+  .dsec.s { flex:1; background:#fff; border:1.5px solid var(--line); display:flex; flex-direction:column; justify-content:center; gap:5px; }
+  .dsec.s i { display:block; height:8px; border-radius:999px; background:#E7E5F0; }
+  .dsec.s i + i { width:65%; }
+
+  .mid { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:0 8px; }
+  .arrow { font-size:34px; color:var(--violet); opacity:0; transition:opacity .4s; }
+  .arrow.in { opacity:1; }
+  .tok { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14px; font-weight:700; border-radius:999px; padding:5px 12px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; }
+  .tok.in { opacity:1; transform:none; }
+  .tok.t1 { color:#fff; background:var(--violet); }
+  .tok.t2 { color:#fff; background:var(--cyan); }
+  .tok.t3 { color:#1A1A2E; background:#FFC400; }
+  .tok.t4 { color:var(--muted); background:#f0eee8; border:1.5px solid #e0dcd2; }
+
+  .qa { align-self:center; display:flex; align-items:center; gap:9px; font-size:17px; font-weight:800; color:var(--violet); opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s; }
+  .qa.in { opacity:1; transform:none; }
+  .qa i { width:27px; height:27px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; font-style:normal; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">WIREFRAME → KÉSZ DESIGN — Figmában és kódban</div>
+
+    <div class="grid">
+      <div class="pagew" id="wf">
+        <span class="tag">Wireframe</span>
+        <div class="wsec h">hero</div>
+        <div class="wsec m">bizonyíték</div>
+        <div class="wsec s">ajánlat</div>
+        <div class="wsec s">cta</div>
+      </div>
+
+      <div class="mid">
+        <span class="arrow" id="arrow">→</span>
+        <span class="tok t1" id="t1">#7C3AED</span>
+        <span class="tok t2" id="t2">Inter 600</span>
+        <span class="tok t3" id="t3">8px grid</span>
+        <span class="tok t4" id="t4">WCAG AA</span>
+        <span class="qa" id="qa"><i>✓</i>design-QA</span>
+      </div>
+
+      <div class="pagew" id="hf">
+        <span class="tag">Kész design</span>
+        <div class="dsec h" id="d1"><b>Meleg ház,<br>feleannyi rezsiből.</b><span class="cta">Kérek felmérést</span></div>
+        <div class="dsec m" id="d2"><i></i><i></i><b>1 200+ ügyfél</b></div>
+        <div class="dsec s" id="d3"><i></i><i></i></div>
+        <div class="dsec s" id="d4"><i style="width:50%"></i></div>
+      </div>
+    </div>
+
+    <div class="cap" id="cap"><b>MATISSE tervez, NEXUS kódol, SENTRY ellenőriz</b> — Figma és HTML/CSS egyben.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var toks = ['t1','t2','t3','t4'];
+  var dsecs = ['d1','d2','d3','d4'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    ['arrow','qa','cap'].forEach(function (id) { $(id).classList.remove('in'); });
+    toks.forEach(function (id) { $(id).classList.remove('in'); });
+    dsecs.forEach(function (id) { $(id).classList.remove('in'); });
+  }
+  function finalState() {
+    ['arrow','qa','cap'].forEach(function (id) { $(id).classList.add('in'); });
+    toks.forEach(function (id) { $(id).classList.add('in'); });
+    dsecs.forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(900);
+      $('arrow').classList.add('in');
+      await sleep(400);
+      for (var i = 0; i < toks.length; i++) {
+        $(toks[i]).classList.add('in');
+        await sleep(260);
+      }
+      await sleep(400);
+      for (var j = 0; j < dsecs.length; j++) {
+        $(dsecs[j]).classList.add('in');
+        await sleep(480);
+      }
+      await sleep(500);
+      $('qa').classList.add('in');
+      await sleep(600);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

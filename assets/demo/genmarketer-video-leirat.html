@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — videó-leiratozás animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .input { flex:none; background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; align-items:center; gap:16px; }
+  .input small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; }
+  .input .url { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:23px; font-weight:700; min-height:31px; }
+  .caret { display:inline-block; width:2px; height:22px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .alt { margin-left:auto; font-size:17px; color:var(--muted); white-space:nowrap; }
+  .alt code { font-family:"JetBrains Mono", ui-monospace, monospace; color:var(--tx); font-weight:700; }
+
+  .proc { flex:none; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:8px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); }
+  .step { display:flex; align-items:center; gap:16px; padding:11px 0; border-bottom:1px solid var(--line); font-size:22px; opacity:0; transition:opacity .35s; }
+  .step:last-child { border-bottom:none; }
+  .step.in { opacity:1; }
+  .step small { color:var(--muted); font-size:18px; margin-left:auto; white-space:nowrap; }
+  .ind { width:28px; height:28px; flex:none; position:relative; }
+  .ind .spin { position:absolute; inset:0; border:3.5px solid #EFEDF6; border-top-color:var(--violet); border-radius:50%; animation:rot .8s linear infinite; }
+  @keyframes rot { to { transform:rotate(360deg); } }
+  .ind .ok { position:absolute; inset:0; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; opacity:0; transform:scale(.6); transition:opacity .25s, transform .25s; }
+  .step.done .spin { display:none; }
+  .step.done .ok { opacity:1; transform:none; }
+
+  .outs { flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; min-height:0; }
+  .out { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:38px 18px 16px; position:relative; box-shadow:0 5px 14px rgba(0,0,0,0.06); opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .out.in { opacity:1; transform:none; }
+  .out .tag { position:absolute; top:-14px; left:14px; font-size:14.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 13px; }
+  #o1 .tag { background:#54595F; }
+  #o2 .tag { background:var(--violet); }
+  #o3 .tag { background:var(--cyan); }
+  .out i { display:block; height:11px; border-radius:999px; background:#E7E5F0; margin-bottom:8px; }
+  .out i.s { width:70%; } .out i.m { width:88%; }
+  .out .q { font-size:34px; font-weight:800; color:var(--cyan); line-height:1; margin-bottom:6px; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">VIDEÓ-ELEMZÉS — linkből tudás · GUTENBERG</div>
+
+    <div class="input"><small>Forrás</small><span class="url" id="url"><span class="caret"></span></span><span class="alt">vagy fájl: <code>eloadas.mp4</code></span></div>
+
+    <div class="proc">
+      <div class="step" id="s1"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Letöltés és hang-kinyerés<small>yt-dlp</small></div>
+      <div class="step" id="s2"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Leiratozás időkódokkal<small>magyar és angol</small></div>
+      <div class="step" id="s3"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Elemzés és kivonatolás<small>témák · érvek · tanulságok</small></div>
+    </div>
+
+    <div class="outs">
+      <div class="out" id="o1"><span class="tag">Teljes leirat</span><i></i><i class="m"></i><i></i><i class="s"></i><i class="m"></i><i class="s"></i></div>
+      <div class="out" id="o2"><span class="tag">Összefoglaló</span><i class="m"></i><i></i><i class="s"></i><i class="m"></i></div>
+      <div class="out" id="o3"><span class="tag">Kulcs-idézetek</span><div class="q">„</div><i class="m"></i><i class="s"></i><div class="q">„</div><i></i><i class="s"></i></div>
+    </div>
+
+    <div class="cap" id="cap"><b>Bármely videóból</b> — a sajátodból vagy a konkurenciáéból.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var URLTXT = 'youtube.com/watch?v=a1b2c3d4';
+  var steps = ['s1','s2','s3'];
+  var outs = ['o1','o2','o3'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(20);
+    }
+    el.textContent = text;
+  }
+  function reset() {
+    $('url').innerHTML = '<span class="caret"></span>';
+    steps.forEach(function (id) { $(id).classList.remove('in', 'done'); });
+    outs.forEach(function (id) { $(id).classList.remove('in'); });
+    $('cap').classList.remove('in');
+  }
+  function finalState() {
+    $('url').textContent = URLTXT;
+    steps.forEach(function (id) { $(id).classList.add('in', 'done'); });
+    outs.forEach(function (id) { $(id).classList.add('in'); });
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      await typeInto($('url'), URLTXT);
+      await sleep(500);
+      for (var i = 0; i < steps.length; i++) {
+        $(steps[i]).classList.add('in');
+        await sleep(900);
+        $(steps[i]).classList.add('done');
+        await sleep(250);
+      }
+      await sleep(400);
+      for (var j = 0; j < outs.length; j++) {
+        $(outs[j]).classList.add('in');
+        await sleep(420);
+      }
+      await sleep(400);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

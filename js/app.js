@@ -1608,12 +1608,91 @@
     } catch (e) {}
   }
 
+  /* ---- Munkaállomás ([data-gm-ws]): use-case fülek + lépés → „A munka állása" panel ---- */
+  function wireWorkstation() {
+    var host = document.querySelector("[data-gm-ws]");
+    if (!host) return;
+    var tabs = host.querySelectorAll("[data-ws-tab]");
+    var panels = host.querySelectorAll("[data-ws-panel]");
+    // fülsor: egérrel is húzható vízszintes görgetés (érintésen a natív pan él tovább)
+    var tabbar = host.querySelector(".gm-ws__tabs");
+    if (tabbar) {
+      var dragOn = false, dragMoved = 0, dragX = 0, dragL = 0;
+      tabbar.addEventListener("pointerdown", function (e) {
+        if (e.pointerType !== "mouse") return;
+        dragOn = true; dragMoved = 0; dragX = e.clientX; dragL = tabbar.scrollLeft;
+      });
+      window.addEventListener("pointermove", function (e) {
+        if (!dragOn) return;
+        var dx = e.clientX - dragX;
+        dragMoved = Math.max(dragMoved, Math.abs(dx));
+        tabbar.scrollLeft = dragL - dx;
+      });
+      window.addEventListener("pointerup", function () { dragOn = false; });
+      tabbar.addEventListener("click", function (e) {
+        if (dragMoved > 6) { e.stopPropagation(); e.preventDefault(); }
+      }, true);
+    }
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var key = tab.getAttribute("data-ws-tab");
+        tab.scrollIntoView({ block: "nearest", inline: "nearest" });
+        tabs.forEach(function (t) { t.setAttribute("aria-selected", t === tab ? "true" : "false"); });
+        panels.forEach(function (p) {
+          var on = p.getAttribute("data-ws-panel") === key;
+          p.classList.toggle("is-active", on);
+          if (on) p.removeAttribute("hidden"); else p.setAttribute("hidden", "");
+        });
+        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: "gm_ws_tab", ws_tab: key }); } catch (e) {}
+      });
+    });
+    panels.forEach(function (panel) {
+      var steps = panel.querySelectorAll("[data-ws-step]");
+      var works = panel.querySelectorAll("[data-ws-work]");
+      // mobil nézethez: a lépés címét bemásoljuk a panel tetejére (CSS csak ≤640px-en mutatja)
+      works.forEach(function (w) {
+        if (w.querySelector(".gm-ws__mtitle")) return;
+        var btn = panel.querySelector('[data-ws-step="' + w.getAttribute("data-ws-work") + '"]');
+        var t = btn && btn.querySelector(".gm-ws__stitle");
+        if (t) {
+          var d = document.createElement("div");
+          d.className = "gm-ws__mtitle";
+          d.innerHTML = t.innerHTML;
+          w.insertBefore(d, w.firstChild);
+        }
+      });
+      steps.forEach(function (step) {
+        step.addEventListener("click", function () {
+          var idx = step.getAttribute("data-ws-step");
+          steps.forEach(function (s) { s.classList.toggle("is-active", s === step); });
+          works.forEach(function (w) {
+            var on = w.getAttribute("data-ws-work") === idx;
+            w.classList.toggle("is-active", on);
+            if (on) {
+              // rejtett panelben álló videó poszterét a megnyitáskor hidratáljuk
+              var v = w.querySelector("video[data-poster]:not([poster])");
+              if (v) v.setAttribute("poster", v.getAttribute("data-poster"));
+              // mobilon/tableten gördüljünk a panelhez — de csak ha tényleg kilóg a képernyőről
+              if (window.innerWidth < 900) requestAnimationFrame(function () {
+                var r = w.getBoundingClientRect();
+                if (r.top > window.innerHeight * 0.6 || r.bottom < 120 || r.top < 0) {
+                  w.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+              });
+            }
+          });
+        });
+      });
+    });
+  }
+
   function init() {
     // 1) Minden, ami a tartalom HASZNÁLHATÓSÁGÁHOZ kell — azonnal, vendor-függés nélkül.
     boot();
     applyRevealState();
     renderAgents();
     wireRoleReliefPeople();
+    wireWorkstation();
     wireFilters();
     wireCtas();
     wireBillingCycle();

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — csatorna-audit animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+
+  .page { position:absolute; inset:0; padding:18px 22px; display:flex; flex-direction:column; gap:13px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; transition:opacity .3s; }
+
+  .row { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .45s, transform .45s; position:relative; }
+  .row.in { opacity:1; transform:none; }
+  .row b { width:150px; flex:none; font-size:24px; }
+  .track { flex:1; height:18px; border-radius:999px; background:#EFEDF6; overflow:hidden; }
+  .fill { display:block; height:100%; border-radius:999px; width:0; transition:width .9s ease; background:linear-gradient(90deg,#7C3AED,#06B6D4); }
+  .reach { width:150px; text-align:right; font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .reach small { display:block; font-size:14.5px; font-weight:600; color:var(--muted); }
+  .chip { width:200px; text-align:center; font-size:18px; font-weight:700; border-radius:999px; padding:7px 0; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .chip.in { opacity:1; transform:none; }
+  .chip.ok { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+  .chip.gold { color:#1A1A2E; background:#FFC400; }
+  .chip.weak { color:#54595F; background:#f0eee8; border:1.5px solid #e0dcd2; }
+  .chip.miss { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); width:auto; }
+
+  /* kiúszó elemek az átvezetéskor */
+  .row.out, .cap.out { opacity:0 !important; transform:translateY(14px); }
+
+  /* mélyfúrás-réteg a felzoomolt sor alatt */
+  #deep { position:absolute; left:22px; right:22px; top:216px; bottom:18px; display:flex; flex-direction:column; gap:13px; opacity:0; transition:opacity .5s; pointer-events:none; }
+  #deep.show { opacity:1; }
+  .cards { flex:1; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,1fr); gap:14px; }
+  .crit { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:16px 20px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:5px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .crit.in { opacity:1; transform:none; }
+  .crit b { font-size:21px; line-height:1.25; }
+  .crit small { font-size:16.5px; color:var(--muted); line-height:1.3; }
+  .score { margin-top:auto; align-self:flex-start; font-size:17.5px; font-weight:800; border-radius:999px; padding:5px 16px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; font-variant-numeric:tabular-nums; }
+  .score.in { opacity:1; transform:none; }
+  .score.hi { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+  .score.mid { color:#1A1A2E; background:#FFC400; }
+  .score.lo { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="page">
+      <div class="head" id="head">CSATORNA-AUDIT 1/2 — a te számaidból · FIGARO</div>
+      <div class="row" id="r1"><b>Instagram</b><span class="track"><span class="fill" data-w="72%"></span></span><span class="reach">84 e<small>elérés/hó</small></span><span class="chip ok">több ilyet</span></div>
+      <div class="row" id="r2"><b>Facebook</b><span class="track"><span class="fill" data-w="45%"></span></span><span class="reach">31 e<small>elérés/hó</small></span><span class="chip weak">formátumot válts</span></div>
+      <div class="row" id="r3"><b>LinkedIn</b><span class="track"><span class="fill" data-w="58%"></span></span><span class="reach">46 e<small>elérés/hó</small></span><span class="chip gold">kiaknázatlan</span></div>
+      <div class="row" id="r4"><b>TikTok</b><span class="track"><span class="fill" data-w="9%"></span></span><span class="reach">3 e<small>elérés/hó</small></span><span class="chip miss">hagyd el</span></div>
+      <div class="cap" id="cap1"><b>Nem általános tippek</b> — a saját számaid mondják meg, hova tedd az energiát.</div>
+    </div>
+
+    <div id="deep">
+      <div class="cards">
+        <div class="crit" id="c1"><b>Elérés-trend</b><small>a követőszámodhoz mérve, 90 napra</small><span class="score mid">6 / 10</span></div>
+        <div class="crit" id="c2"><b>Formátum-mix</b><small>szöveg · carousel · videó megoszlás</small><span class="score lo">4 / 10</span></div>
+        <div class="crit" id="c3"><b>Hook-erősség</b><small>az első sor megtartja-e az olvasót</small><span class="score mid">5 / 10</span></div>
+        <div class="crit" id="c4"><b>Ritmus és időzítés</b><small>milyen sűrűn és mikor posztolsz</small><span class="score lo">3 / 10</span></div>
+        <div class="crit" id="c5"><b>Elköteleződés</b><small>komment-mélység, nem csak like-ok</small><span class="score hi">7 / 10</span></div>
+        <div class="crit" id="c6"><b>Követő-növekedés</b><small>30 napos ütem, a piacodhoz mérve</small><span class="score mid">5 / 10</span></div>
+      </div>
+      <div class="cap" id="cap2"><b>Minden csatornára ugyanez a mélyfúrás</b> — a piacod legjobbjaival összevetve.</div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rows = ['r1','r2','r3','r4'];
+  var crits = ['c1','c2','c3','c4','c5','c6'];
+  var HEAD1 = 'CSATORNA-AUDIT 1/2 — a te számaidból · FIGARO';
+  var HEAD2 = 'CSATORNA-AUDIT 2/2 — LinkedIn mélyfúrás · FIGARO';
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function partsOf(id) {
+    var row = $(id);
+    return { row: row, fill: row.querySelector('.fill'), chip: row.querySelector('.chip') };
+  }
+  function zoomR3() {
+    var r3 = $('r3');
+    var delta = r3.getBoundingClientRect().top - $('r1').getBoundingClientRect().top;
+    var scale = stage.getBoundingClientRect().width / W;
+    r3.style.zIndex = '5';
+    r3.style.transition = 'transform .85s cubic-bezier(.22,.9,.3,1), box-shadow .85s';
+    r3.style.transform = 'translateY(' + (-delta / scale) + 'px) scale(1.05)';
+    r3.style.boxShadow = '0 16px 40px rgba(64,0,153,0.18)';
+  }
+  function unzoomR3() {
+    var r3 = $('r3');
+    r3.style.transition = 'none';
+    r3.style.transform = '';
+    r3.style.boxShadow = '';
+    r3.style.zIndex = '';
+    void r3.offsetHeight;
+  }
+  function reset() {
+    unzoomR3();
+    $('head').textContent = HEAD1;
+    $('deep').classList.remove('show');
+    rows.forEach(function (id) {
+      var p = partsOf(id);
+      p.row.classList.remove('in', 'out');
+      p.fill.style.width = '0';
+      p.chip.classList.remove('in');
+    });
+    crits.forEach(function (id) {
+      $(id).classList.remove('in');
+      $(id).querySelector('.score').classList.remove('in');
+    });
+    $('cap1').classList.remove('in', 'out');
+    $('cap2').classList.remove('in');
+  }
+  function finalState() {
+    $('head').textContent = HEAD2;
+    rows.forEach(function (id) {
+      var p = partsOf(id);
+      p.row.classList.add('in');
+      p.fill.style.width = p.fill.getAttribute('data-w');
+      p.chip.classList.add('in');
+    });
+    ['r1','r2','r4'].forEach(function (id) { $(id).classList.add('out'); });
+    $('cap1').classList.add('in', 'out');
+    zoomR3();
+    $('deep').classList.add('show');
+    crits.forEach(function (id) {
+      $(id).classList.add('in');
+      $(id).querySelector('.score').classList.add('in');
+    });
+    $('cap2').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < rows.length; i++) {
+        var p = partsOf(rows[i]);
+        p.row.classList.add('in');
+        await sleep(280);
+        p.fill.style.width = p.fill.getAttribute('data-w');
+        await sleep(700);
+        p.chip.classList.add('in');
+        await sleep(320);
+      }
+      await sleep(400);
+      $('cap1').classList.add('in');
+      await sleep(2800);
+
+      ['r1','r2','r4'].forEach(function (id) { $(id).classList.add('out'); });
+      $('cap1').classList.add('out');
+      await sleep(350);
+      $('head').style.opacity = '0';
+      zoomR3();
+      await sleep(350);
+      $('head').textContent = HEAD2;
+      $('head').style.opacity = '1';
+      await sleep(550);
+
+      $('deep').classList.add('show');
+      await sleep(400);
+      for (var j = 0; j < crits.length; j++) {
+        $(crits[j]).classList.add('in');
+        await sleep(280);
+        $(crits[j]).querySelector('.score').classList.add('in');
+        await sleep(200);
+      }
+      await sleep(400);
+      $('cap2').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — Google Ads fiókmenedzsment (chat animáció)</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  /* A színpad 1070×720, de ~534px szélesen renderelődik → minden méret ~2×-es. */
+  :root { --bg:#faf9f5; --tx:#1f1e1d; --muted:#7a776f; --line:#e8e5dd; --user:#eef3fb; --violet:#7C3AED; --green:#31a24c; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; }
+
+  .window { width:100%; height:100%; background:var(--bg); border-radius:16px; border:1px solid #ded9cf; overflow:hidden; display:flex; flex-direction:column; }
+  .topbar { display:flex; align-items:center; gap:16px; padding:20px 28px; border-bottom:1px solid var(--line); background:#fff; }
+  .mark { width:40px; height:40px; border-radius:12px; background:#D97757; color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; }
+  .topbar b { font-size:26px; }
+  .ctx { margin-left:auto; display:flex; align-items:center; gap:10px; font-size:20px; font-weight:700; color:var(--violet); background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.25); padding:8px 18px; border-radius:999px; }
+  .ctx i { width:12px; height:12px; border-radius:50%; background:var(--violet); font-style:normal; animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .chat { flex:1; padding:26px 30px; display:flex; flex-direction:column; gap:18px; overflow:hidden; }
+
+  .msg { max-width:88%; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .msg.in { opacity:1; transform:none; }
+  .u { align-self:flex-end; background:var(--user); border:1px solid #d8e2f3; border-radius:18px 18px 4px 18px; padding:16px 22px; font-size:27px; line-height:1.45; }
+  .a { align-self:flex-start; font-size:27px; line-height:1.5; display:flex; gap:14px; }
+  .a .dot { width:34px; height:34px; border-radius:50%; background:#D97757; flex:none; margin-top:4px; }
+  .a p b { font-weight:700; }
+
+  .typing { align-self:flex-start; display:none; gap:7px; padding:14px 20px; }
+  .typing.on { display:flex; }
+  .typing s { width:11px; height:11px; border-radius:50%; background:#c9c5ba; animation:tp 1s infinite; text-decoration:none; }
+  .typing s:nth-child(2){ animation-delay:.18s } .typing s:nth-child(3){ animation-delay:.36s }
+  @keyframes tp { 0%,100%{opacity:.3; transform:translateY(0)} 50%{opacity:1; transform:translateY(-4px)} }
+
+  .work { align-self:flex-start; width:88%; background:#fff; border:1px solid var(--line); border-radius:14px; padding:8px 22px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .work.in { opacity:1; transform:none; }
+  .step { display:flex; align-items:center; gap:16px; padding:13px 0; border-bottom:1px solid var(--line); font-size:24px; opacity:0; transition:opacity .35s; }
+  .step:last-child { border-bottom:none; }
+  .step.in { opacity:1; }
+  .step small { color:var(--muted); font-size:20px; margin-left:auto; white-space:nowrap; }
+  .ind { width:28px; height:28px; flex:none; position:relative; }
+  .ind .spin { position:absolute; inset:0; border:3.5px solid #e5e1d8; border-top-color:var(--violet); border-radius:50%; animation:rot .8s linear infinite; }
+  @keyframes rot { to { transform:rotate(360deg); } }
+  .ind .ok { position:absolute; inset:0; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; opacity:0; transform:scale(.6); transition:opacity .25s, transform .25s; }
+  .step.done .spin { display:none; }
+  .step.done .ok { opacity:1; transform:none; }
+
+  .choices { display:flex; gap:14px; margin-top:14px; }
+  .choice { font-size:23px; font-weight:700; padding:12px 24px; border-radius:999px; border:2px solid var(--violet); color:var(--violet); }
+  .choice.primary { background:var(--violet); color:#fff; }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="window">
+      <div class="topbar">
+        <div class="mark">✳</div><b>Claude</b>
+        <span class="ctx"><i></i>APOLLÓN · Google Ads connector</span>
+      </div>
+      <div class="chat">
+        <div class="msg u" id="m1">Építsd fel az új keresési kampányt a Google Ads-fiókomban. Napi keret: 10 000 Ft.</div>
+        <div class="typing" id="t1"><s></s><s></s><s></s></div>
+        <div class="msg a" id="m2"><span class="dot"></span><p><b>Vettem — kezdem az építést</b> a bekötött Google Ads-fiókodban. Mindent szüneteltetett állapotban rakok össze, az indítás a tiéd marad.</p></div>
+        <div class="work" id="wk">
+          <div class="step" id="s1"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Kampány: „GEN | Keresés – Tavaszi"<small>keresési · Leadek</small></div>
+          <div class="step" id="s2"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Napi költségkeret: 10 000 Ft</div>
+          <div class="step" id="s3"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>2 hirdetéscsoport, 28 kulcsszó<small>exact + kifejezés</small></div>
+          <div class="step" id="s4"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Kizáró kulcsszavak: 34 db<small>az audit alapján</small></div>
+          <div class="step" id="s5"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Reszponzív keresési hirdetések: 2×3<small>címsorok + leírások</small></div>
+          <div class="step" id="s6"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Bővítmények: sitelink · hívás · kiemelő</div>
+          <div class="step" id="s7"><span class="ind"><span class="spin"></span><span class="ok">✓</span></span>Visszaolvasás + Google-szabályellenőrzés</div>
+        </div>
+        <div class="msg a" id="m3"><span class="dot"></span><p><b>Kész</b> — a kampány felépítve, szüneteltetve.<span class="choices"><span class="choice primary">Előbb átnézem</span><span class="choice">Indítsd</span></span></p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var steps = ['s1','s2','s3','s4','s5','s6','s7'];
+  var chat = document.querySelector('.chat');
+  function toBottom() { chat.scrollTop = chat.scrollHeight; }
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    chat.scrollTop = 0;
+    ['m1','m2','m3','wk'].forEach(function (id) { $(id).classList.remove('in'); });
+    steps.forEach(function (id) { $(id).classList.remove('in', 'done'); });
+    $('t1').classList.remove('on');
+  }
+  function finalState() {
+    ['m1','m2','m3','wk'].forEach(function (id) { $(id).classList.add('in'); });
+    steps.forEach(function (id) { $(id).classList.add('in', 'done'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(700);
+      $('m1').classList.add('in');
+      await sleep(900);
+      $('t1').classList.add('on');
+      await sleep(1300);
+      $('t1').classList.remove('on');
+      $('m2').classList.add('in'); toBottom();
+      await sleep(1100);
+      $('wk').classList.add('in'); toBottom();
+      await sleep(400);
+      for (var i = 0; i < steps.length; i++) {
+        $(steps[i]).classList.add('in'); toBottom();
+        await sleep(950);
+        $(steps[i]).classList.add('done');
+        await sleep(230);
+      }
+      await sleep(500);
+      $('m3').classList.add('in'); toBottom();
+      await sleep(4800);
+      await sleep(400);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

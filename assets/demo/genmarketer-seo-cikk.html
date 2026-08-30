@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — SEO cikk-építő animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --bar:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .grid { flex:1; display:grid; grid-template-columns:0.85fr 1.15fr; gap:16px; min-height:0; }
+
+  .panel { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:40px 22px 18px; position:relative; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:12px; }
+  .panel .tag { position:absolute; top:-15px; left:18px; font-size:15px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 14px; }
+  #outline .tag { background:var(--violet); }
+  #article .tag { background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+
+  .oline { display:flex; align-items:center; gap:12px; font-size:21px; padding:9px 12px; border:1.5px solid var(--line); border-radius:10px; background:#FAFAFB; opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
+  .oline.in { opacity:1; transform:none; }
+  .oline .h { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; font-weight:700; color:var(--cyan); flex:none; }
+  .oline.h1 .h { color:var(--violet); }
+  .oline.h1 { font-weight:800; }
+
+  .atitle { font-size:27px; font-weight:800; line-height:1.25; min-height:36px; }
+  .caret { display:inline-block; width:2px; height:24px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .ablock { opacity:0; transform:translateY(10px); transition:opacity .35s, transform .35s; }
+  .ablock.in { opacity:1; transform:none; }
+  .ablock .ah { font-size:21px; font-weight:800; margin-bottom:8px; }
+  .ablock i { display:block; height:11px; border-radius:999px; background:var(--bar); }
+  .ablock i + i { margin-top:6px; width:72%; }
+
+  .scores { display:flex; gap:12px; margin-top:auto; }
+  .score { flex:1; text-align:center; font-size:21px; font-weight:800; border-radius:12px; padding:11px 0; opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s; }
+  .score.in { opacity:1; transform:none; }
+  .score small { display:block; font-size:14.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; opacity:.8; margin-bottom:2px; }
+  .score.seo { color:#fff; background:var(--violet); }
+  .score.geo { color:#fff; background:var(--cyan); }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">CIKKÍRÁS — vázlatból kész cikk · PARETO</div>
+
+    <div class="grid">
+      <div class="panel" id="outline">
+        <span class="tag">Vázlat</span>
+        <div class="oline h1" id="l1"><span class="h">H1</span>Futócipő-választás: teljes útmutató</div>
+        <div class="oline" id="l2"><span class="h">H2</span>Mire figyelj elsőre?</div>
+        <div class="oline" id="l3"><span class="h">H2</span>Aszfalt, terep, verseny</div>
+        <div class="oline" id="l4"><span class="h">H2</span>Méret és próba</div>
+        <div class="oline" id="l5"><span class="h">GYIK</span>Idézhető kérdés-válasz blokk</div>
+      </div>
+
+      <div class="panel" id="article">
+        <span class="tag">Kész cikk</span>
+        <div class="atitle" id="at"><span class="caret"></span></div>
+        <div class="ablock" id="a1"><div class="ah">Mire figyelj elsőre?</div><i></i><i></i></div>
+        <div class="ablock" id="a2"><div class="ah">Aszfalt, terep, verseny</div><i></i><i></i></div>
+        <div class="ablock" id="a3"><div class="ah">Méret és próba</div><i></i><i></i></div>
+        <div class="scores">
+          <div class="score seo" id="s1"><small>SEO-pontszám</small>92 / 100</div>
+          <div class="score geo" id="s2"><small>GEO-pontszám</small>88 / 100</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cap" id="cap"><b>Két pontszám, egy cikk</b> — Google-rangsorra és AI-hivatkozásra írva.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var TITLE = 'Futócipő-választás: a teljes útmutató kezdőknek';
+  var olines = ['l1','l2','l3','l4','l5'];
+  var ablocks = ['a1','a2','a3'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(20);
+    }
+    el.textContent = text;
+  }
+  function reset() {
+    olines.concat(ablocks).concat(['s1','s2','cap']).forEach(function (id) { $(id).classList.remove('in'); });
+    $('at').innerHTML = '<span class="caret"></span>';
+  }
+  function finalState() {
+    olines.concat(ablocks).concat(['s1','s2','cap']).forEach(function (id) { $(id).classList.add('in'); });
+    $('at').textContent = TITLE;
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < olines.length; i++) {
+        $(olines[i]).classList.add('in');
+        await sleep(340);
+      }
+      await sleep(400);
+      await typeInto($('at'), TITLE);
+      await sleep(350);
+      for (var j = 0; j < ablocks.length; j++) {
+        $(ablocks[j]).classList.add('in');
+        await sleep(480);
+      }
+      await sleep(400);
+      $('s1').classList.add('in'); await sleep(320);
+      $('s2').classList.add('in');
+      await sleep(500);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — kampánystruktúra animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --violet:#7C3AED; --cyan:#00D4FF; --line:#E7E5F0; --tx:#1A1A2E; --muted:#54595F; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+
+  .node { position:absolute; background:#ffffff; border:1.5px solid var(--line); border-radius:16px; padding:18px 24px; opacity:0; transform:translateY(14px); transition:opacity .45s, transform .45s; box-shadow:0 6px 18px rgba(0,0,0,0.07); }
+  .node.in { opacity:1; transform:none; }
+  .node b { display:block; font-size:27px; font-weight:800; }
+  .node small { display:block; margin-top:5px; font-size:21px; color:var(--muted); }
+  .tag { position:absolute; top:-16px; left:20px; font-size:17px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; background:linear-gradient(135deg,var(--violet),#06B6D4); color:#fff; border-radius:999px; padding:4px 14px; }
+
+  .camp { left:295px; top:36px; width:480px; border-color:rgba(124,58,237,0.6); }
+  .as1 { left:120px; top:250px; width:360px; }
+  .as2 { left:590px; top:250px; width:360px; }
+  .ad { width:270px; top:452px; }
+  .ad1 { left:65px; } .ad2 { left:400px; } .ad3 { left:735px; }
+  .ad .thumb { width:44px; height:44px; border-radius:10px; float:left; margin-right:14px; }
+  .t-a { background:linear-gradient(135deg,#7C3AED,#00D4FF); }
+  .t-b { background:linear-gradient(135deg,#F59E0B,#EF4444); }
+  .t-c { background:linear-gradient(135deg,#10B981,#06B6D4); }
+  .ad b { font-size:24px; }
+  .node.ad { border:1.5px solid #C9CDD6; }
+  .ad small { font-size:19px; }
+
+  .ord { position:absolute; top:-18px; right:-14px; width:44px; height:44px; border-radius:50%; background:#FFC400; color:#1A1A2E; font-size:23px; font-weight:800; display:flex; align-items:center; justify-content:center; opacity:0; transform:scale(.5); transition:opacity .3s, transform .3s; }
+  .ord.in { opacity:1; transform:none; }
+
+  svg.wires { position:absolute; inset:0; pointer-events:none; }
+  .wire { stroke:url(#grad); stroke-width:3; fill:none; stroke-dasharray:400; stroke-dashoffset:400; transition:stroke-dashoffset .8s ease; opacity:.8; }
+  .wire.in { stroke-dashoffset:0; }
+
+  .cap { position:absolute; left:65px; right:65px; bottom:26px; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:16px 22px; font-size:24px; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+  .cap span { color:var(--muted); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <svg class="wires" width="1070" height="720" viewBox="0 0 1070 720">
+      <defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#00D4FF"/></linearGradient></defs>
+      <path class="wire" id="w1" d="M535 150 C 535 205, 300 195, 300 250"/>
+      <path class="wire" id="w2" d="M535 150 C 535 205, 770 195, 770 250"/>
+      <path class="wire" id="w3" d="M300 360 C 300 410, 200 405, 200 452"/>
+      <path class="wire" id="w4" d="M300 360 C 300 410, 470 400, 528 452"/>
+      <path class="wire" id="w5" d="M770 360 C 770 410, 870 405, 870 452"/>
+    </svg>
+
+    <div class="node camp" id="camp">
+      <span class="tag">Kampány</span>
+      <b>GEN | Tavaszi leadkampány</b>
+      <small>Cél: Leadek · Napi keret: 15 000 Ft</small>
+    </div>
+    <div class="node as1" id="as1">
+      <span class="tag">Hirdetéssorozat</span>
+      <b>AS1 — Érdeklődés alapú</b>
+      <small>25–55 · HU · Advantage+</small>
+    </div>
+    <div class="node as2" id="as2">
+      <span class="tag">Hirdetéssorozat</span>
+      <b>AS2 — Hasonmás 3%</b>
+      <small>vásárlói lista alapján</small>
+    </div>
+    <div class="node ad ad1" id="ad1"><span class="ord" id="o1">1</span><span class="thumb t-a"></span><b>Hook A</b><small>UGC videó</small></div>
+    <div class="node ad ad2" id="ad2"><span class="ord" id="o3">3</span><span class="thumb t-b"></span><b>Hook B</b><small>statikus</small></div>
+    <div class="node ad ad3" id="ad3"><span class="ord" id="o2">2</span><span class="thumb t-c"></span><b>Hook C</b><small>motion</small></div>
+
+    <div class="cap" id="cap"><b>Tesztsorrend: A → C → B</b> <span>· várható tanulság: melyik horog hozza olcsóbban a leadet</span></div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var nodes = ['camp','as1','as2','ad1','ad2','ad3'];
+  var wires = ['w1','w2','w3','w4','w5'];
+  var ords = ['o1','o2','o3'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    nodes.forEach(function (id) { $(id).classList.remove('in'); });
+    wires.forEach(function (id) { $(id).classList.remove('in'); });
+    ords.forEach(function (id) { $(id).classList.remove('in'); });
+    $('cap').classList.remove('in');
+  }
+  function finalState() {
+    nodes.forEach(function (id) { $(id).classList.add('in'); });
+    wires.forEach(function (id) { $(id).classList.add('in'); });
+    ords.forEach(function (id) { $(id).classList.add('in'); });
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(700);
+      $('camp').classList.add('in');
+      await sleep(900);
+      $('w1').classList.add('in'); $('w2').classList.add('in');
+      await sleep(550);
+      $('as1').classList.add('in');
+      await sleep(400);
+      $('as2').classList.add('in');
+      await sleep(900);
+      $('w3').classList.add('in'); $('w4').classList.add('in'); $('w5').classList.add('in');
+      await sleep(550);
+      $('ad1').classList.add('in');
+      await sleep(350);
+      $('ad2').classList.add('in');
+      await sleep(350);
+      $('ad3').classList.add('in');
+      await sleep(800);
+      $('o1').classList.add('in');
+      await sleep(300);
+      $('o2').classList.add('in');
+      await sleep(300);
+      $('o3').classList.add('in');
+      await sleep(600);
+      $('cap').classList.add('in');
+      await sleep(4500);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

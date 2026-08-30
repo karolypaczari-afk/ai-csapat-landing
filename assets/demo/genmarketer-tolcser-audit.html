@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — tölcsér-audit animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .funnel { flex:1; display:flex; flex-direction:column; justify-content:center; gap:8px; }
+  .frow { display:flex; align-items:center; justify-content:center; position:relative; height:86px; opacity:0; transition:opacity .45s; }
+  .frow.in { opacity:1; }
+  .bar { height:100%; border-radius:14px; background:linear-gradient(90deg,#7C3AED,#06B6D4); display:flex; align-items:center; justify-content:space-between; padding:0 28px; color:#fff; width:0; transition:width .8s cubic-bezier(.22,.9,.3,1); overflow:hidden; }
+  .bar b { font-size:24px; white-space:nowrap; }
+  .bar span { font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  #f4 .bar { background:#1A1A2E; }
+
+  .gap { display:flex; align-items:center; justify-content:center; height:30px; position:relative; }
+  .drop { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:17px; font-weight:700; color:var(--muted); background:#f0eee8; border-radius:999px; padding:3px 15px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .drop.in { opacity:1; transform:none; }
+  .drop.worst { color:#fff; background:var(--red); font-size:18px; }
+
+  .lever { position:absolute; right:40px; top:50%; transform:translateY(-50%) scale(.7); font-size:18px; font-weight:800; color:#1A1A2E; background:#FFC400; border-radius:999px; padding:8px 18px; opacity:0; transition:opacity .35s, transform .35s; box-shadow:0 4px 12px rgba(0,0,0,0.15); white-space:nowrap; }
+  .lever.in { opacity:1; transform:translateY(-50%) scale(1); }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">TÖLCSÉR-AUDIT — hol szivárog a pénz · MIDÁSZ</div>
+
+    <div class="funnel">
+      <div class="frow" id="f1"><div class="bar" data-w="94%"><b>Látogató</b><span>12 400</span></div></div>
+      <div class="gap"><span class="drop" id="d1">–60%</span></div>
+      <div class="frow" id="f2"><div class="bar" data-w="66%"><b>Termékoldal</b><span>4 900</span></div></div>
+      <div class="gap"><span class="drop worst" id="d2">–88% · itt szivárog</span></div>
+      <div class="frow" id="f3"><div class="bar" data-w="36%"><b>Kosár</b><span>610</span></div><span class="lever" id="lever">ide fókuszálj</span></div>
+      <div class="gap"><span class="drop" id="d3">–84%</span></div>
+      <div class="frow" id="f4"><div class="bar" data-w="20%"><b>Vásárlás</b><span>96</span></div></div>
+    </div>
+
+    <div class="cap" id="cap"><b>Nem vélemény</b> — a saját méréseidből látszik, melyik lépésen múlik a legtöbb.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rows = ['f1','f2','f3','f4'];
+  var drops = ['d1','d2','d3'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function barOf(id) { return $(id).querySelector('.bar'); }
+  function reset() {
+    rows.forEach(function (id) { $(id).classList.remove('in'); barOf(id).style.width = '0'; });
+    drops.forEach(function (id) { $(id).classList.remove('in'); });
+    $('lever').classList.remove('in');
+    $('cap').classList.remove('in');
+  }
+  function finalState() {
+    rows.forEach(function (id) { $(id).classList.add('in'); barOf(id).style.width = barOf(id).getAttribute('data-w'); });
+    drops.forEach(function (id) { $(id).classList.add('in'); });
+    $('lever').classList.add('in');
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < rows.length; i++) {
+        $(rows[i]).classList.add('in');
+        barOf(rows[i]).style.width = barOf(rows[i]).getAttribute('data-w');
+        await sleep(650);
+        if (i < 3) { $(drops[i]).classList.add('in'); await sleep(350); }
+      }
+      await sleep(600);
+      $('lever').classList.add('in');
+      await sleep(700);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

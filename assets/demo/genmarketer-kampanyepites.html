@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — kampányépítés animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1c2b33; --muted:#65676b; --line:#e4e6eb; --soft:#f0f2f5; --blue:#0866ff; --green:#31a24c; --off:#bcc0c4; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: var(--tx); -webkit-font-smoothing: antialiased; display:flex; justify-content:center; }
+
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; }
+
+  .window { width:100%; height:100%; background:#fff; border-radius:14px; border:1px solid #dcdfe4; overflow:hidden; display:flex; flex-direction:column; }
+
+  /* fejléc */
+  .topbar { display:flex; align-items:center; gap:14px; padding:14px 20px; border-bottom:1px solid var(--line); }
+  .topbar .logo { width:30px; height:30px; border-radius:50%; background:var(--blue); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:17px; }
+  .topbar b { font-size:17px; }
+  .topbar .acct { margin-left:auto; font-size:13px; color:var(--muted); background:var(--soft); padding:6px 12px; border-radius:8px; }
+  .aurora { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#7C3AED; background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.25); padding:5px 12px; border-radius:999px; }
+  .aurora i { width:8px; height:8px; border-radius:50%; background:#7C3AED; animation: pulse 1.6s infinite; font-style:normal; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* eszközsor */
+  .toolbar { display:flex; align-items:center; gap:12px; padding:12px 20px; }
+  .btn-create { background:var(--green); color:#fff; font-weight:700; font-size:14px; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:7px; transition: filter .15s; }
+  .btn-create.clicked { filter: brightness(0.85); }
+  .search { flex:1; max-width:300px; background:var(--soft); border-radius:8px; padding:8px 13px; font-size:13px; color:var(--muted); }
+
+  /* fülek */
+  .tabs { display:flex; gap:2px; padding:0 20px; border-bottom:1px solid var(--line); }
+  .tab { padding:11px 16px; font-size:14px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; }
+  .tab.on { color:var(--blue); border-bottom-color:var(--blue); }
+  .tab .cnt { display:inline-block; min-width:20px; text-align:center; background:var(--soft); border-radius:999px; font-size:12px; padding:1px 6px; margin-left:6px; color:var(--tx); opacity:0; transition:opacity .3s; }
+  .tab .cnt.show { opacity:1; }
+
+  /* táblák */
+  .sheet { flex:1; position:relative; overflow:hidden; }
+  .pane { position:absolute; inset:0; padding:6px 20px 20px; opacity:0; transition:opacity .35s; pointer-events:none; }
+  .pane.on { opacity:1; }
+  .thead { display:grid; grid-template-columns:56px 1fr 170px 150px; gap:10px; padding:10px 6px; font-size:12px; color:var(--muted); border-bottom:1px solid var(--line); text-transform:uppercase; letter-spacing:.03em; }
+  .row { display:grid; grid-template-columns:56px 1fr 170px 150px; gap:10px; align-items:center; padding:13px 6px; border-bottom:1px solid var(--line); font-size:14px; opacity:0; transform:translateY(8px); transition:opacity .4s, transform .4s; }
+  .row.in { opacity:1; transform:none; }
+  .tgl { width:38px; height:21px; border-radius:999px; background:var(--off); position:relative; }
+  .tgl::after { content:""; position:absolute; top:2.5px; left:3px; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.25); }
+  .nm b { display:block; font-weight:700; }
+  .nm small { color:var(--muted); font-size:12.5px; }
+  .chipz { display:flex; flex-wrap:wrap; gap:5px; }
+  .chip { font-size:11.5px; background:var(--soft); border-radius:999px; padding:3px 9px; color:var(--tx); white-space:nowrap; }
+  .money { font-variant-numeric: tabular-nums; font-weight:600; }
+  .money .caret { display:inline-block; width:1px; height:14px; background:var(--tx); vertical-align:-2px; animation: blink .8s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .stat { font-size:12.5px; color:var(--muted); }
+  .thumb { width:40px; height:40px; border-radius:8px; flex:none; display:inline-block; }
+  .t-a { background:linear-gradient(135deg,#7C3AED,#00D4FF); }
+  .t-b { background:linear-gradient(135deg,#F59E0B,#EF4444); }
+  .t-c { background:linear-gradient(135deg,#10B981,#06B6D4); }
+  .adrow { display:flex; align-items:center; gap:12px; }
+
+  /* összegző sáv */
+  .done { position:absolute; left:20px; right:20px; bottom:18px; background:#eaf7ee; border:1px solid #bfe5c8; color:#1d6832; border-radius:12px; padding:14px 18px; font-size:14.5px; font-weight:600; display:flex; align-items:center; gap:10px; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .done.in { opacity:1; transform:none; }
+  .done .ok { width:24px; height:24px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; flex:none; }
+  .done small { font-weight:500; color:#2b7a42; display:block; font-size:12.5px; }
+
+  /* kurzor */
+  #cursor { position:absolute; width:22px; height:22px; z-index:50; left:520px; top:600px; transition: left 1s cubic-bezier(.4,0,.2,1), top 1s cubic-bezier(.4,0,.2,1); filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+  #cursor.click { animation: clickpulse .35s; }
+  @keyframes clickpulse { 40% { transform: scale(0.82); } }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="window">
+      <div class="topbar">
+        <div class="logo">f</div><b>Hirdetéskezelő</b>
+        <span class="aurora"><i></i>AURORA épít</span>
+        <span class="acct">Fiók: A te vállalkozásod</span>
+      </div>
+      <div class="toolbar">
+        <span class="btn-create" id="btnCreate">＋ Létrehozás</span>
+        <span class="search">🔍 Keresés és szűrés</span>
+      </div>
+      <div class="tabs">
+        <span class="tab on" id="tab0">Kampányok<span class="cnt" id="cnt0">1</span></span>
+        <span class="tab" id="tab1">Hirdetéssorozatok<span class="cnt" id="cnt1">2</span></span>
+        <span class="tab" id="tab2">Hirdetések<span class="cnt" id="cnt2">3</span></span>
+      </div>
+      <div class="sheet">
+        <div class="pane on" id="pane0">
+          <div class="thead"><span>Ki/Be</span><span>Kampány</span><span>Cél</span><span>Napi keret</span></div>
+          <div class="row" id="camp">
+            <span class="tgl"></span>
+            <span class="nm"><b>GEN | Tavaszi leadkampány</b><small>Létrehozva: AURORA · leállítva</small></span>
+            <span class="stat">Leadek</span>
+            <span class="money" id="budget"><span class="caret"></span></span>
+          </div>
+        </div>
+        <div class="pane" id="pane1">
+          <div class="thead"><span>Ki/Be</span><span>Hirdetéssorozat</span><span>Célzás</span><span>Elhelyezés</span></div>
+          <div class="row" id="as1">
+            <span class="tgl"></span>
+            <span class="nm"><b>AS1 — Érdeklődés alapú</b><small>Optimalizálás: leadek</small></span>
+            <span class="chipz"><span class="chip">25–55</span><span class="chip">HU</span><span class="chip">érdeklődés</span></span>
+            <span class="stat">Advantage+</span>
+          </div>
+          <div class="row" id="as2">
+            <span class="tgl"></span>
+            <span class="nm"><b>AS2 — Hasonmás 3%</b><small>Optimalizálás: leadek</small></span>
+            <span class="chipz"><span class="chip">Hasonmás 3%</span><span class="chip">HU</span></span>
+            <span class="stat">Advantage+</span>
+          </div>
+        </div>
+        <div class="pane" id="pane2">
+          <div class="thead"><span>Ki/Be</span><span>Hirdetés</span><span>Formátum</span><span>Állapot</span></div>
+          <div class="row" id="ad1">
+            <span class="tgl"></span>
+            <span class="adrow"><span class="thumb t-a"></span><span class="nm"><b>Hook A — UGC videó</b><small>1:1 + 9:16</small></span></span>
+            <span class="stat">Videó</span><span class="stat">Vázlat</span>
+          </div>
+          <div class="row" id="ad2">
+            <span class="tgl"></span>
+            <span class="adrow"><span class="thumb t-b"></span><span class="nm"><b>Hook B — statikus</b><small>minden méretben</small></span></span>
+            <span class="stat">Kép</span><span class="stat">Vázlat</span>
+          </div>
+          <div class="row" id="ad3">
+            <span class="tgl"></span>
+            <span class="adrow"><span class="thumb t-c"></span><span class="nm"><b>Hook C — motion</b><small>1:1 + 4:5</small></span></span>
+            <span class="stat">Videó</span><span class="stat">Vázlat</span>
+          </div>
+        </div>
+        <div class="done" id="done">
+          <span class="ok">✓</span>
+          <span>Kampány felépítve — leállított állapotban<small>Az élesítés rád vár: egyetlen kattintás, amikor jónak látod.</small></span>
+        </div>
+      </div>
+    </div>
+    <svg id="cursor" viewBox="0 0 24 24"><path d="M5.5 3.2l12.3 11.6-5.6.6 3 6-2.6 1.2-3-6.1-4.1 3.9z" fill="#111" stroke="#fff" stroke-width="1.4"/></svg>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var cursor = $('cursor');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function moveTo(el, dx, dy) {
+    var r = el.getBoundingClientRect(), s = stage.getBoundingClientRect();
+    var sc = s.width / W;
+    cursor.style.left = ((r.left - s.left) / sc + r.width / sc / 2 + (dx || 0)) + 'px';
+    cursor.style.top = ((r.top - s.top) / sc + r.height / sc / 2 + (dy || 0)) + 'px';
+  }
+  function click() { cursor.classList.add('click'); setTimeout(function () { cursor.classList.remove('click'); }, 360); }
+  function showTab(i) {
+    for (var k = 0; k < 3; k++) {
+      $('tab' + k).classList.toggle('on', k === i);
+      $('pane' + k).classList.toggle('on', k === i);
+    }
+  }
+  async function typeMoney(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(90);
+    }
+    el.innerHTML = text;
+  }
+  function reset() {
+    ['camp','as1','as2','ad1','ad2','ad3'].forEach(function (id) { $(id).classList.remove('in'); });
+    ['cnt0','cnt1','cnt2'].forEach(function (id) { $(id).classList.remove('show'); });
+    $('done').classList.remove('in');
+    $('budget').innerHTML = '<span class="caret"></span>';
+    showTab(0);
+  }
+  function finalState() {
+    ['camp','as1','as2','ad1','ad2','ad3'].forEach(function (id) { $(id).classList.add('in'); });
+    ['cnt0','cnt1','cnt2'].forEach(function (id) { $(id).classList.add('show'); });
+    $('budget').textContent = '15 000 Ft';
+    showTab(2);
+    $('done').classList.add('in');
+    cursor.style.display = 'none';
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(1200);
+      moveTo($('btnCreate')); await sleep(1100); click(); await sleep(400);
+      $('camp').classList.add('in'); $('cnt0').classList.add('show');
+      await sleep(650);
+      moveTo($('budget'), -20, 0); await sleep(700);
+      await typeMoney($('budget'), '15 000 Ft');
+      await sleep(700);
+      moveTo($('tab1')); await sleep(1000); click(); showTab(1); await sleep(450);
+      $('as1').classList.add('in'); await sleep(800);
+      $('as2').classList.add('in'); $('cnt1').classList.add('show');
+      await sleep(1100);
+      moveTo($('tab2')); await sleep(1000); click(); showTab(2); await sleep(450);
+      $('ad1').classList.add('in'); await sleep(700);
+      $('ad2').classList.add('in'); await sleep(700);
+      $('ad3').classList.add('in'); $('cnt2').classList.add('show');
+      await sleep(900);
+      moveTo($('done'), 0, -10);
+      $('done').classList.add('in');
+      await sleep(4200);
+      $('done').classList.remove('in');
+      await sleep(500);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

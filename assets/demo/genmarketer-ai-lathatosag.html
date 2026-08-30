@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — AI-láthatóság animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .query { flex:none; background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); }
+  .query small { display:block; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin-bottom:6px; }
+  .query .q { font-size:26px; font-weight:700; min-height:34px; }
+  .caret { display:inline-block; width:2px; height:24px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+
+  .plat { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .plat.in { opacity:1; transform:none; }
+  .plat b { width:190px; flex:none; font-size:25px; }
+  .plat .ans { flex:1; font-size:21px; color:var(--muted); }
+  .plat .ans .brand { font-weight:800; color:var(--violet); background:rgba(124,58,237,0.1); border-radius:5px; padding:0 6px; }
+  .verdict { width:170px; flex:none; text-align:center; font-size:18px; font-weight:700; border-radius:999px; padding:7px 0; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .verdict.in { opacity:1; transform:none; }
+  .verdict.no { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
+  .verdict.yes { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+  .verdict.part { color:#1A1A2E; background:#FFC400; }
+
+  .fix { flex:none; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:13px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .fix.in { opacity:1; transform:none; }
+  .fix small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; }
+  .pill { font-size:18px; font-weight:800; border-radius:999px; padding:7px 18px; color:#fff; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; font-family:"JetBrains Mono", ui-monospace, monospace; }
+  .pill.in { opacity:1; transform:none; }
+  .pill.p1 { background:var(--violet); }
+  .pill.p2 { background:var(--cyan); }
+  .pill.p3 { background:#FFC400; color:#1A1A2E; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">AI-LÁTHATÓSÁG (GEO) — audit a te piacodon</div>
+
+    <div class="query"><small>Ezt kérdezik az AI-tól</small><span class="q" id="q"><span class="caret"></span></span></div>
+
+    <div class="plat" id="p1"><b>ChatGPT</b><span class="ans">a válaszában 3 versenytársad szerepel – te nem</span><span class="verdict no" id="v1">nem említ</span></div>
+    <div class="plat" id="p2"><b>Perplexity</b><span class="ans">említ: <span class="brand">runova.hu</span> – forrás-hivatkozással</span><span class="verdict yes" id="v2">✓ említ</span></div>
+    <div class="plat" id="p3"><b>Gemini</b><span class="ans">a márkanevet ismeri, de a webshopot nem ajánlja</span><span class="verdict part" id="v3">részben</span></div>
+
+    <div class="fix" id="fix"><small>Felkészítés</small><span class="pill p1" id="f1">llms.txt</span><span class="pill p2" id="f2">AI-bot-szabályzat</span><span class="pill p3" id="f3">schema</span></div>
+
+    <div class="cap" id="cap"><b>Cél: benne lenni a válaszban</b> — idézhető, AI-olvasható oldalakkal.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var QUERY = 'Melyik futócipő-webshopot ajánlod kezdőknek?';
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(20);
+    }
+    el.textContent = text;
+  }
+  function reset() {
+    $('q').innerHTML = '<span class="caret"></span>';
+    ['p1','p2','p3','v1','v2','v3','fix','f1','f2','f3','cap'].forEach(function (id) { $(id).classList.remove('in'); });
+  }
+  function finalState() {
+    $('q').textContent = QUERY;
+    ['p1','p2','p3','v1','v2','v3','fix','f1','f2','f3','cap'].forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      await typeInto($('q'), QUERY);
+      await sleep(600);
+      var plats = ['p1','p2','p3'], verds = ['v1','v2','v3'];
+      for (var i = 0; i < 3; i++) {
+        $(plats[i]).classList.add('in');
+        await sleep(520);
+        $(verds[i]).classList.add('in');
+        await sleep(480);
+      }
+      await sleep(400);
+      $('fix').classList.add('in');
+      await sleep(350);
+      $('f1').classList.add('in'); await sleep(260);
+      $('f2').classList.add('in'); await sleep(260);
+      $('f3').classList.add('in');
+      await sleep(500);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

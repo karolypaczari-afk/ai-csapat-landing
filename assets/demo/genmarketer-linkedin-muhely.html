@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — LinkedIn-műhely animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .grid { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:16px; min-height:0; }
+  .panel { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:40px 22px 16px; position:relative; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:12px; }
+  .panel .tag { position:absolute; top:-15px; left:18px; font-size:15px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 14px; }
+  #profil .tag { background:var(--violet); }
+  #poszt .tag { background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+
+  .lbl { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14.5px; letter-spacing:.07em; color:var(--muted); text-transform:uppercase; }
+  .old { font-size:21px; color:var(--tx); position:relative; display:inline-block; transition:color .4s; }
+  .old::after { content:''; position:absolute; left:0; top:55%; height:2.5px; width:0; background:var(--red); transition:width .45s ease; }
+  .old.struck { color:#9AA0A8; }
+  .old.struck::after { width:100%; }
+  .new { font-size:22px; font-weight:700; line-height:1.35; min-height:60px; }
+  .caret { display:inline-block; width:2px; height:22px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .pchips { display:flex; flex-wrap:wrap; gap:9px; margin-top:auto; }
+  .pchip { font-size:16.5px; font-weight:700; color:var(--violet); background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:999px; padding:5px 14px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .pchip.in { opacity:1; transform:none; }
+
+  .hook { font-size:23px; font-weight:800; line-height:1.35; min-height:64px; }
+  .bars i { display:block; height:11px; border-radius:999px; background:#E7E5F0; }
+  .bars i + i { margin-top:6px; width:68%; }
+  .stats { display:flex; gap:10px; margin-top:auto; }
+  .stat { font-size:17px; font-weight:800; border-radius:999px; padding:6px 15px; color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .stat.in { opacity:1; transform:none; }
+
+  .flow { flex:none; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:12px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .flow.in { opacity:1; transform:none; }
+  .flow small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14.5px; letter-spacing:.07em; color:var(--muted); text-transform:uppercase; flex:none; }
+  .fstep { font-size:17.5px; font-weight:700; border-radius:999px; padding:6px 15px; background:#f0eee8; color:#1A1A2E; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; }
+  .fstep.in { opacity:1; transform:none; }
+  .farrow { color:var(--muted); font-size:18px; opacity:0; transition:opacity .3s; }
+  .farrow.in { opacity:1; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">LINKEDIN-MŰHELY — 31 szakértő módszertana · FIGARO</div>
+
+    <div class="grid">
+      <div class="panel" id="profil">
+        <span class="tag">Profil</span>
+        <span class="lbl">Headline most</span>
+        <span class="old" id="old">Ügyvezető | Kovács Consulting Kft.</span>
+        <span class="lbl">Headline átírva</span>
+        <span class="new" id="new"><span class="caret"></span></span>
+        <div class="pchips">
+          <span class="pchip" id="pc1">kulcsszavak a headline-ban</span>
+          <span class="pchip" id="pc2">About: sztori + bizonyíték</span>
+          <span class="pchip" id="pc3">kiemelt szekció rendbe téve</span>
+        </div>
+      </div>
+
+      <div class="panel" id="poszt">
+        <span class="tag">Poszt</span>
+        <span class="lbl">Hook — az első sor dönt</span>
+        <div class="hook" id="hook"><span class="caret"></span></div>
+        <div class="bars"><i></i><i></i></div>
+        <div class="stats">
+          <span class="stat" id="s1">2 400 megjelenés</span>
+          <span class="stat" id="s2">86 reakció</span>
+          <span class="stat" id="s3">21 komment</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow" id="flow"><small>Outreach</small>
+      <span class="fstep" id="f1">kapcsolatkérés — üresen</span><span class="farrow" id="a1">→</span>
+      <span class="fstep" id="f2">1. üzenet: érték, nem ajánlat</span><span class="farrow" id="a2">→</span>
+      <span class="fstep" id="f3">follow-up +4 nap</span>
+    </div>
+
+    <div class="cap" id="cap"><b>Profil · tartalom · outreach</b> — a B2B-ügyfélszerzés teljes íve.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NEWLINE = 'B2B cégeknek építek kiszámítható lead-csatornát LinkedInen | 120+ kampány';
+  var HOOK = 'A legtöbb B2B cég ugyanazt a 3 hibát követi el a LinkedInen:';
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(18);
+    }
+    el.textContent = text;
+  }
+  var ids = ['pc1','pc2','pc3','s1','s2','s3','flow','f1','a1','f2','a2','f3','cap'];
+  function reset() {
+    $('old').classList.remove('struck');
+    $('new').innerHTML = '<span class="caret"></span>';
+    $('hook').innerHTML = '<span class="caret"></span>';
+    ids.forEach(function (id) { $(id).classList.remove('in'); });
+  }
+  function finalState() {
+    $('old').classList.add('struck');
+    $('new').textContent = NEWLINE;
+    $('hook').textContent = HOOK;
+    ids.forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(700);
+      $('old').classList.add('struck');
+      await sleep(500);
+      await typeInto($('new'), NEWLINE);
+      await sleep(300);
+      $('pc1').classList.add('in'); await sleep(240);
+      $('pc2').classList.add('in'); await sleep(240);
+      $('pc3').classList.add('in');
+      await sleep(600);
+      await typeInto($('hook'), HOOK);
+      await sleep(400);
+      $('s1').classList.add('in'); await sleep(280);
+      $('s2').classList.add('in'); await sleep(280);
+      $('s3').classList.add('in');
+      await sleep(500);
+      $('flow').classList.add('in');
+      await sleep(350);
+      $('f1').classList.add('in'); await sleep(260);
+      $('a1').classList.add('in'); await sleep(180);
+      $('f2').classList.add('in'); await sleep(260);
+      $('a2').classList.add('in'); await sleep(180);
+      $('f3').classList.add('in');
+      await sleep(450);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

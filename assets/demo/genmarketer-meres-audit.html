@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — mérés-audit animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .list { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:12px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); }
+  .ev { display:flex; align-items:center; gap:16px; padding:11px 0; border-bottom:1px solid var(--line); font-size:22px; opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
+  .ev:last-child { border-bottom:none; }
+  .ev.in { opacity:1; transform:none; }
+  .ev code { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:20px; width:220px; flex:none; }
+  .ev small { color:var(--muted); font-size:18px; }
+  .st { margin-left:auto; font-size:17px; font-weight:800; border-radius:999px; padding:5px 16px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; }
+  .st.in { opacity:1; transform:none; }
+  .st.ok { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+  .st.bad { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
+  .st.mid { color:#1A1A2E; background:#FFC400; }
+
+  .det { background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:34px 22px 14px; box-shadow:0 5px 14px rgba(0,0,0,0.05); flex:1; position:relative; display:flex; gap:20px; align-items:center; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; min-height:0; }
+  .det.in { opacity:1; transform:none; }
+  .det .tag { position:absolute; top:-14px; left:16px; font-size:14.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:3px 13px; background:#1A1A2E; }
+  .chart { flex:1.1; height:120px; }
+  .chart path.lineA { stroke:url(#lg); stroke-width:4; fill:none; stroke-dasharray:600; stroke-dashoffset:600; transition:stroke-dashoffset 1.6s ease; }
+  .chart path.lineA.in { stroke-dashoffset:0; }
+  .dropmark { opacity:0; transition:opacity .4s; }
+  .dropmark.in { opacity:1; }
+  .verdicts { flex:1; display:flex; flex-direction:column; gap:9px; }
+  .vd { font-size:19px; font-weight:600; display:flex; align-items:center; gap:11px; opacity:0; transform:translateX(-8px); transition:opacity .3s, transform .3s; }
+  .vd.in { opacity:1; transform:none; }
+  .vd.no { color:#9AA0A8; text-decoration:line-through; text-decoration-color:rgba(220,38,38,0.6); text-decoration-thickness:2px; }
+  .vd.yes { font-weight:800; }
+  .vd .ic { width:26px; height:26px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; }
+  .vd.no .ic { border:2px solid #C9CDD6; color:#9AA0A8; text-decoration:none; }
+  .vd.yes .ic { background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">MÉRÉS-AUDIT — jól mér-e az oldalad · ROBINSON</div>
+
+    <div class="list">
+      <div class="ev" id="e1"><code>page_view</code><small>GA4 + pixel</small><span class="st ok">rendben</span></div>
+      <div class="ev" id="e2"><code>add_to_cart</code><small>GA4 + pixel</small><span class="st ok">rendben</span></div>
+      <div class="ev" id="e3"><code>purchase</code><small>kétszer érkezik – duplán számol</small><span class="st bad">duplikált</span></div>
+      <div class="ev" id="e4"><code>consent_mode</code><small>hozzájárulás nélkül nem mérhetsz</small><span class="st mid">hiányos</span></div>
+    </div>
+
+    <div class="det" id="det">
+      <span class="tag">És ha beszakad a bevétel?</span>
+      <svg class="chart" viewBox="0 0 420 120" preserveAspectRatio="none">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+        <path class="lineA" id="line" d="M8 38 C 60 30, 110 44, 160 36 C 200 30, 230 34, 258 40 L 286 96 C 320 100, 370 98, 412 94"/>
+        <g class="dropmark" id="dm"><circle cx="286" cy="96" r="7" fill="#dc2626"/><text x="286" y="118" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626" font-family="Inter, sans-serif">kedd 14:20</text></g>
+      </svg>
+      <div class="verdicts">
+        <div class="vd no" id="v1"><span class="ic">✕</span>a hirdetés romlott el? – nem</div>
+        <div class="vd no" id="v2"><span class="ic">✕</span>szezonális esés? – nem</div>
+        <div class="vd yes" id="v3"><span class="ic">✓</span>a pénztár-oldal mérése halt el</div>
+      </div>
+    </div>
+
+    <div class="cap" id="cap"><b>Bizonyíték, nem találgatás</b> — a saját GA4- és Clarity-adataidból.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var evs = ['e1','e2','e3','e4'];
+  var vds = ['v1','v2','v3'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    evs.forEach(function (id) {
+      $(id).classList.remove('in');
+      $(id).querySelector('.st').classList.remove('in');
+    });
+    ['det','dm','cap'].forEach(function (id) { $(id).classList.remove('in'); });
+    $('line').classList.remove('in');
+    vds.forEach(function (id) { $(id).classList.remove('in'); });
+  }
+  function finalState() {
+    evs.forEach(function (id) {
+      $(id).classList.add('in');
+      $(id).querySelector('.st').classList.add('in');
+    });
+    ['det','dm','cap'].forEach(function (id) { $(id).classList.add('in'); });
+    $('line').classList.add('in');
+    vds.forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < evs.length; i++) {
+        $(evs[i]).classList.add('in');
+        await sleep(380);
+        $(evs[i]).querySelector('.st').classList.add('in');
+        await sleep(300);
+      }
+      await sleep(500);
+      $('det').classList.add('in');
+      await sleep(400);
+      $('line').classList.add('in');
+      await sleep(1400);
+      $('dm').classList.add('in');
+      await sleep(600);
+      for (var j = 0; j < vds.length; j++) {
+        $(vds[j]).classList.add('in');
+        await sleep(520);
+      }
+      await sleep(400);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

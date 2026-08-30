@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — kreatív koncepciók animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+
+  .ph { position:absolute; border:1.5px dashed #D8D5E2; border-radius:16px; width:300px; height:300px; }
+  #p2 { left:542px; top:42px; }
+  #p3 { left:228px; top:356px; }
+  #p4 { left:542px; top:356px; }
+
+  .shot { position:absolute; background:#fff; border:1.5px solid #C9CDD6; border-radius:16px; box-shadow:0 8px 22px rgba(0,0,0,0.09); }
+  .shot img { width:100%; height:100%; object-fit:cover; border-radius:14px; display:block; }
+
+  #base { left:315px; top:110px; width:440px; height:440px; transition:left .8s cubic-bezier(.22,.9,.3,1), top .8s cubic-bezier(.22,.9,.3,1), width .8s cubic-bezier(.22,.9,.3,1), height .8s cubic-bezier(.22,.9,.3,1); opacity:0; }
+  #base.in { opacity:1; transition:opacity .5s; }
+  #base.docked { left:228px; top:42px; width:300px; height:300px; transition:left .8s cubic-bezier(.22,.9,.3,1), top .8s cubic-bezier(.22,.9,.3,1), width .8s cubic-bezier(.22,.9,.3,1), height .8s cubic-bezier(.22,.9,.3,1); }
+
+  .variant { width:300px; height:300px; opacity:0; transform:translateY(14px) scale(.92); transition:opacity .45s, transform .45s; }
+  .variant.in { opacity:1; transform:none; }
+  #v1 { left:542px; top:42px; }
+  #v2 { left:228px; top:356px; }
+  #v3 { left:542px; top:356px; }
+
+  .lbl { position:absolute; font-size:31px; font-weight:800; letter-spacing:.01em; opacity:0; transform:translateX(0) scale(.92); transition:opacity .4s, transform .4s; white-space:nowrap; }
+  .lbl.in { opacity:1; transform:none; }
+  .lbl.left { right:858px; text-align:right; transform:translateX(8px) scale(.92); }
+  .lbl.right { left:858px; text-align:left; transform:translateX(-8px) scale(.92); }
+  .lbl.left.in, .lbl.right.in { transform:translateX(0) scale(1); }
+  #l1 { top:176px; color:#54595F; }
+  #l2 { top:176px; color:var(--violet); }
+  #l3 { top:490px; color:var(--cyan); }
+  #l4 { top:490px; color:#b8860b; }
+
+  .cap { position:absolute; left:140px; right:140px; bottom:14px; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:10px 20px; font-size:22px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="ph" id="p2"></div>
+    <div class="ph" id="p3"></div>
+    <div class="ph" id="p4"></div>
+
+    <div class="shot" id="base"><img src="/assets/img/proof/koncepcio-alap.webp" width="640" height="640" alt="Fehér hátteres sablon termékfotó"></div>
+    <div class="shot variant" id="v1"><img src="/assets/img/proof/koncepcio-lifestyle.webp" width="640" height="640" alt="Lifestyle változat konyhában" loading="lazy"></div>
+    <div class="shot variant" id="v2"><img src="/assets/img/proof/koncepcio-benefit.webp" width="640" height="640" alt="Előny-badge-es változat a lifestyle-fotón" loading="lazy"></div>
+    <div class="shot variant" id="v3"><img src="/assets/img/proof/koncepcio-callout.webp" width="640" height="640" alt="Callout változat címsorral a lifestyle-fotón" loading="lazy"></div>
+
+    <span class="lbl left" id="l1">Eredeti</span>
+    <span class="lbl right" id="l2">Lifestyle</span>
+    <span class="lbl left" id="l3">Benefit</span>
+    <span class="lbl right" id="l4">Callout</span>
+
+    <div class="cap" id="cap"><b>Egy fotóból teljes készlet</b> — 49 sablon, 3 stíluscsalád.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var variants = ['v1','v2','v3'];
+  var vlabels = ['l2','l3','l4'];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    $('base').classList.remove('in', 'docked');
+    variants.forEach(function (id) { $(id).classList.remove('in'); });
+    ['l1','l2','l3','l4','cap'].forEach(function (id) { $(id).classList.remove('in'); });
+  }
+  function finalState() {
+    $('base').classList.add('in', 'docked');
+    variants.forEach(function (id) { $(id).classList.add('in'); });
+    ['l1','l2','l3','l4','cap'].forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(700);
+      $('base').classList.add('in');
+      await sleep(1800);
+      $('base').classList.add('docked');
+      await sleep(850);
+      $('l1').classList.add('in');
+      await sleep(500);
+      for (var i = 0; i < variants.length; i++) {
+        $(variants[i]).classList.add('in');
+        await sleep(320);
+        $(vlabels[i]).classList.add('in');
+        await sleep(430);
+      }
+      await sleep(400);
+      $('cap').classList.add('in');
+      await sleep(5600);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — wireframe és kész design görgetve</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; overflow:hidden; }
+
+  #scrollimg { position:absolute; top:0; left:0; width:1070px; display:block; will-change:transform; }
+
+  .lbl { position:absolute; top:14px; z-index:2; font-size:15px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#fff; border-radius:999px; padding:6px 16px; box-shadow:0 4px 14px rgba(0,0,0,0.22); }
+  #l1 { left:18px; background:#54595F; }
+  #l2 { left:553px; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <span class="lbl" id="l1">Wireframe</span>
+    <span class="lbl" id="l2">Kész design</span>
+    <img id="scrollimg" src="/assets/img/proof/figma-wireframe-design.webp" width="1070" height="1373" alt="Wireframe és kész design egymás mellett">
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720, IMGH = 1373;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+  function awake() { return __ioVis && !document.hidden; }
+
+  var img = document.getElementById('scrollimg');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var MAXY = -(IMGH - H);
+  var y = 0;
+
+  if (reduced) { return; }
+
+  function sleep(ms) {
+    return new Promise(function (r) { setTimeout(r, ms); }).then(function () {
+      if (awake()) return;
+      return new Promise(function (r2) {
+        var t = setInterval(function () { if (awake()) { clearInterval(t); r2(); } }, 400);
+      });
+    });
+  }
+  function tweenTo(target, dur) {
+    return new Promise(function (res) {
+      var startY = y, delta = target - startY, p = 0, last = null;
+      function frame(ts) {
+        if (!awake()) { last = null; requestAnimationFrame(frame); return; }
+        if (last === null) last = ts;
+        var dt = ts - last; last = ts;
+        p = Math.min(1, p + dt / dur);
+        var e = 0.5 - 0.5 * Math.cos(Math.PI * p);
+        y = startY + delta * e;
+        img.style.transform = 'translateY(' + y + 'px)';
+        if (p < 1) requestAnimationFrame(frame); else res();
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  async function run() {
+    for (;;) {
+      await sleep(1600);
+      await tweenTo(MAXY, 9500);
+      await sleep(1800);
+      await tweenTo(0, 7500);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

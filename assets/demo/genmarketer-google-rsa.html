@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — Google RSA-készlet animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1f1e1d; --muted:#7a776f; --violet:#7C3AED; --green:#1d8f4e; --red:#dc2626; --card:#ffffff; --line:#e8e5dd; --bar:#e3e0d8; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; display:flex; flex-direction:column; gap:16px; padding:20px 22px; background:#faf9f5; border-radius:16px; border:1px solid #ded9cf; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .cols { display:flex; gap:16px; flex:1; min-height:0; }
+  .panel { background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+  .panel h3 { font-size:22px; font-weight:800; margin-bottom:4px; }
+  .panel .sub { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:17px; color:var(--muted); margin-bottom:14px; }
+  .panel .sub b { color:var(--violet); }
+  #pH { flex:1.35; }
+  #pD { flex:1; }
+
+  .hgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; align-content:start; }
+  .slot { display:flex; align-items:center; gap:10px; opacity:0; transform:translateY(8px); transition:opacity .3s, transform .3s; }
+  .slot.in { opacity:1; transform:none; }
+  .slot .bar { height:13px; border-radius:999px; background:var(--bar); flex:none; transition:width .4s; }
+  .slot .cc { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:15px; color:var(--green); white-space:nowrap; margin-left:auto; }
+  .slot .cc.over { color:var(--red); font-weight:700; }
+
+  .dgrid { display:flex; flex-direction:column; gap:14px; }
+  .dslot { opacity:0; transform:translateY(8px); transition:opacity .3s, transform .3s; }
+  .dslot.in { opacity:1; transform:none; }
+  .dslot .bar { height:13px; border-radius:999px; background:var(--bar); margin-bottom:7px; }
+  .dslot .bar.b2 { width:62%; }
+  .dslot .cc { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:15px; color:var(--green); }
+
+  .finale { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:15px 22px; font-size:24px; line-height:1.4; opacity:0; transform:translateY(10px); transition:opacity .5s, transform .5s; }
+  .finale.in { opacity:1; transform:none; }
+  .finale b { color:var(--violet); }
+  .finale span { color:var(--muted); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">RSA-KÉSZLET — keresési kampány · CYRANO + APOLLÓN</div>
+    <div class="cols">
+      <div class="panel" id="pH">
+        <h3>Címsorok</h3>
+        <div class="sub"><b id="hc">0</b> / 15 hely · max 30 karakter</div>
+        <div class="hgrid" id="hgrid"></div>
+      </div>
+      <div class="panel" id="pD">
+        <h3>Leírások</h3>
+        <div class="sub"><b id="dc">0</b> / 4 hely · max 90 karakter</div>
+        <div class="dgrid" id="dgrid"></div>
+      </div>
+    </div>
+    <div class="finale" id="fin"><b>Egyszerre 3 címsor + 2 leírás jelenik meg</b> — <span>a Google a teljes készletedből keveri ki és teszteli a nyerő párosítást.</span></div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* 15 címsor-slot: sávszélesség% + karakterszám (a 4. túllóg, majd vágva lesz) */
+  var HEADS = [
+    [82, 26], [95, 29], [64, 21], [104, 34], [88, 27],
+    [72, 23], [97, 30], [60, 19], [90, 28], [78, 25],
+    [93, 29], [68, 22], [85, 27], [99, 30], [75, 24]
+  ];
+  var DESCS = [[96, 88], [90, 84], [98, 90], [86, 79]];
+  var OVER_IDX = 3; /* a 4. címsor karakter-túllépést demonstrál */
+
+  var hgrid = $('hgrid'), dgrid = $('dgrid');
+  var hslots = HEADS.map(function (h) {
+    var d = document.createElement('div');
+    d.className = 'slot';
+    d.innerHTML = '<span class="bar" style="width:' + Math.min(h[0], 100) * 0.82 + '%"></span><span class="cc">' + h[1] + '/30</span>';
+    hgrid.appendChild(d);
+    return d;
+  });
+  var dslots = DESCS.map(function (dd) {
+    var d = document.createElement('div');
+    d.className = 'dslot';
+    d.innerHTML = '<div class="bar" style="width:' + dd[0] + '%"></div><div class="bar b2"></div><div class="cc">' + dd[1] + '/90</div>';
+    dgrid.appendChild(d);
+    return d;
+  });
+  /* a túllógó slot piros számlálóval indul */
+  hslots[OVER_IDX].querySelector('.cc').classList.add('over');
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    hslots.forEach(function (s, i) {
+      s.classList.remove('in');
+      var cc = s.querySelector('.cc'), bar = s.querySelector('.bar');
+      if (i === OVER_IDX) { cc.textContent = '34/30'; cc.classList.add('over'); bar.style.width = (HEADS[i][0] * 0.82) + '%'; }
+    });
+    dslots.forEach(function (s) { s.classList.remove('in'); });
+    $('hc').textContent = '0'; $('dc').textContent = '0';
+    $('fin').classList.remove('in');
+  }
+  function finalState() {
+    hslots.forEach(function (s, i) {
+      s.classList.add('in');
+      if (i === OVER_IDX) {
+        var cc = s.querySelector('.cc');
+        cc.textContent = '28/30'; cc.classList.remove('over');
+        s.querySelector('.bar').style.width = (78 * 0.82) + '%';
+      }
+    });
+    dslots.forEach(function (s) { s.classList.add('in'); });
+    $('hc').textContent = '15'; $('dc').textContent = '4';
+    $('fin').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(700);
+      /* címsorok töltődnek */
+      for (var i = 0; i < hslots.length; i++) {
+        hslots[i].classList.add('in');
+        $('hc').textContent = String(i + 1);
+        if (i === OVER_IDX) {
+          /* karakter-túllépés demó: piros 34/30 → vágás → zöld 28/30 */
+          await sleep(750);
+          var s = hslots[i], cc = s.querySelector('.cc');
+          s.querySelector('.bar').style.width = (78 * 0.82) + '%';
+          await sleep(420);
+          cc.textContent = '28/30';
+          cc.classList.remove('over');
+          await sleep(350);
+        } else {
+          await sleep(i < 6 ? 340 : 150);
+        }
+      }
+      await sleep(500);
+      /* leírások */
+      for (var j = 0; j < dslots.length; j++) {
+        dslots[j].classList.add('in');
+        $('dc').textContent = String(j + 1);
+        await sleep(430);
+      }
+      await sleep(600);
+      $('fin').classList.add('in');
+      await sleep(4800);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

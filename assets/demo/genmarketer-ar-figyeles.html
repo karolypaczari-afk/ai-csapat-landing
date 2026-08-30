@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — ár- és weboldal-figyelés animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .grid { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:18px; min-height:0; }
+  .snap { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:40px 22px 16px; position:relative; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:10px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .snap.in { opacity:1; transform:none; }
+  .snap .tag { position:absolute; top:-15px; left:16px; font-size:14.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 14px; }
+  #old .tag { background:#54595F; }
+  #new .tag { background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+
+  .site { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:16px; color:var(--muted); }
+  .plan { border:1.5px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .plan b { display:block; font-size:20px; margin-bottom:4px; }
+  .price { font-size:30px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .price small { font-size:17px; font-weight:600; color:var(--muted); }
+  .oldprice { position:relative; display:inline-block; }
+  .oldprice::after { content:''; position:absolute; left:0; top:55%; height:3px; width:0; background:var(--red); transition:width .5s ease; }
+  #new .struck .oldprice::after { width:100%; }
+  #new .struck .oldprice { color:#9AA0A8; }
+  .newprice { color:var(--violet); margin-left:12px; opacity:0; transition:opacity .4s; }
+  .newprice.in { opacity:1; }
+  .delta { display:inline-block; margin-left:10px; font-size:16px; font-weight:800; color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); border-radius:999px; padding:3px 12px; vertical-align:4px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .delta.in { opacity:1; transform:none; }
+  .bars i { display:block; height:10px; border-radius:999px; background:#E7E5F0; margin-top:7px; }
+  .bars i.s { width:65%; }
+
+  .newrow { border:1.5px solid rgba(255,196,0,0.7); background:rgba(255,196,0,0.1); border-radius:12px; padding:12px 16px; display:flex; align-items:center; gap:12px; font-size:20px; font-weight:700; opacity:0; transform:translateY(10px); transition:opacity .4s, transform .4s; }
+  .newrow.in { opacity:1; transform:none; }
+  .newrow .nb { font-size:13.5px; font-weight:800; letter-spacing:.05em; color:#1A1A2E; background:#FFC400; border-radius:999px; padding:3px 11px; text-transform:uppercase; flex:none; }
+
+  .alert { flex:none; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:12px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; font-size:21px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .alert.in { opacity:1; transform:none; }
+  .alert .dot { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; font-size:16px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
+  .alert small { margin-left:auto; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:17px; color:var(--muted); white-space:nowrap; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">ÁR- ÉS WEBOLDAL-FIGYELÉS — konkurens-a.hu</div>
+
+    <div class="grid">
+      <div class="snap" id="old">
+        <span class="tag">Korábbi · aug. 21.</span>
+        <span class="site">konkurens-a.hu/arak</span>
+        <div class="plan"><b>Pro csomag</b><span class="price">29 900 <small>Ft/hó</small></span></div>
+        <div class="bars"><i></i><i class="s"></i><i></i></div>
+      </div>
+
+      <div class="snap" id="new">
+        <span class="tag">Friss · aug. 28.</span>
+        <span class="site">konkurens-a.hu/arak</span>
+        <div class="plan" id="plan"><b>Pro csomag</b><span class="price"><span class="oldprice">29 900</span><span class="newprice" id="np">24 900 <small>Ft/hó</small></span><span class="delta" id="delta">–17%</span></span></div>
+        <div class="newrow" id="nrow"><span class="nb">Új</span>Éves csomag – két hónap ajándékba</div>
+        <div class="bars"><i></i><i class="s"></i></div>
+      </div>
+    </div>
+
+    <div class="alert" id="alert"><span class="dot">!</span><b>Árcsökkentés a Pro csomagon</b> + új éves konstrukció<small>észlelve: kedd 08:10</small></div>
+
+    <div class="cap" id="cap"><b>Csak az érdemi változás</b> — zaj nélkül, magyarázattal.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    ['old','new','nrow','alert','cap'].forEach(function (id) { $(id).classList.remove('in'); });
+    $('plan').parentNode.classList.remove('struck');
+    $('np').classList.remove('in');
+    $('delta').classList.remove('in');
+  }
+  function finalState() {
+    ['old','new','nrow','alert','cap'].forEach(function (id) { $(id).classList.add('in'); });
+    $('plan').parentNode.classList.add('struck');
+    $('np').classList.add('in');
+    $('delta').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      $('old').classList.add('in');
+      await sleep(800);
+      $('new').classList.add('in');
+      await sleep(800);
+      $('plan').parentNode.classList.add('struck');
+      await sleep(600);
+      $('np').classList.add('in');
+      await sleep(400);
+      $('delta').classList.add('in');
+      await sleep(600);
+      $('nrow').classList.add('in');
+      await sleep(700);
+      $('alert').classList.add('in');
+      await sleep(600);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

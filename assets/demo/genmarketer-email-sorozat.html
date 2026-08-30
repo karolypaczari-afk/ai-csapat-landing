@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — levélsorozat animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --card:#ffffff; --line:#E7E5F0; --bar:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:16px; padding:20px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .card { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:20px 26px; box-shadow:0 6px 18px rgba(0,0,0,0.06); opacity:0; transform:translateY(14px); transition:opacity .4s, transform .4s; flex:1; }
+  .card.in { opacity:1; transform:none; }
+  .meta { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
+  .num { font-size:19px; font-weight:800; color:#fff; background:var(--violet); border-radius:8px; padding:3px 12px; }
+  .when { margin-left:auto; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:18px; font-weight:700; color:var(--muted); background:#f0eee8; border-radius:999px; padding:3px 14px; }
+  .subj { font-size:27px; font-weight:800; line-height:1.3; min-height:36px; }
+  .subj .lbl { color:var(--muted); font-weight:600; font-size:20px; margin-right:8px; }
+  .subj .caret { display:inline-block; width:2px; height:24px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .bars { margin-top:12px; }
+  .bars i { display:block; height:12px; border-radius:999px; background:var(--bar); }
+  .bars i + i { margin-top:7px; width:64%; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">ÜDVÖZLŐ SOROZAT — a te hangodon · HERMÉSZ</div>
+    <div class="card" id="c1">
+      <div class="meta"><span class="num">1. levél</span><span class="when">azonnal</span></div>
+      <div class="subj"><span class="lbl">Tárgy:</span><span id="s1"><span class="caret"></span></span></div>
+      <div class="bars"><i></i><i></i></div>
+    </div>
+    <div class="card" id="c2">
+      <div class="meta"><span class="num">2. levél</span><span class="when">+2 nap</span></div>
+      <div class="subj"><span class="lbl">Tárgy:</span><span id="s2"><span class="caret"></span></span></div>
+      <div class="bars"><i></i><i></i></div>
+    </div>
+    <div class="card" id="c3">
+      <div class="meta"><span class="num">3. levél</span><span class="when">+4 nap</span></div>
+      <div class="subj"><span class="lbl">Tárgy:</span><span id="s3"><span class="caret"></span></span></div>
+      <div class="bars"><i></i><i></i></div>
+    </div>
+    <div class="cap" id="cap"><b>Teljes sorozat, tárgymezőkkel</b> — kiküldésre készen, a te hangodon.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SUBJ = [
+    'Megérkeztél — és rögtön hoztam is valamit',
+    'A hiba, amit majdnem mindenki elkövet',
+    'Mi lenne, ha ez holnaptól magától menne?'
+  ];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(24);
+    }
+    el.innerHTML = text;
+  }
+  function reset() {
+    for (var i = 1; i <= 3; i++) {
+      $('c' + i).classList.remove('in');
+      $('s' + i).innerHTML = '<span class="caret"></span>';
+    }
+    $('cap').classList.remove('in');
+  }
+  function finalState() {
+    for (var i = 1; i <= 3; i++) {
+      $('c' + i).classList.add('in');
+      $('s' + i).textContent = SUBJ[i - 1];
+    }
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 1; i <= 3; i++) {
+        $('c' + i).classList.add('in');
+        await sleep(350);
+        await typeInto($('s' + i), SUBJ[i - 1]);
+        await sleep(450);
+      }
+      await sleep(400);
+      $('cap').classList.add('in');
+      await sleep(4600);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

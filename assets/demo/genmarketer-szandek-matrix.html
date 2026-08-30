@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — szándék-mátrix animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --gold:#b8860b; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:14px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .slot { flex:none; background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; align-items:center; gap:16px; }
+  .slot small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:16px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; }
+  .slot .kw { font-size:26px; font-weight:700; min-height:34px; }
+  .slot .caret { display:inline-block; width:2px; height:24px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+
+  .cols { flex:1; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .col { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:44px 14px 14px; position:relative; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:10px; }
+  .col .tag { position:absolute; top:-15px; left:12px; font-size:14px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 13px; white-space:nowrap; }
+  #col1 .tag { background:var(--violet); }
+  #col2 .tag { background:var(--cyan); }
+  #col3 .tag { background:#FFC400; color:#1A1A2E; }
+  #col4 .tag { background:#54595F; }
+  .col .cnt { position:absolute; top:-15px; right:8px; font-size:14px; font-weight:800; background:#1A1A2E; color:#fff; border-radius:999px; padding:4px 10px; opacity:0; transition:opacity .3s; }
+  .col .cnt.in { opacity:1; }
+
+  .kchip { font-size:18.5px; font-weight:600; background:#FAFAFB; border:1.5px solid var(--line); border-radius:10px; padding:9px 13px; opacity:0; transform:translateY(-8px) scale(.85); transition:opacity .35s, transform .35s; line-height:1.25; }
+  .kchip.in { opacity:1; transform:none; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">KULCSSZÓ- ÉS SZÁNDÉK-KUTATÁS · KOLUMBUSZ</div>
+
+    <div class="slot"><small>Beérkező kulcsszó</small><span class="kw" id="kw"><span class="caret"></span></span></div>
+
+    <div class="cols">
+      <div class="col" id="col1"><span class="tag">Tájékozódó</span><span class="cnt">240/hó</span></div>
+      <div class="col" id="col2"><span class="tag">Mérlegelő</span><span class="cnt">390/hó</span></div>
+      <div class="col" id="col3"><span class="tag">Vásárló</span><span class="cnt">880/hó</span></div>
+      <div class="col" id="col4"><span class="tag">Márkakereső</span><span class="cnt">150/hó</span></div>
+    </div>
+
+    <div class="cap" id="cap"><b>Nem lista – térkép</b>: minden kulcsszó a szándéka szerint, kereséssel súlyozva.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var KW = [
+    { t: 'hogyan válassz futócipőt', col: 'col1' },
+    { t: 'futócipő akció', col: 'col3' },
+    { t: 'legjobb futócipő kezdőknek', col: 'col2' },
+    { t: 'runova webshop', col: 'col4' },
+    { t: 'futócipő méret-táblázat', col: 'col1' },
+    { t: 'aszfaltra vagy terepre?', col: 'col2' },
+    { t: 'futócipő ingyen szállítással', col: 'col3' },
+    { t: 'runova futócipő vélemények', col: 'col4' }
+  ];
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  async function typeInto(el, text) {
+    var caret = '<span class="caret"></span>';
+    for (var i = 1; i <= text.length; i++) {
+      el.innerHTML = text.slice(0, i) + caret;
+      await sleep(18);
+    }
+  }
+  function reset() {
+    $('kw').innerHTML = '<span class="caret"></span>';
+    document.querySelectorAll('.kchip').forEach(function (c) { c.remove(); });
+    document.querySelectorAll('.cnt').forEach(function (c) { c.classList.remove('in'); });
+    $('cap').classList.remove('in');
+  }
+  function addChip(colId, text, instant) {
+    var chip = document.createElement('div');
+    chip.className = 'kchip';
+    chip.textContent = text;
+    $(colId).appendChild(chip);
+    if (instant) { chip.classList.add('in'); }
+    else { requestAnimationFrame(function () { requestAnimationFrame(function () { chip.classList.add('in'); }); }); }
+  }
+  function finalState() {
+    reset();
+    $('kw').textContent = KW[KW.length - 1].t;
+    KW.forEach(function (k) { addChip(k.col, k.t, true); });
+    document.querySelectorAll('.cnt').forEach(function (c) { c.classList.add('in'); });
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < KW.length; i++) {
+        await typeInto($('kw'), KW[i].t);
+        await sleep(300);
+        addChip(KW[i].col, KW[i].t, false);
+        $('kw').innerHTML = '<span class="caret"></span>';
+        await sleep(420);
+      }
+      await sleep(300);
+      var cnts = document.querySelectorAll('.cnt');
+      for (var j = 0; j < cnts.length; j++) {
+        cnts[j].classList.add('in');
+        await sleep(240);
+      }
+      await sleep(400);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

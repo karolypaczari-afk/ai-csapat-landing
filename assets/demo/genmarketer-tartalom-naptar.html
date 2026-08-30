@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — tartalomnaptár animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --gold:#b8860b; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  .legend { display:flex; gap:12px; flex:none; }
+  .lg { font-size:17px; font-weight:800; border-radius:999px; padding:6px 17px; color:#fff; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .lg.in { opacity:1; transform:none; }
+  .lg.p1 { background:var(--violet); }
+  .lg.p2 { background:var(--cyan); }
+  .lg.p3 { background:#FFC400; color:#1A1A2E; }
+  .lg.p4 { background:#54595F; }
+
+  .days { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; flex:none; }
+  .day { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:16px; font-weight:700; color:var(--muted); text-align:center; letter-spacing:.08em; }
+
+  .grid { flex:1; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(4,1fr); gap:10px; }
+  .slot { border:1.5px dashed #D8D5E2; border-radius:12px; }
+  .slot.filled { border:1.5px solid #C9CDD6; background:var(--card); box-shadow:0 4px 10px rgba(0,0,0,0.05); padding:10px 12px; opacity:0; transform:scale(.85); transition:opacity .35s, transform .35s; }
+  .slot.filled.in { opacity:1; transform:none; }
+  .slot .pil { display:inline-block; font-size:13.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#fff; border-radius:999px; padding:2px 10px; margin-bottom:6px; }
+  .slot.c1 .pil { background:var(--violet); }
+  .slot.c2 .pil { background:var(--cyan); }
+  .slot.c3 .pil { background:#FFC400; color:#1A1A2E; }
+  .slot.c4 .pil { background:#54595F; }
+  .slot .fmt { display:block; font-size:17.5px; font-weight:700; }
+  .slot .hk { display:block; font-size:14.5px; color:var(--muted); margin-top:2px; }
+
+  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap.in { opacity:1; transform:none; }
+  .cap b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">TARTALOMNAPTÁR — 4 hét, tartható ritmus · PARETO</div>
+
+    <div class="legend">
+      <span class="lg p1" id="lg1">Oktatás</span>
+      <span class="lg p2" id="lg2">Kulisszák</span>
+      <span class="lg p3" id="lg3">Eredmény-eset</span>
+      <span class="lg p4" id="lg4">Vélemény</span>
+    </div>
+
+    <div class="days"><span class="day">HÉTFŐ</span><span class="day">KEDD</span><span class="day">SZERDA</span><span class="day">CSÜT.</span><span class="day">PÉNTEK</span></div>
+
+    <div class="grid" id="grid">
+      <div class="slot filled c1" data-o="1"><span class="pil">Oktatás</span><span class="fmt">Reels</span><span class="hk">kérdés-hook</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c2" data-o="2"><span class="pil">Kulisszák</span><span class="fmt">kép + szöveg</span><span class="hk">sztori-hook</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c3" data-o="3"><span class="pil">Eredmény</span><span class="fmt">carousel</span><span class="hk">szám-hook</span></div>
+
+      <div class="slot filled c4" data-o="4"><span class="pil">Vélemény</span><span class="fmt">szöveges</span><span class="hk">kontra-hook</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c1" data-o="5"><span class="pil">Oktatás</span><span class="fmt">carousel</span><span class="hk">lista-hook</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c2" data-o="6"><span class="pil">Kulisszák</span><span class="fmt">story-sorozat</span><span class="hk">poll</span></div>
+
+      <div class="slot filled c1" data-o="7"><span class="pil">Oktatás</span><span class="fmt">Reels</span><span class="hk">hiba-hook</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c3" data-o="8"><span class="pil">Eredmény</span><span class="fmt">kép + szöveg</span><span class="hk">előtte-utána</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c4" data-o="9"><span class="pil">Vélemény</span><span class="fmt">szöveges</span><span class="hk">kérdés-hook</span></div>
+
+      <div class="slot filled c2" data-o="10"><span class="pil">Kulisszák</span><span class="fmt">Reels</span><span class="hk">sztori-hook</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c1" data-o="11"><span class="pil">Oktatás</span><span class="fmt">carousel</span><span class="hk">lista-hook</span></div>
+      <div class="slot"></div>
+      <div class="slot filled c3" data-o="12"><span class="pil">Eredmény</span><span class="fmt">carousel</span><span class="hk">szám-hook</span></div>
+    </div>
+
+    <div class="cap" id="cap"><b>Minden slot kész terv</b>: pillér + formátum + hook — nem üres ötletlista.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var legends = ['lg1','lg2','lg3','lg4'];
+  var slots = Array.prototype.slice.call(document.querySelectorAll('.slot.filled'))
+    .sort(function (a, b) { return +a.getAttribute('data-o') - +b.getAttribute('data-o'); });
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function reset() {
+    legends.forEach(function (id) { $(id).classList.remove('in'); });
+    slots.forEach(function (s) { s.classList.remove('in'); });
+    $('cap').classList.remove('in');
+  }
+  function finalState() {
+    legends.forEach(function (id) { $(id).classList.add('in'); });
+    slots.forEach(function (s) { s.classList.add('in'); });
+    $('cap').classList.add('in');
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(600);
+      for (var i = 0; i < legends.length; i++) {
+        $(legends[i]).classList.add('in');
+        await sleep(240);
+      }
+      await sleep(400);
+      for (var j = 0; j < slots.length; j++) {
+        slots[j].classList.add('in');
+        await sleep(330);
+      }
+      await sleep(500);
+      $('cap').classList.add('in');
+      await sleep(5200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

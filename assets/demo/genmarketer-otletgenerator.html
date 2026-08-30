@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — ötletgenerátor animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --gold:#FFC400; --green:#1d8f4e; --card:#ffffff; --line:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+
+  .head { position:absolute; top:14px; left:18px; right:18px; font-family:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; }
+
+  .scene { position:absolute; inset:60px 12px 10px; opacity:0; transition:opacity .5s; pointer-events:none; }
+  .scene.on { opacity:1; }
+
+  /* ===== 1. felvonás: a képlet ===== */
+  #s1 { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:34px; }
+  .formula { font-size:44px; font-weight:800; opacity:0; transform:translateY(14px); transition:opacity .5s, transform .5s; }
+  .formula.in { opacity:1; transform:none; }
+  .formula .aw, .formula .fm, .formula .sz { display:inline-block; font-size:36px; border-radius:999px; padding:4px 22px; vertical-align:6px; }
+  .formula .aw { background:var(--violet); color:#fff; }
+  .formula .fm { background:var(--cyan); color:#fff; }
+  .formula .sz { background:var(--gold); color:#1A1A2E; }
+  .math { font-size:38px; font-weight:700; color:var(--muted); opacity:0; transition:opacity .5s; }
+  .math.in { opacity:1; }
+  .math b { color:var(--tx); font-size:46px; font-variant-numeric:tabular-nums; }
+  .foot { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:22px; color:var(--muted); opacity:0; transition:opacity .5s; }
+  .foot.in { opacity:1; }
+
+  /* ===== 2. felvonás: a gép ===== */
+  #s2 { display:flex; flex-direction:column; gap:22px; }
+  .slots { display:flex; gap:18px; }
+  .slot { flex:1; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:14px 18px; transition:border-color .2s, box-shadow .2s; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+  .slot small { display:inline-block; font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:16px; font-weight:700; letter-spacing:.08em; margin-bottom:10px; border-radius:999px; padding:3px 12px; }
+  .slot .val { display:block; font-size:27px; font-weight:800; min-height:37px; white-space:nowrap; }
+  .slot--aw small { background:var(--violet); color:#fff; } .slot--fm small { background:var(--cyan); color:#fff; } .slot--sz small { background:var(--gold); color:#1A1A2E; }
+  .slot.lock { border-color:var(--violet); box-shadow:0 0 0 1.5px var(--violet); }
+  .slots .x { align-self:center; font-size:30px; font-weight:800; color:var(--muted); }
+
+  .grid { display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; flex:1; align-content:start; }
+  .mini { background:var(--card); border:1.5px solid #C9CDD6; border-radius:10px; padding:10px 12px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; box-shadow:0 3px 8px rgba(0,0,0,0.06); }
+  .mini.in { opacity:1; transform:none; }
+  .mini .dots { display:flex; gap:6px; margin-bottom:8px; }
+  .mini .dots i { width:12px; height:12px; border-radius:50%; }
+  .mini .bar { height:9px; border-radius:999px; background:#E7E5F0; }
+  .mini .bar + .bar { margin-top:6px; width:70%; }
+
+  .count { position:absolute; right:6px; bottom:2px; font-size:34px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--tx); }
+  .count small { font-size:22px; color:var(--muted); font-weight:700; }
+
+  /* ===== 3. felvonás: minőség-kapu ===== */
+  #s3 { display:flex; flex-direction:column; justify-content:center; align-items:center; }
+  .gatebox { width:fit-content; display:flex; flex-direction:column; gap:16px; text-align:left; }
+  #s3 h2 { font-size:30px; font-weight:800; margin-bottom:6px; }
+  .chk { display:flex; align-items:center; gap:14px; font-size:26px; opacity:0; transform:translateX(-12px); transition:opacity .35s, transform .35s; }
+  .chk.in { opacity:1; transform:none; }
+  .chk .ok { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#ffffff; font-weight:800; font-size:20px; display:flex; align-items:center; justify-content:center; flex:none; }
+  .closing { margin-top:14px; font-size:27px; font-weight:700; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:16px 22px; opacity:0; transform:translateY(10px); transition:opacity .5s, transform .5s; }
+  .closing.in { opacity:1; transform:none; }
+  .closing b { color:var(--violet); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">AD-PLANNER · 118 videó · 131 framework tudásából</div>
+
+    <div class="scene" id="s1">
+      <div class="formula" id="f1">Ötlet = <span class="aw">Awareness</span> × <span class="fm">Formátum</span> × <span class="sz">Szög</span></div>
+      <div class="math" id="f2"><span id="n1">5</span> × <span id="n2">48</span> × <span id="n3">22</span> = <b id="total">0</b> kombináció</div>
+      <div class="foot" id="f3">perszónával szorozva: 105 600</div>
+    </div>
+
+    <div class="scene" id="s2">
+      <div class="slots">
+        <div class="slot slot--aw" id="slA"><small>AWARENESS</small><span class="val" id="vA">—</span></div>
+        <span class="x">×</span>
+        <div class="slot slot--fm" id="slF"><small>FORMÁTUM</small><span class="val" id="vF">—</span></div>
+        <span class="x">×</span>
+        <div class="slot slot--sz" id="slS"><small>SZÖG</small><span class="val" id="vS">—</span></div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="count"><span id="cnt">0</span><small> / 15 mini brief</small></div>
+    </div>
+
+    <div class="scene" id="s3">
+      <div class="gatebox">
+        <h2>Lefedettség-ellenőrzés</h2>
+        <div class="chk" id="k1"><span class="ok">✓</span>legalább 3 awareness-szint</div>
+        <div class="chk" id="k2"><span class="ok">✓</span>legalább 4 különböző formátum</div>
+        <div class="chk" id="k3"><span class="ok">✓</span>legalább 5 különböző szög</div>
+        <div class="chk" id="k4"><span class="ok">✓</span>nincs két ötlet azonos kombinációval</div>
+        <div class="closing" id="cl"><b>A változatosság maga a célzás</b> — ez az Andromeda-logika.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var AW = ['Unaware', 'Problem-aware', 'Solution-aware', 'Product-aware', 'Most-aware'];
+  var FM = ['statikus', 'UGC-videó', 'carousel', 'mém', 'képernyőfotó', 'motion'];
+  var SZ = ['idő', 'pénz', 'státusz', 'félelem', 'kényelem', 'közösség', 'transzformáció'];
+  var LOCKS = [
+    ['Problem-aware', 'UGC-videó', 'pénz'],
+    ['Unaware', 'statikus mém', 'státusz'],
+    ['Product-aware', 'carousel', 'kényelem']
+  ];
+  var DOTC = { 0:'#7C3AED', 1:'#00D4FF', 2:'#FFC400' };
+
+  var grid = $('grid');
+  var minis = [];
+  for (var i = 0; i < 15; i++) {
+    var m = document.createElement('div');
+    m.className = 'mini';
+    m.innerHTML = '<div class="dots"><i style="background:#7C3AED"></i><i style="background:#00D4FF"></i><i style="background:#FFC400"></i></div><div class="bar"></div><div class="bar"></div>';
+    grid.appendChild(m);
+    minis.push(m);
+  }
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  function rnd(arr) { return arr[Math.floor(arr.length * ((Date.now() % 997) / 997))]; }
+  function scene(n) {
+    ['s1','s2','s3'].forEach(function (id, i) { $(id).classList.toggle('on', i === n - 1); });
+  }
+  function reset() {
+    ['f1','f2','f3'].forEach(function (id) { $(id).classList.remove('in'); });
+    $('total').textContent = '0';
+    minis.forEach(function (m) { m.classList.remove('in'); });
+    $('cnt').textContent = '0';
+    ['k1','k2','k3','k4','cl'].forEach(function (id) { $(id).classList.remove('in'); });
+    ['slA','slF','slS'].forEach(function (id) { $(id).classList.remove('lock'); });
+    $('vA').textContent = '—'; $('vF').textContent = '—'; $('vS').textContent = '—';
+  }
+  function finalState() {
+    scene(3);
+    ['k1','k2','k3','k4','cl'].forEach(function (id) { $(id).classList.add('in'); });
+  }
+
+  async function spinTotal() {
+    var target = 5280, steps = 24;
+    for (var i = 1; i <= steps; i++) {
+      $('total').textContent = Math.round(target * (i / steps) / 10) * 10;
+      await sleep(38);
+    }
+    $('total').textContent = '5 280';
+  }
+
+  async function flickTo(el, arr, final, n) {
+    for (var i = 0; i < n; i++) {
+      el.textContent = arr[(i * 3 + el.textContent.length) % arr.length];
+      await sleep(110);
+    }
+    el.textContent = final;
+  }
+
+  async function combo(idx, lock, slow) {
+    var locks = ['slA','slF','slS'];
+    locks.forEach(function (id) { $(id).classList.remove('lock'); });
+    if (slow) {
+      await Promise.all([
+        flickTo($('vA'), AW, lock[0], 4),
+        flickTo($('vF'), FM, lock[1], 5),
+        flickTo($('vS'), SZ, lock[2], 6)
+      ]);
+      locks.forEach(function (id) { $(id).classList.add('lock'); });
+      await sleep(280);
+    } else {
+      $('vA').textContent = rnd(AW); $('vF').textContent = rnd(FM); $('vS').textContent = rnd(SZ);
+    }
+    minis[idx].classList.add('in');
+    $('cnt').textContent = String(idx + 1);
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      /* 1. felvonás — a képlet */
+      scene(1);
+      await sleep(400);
+      $('f1').classList.add('in');
+      await sleep(800);
+      $('f2').classList.add('in');
+      await spinTotal();
+      $('f3').classList.add('in');
+      await sleep(1600);
+      /* 2. felvonás — a gép */
+      scene(2);
+      await sleep(500);
+      for (var i = 0; i < 3; i++) { await combo(i, LOCKS[i], true); await sleep(500); }
+      for (var j = 3; j < 15; j++) { await combo(j, null, false); await sleep(170); }
+      await sleep(1400);
+      /* 3. felvonás — minőség-kapu */
+      scene(3);
+      await sleep(500);
+      var ks = ['k1','k2','k3','k4'];
+      for (var k = 0; k < ks.length; k++) { $(ks[k]).classList.add('in'); await sleep(450); }
+      await sleep(400);
+      $('cl').classList.add('in');
+      await sleep(4200);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>

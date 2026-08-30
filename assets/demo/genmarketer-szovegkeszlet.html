@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GENmarketer — szövegkészlet animáció</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+  :root { --tx:#1A1A2E; --muted:#54595F; --line:#E7E5F0; --violet:#7C3AED; --bar:#E7E5F0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: transparent; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
+  #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; display:flex; flex-direction:column; gap:16px; padding:20px 22px; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+
+  .head { font-family:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+
+  #list { flex:1; overflow:hidden; display:flex; flex-direction:column; gap:16px; }
+
+  .card { background:#fff; border:1.5px solid #C9CDD6; border-radius:16px; padding:20px 26px; box-shadow:0 6px 18px rgba(0,0,0,0.06); opacity:0; transform:translateY(16px); transition:opacity .45s, transform .45s; flex:none; }
+  .card.in { opacity:1; transform:none; }
+  .meta { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+  .num { width:38px; height:38px; border-radius:50%; background:var(--violet); color:#fff; font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
+  .style { font-size:28px; font-weight:800; line-height:1.25; }
+  .bars { display:flex; flex-direction:column; gap:9px; }
+  .bars i { display:block; height:14px; border-radius:999px; background:var(--bar); }
+</style>
+</head>
+<body>
+<div id="anim-wrap">
+  <div id="stage">
+    <div class="head">SZÖVEGKÉSZLET — tavaszi kampány · CYRANO · 10 változat</div>
+    <div id="list"></div>
+  </div>
+</div>
+<script>
+(function () {
+  var W = 1070, H = 720;
+  var wrap = document.getElementById('anim-wrap');
+  var stage = document.getElementById('stage');
+  function rescale() {
+    var s = Math.min(1, wrap.clientWidth / W);
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = (H * s) + 'px';
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+
+  /* Alvó kapu: ha az animáció nem látszik, a ciklus szünetel */
+  var __ioVis = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { __ioVis = en[en.length - 1].isIntersecting; }, { threshold: 0.01 }).observe(stage);
+  }
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var list = document.getElementById('list');
+
+  /* verzió-címkék + skeleton-sávok szélességei (a hosszabb stílus több/több soros) */
+  var VERSIONS = [
+    { t: 'PAS, empatikus, fájdalompont-hook',                       bars: ['88%','62%'] },
+    { t: 'Előtte vs Utána (Before-After-Bridge)',                   bars: ['92%','58%'] },
+    { t: 'Sztorizós: Hook-Story-Offer (Brunson-stílus)',            bars: ['95%','65%'] },
+    { t: 'AIDA, tekintélyelvű, hosszabb',                           bars: ['90%','70%'] },
+    { t: 'Founder ad (Dara Denney), személyes, puha CTA',           bars: ['86%','60%'] },
+    { t: 'Kontra hook (Cattoni: „stop X, do this instead")',        bars: ['80%','55%'] },
+    { t: 'Provokáció / anti-ad (Barry Hott „ugly ad"), natív hang', bars: ['74%','52%'] },
+    { t: 'Számos / listás fejléc',                                  bars: ['82%','64%'] },
+    { t: 'UGC / beszélő fej script',                                bars: ['89%','61%'] },
+    { t: 'Awareness-létra, ugyanaz az ajánlat öt szinten',          bars: ['91%','57%'] }
+  ];
+
+  var cards = VERSIONS.map(function (v, i) {
+    var card = document.createElement('div');
+    card.className = 'card';
+    var barsHtml = v.bars.map(function (w) { return '<i style="width:' + w + '"></i>'; }).join('');
+    card.innerHTML = '<div class="meta"><span class="num">' + (i + 1) + '</span><span class="style">' + v.t + '</span></div>' +
+      '<div class="bars">' + barsHtml + '</div>';
+    list.appendChild(card);
+    return card;
+  });
+
+  function waitAwake() {
+    if (__ioVis && !document.hidden) return;
+    return new Promise(function (r) {
+      var t = setInterval(function () { if (__ioVis && !document.hidden) { clearInterval(t); r(); } }, 400);
+    });
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }).then(waitAwake); }
+  /* kézi smooth-scroll: az overflow:hidden konténeren a scroll-behavior nem animál */
+  function tweenScroll(target, dur) {
+    return new Promise(function (resolve) {
+      var from = list.scrollTop, delta = target - from, t0 = null;
+      if (Math.abs(delta) < 1) { resolve(); return; }
+      function ease(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+      function frame(ts) {
+        if (!t0) t0 = ts;
+        var k = Math.min(1, (ts - t0) / dur);
+        list.scrollTop = from + delta * ease(k);
+        if (k < 1) requestAnimationFrame(frame); else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  function reset() {
+    cards.forEach(function (c) { c.classList.remove('in'); });
+    list.scrollTop = 0;
+  }
+  function finalState() {
+    cards.forEach(function (c) { c.classList.add('in'); });
+    list.scrollTop = 0;
+  }
+
+  if (reduced) { finalState(); return; }
+
+  async function run() {
+    for (;;) {
+      reset();
+      await sleep(700);
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.add('in');
+        // az ÚJ kártya aljáig görgetünk, easinggel: a friss verzió mindig a keret alján úszik be
+        var target = Math.max(0, cards[i].offsetTop + cards[i].offsetHeight - list.clientHeight + 6);
+        await tweenScroll(target, 550);
+        await sleep(520);
+      }
+      await sleep(3200);
+      await sleep(300);
+    }
+  }
+  run();
+})();
+</script>
+</body>
+</html>
