@@ -157,7 +157,8 @@
   <!-- OptiMonk — KÉSLELTETVE (2026-08-05). Mérve: 42 kérés 8 hosztnévre, és a kampány-impresszió
        a 18,7. másodpercnél tüzelt. A betöltés első másodperceiben tehát nincs rá szükség, közben
        viszont ő vitte el a legtöbb kapcsolatot és main-thread-időt — ez régi eszközön a legdrágább.
-       Az első valódi interakcióra (vagy 3,5 mp-re) töltjük be; a kampánylogika érintetlen. -->
+       Az első valódi interakcióra (vagy 8 mp-re) töltjük be. A mért 18,7 mp-es kampány-
+       impresszió előtt így is készen áll, tehát a látogatói kampánylogika érintetlen. -->
   <script>
     (function () {
       if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
@@ -173,7 +174,7 @@
       }
       var evts = ['scroll', 'pointermove', 'touchstart', 'keydown', 'click'];
       for (var i = 0; i < evts.length; i++) { window.addEventListener(evts[i], load, true); }
-      var timer = setTimeout(load, 3500);
+      var timer = setTimeout(load, 8000);
     })();
   </script>
   <!-- Meta Pixel — browser-side PageView + checkout intent. CAPI token stays server-side only. -->
