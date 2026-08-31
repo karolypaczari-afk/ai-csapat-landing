@@ -785,7 +785,7 @@
       var statusCls = soon ? "soon" : "live", statusTxt = soon ? tr("HAMAROSAN", "STANDBY") : tr("AKTÍV", "NOMINAL");
       var role = EN ? a.roleEn : a.role, task = EN ? a.currentTaskEn : a.currentTask;
       var label = a.name || a.code;   // megjelenítendő (ékezetes) név; a.code marad az ASCII fájl-/adatkulcs
-      html += '<button type="button" class="gm-agent' + (soon ? " is-soon" : "") + '" data-code="' + esc(a.code) + '" data-cat="' + esc(a.cat) + '" style="--c:' + esc(a.color) + '">';
+      html += '<button type="button" class="gm-agent' + (soon ? " is-soon" : "") + '" data-code="' + esc(a.code) + '" data-cat="' + esc((a.cats || [a.cat]).join("|")) + '" style="--c:' + esc(a.color) + '">';
       html += '<span class="gm-agent__top">';
       html += '<span class="gm-agent__av"><img src="' + AV + esc(a.code) + '.webp" alt="' + esc(label + " – " + role) + '" loading="lazy" width="60" height="60"></span>';
       html += '<span class="gm-agent__meta"><span class="gm-agent__code">' + esc(label) + ' <span class="gm-status gm-status--' + statusCls + '">' + statusTxt + '</span></span>';
@@ -841,7 +841,7 @@
       card.setAttribute("role", "button");
       card.setAttribute("tabindex", "0");
       card.setAttribute("aria-haspopup", "dialog");
-      card.setAttribute("aria-label", (label ? label.textContent : code) + " szakember részleteinek megnyitása");
+      card.setAttribute("aria-label", (label ? label.textContent : code) + " csapattag részleteinek megnyitása");
       card.addEventListener("click", function () { openModal(code); });
       card.addEventListener("keydown", function (event) {
         if (event.key !== "Enter" && event.key !== " ") return;
@@ -862,7 +862,7 @@
         var cat = chip.getAttribute("data-cat");
         var state = (Flip && !REDUCE) ? Flip.getState(cards) : null;
         cards.forEach(function (c) {
-          var show = cat === "all" || c.getAttribute("data-cat") === cat;
+          var show = cat === "all" || c.getAttribute("data-cat").split("|").indexOf(cat) !== -1;
           c.style.display = show ? "" : "none";
         });
         if (state) Flip.from(state, { duration: 0.5, ease: "power2.out", scale: true, absolute: true, onEnter: function (els) { return gsap.fromTo(els, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4 }); }, onLeave: function (els) { return gsap.to(els, { opacity: 0, scale: 0.8, duration: 0.3 }); } });

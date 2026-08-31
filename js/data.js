@@ -26,7 +26,7 @@
      szám továbbra sem élhet egy oldalon (ez volt az eredeti baj: 25 / 27 / 28).
      ⚠️ Egyetlen hely: aki átírja, itt írja át — a HTML-prózát is vele együtt,
      különben a kapu megbukik. */
-  window.GM_LANDING_FACTS = { team: 28, areas: 7 };
+  window.GM_LANDING_FACTS = { team: 28, areas: 10 };
 
   window.GM_TEAM = [
     { cat: "Vezetés és stratégia", catEn: "Leadership & strategy", color: "#F5A623", members: [
@@ -245,4 +245,30 @@
     g.members.forEach(function (m) { acc.push(Object.assign({ cat: g.cat, catEn: g.catEn, color: g.color }, m)); });
     return acc;
   }, []);
+
+  /* 2026-08-31: tíz terület — a Munkaállomás-blokk (#use-casek) fülrendje az irányadó.
+     Az első terület az elsődleges (kártyaszín), a többi a szűrőben jeleníti meg a tagot.
+     A hozzárendelés 1:1 a munkaállomás-fülek csapatsoraival. */
+  var GM_AREA_COLORS = { "Meta Ads": "#00D4FF", "Google Ads": "#FFC400", "Email": "#0A66C2", "SEO": "#00AACC", "Weboldal": "#06B6D4", "Social": "#E1306C", "Design": "#9B6DFF", "Videó": "#400099", "Versenytárs": "#7C3AED", "Stratégia": "#F5A623" };
+  var GM_AREA_EN = { "Meta Ads": "Meta Ads", "Google Ads": "Google Ads", "Email": "Email", "SEO": "SEO", "Weboldal": "Website", "Social": "Social", "Design": "Design", "Videó": "Video", "Versenytárs": "Competitors", "Stratégia": "Strategy" };
+  var GM_AREAS10 = {
+    "ATLASZ": ["Stratégia"], "ATHENE": ["Stratégia"], "PERPETUUM": ["Stratégia"],
+    "SHERLOCK": ["Stratégia", "Versenytárs"], "SUN-TZU": ["Versenytárs"],
+    "AURORA": ["Meta Ads"], "KEPLER": ["Meta Ads"], "CYRANO": ["Meta Ads", "Google Ads"],
+    "APOLLON": ["Google Ads"],
+    "HERMESZ": ["Email"],
+    "KOLUMBUSZ": ["SEO", "Google Ads"], "PARETO": ["SEO", "Social"], "MERIDIAN": ["SEO", "Versenytárs"], "VERITAS": ["SEO"], "ARTEMISZ": ["SEO"],
+    "MIDASZ": ["Weboldal"], "ROBINSON": ["Weboldal"], "NEXUS": ["Weboldal"], "SENTRY": ["Weboldal"],
+    "MATISSE": ["Design", "Weboldal"], "LEONARDO": ["Design", "Meta Ads", "Social"], "VECTOR": ["Design"],
+    "FIGARO": ["Social"],
+    "SEHEREZADE": ["Videó"], "GULLIVER": ["Videó", "Versenytárs"], "LUMIERE": ["Videó"], "KRONOSZ": ["Videó"], "GUTENBERG": ["Videó"]
+  };
+  window.GM_AGENTS.forEach(function (a) {
+    var areas = GM_AREAS10[a.code];
+    if (!areas) return;
+    a.cats = areas;
+    a.cat = areas[0];
+    a.catEn = GM_AREA_EN[areas[0]];
+    a.color = GM_AREA_COLORS[areas[0]];
+  });
 })();
