@@ -120,6 +120,15 @@
   var ATTR_COOKIE = "gm_ads_attrib";
   var META_EXT_COOKIE = "gm_meta_ext_id";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+  var ATTR_VALUE_MAX = 512;
+  var INTERNAL_ROOT_DOMAINS = ["genmarketer.hu", "genmarketer.eu"];
+  var ORGANIC_REFERRERS = [
+    { test: /(^|\.)google\./, source: "google" },
+    { test: /(^|\.)bing\.com$/, source: "bing" },
+    { test: /(^|\.)search\.yahoo\.com$/, source: "yahoo" },
+    { test: /(^|\.)duckduckgo\.com$/, source: "duckduckgo" },
+    { test: /(^|\.)ecosia\.org$/, source: "ecosia" }
+  ];
   function isLocal() { return location.hostname === "localhost" || location.hostname === "127.0.0.1"; }
   // A süti-scope-ot a REGISZTRÁLHATÓ domainre kell emelni, különben a landolón írt
   // `_fbc` / `_fbp` / `gm_meta_ext_id` host-only marad, és a pénztár-aldomain NEM látja.
@@ -297,10 +306,36 @@
       try { localStorage.setItem(ATTR_COOKIE, json); } catch (e) {}
     }
   }
+  function cleanAttributionValue(value) {
+    return String(value || "").trim().slice(0, ATTR_VALUE_MAX);
+  }
+  function isInternalHostname(hostname) {
+    var host = String(hostname || "").toLowerCase().replace(/^www\./, "");
+    return INTERNAL_ROOT_DOMAINS.some(function (root) {
+      return host === root || host.slice(-(root.length + 1)) === "." + root;
+    });
+  }
+  // A referrerből kizárólag a hostot tartjuk meg: útvonal, query és fragment nem
+  // kerül sem sütibe, sem checkout-URL-be. A saját root domainek belső navigációk,
+  // ezért sosem válhatnak megszerzési forrássá.
+  function attributionFromReferrer(referrer) {
+    try {
+      var parsed = new URL(referrer);
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return {};
+      var host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+      if (!host || isInternalHostname(host)) return {};
+      for (var i = 0; i < ORGANIC_REFERRERS.length; i += 1) {
+        if (ORGANIC_REFERRERS[i].test.test(host)) {
+          return { utm_source: ORGANIC_REFERRERS[i].source, utm_medium: "organic", gm_attrib_inferred: "referrer_host" };
+        }
+      }
+      return { utm_source: cleanAttributionValue(host), utm_medium: "referral", gm_attrib_inferred: "referrer_host" };
+    } catch (e) { return {}; }
+  }
   function ensureAdAttribution() {
     var qs = new URLSearchParams(location.search), current = readStoredAttribution(), incoming = {}, hasClickId = false;
     ATTR_KEYS.forEach(function (k) {
-      var v = qs.get(k);
+      var v = cleanAttributionValue(qs.get(k));
       if (v) {
         incoming[k] = v;
         if (/^(gclid|gbraid|wbraid|fbclid|msclkid)$/.test(k)) hasClickId = true;
@@ -308,12 +343,26 @@
     });
     var out = Object.assign({}, current);
     if (Object.keys(incoming).length) {
-      out = hasClickId ? Object.assign({}, incoming) : Object.assign({}, current, incoming);
+      // Új, név szerint megadott forrás vagy paid click új last-click. A régi
+      // medium/campaign nem keveredhet az új source mellé; részparaméter csak a
+      // már élő attributiont egészítheti ki.
+      out = (hasClickId || incoming.utm_source) ? Object.assign({}, incoming) : Object.assign({}, current, incoming);
       out.first_seen = out.first_seen || new Date().toISOString();
       out.last_seen = new Date().toISOString();
-      out.landing_page = location.pathname + location.search;
-      out.referrer = document.referrer || out.referrer || "";
+      out.landing_page = location.pathname;
+      try { out.referrer = document.referrer ? new URL(document.referrer).hostname.toLowerCase() : (out.referrer || ""); } catch (e) { out.referrer = ""; }
       writeStoredAttribution(out);
+    } else {
+      var inferred = attributionFromReferrer(document.referrer);
+      if (inferred.utm_source) {
+        out = Object.assign({}, inferred, {
+          first_seen: out.first_seen || new Date().toISOString(),
+          last_seen: new Date().toISOString(),
+          landing_page: location.pathname,
+          referrer: inferred.utm_source
+        });
+        writeStoredAttribution(out);
+      }
     }
     ["gclid", "gbraid", "wbraid", "msclkid"].forEach(function (k) {
       if (out[k]) writeCookie("gm_" + k, out[k], 90);
@@ -492,6 +541,18 @@
       return withAttribution(live);
     } catch (e) { return withAttribution(built); }
   }
+  // A Woo checkout ne a landing aldomaint lássa referralnak. A valódi külső
+  // forrás már UTM-ként a cél-URL-ben van; jel nélküli érkezésnél pedig a Woo így
+  // natív Direct forrást rögzíthet a hamis belső referral helyett.
+  function navigateToCheckout(url) {
+    var link = document.createElement("a");
+    link.href = url;
+    link.rel = "noreferrer";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
   /* ── Havi ↔ hosszabb számlázási ciklus ─────────────────────────────────────
    *
    * EGY implementáció mindkét nyelvre, és MINDEN ciklus-függő értéket a MARKUP
@@ -623,7 +684,7 @@
       if (key && CHECKOUT[key]) el.setAttribute("href", withAttribution(CHECKOUT[key]));
       el.addEventListener("click", function (ev) {
         track(el.getAttribute("data-gm-package") || PKG_DEFAULT, el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]), el);
-        if (key && CHECKOUT[key]) { ev.preventDefault(); window.location.href = checkoutTarget(el, key); }
+        if (key && CHECKOUT[key]) { ev.preventDefault(); navigateToCheckout(checkoutTarget(el, key)); }
       });
     });
   }
