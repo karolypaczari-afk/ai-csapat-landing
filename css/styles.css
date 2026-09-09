@@ -395,7 +395,7 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-ws__person img { border-radius: 8px; display: inline-block; }
 .gm-ws__grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 1.8rem; align-items: start; }
 .gm-ws__steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
-.gm-ws__steps button { display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; font: inherit; background: #fff; border: 1px solid var(--gm-line); border-radius: var(--gm-r); padding: 0.85rem 1.25rem; cursor: pointer; box-shadow: 0 6px 16px rgba(26, 26, 46, 0.09); transition: border-color 0.2s var(--gm-ease), box-shadow 0.2s var(--gm-ease), transform 0.2s var(--gm-ease); }
+.gm-ws__steps button { display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; font: inherit; color: var(--gm-ink); background: #fff; border: 1px solid var(--gm-line); border-radius: var(--gm-r); padding: 0.85rem 1.25rem; cursor: pointer; box-shadow: 0 6px 16px rgba(26, 26, 46, 0.09); transition: border-color 0.2s var(--gm-ease), box-shadow 0.2s var(--gm-ease), transform 0.2s var(--gm-ease); }
 .gm-ws__steps button:hover { border-color: var(--gm-grey-300); transform: translateY(-3px); box-shadow: 0 14px 30px rgba(64, 0, 153, 0.16); }
 .gm-ws__steps button.is-active { border-color: var(--gm-cyan-600); box-shadow: 0 0 0 1px var(--gm-cyan-600), 0 10px 24px rgba(6, 182, 212, 0.18); }
 .gm-ws__num { display: inline-flex; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--gm-sand); color: var(--gm-ink); font-size: 1rem; font-weight: 800; flex: none; }
