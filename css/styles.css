@@ -954,6 +954,9 @@ figure.gm-video.gm-ws__media { position: relative; }
   padding-inline: 0.9em;
   font-size: clamp(0.82rem, 1.35vw, 1.02rem);
 }
+/* Két gomb egy kártyában (Pro: próba + előfizetés, 2026-09-10): a második NE kapjon
+   margin-top:auto-t, különben a flex a két gomb közé osztaná a szabad helyet. */
+.gm-price .gm-btn + .gm-btn { margin-top: 0.6rem; }
 
 /* ---- Pricing: ajanlat-csoport ----
    2026-08-27-ig itt egy `--split` racs allt (elofizetes 2fr + egyszeri 1fr),
