@@ -957,6 +957,11 @@ figure.gm-video.gm-ws__media { position: relative; }
 /* Két gomb egy kártyában (Pro: próba + előfizetés, 2026-09-10): a második NE kapjon
    margin-top:auto-t, különben a flex a két gomb közé osztaná a szabad helyet. */
 .gm-price .gm-btn + .gm-btn { margin-top: 0.6rem; }
+/* A próba apróbetűje. A `margin-top: auto` a gombokat a kártya aljára tolja, ezért
+   a jegyzet a gomb UTÁN áll, de vizuálisan hozzá tapad – és a következő gomb
+   (a teljes árú „Előfizetek") a saját 0.6rem-jét a jegyzethez méri. */
+.gm-price__trialnote { margin: 0.45rem 0 0; color: #8C89A8; font-size: 0.78rem; line-height: 1.45; text-align: center; }
+.gm-price__trialnote strong { color: #B8B6CE; }
 
 /* ---- Pricing: ajanlat-csoport ----
    2026-08-27-ig itt egy `--split` racs allt (elofizetes 2fr + egyszeri 1fr),

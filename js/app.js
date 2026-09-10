@@ -74,11 +74,19 @@
     //    200 + a HELYES ár a kosárban (2342→9 990/hó · 2343→39 960/6 hó · 2344→19 990/hó · 2345→79 960/6 hó).
     //
     planner:   "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2342&wcf-qty=1",
-    autopilot: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2344&wcf-qty=1"
+    autopilot: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2344&wcf-qty=1",
+    // 3 napos, 990 Ft-os próba (2026-09-10). SAJÁT variáció (5809), nem a 2344:
+    // a Pro kártyán a próba-gomb MELLETT ott marad a teljes árú „Előfizetek" gomb,
+    // tehát a két ajánlatnak két külön kosár-cél kell. A variáció: 990 Ft egyszeri
+    // díj + 3 nap próba → 72 óra múlva 19 990 Ft/hó, 1 fő. A ciklus-/létszámváltó
+    // SZÁNDÉKOSAN nem nyúl hozzá: a szelektora `data-yearly-href`-et is megkövetel,
+    // és a próba-gombon az nincs — így a 990-et kosárba tevő mindig az 1 fiókos
+    // havi Pro-ra fut ki, bármit is állított be előtte a kártyán.
+    autopilot_trial: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=5809&wcf-qty=1"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990, autopilot_trial: 990 };
   var CURRENCY = EN ? "EUR" : "HUF";
   /* ── KI A TULAJDONOSA A TÖLCSÉR-ESEMÉNYNEK: a landoló vagy a pénztár? ─────────
    *
@@ -114,7 +122,11 @@
     autopilot: { label: "Autopilot subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" }
   } : {
     planner:   { label: "Standard előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
-    autopilot: { label: "Pro előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" }
+    autopilot: { label: "Pro előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" },
+    // KÜLÖN `item_id`: a próba más árú és más ajánlat, mint a teljes árú Pro — egy
+    // közös azonosító a 990-et és a 19 990-et egyetlen sorba olvasztaná, és a
+    // „próba → fizető" arány, a valódi KPI, mérhetetlenné válna.
+    autopilot_trial: { label: "Pro előfizetés – 3 napos próba", itemId: "ai-csapatod-elofizetes-autopilot-proba" }
   };
   var PKG_DEFAULT = "planner";
   var ATTR_COOKIE = "gm_ads_attrib";
@@ -225,7 +237,7 @@
   // A kettő két külön rendszer kulcsa — a Metáé a Woo-ID, a GA4-é a beszédes slug.
   var META_CONTENT_ID = EN
     ? { planner: "46", autopilot: "49" }
-    : { planner: "2342", autopilot: "2344" };
+    : { planner: "2342", autopilot: "2344", autopilot_trial: "5809" };
   // A GOMBON ÁLLÓ href az igazság, nem a konstans: a ciklusváltó átírja (havi 2342 →
   // éves 2343), és a kosárba is az kerül — ugyanaz az elv, mint a `checkoutTarget`-nél.
   // A konstans csak ott kell, ahol nincs pénztár-href (anchor-CTA, `ViewContent`);
@@ -247,7 +259,7 @@
    * Gépi kapu: tests/tracking-value.mjs — a markupban deklarált variáció↔ár párokat
    * veti össze ezzel a térképpel, fail-closed. Ha egy ár változik és ez nem, PIROS. */
   var VALUE_BY_VARIATION = EN ? { "46": 29, "47": 116, "49": 59, "50": 236, "337": 44, "338": 176, "339": 55, "340": 220, "341": 64, "342": 256, "343": 69, "344": 276, "345": 89, "346": 356, "347": 111, "348": 444, "349": 129, "350": 516, "351": 139, "352": 556 }
-                              : { "2342": 9990, "2343": 39960, "2344": 19990, "2345": 79960, "3494": 14980, "3495": 59920, "3496": 18970, "3497": 75880, "3498": 21960, "3499": 87840, "3500": 23950, "3501": 95800, "3502": 29980, "3503": 119920, "3504": 37970, "3505": 151880, "3506": 43960, "3507": 175840, "3508": 47950, "3509": 191800 };
+                              : { "2342": 9990, "2343": 39960, "2344": 19990, "2345": 79960, "3494": 14980, "3495": 59920, "3496": 18970, "3497": 75880, "3498": 21960, "3499": 87840, "3500": 23950, "3501": 95800, "3502": 29980, "3503": 119920, "3504": 37970, "3505": 151880, "3506": 43960, "3507": 175840, "3508": 47950, "3509": 191800, "5809": 990 };
   function offerValue(pkg, el) {
     try {
       var href = el && el.getAttribute && el.getAttribute("href");
