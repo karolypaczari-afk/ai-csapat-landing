@@ -273,12 +273,29 @@
     // sosem lehet — egy 0 értékű konverzió a licitnek azt mondaná, hogy semmit sem ér.
     return PRICE[pkg] || 0;
   }
+  /* ☠️ 2026-09-11 — EZ A FÜGGVÉNY VAK VOLT A MAGYAR PÉNZTÁR-LINKRE.
+   *
+   * A 2026-08-08-i CartFlows-javítás óta MINDEN magyar CTA a natív
+   * `?wcf-add-to-cart=<variáció>` formát viseli — a régi `variation_id` /
+   * `add-to-cart` paraméter egyetlen magyar hrefen sincs többé. A `offerValue`
+   * testvérfüggvényt akkor átvezették rá, EZT nem: azóta minden magyar hívás a
+   * `try` ágon átesett, és a bedrótozott HAVI alapértelmezésre bukott vissza.
+   *
+   * Némán rossz, nem hibás: a havi nézetben a fallback VÉLETLENÜL a helyes ID-t
+   * adja (2342/2344), ezért a kapuk zöldek maradtak. A ciklus- vagy létszámváltó
+   * után viszont a `ViewContent` továbbra is a havi 1 fős variációt hirdeti, míg
+   * a pénztár PYS-e a ténylegesen kosárba tett variációt küldi (élőben mérve:
+   * `InitiateCheckout content_ids:["5809"]` a 990 Ft-os próbán) — vagyis a Meta
+   * a tölcsér két fokán KÉT KÜLÖNBÖZŐ terméket lát, és sem a katalógus, sem a
+   * tartalom-alapú közönség nem tud a landoló jeléről a pénztár jelére illeszkedni.
+   *
+   * A paraméter-sorrend ugyanaz, mint az `offerValue`-ban — egy forrás, egy kulcs. */
   function metaContentId(pkg, el) {
     try {
       var href = el && el.getAttribute && el.getAttribute("href");
       if (href) {
         var q = new URL(href, location.href).searchParams;
-        var v = q.get("variation_id") || q.get("add-to-cart");
+        var v = q.get("wcf-add-to-cart") || q.get("variation_id") || q.get("add-to-cart");
         if (v) return String(v);
       }
     } catch (e) {}
@@ -1641,8 +1658,13 @@
       // A Metának a Woo-ID kell (ld. `META_CONTENT_ID`), és lehetőleg az ÉLŐ árazás-CTA
       // hrefjéből, hogy a ciklusváltó utáni állapotot vigye — különben a `ViewContent`
       // havi variációt hirdetne egy éves nézetben.
+      // A csomag-kulcs ALULVONÁSOS (`autopilot_trial`), a `data-gm-cta` címke
+      // KÖTŐJELES (`pricing-autopilot-trial`) — a nyers összefűzés a próbára néma
+      // `null`-t adott, és a `metaContentId` fallbackjára bízta a variáció-ID-t.
+      // Ma az véletlenül a helyes 5809-et adja, de a következő ajánlat már nem lesz
+      // ilyen szerencsés; a ciklusváltó élő hrefjét meg eleve nem látná.
       var ids = Object.keys(PKG).map(function (k) {
-        return metaContentId(k, document.querySelector('[data-gm-cta="pricing-' + k + '"]'));
+        return metaContentId(k, document.querySelector('[data-gm-cta="pricing-' + k.replace(/_/g, "-") + '"]'));
       });
       var value = PRICE[PKG_DEFAULT] || 0;
       var items = Object.keys(PKG).map(function (k) {

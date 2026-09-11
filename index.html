@@ -305,7 +305,13 @@
         <p class="gm-hero__sub">5 perc alatt telepíted – és az AI-od profi PPC-sként, szövegíróként, videóvágóként dolgozik veled. Magyarul.</p>
         <div class="gm-hero__ctawrap">
           <div class="gm-hero__cta">
-            <a class="gm-btn gm-btn--primary gm-btn--lg" href="#arazas" data-gm-cta="hero" data-gm-package="planner">Kipróbálom 990 Ft-ért</a>
+            <!-- A CSOMAG-CÍMKE A LÁTHATÓ AJÁNLATOT KÖVETI (2026-09-11). Ez a gomb a #arazas-ra
+                 görget, tehát nem pénztár-CTA — de a `gm_cta_click` ETTŐL a címkétől kapja a
+                 `package`-et és az `item`-et. Amíg `planner` volt, a 990 Ft-os próbát hirdető
+                 szöveg 9 990 Ft-os Standard-szándéknak jelentette magát a GA4-ben, és a
+                 „melyik ajánlat visz a pénztárig" CRO-kérdés mérhetetlen volt. Kapu:
+                 tests/tracking-value.mjs → „a CTA szövegében hirdetett ár". -->
+            <a class="gm-btn gm-btn--primary gm-btn--lg" href="#arazas" data-gm-cta="hero" data-gm-package="autopilot_trial">Kipróbálom 990 Ft-ért</a>
           </div>
           <a class="gm-hero__textlink" href="#csapat">Megnézem mind a 28 szakértőt ▸</a>
         </div>
@@ -1326,7 +1332,7 @@
 
   <!-- STICKY MOBIL CTA -->
   <div class="gm-sticky-cta" id="gm-sticky-cta">
-    <a class="gm-btn gm-btn--primary" href="#arazas" data-gm-cta="sticky" data-gm-package="planner">Kipróbálom – 3 napig 990 Ft-ért ▸</a>
+    <a class="gm-btn gm-btn--primary" href="#arazas" data-gm-cta="sticky" data-gm-package="autopilot_trial">Kipróbálom – 3 napig 990 Ft-ért ▸</a>
   </div>
 
   <!-- FOOTER -->
