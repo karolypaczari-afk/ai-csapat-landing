@@ -874,7 +874,11 @@ figure.gm-video.gm-ws__media { position: relative; }
    `.gm-pgroup` BUROK (nem maga a kartya), ezert a ket oszlop a burkot vagta
    ketté: MERVE 1440px-en 201px-es kartyak es ket sorba tort ciklusvalaszto.
    A kartyak sorrendezese eggyel beljebb, a `.gm-pgroup__cards`-ban tortenik. */
-.gm-pricing { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.6rem; max-width: 880px; margin-inline: auto; }
+/* 2026-09-18: a HARMADIK csomag (Prémium) miatt 880 -> 1120px. A 880 két
+   kartyara volt meretezve; harommal 280px ala vitte volna a kartyakat, es a
+   CTA felirata („Elofizetek - 383 800 Ft/6 ho") kilogott volna a `nowrap`
+   miatt. A `tests/pricing-layout.mjs` ezt 1440 ES 1024 szelessegen MERI. */
+.gm-pricing { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.6rem; max-width: 1120px; margin-inline: auto; }
 .gm-price {
   position: relative; background: rgba(255,255,255,0.04); border: 1px solid rgba(124,58,237,0.3);
   border-radius: var(--gm-r-lg); padding: 2rem 1.8rem; display: flex; flex-direction: column;
@@ -911,7 +915,11 @@ figure.gm-video.gm-ws__media { position: relative; }
 }
 
 .gm-price__name { font-size: 1.44rem; font-weight: 800; color: #fff; }
-.gm-price__sub { color: #A6A3C2; font-size: 0.9rem; margin-top: 0.2rem; }
+/* Fix magassag (2026-09-18): a Premium alcime ket sorba tordel, a masik kettoe
+   egybe -> az ARAK harom kulonbozo magassagban alltak, es a harom kartya
+   ranezesre nem volt osszehasonlithato. 3,2em = pontosan ket sor (MERVE: 2 x 23,04px sormagassag / 14,4px betumeret);
+   mobilon (egy oszlop) nincs mihez igazodni, ezert ott feloldjuk. */
+.gm-price__sub { color: #A6A3C2; font-size: 0.9rem; margin-top: 0.2rem; min-height: 3.2em; }
 .gm-price__anchor { color: #8C89A8; font-size: 0.95rem; margin-top: 0.9rem; }
 .gm-price__anchor s { opacity: 0.8; }
 .gm-price__note { display: block; color: #8C89A8; font-size: 0.8rem; margin-bottom: 0.4rem; }
@@ -963,6 +971,50 @@ figure.gm-video.gm-ws__media { position: relative; }
 .gm-price__trialnote { margin: 0.45rem 0 0; color: #8C89A8; font-size: 0.78rem; line-height: 1.45; text-align: center; }
 .gm-price__trialnote strong { color: #B8B6CE; }
 
+/* ---- Premium (arany) variáns + a 6 havi havidíj-egyenértéke (2026-09-18) ----
+
+   A Prémium SZÁNDÉKOSAN nem a cyan `--featured` kiemelést kapja: az a Pro-é
+   („LEGNÉPSZERŰBB"), és két egyforma kiemelés egymás mellett egyiket sem emeli
+   ki. Az arany a `gm-btn--gold`-dal is egy nyelvet beszél, ami már élt a
+   lapon — nincs új szín a palettában. */
+.gm-price--premium {
+  border-color: rgba(255,196,0,0.55);
+  box-shadow: 0 0 0 1px rgba(255,196,0,0.35), 0 24px 60px rgba(255,196,0,0.12);
+  background: linear-gradient(180deg, rgba(255,196,0,0.06), rgba(255,255,255,0.03) 40%);
+}
+.gm-price--premium .gm-price__amount { color: var(--gm-gold); }
+.gm-price--premium .gm-price__list li::before { color: var(--gm-gold); }
+.gm-price__tag--gold { background: linear-gradient(135deg, #8A5A00 0%, #D99500 38%, #FFC400 78%, #FFDA6B 100%); color: #241800; }
+
+/* A 6 havi ciklus HAVIDÍJ-EGYENÉRTÉKE.
+
+   ☠️ Károly kérése (2026-09-18): „a 6 havi opciónál mutasd, mennyire jön ki a
+   havidíj". A sor CSAK a 6 havi ágon létezik — nem elrejtve, hanem azért, mert a
+   HAVI ág markupja nem is tartalmazza (a `data-yearly` / `data-seat-price`
+   deklarált értékei hordozzák). Egy `display:none`-os megoldás a havi nézetben
+   is beletenné a DOM-ba, és a képernyőolvasó felolvasná a nem érvényes árat.
+
+   A `font-variant-numeric: tabular-nums` azért kell, mert a szám ciklus- és
+   létszámváltáskor cserélődik: arányos számjegyekkel a sor szélessége ugrálna,
+   és a kártya alatta lévő tartalma megrezzenne minden kattintásra. */
+.gm-price__permonth {
+  display: block;
+  margin-top: 0.34rem;
+  font-family: var(--gm-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #8C89A8;
+  font-variant-numeric: tabular-nums;
+}
+.gm-price--featured .gm-price__permonth { color: #9FB9C4; }
+.gm-price--premium .gm-price__permonth { color: #B39A5E; }
+
+/* A lista-elem magyarázó alsora („mit jelent ez a gyakorlatban").
+   Blokk, hogy a ✓ oszlopa alatt, a mondat ALATT fusson — nem a mondat végén,
+   ahol beleolvadna. A `text-wrap: pretty` az árva szót kerüli. */
+.gm-price__why { display: block; margin-top: 0.22rem; color: #9B98B6; font-size: 0.82rem; line-height: 1.45; font-weight: 400; text-wrap: pretty; }
+
 /* ---- Pricing: ajanlat-csoport ----
    2026-08-27-ig itt egy `--split` racs allt (elofizetes 2fr + egyszeri 1fr),
    mert KET ajanlat-csoport volt egymas mellett. Az egyszeri csomag kivezetese
@@ -974,7 +1026,7 @@ figure.gm-video.gm-ws__media { position: relative; }
 .gm-pgroup__head { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
 .gm-pgroup__head .gm-eyebrow { margin: 0; }
 .gm-pgroup__desc { font-size: 0.86rem; color: #8C89A8; }
-.gm-pgroup__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem; align-items: stretch; flex: 1; }
+.gm-pgroup__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem; align-items: stretch; flex: 1; }
 .gm-pgroup__cards .gm-price { height: 100%; }
 
 /* Egyszeri csomag — borostyán variáns, hogy ránézésre elváljon az előfizetéstől. */
@@ -1142,6 +1194,12 @@ figure.gm-video.gm-ws__media { position: relative; }
 /* ---- Responsive ---- */
 @media (max-width: 1020px) {
   .gm-relief-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Harom arkartya 1020px alatt ~300px ala menne, es a CTA `nowrap` felirata
+     („Elofizetek - 383 800 Ft/6 ho") kilogna. A ketto+egy tordeles rondabb
+     lenne, mint az egy oszlop, ezert itt MAR egy oszlopra valtunk - a 860px-es
+     szabaly ugyanezt mondja, ez csak elorehozza a harom kartya miatt. */
+  .gm-pgroup__cards { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; }
+  .gm-price__sub { min-height: 0; }
   /* A két ajánlat-csoport egymás alá kerül; a bal oldali arany elválasztó
      ilyenkor értelmét veszti (nincs mit elválasztania vízszintesen). */
 }
