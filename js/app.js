@@ -82,11 +82,30 @@
     // SZÁNDÉKOSAN nem nyúl hozzá: a szelektora `data-yearly-href`-et is megkövetel,
     // és a próba-gombon az nincs — így a 990-et kosárba tevő mindig az 1 fiókos
     // havi Pro-ra fut ki, bármit is állított be előtte a kártyán.
-    autopilot_trial: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=5809&wcf-qty=1"
+    autopilot_trial: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=5809&wcf-qty=1",
+    /*
+     * ☠️ A PRÉMIUM BEJEGYZÉS NEM KOZMETIKA — NÉLKÜLE ELVÉSZ A KAMPÁNY-ATTRIBÚCIÓ
+     * (mérve 2026-09-18, Woo 6030).
+     *
+     * A `wireCtas()` CSAK akkor írja rá a hrefre a `withAttribution()`-t (és csak
+     * akkor fogja el a kattintást), ha a `data-gm-checkout` kulcsa ITT szerepel.
+     * Kulcs nélkül a gomb működik — a böngésző követi a markupban álló hrefet —,
+     * de UTM, `gclid`, `fbp` és `external_id` NÉLKÜL. Élő mérés a hiányzó
+     * bejegyzéssel, `?utm_source=teszt&utm_medium=cpc&gclid=ABC123`-mal betöltve:
+     *
+     *   pricing-planner   → …wcf-add-to-cart=2342…&gclid=ABC123&utm_source=teszt&fbp=…
+     *   pricing-premium   → …wcf-add-to-cart=6031&wcf-qty=1          ← CSUPASZ
+     *
+     * Vagyis pontosan a 2026-08-08-i incidens osztálya (7 rendelésből 5 `referral`),
+     * csak más okból. ⚠ A rés a LEGGYAKORIBB állapotot érinti: a ciklus-/létszámváltó
+     * `apply()`-ja utólag rárakja az attribúciót, tehát aki hozzányúl a kapcsolóhoz,
+     * annál helyreáll — aki alapállapotban kattint, annál nem.
+     */
+    premium: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=6031&wcf-qty=1"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990, autopilot_trial: 990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990, autopilot_trial: 990, premium: 39990 };
   var CURRENCY = EN ? "EUR" : "HUF";
   /* ── KI A TULAJDONOSA A TÖLCSÉR-ESEMÉNYNEK: a landoló vagy a pénztár? ─────────
    *
