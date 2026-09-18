@@ -1033,6 +1033,94 @@ figure.gm-video.gm-ws__media { position: relative; }
 .gm-btn--gold { background: linear-gradient(135deg, #8A5A00 0%, #D99500 38%, #FFC400 78%, #FFDA6B 100%); color: #241800; box-shadow: 0 10px 30px rgba(180,130,0,0.35); }
 .gm-btn--gold:hover { transform: translateY(-2px); box-shadow: 0 18px 42px rgba(180,130,0,0.45); filter: brightness(1.06); }
 
+/* ---- Pricing: fejlécsávos kártyák (Tibor terve, 2026-09-18) ----
+   MINDEN szabály a `.gm-price--band` módosító alatt áll: az `en/index.html`
+   UGYANEZT a styles.css-t tölti, a régi, kétkártyás szerkezettel (ott nincs
+   `__hdr` / `__price` burkoló). A módosító nélkül ott semmi nem változik.
+   A csomag akcentszíne EGY helyen dől el (`--pb` / `--pb-rgb`); a sáv, a név,
+   az ár és a pipák ebből dolgoznak: Standard lila · Pro cián · Prémium arany.
+   A kártya-padding változóban él, mert a fejlécsáv NEGATÍV margóval fut ki a
+   kártya széléig: ha a kettő elcsúszna, a sáv belelógna vagy rés maradna
+   (a 640px alatti általános `.gm-price { padding }` ezért nem írhatja felül). */
+.gm-price.gm-price--band { --pb: #C4B5FD; --pb-rgb: 196,181,253; --pb-a: 0.14; --pb-line: 0.35; --pp-y: 1.5rem; --pp-x: 1.6rem; padding: var(--pp-y) var(--pp-x); min-width: 0; }
+.gm-price--band.gm-price--featured { --pb: var(--gm-cyan); --pb-rgb: 0,212,255; --pb-a: 0.16; }
+.gm-price--band.gm-price--premium { --pb: var(--gm-gold); --pb-rgb: 255,196,0; --pb-a: 0.18; --pb-line: 0.4; }
+.gm-price--band .gm-price__tag { z-index: 1; right: 1.3rem; font-size: 0.7rem; letter-spacing: 0.06em; }
+.gm-price--band .gm-price__hdr {
+  margin: calc(-1 * var(--pp-y)) calc(-1 * var(--pp-x)) 1.1rem; padding: 1.35rem var(--pp-x) 1.15rem;
+  border-radius: calc(var(--gm-r-lg) - 1px) calc(var(--gm-r-lg) - 1px) 0 0;
+  background: linear-gradient(180deg, rgba(var(--pb-rgb), var(--pb-a)), rgba(var(--pb-rgb), 0.03));
+  border-bottom: 1px solid rgba(var(--pb-rgb), var(--pb-line));
+}
+.gm-price--band .gm-price__name { font-size: 1.5rem; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; color: var(--pb); line-height: 1.1; text-shadow: 0 0 18px rgba(var(--pb-rgb), 0.33); }
+/* 2,7em = pontosan két sor 1,35-ös sormagassággal: a három ár egy vonalban marad. */
+.gm-price--band .gm-price__sub { font-size: 0.9rem; line-height: 1.35; margin-top: 0.3rem; min-height: 2.7em; text-wrap: balance; }
+.gm-price--band .gm-price__amount { font-size: clamp(1.9rem, 3.4vw, 2.5rem); color: var(--pb); margin: 0.9rem 0 0.25rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.gm-price--band .gm-price__cur { font-size: 0.95rem; font-weight: 700; }
+.gm-price--band .gm-price__list { margin: 1rem 0 1.9rem; gap: 0.6rem; font-size: 0.93rem; color: #B9B7D0; }
+.gm-price--band .gm-price__list strong { color: #E3E1EF; font-weight: 700; }
+.gm-price--band .gm-price__list li { padding-left: 1.35rem; }
+.gm-price--band .gm-price__list li::before { color: var(--pb); }
+.gm-price--band .gm-price__why { color: #8C89A8; line-height: 1.4; margin-top: 0.15rem; }
+/* Gombok. A betűméret-clamp és a vízszintes padding SZÁNDÉKOSAN a meglévő, mért
+   érték marad (`.gm-price .gm-btn`): a leghosszabb felirat („Előfizetek – 383 800
+   Ft/6 hó") nowrap mellett így fér el 1024 és 1440 px-en. Kapu: tests/pricing-layout.mjs. */
+.gm-price--band .gm-btn { padding-block: 1.12em; font-weight: 800; letter-spacing: 0.01em; }
+.gm-price--band .gm-btn:hover { transform: translateY(-2px); filter: brightness(1.06); }
+.gm-price--band .gm-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.gm-price--band .gm-btn--primary { box-shadow: 0 0 0 1px rgba(0,212,255,0.35), 0 14px 36px rgba(64,0,153,0.5), 0 0 28px rgba(0,212,255,0.22); }
+.gm-price--band .gm-btn--primary:hover { box-shadow: 0 0 0 1px rgba(0,212,255,0.6), 0 20px 46px rgba(6,182,212,0.5), 0 0 40px rgba(0,212,255,0.35); }
+.gm-price--band .gm-btn--gold { box-shadow: 0 0 0 1px rgba(255,218,107,0.5), 0 14px 36px rgba(180,130,0,0.5), 0 0 28px rgba(255,196,0,0.25); }
+.gm-price--band .gm-btn--gold:hover { box-shadow: 0 0 0 1px #FFDA6B, 0 20px 46px rgba(180,130,0,0.55), 0 0 40px rgba(255,196,0,0.4); }
+.gm-price--band .gm-btn--ghost { background: rgba(255,255,255,0.07); color: #fff; border: 1px solid rgba(196,181,253,0.6); box-shadow: inset 0 0 0 1px rgba(0,212,255,0.12), 0 8px 22px rgba(0,0,0,0.25); }
+.gm-price--band.gm-price--featured .gm-btn--ghost { border-color: rgba(0,212,255,0.55); }
+.gm-price--band .gm-btn--ghost:hover { border-color: var(--gm-cyan); background: rgba(0,212,255,0.1); }
+/* A Pro két gombja közt a próba apróbetűje áll, tehát a `.gm-btn + .gm-btn` ott NEM
+   illeszkedik: enélkül a második gomb is `margin-top:auto`-t kapna, és a flex a két
+   gomb közé osztaná a szabad helyet (a Pro rövidebb a Prémiumnál, tehát VAN szabad hely). */
+.gm-price--band .gm-btn + .gm-btn,
+.gm-price--band .gm-price__trialnote + .gm-btn { margin-top: 0.7rem; }
+
+/* Egyoszlopos nézet (a rács 1020px alatt vált): a név és az ár EGY sorban, két
+   hasábban áll a kártya tetején, a sáv mindkét hasáb alatt végigfut. */
+@media (max-width: 1020px) {
+  .gm-price.gm-price--band { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; column-gap: 0; }
+  .gm-price--band .gm-price__hdr { grid-column: 1; margin: calc(-1 * var(--pp-y)) 0 1rem calc(-1 * var(--pp-x)); padding: 1.2rem 0.8rem 1.05rem var(--pp-x); border-radius: calc(var(--gm-r-lg) - 1px) 0 0 0; display: flex; flex-direction: column; justify-content: center; }
+  .gm-price--band .gm-price__sub { min-height: 0; }
+  .gm-price--band .gm-price__price {
+    grid-column: 2; margin: calc(-1 * var(--pp-y)) calc(-1 * var(--pp-x)) 1rem 0; padding: 1.2rem var(--pp-x) 1.05rem 0;
+    border-radius: 0 calc(var(--gm-r-lg) - 1px) 0 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right;
+    background: linear-gradient(180deg, rgba(var(--pb-rgb), var(--pb-a)), rgba(var(--pb-rgb), 0.03));
+    border-bottom: 1px solid rgba(var(--pb-rgb), var(--pb-line));
+  }
+  .gm-price--band .gm-price__amount { margin: 0; font-size: 1.5rem; }
+  .gm-price--band .gm-price__cur { font-size: 0.8rem; margin-left: 0.15em; }
+  /* A jegyzet két sorba törhet: egy sorban a jobb hasáb annyira kiszélesedne, hogy a
+     „STANDARD" név 375px-en nem férne el mellette. */
+  .gm-price--band .gm-price__note { margin: 0.3rem 0 0; font-size: 0.7rem; line-height: 1.25; max-width: 11.5em; text-wrap: balance; }
+  .gm-price--band .gm-price__name { font-size: 1.25rem; }
+  .gm-price--band .gm-price__list, .gm-price--band .gm-btn, .gm-price--band .gm-price__trialnote { grid-column: 1 / -1; }
+  .gm-price--band .gm-btn { margin-top: 0; }
+  .gm-price--band .gm-price__list { margin-top: 0.2rem; }
+}
+/* Keskeny telefon: az oldal kontenere szukebb, mint a terv vaszna (375px-en 312px a
+   kartya), es a 6 havi, 5 fos ar a leghosszabb. A nev ezert a nezetszelesseggel
+   skalazodik, a kartya-padding es a hasabkoz szukul. MERVE 375 / 360 / 320 px-en. */
+@media (max-width: 420px) {
+  .gm-price.gm-price--band { --pp-x: 1.3rem; }
+  .gm-price--band .gm-price__hdr { padding-right: 0.5rem; }
+  .gm-price--band .gm-price__name { font-size: clamp(0.95rem, 4.6vw, 1.1rem); }
+  .gm-price--band .gm-price__sub { font-size: 0.82rem; }
+  .gm-price--band .gm-price__amount { font-size: 1.3rem; }
+  .gm-price--band .gm-price__note { font-size: 0.64rem; }
+}
+@media (max-width: 350px) {
+  .gm-price--band .gm-price__hdr { padding-right: 0.35rem; }
+  .gm-price--band .gm-price__name { font-size: 0.84rem; letter-spacing: 0.02em; }
+  .gm-price--band .gm-price__amount { font-size: 1.1rem; }
+  .gm-price--band .gm-price__cur { font-size: 0.7rem; }
+}
+
 /* ---- GYIK ---- */
 .gm-faq { max-width: 780px; margin-inline: auto; display: grid; gap: 0.8rem; }
 
