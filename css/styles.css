@@ -1167,6 +1167,78 @@ figure.gm-video.gm-ws__media { position: relative; }
 .gm-arazas--lightseg .gm-cycle__seg button:hover { background: rgba(124,58,237,0.10); }
 .gm-arazas--lightseg .gm-cycle__seg button.is-on { color: #fff; background: var(--gm-grad); box-shadow: 0 8px 22px rgba(64,0,153,0.28); }
 
+/* ---- Pricing: letisztított kártyák és kapcsolók (Tibor döntése, 2026-09-19) ----
+   A HU szekció `gm-arazas--tidy` módosítója alatt áll minden szabály; az `en/index.html`
+   ugyanezt a styles.css-t tölti, de ott a módosító nincs kint, tehát semmi nem változik.
+   1) badge: nagyobb, jobb felül, a 24px-es sarokív UTÁN és pontosan a felső él vonalán,
+      vékony, félig átlátszó gyűrűvel;
+   2) egysoros alcím, ezért csak egy sornyi hely van fenntartva (eltűnt a fölös rés);
+   3) egyetlen kiemelés: a Pro világít, a Prémium vékony arany keretet kap fény nélkül;
+   4) lista-rend: öröklés-fejsor, alatta rövid félkövér név + egy szürke sor;
+   5) az ár ezres csoportja közelebb áll (a mono betű szóköze 0,6em, ez túl széles);
+   6) kapcsolók: a létszám gombjai körök; egymás alá törve a két fehér kapszula szélessége
+      és magassága is azonos, a blokk oldalmargója a kártyákénak kb. a duplája. */
+.gm-arazas--tidy .gm-pgroup__cards { margin-top: 0.7rem; }
+.gm-arazas--tidy .gm-price--band .gm-price__tag {
+  left: auto; right: 1.75rem; top: 0; transform: translateY(-50%);
+  font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; padding: 0.5em 1.25em; white-space: nowrap;
+  box-shadow: 0 0 0 2px rgba(26,26,46,0.4), 0 6px 14px rgba(26,26,46,0.16);
+}
+.gm-arazas--tidy .gm-price--band .gm-price__sub { min-height: 1.35em; }
+.gm-arazas--tidy .gm-price--band.gm-price--premium { border: 1px solid rgba(217,149,0,0.75); box-shadow: 0 18px 50px rgba(0,0,0,0.38); }
+.gm-arazas--tidy .gm-price--band .gm-price__amount { margin-bottom: 0.9rem; word-spacing: -0.3em; }
+.gm-arazas--tidy .gm-price--band .gm-price__cur { word-spacing: normal; margin-left: 0.5em; }
+.gm-arazas--tidy .gm-price--band .gm-price__permonth { word-spacing: normal; }
+.gm-arazas--tidy .gm-price--band .gm-price__list { margin: 0.3rem 0 1.7rem; gap: 0.78rem; }
+.gm-arazas--tidy .gm-price--band .gm-price__list li.gm-price__inherit {
+  padding: 0 0 0.6rem; margin-bottom: 0.1rem; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--pb); border-bottom: 1px dashed rgba(var(--pb-rgb), 0.4);
+}
+.gm-arazas--tidy .gm-price--band .gm-price__list li.gm-price__inherit::before { content: none; }
+.gm-arazas--tidy .gm-price--band .gm-price__list strong { display: block; font-size: 0.95rem; }
+.gm-arazas--tidy .gm-price--band .gm-price__why { margin-top: 0.12rem; font-size: 0.84rem; }
+.gm-arazas--tidy .gm-price__more { margin-top: 0.3rem; font-size: 0.82rem; color: #6B6985; }
+.gm-arazas--tidy .gm-price__more summary { cursor: pointer; width: fit-content; color: var(--pb); font-weight: 700; list-style: none; }
+.gm-arazas--tidy .gm-price__more summary::-webkit-details-marker { display: none; }
+.gm-arazas--tidy .gm-price__more summary::after { content: " ▾"; }
+.gm-arazas--tidy .gm-price__more[open] summary::after { content: " ▴"; }
+.gm-arazas--tidy .gm-price__more p { margin: 0.35rem 0 0; line-height: 1.45; }
+@media (max-width: 1020px) {
+  .gm-arazas--tidy .gm-price--band .gm-price__list { margin-top: 0.1rem; }
+  .gm-arazas--tidy .gm-price--band .gm-price__amount { margin-bottom: 0; }
+}
+/* Kapcsolók. A létszám gombjai KÖRÖK: fix szélesség = magasság, padding nélkül. */
+.gm-arazas--tidy [data-gm-seats] .gm-cycle__seg button {
+  width: 2.4rem; height: 2.4rem; min-width: 0; padding: 0; flex: 0 0 auto;
+  display: inline-grid; place-items: center; line-height: 1;
+}
+@media (max-width: 760px) {
+  .gm-arazas--tidy .gm-cycle-row { flex-direction: column; align-items: center; gap: 10px; }
+  /* Szélesség: a kártyákhoz képest mindkét oldalon +1.5rem, vagyis a blokk oldalmargója a
+     kártyákénak kb. a duplája. Alsó korlát 19.6rem (ennyi kell a „6 havi + címke" sornak),
+     felső korlát 23rem (tableten se nyúljon meg). */
+  .gm-arazas--tidy .gm-cycle-row .gm-cycle {
+    display: grid; grid-template-columns: 5.6rem minmax(0, 1fr); align-items: center; column-gap: 8px;
+    width: min(100%, max(calc(100% - 3rem), 19.6rem)); max-width: 23rem;
+  }
+  .gm-arazas--tidy .gm-cycle__label { text-align: left; }
+  /* A két fehér kapszula SZÉLESSÉGE (rács 1fr) és MAGASSÁGA (rögzített) is azonos. */
+  .gm-arazas--tidy .gm-cycle__seg { display: flex; align-items: center; width: 100%; height: 2.9rem; box-sizing: border-box; }
+  /* A „2 hónap ingyen" címke MINDIG egy sorban áll a „6 havi"-val (nowrap): ha alá törhetne,
+     a számlázás kapszulája magasabb lenne a létszáménál. */
+  .gm-arazas--tidy [data-gm-cycle] .gm-cycle__seg button {
+    flex: 1 1 auto; display: inline-flex; flex-wrap: nowrap; white-space: nowrap; align-items: center; justify-content: center;
+    gap: 5px; padding: 0 6px; height: 2.4rem; line-height: 1;
+  }
+  .gm-arazas--tidy .gm-cycle__save { display: inline-block; margin: 0; font-size: 0.64rem; padding: 2px 6px; }
+  .gm-arazas--tidy [data-gm-seats] .gm-cycle__seg { justify-content: space-between; }
+}
+/* 360px alatt a címke a kapszula FÖLÉ kerül, hogy a „6 havi + címke" itt is egy sorban elférjen. */
+@media (max-width: 359px) {
+  .gm-arazas--tidy .gm-cycle-row { gap: 12px; }
+  .gm-arazas--tidy .gm-cycle-row .gm-cycle { grid-template-columns: minmax(0, 1fr); row-gap: 5px; width: min(100%, 14rem); }
+}
+
 /* ---- GYIK ---- */
 .gm-faq { max-width: 780px; margin-inline: auto; display: grid; gap: 0.8rem; }
 
