@@ -85,7 +85,7 @@
     autopilot_trial: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=5809&wcf-qty=1",
     /*
      * ☠️ A PRÉMIUM BEJEGYZÉS NEM KOZMETIKA — NÉLKÜLE ELVÉSZ A KAMPÁNY-ATTRIBÚCIÓ
-     * (mérve 2026-09-18, Woo 6030).
+     * (mérve 2026-09-18, Woo 6090).
      *
      * A `wireCtas()` CSAK akkor írja rá a hrefre a `withAttribution()`-t (és csak
      * akkor fogja el a kattintást), ha a `data-gm-checkout` kulcsa ITT szerepel.
@@ -94,14 +94,14 @@
      * bejegyzéssel, `?utm_source=teszt&utm_medium=cpc&gclid=ABC123`-mal betöltve:
      *
      *   pricing-planner   → …wcf-add-to-cart=2342…&gclid=ABC123&utm_source=teszt&fbp=…
-     *   pricing-premium   → …wcf-add-to-cart=6031&wcf-qty=1          ← CSUPASZ
+     *   pricing-premium   → …wcf-add-to-cart=6091&wcf-qty=1          ← CSUPASZ
      *
      * Vagyis pontosan a 2026-08-08-i incidens osztálya (7 rendelésből 5 `referral`),
      * csak más okból. ⚠ A rés a LEGGYAKORIBB állapotot érinti: a ciklus-/létszámváltó
      * `apply()`-ja utólag rárakja az attribúciót, tehát aki hozzányúl a kapcsolóhoz,
      * annál helyreáll — aki alapállapotban kattint, annál nem.
      */
-    premium: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=6031&wcf-qty=1"
+    premium: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=6091&wcf-qty=1"
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
@@ -279,11 +279,11 @@
    * veti össze ezzel a térképpel, fail-closed. Ha egy ár változik és ez nem, PIROS. */
   var VALUE_BY_VARIATION = EN ? { "46": 29, "47": 116, "49": 59, "50": 236, "337": 44, "338": 176, "339": 55, "340": 220, "341": 64, "342": 256, "343": 69, "344": 276, "345": 89, "346": 356, "347": 111, "348": 444, "349": 129, "350": 516, "351": 139, "352": 556 }
                               : { "2342": 9990, "2343": 39960, "2344": 19990, "2345": 79960, "3494": 14980, "3495": 59920, "3496": 18970, "3497": 75880, "3498": 21960, "3499": 87840, "3500": 23950, "3501": 95800, "3502": 29980, "3503": 119920, "3504": 37970, "3505": 151880, "3506": 43960, "3507": 175840, "3508": 47950, "3509": 191800, "5809": 990,
-                                  /* Prémium (2026-09-18, Woo 6030). A `tracking-value.mjs` kapuja pont ezt a rést
+                                  /* Prémium (2026-09-18, Woo 6090). A `tracking-value.mjs` kapuja pont ezt a rést
                                      fogta meg a CI-ben: a kártya már hirdette a tíz új variációt, a licit-érték
                                      viszont hiányzott — a Meta és a Google NULLA értéken licitált volna a
                                      legdrágább csomagunkra. */
-                                  "6031": 39990, "6032": 159960, "6033": 59980, "6034": 239920, "6035": 75970, "6036": 303880, "6037": 87960, "6038": 351840, "6039": 95950, "6040": 383800 };
+                                  "6091": 39990, "6092": 159960, "6093": 59980, "6094": 239920, "6095": 75970, "6096": 303880, "6097": 87960, "6098": 351840, "6099": 95950, "6100": 383800 };
   function offerValue(pkg, el) {
     try {
       var href = el && el.getAttribute && el.getAttribute("href");
