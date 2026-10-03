@@ -1009,19 +1009,38 @@
     var role = EN ? a.roleEn : a.role;
     modal.querySelector(".gm-modal__title h3").textContent = a.name || a.code;
     modal.querySelector(".gm-modal__title p").textContent = role;
-    var soon = a.status === "soon";
-    var spec = (EN ? a.specEn : a.spec) || {};
-    var rows = "";
-    rows += '<dt>' + tr("Státusz", "Status") + '</dt><dd class="is-accent">' + (soon ? tr("HAMAROSAN", "STANDBY · soon") : tr("AKTÍV", "NOMINAL · active")) + '</dd>';
-    rows += '<dt>' + tr("Aktuális feladat", "Current task") + '</dt><dd>' + esc(EN ? a.currentTaskEn : a.currentTask) + '</dd>';
-    rows += '<dt>' + tr("Folyamat", "Pipeline") + '</dt><dd>' + esc(spec.pipeline || "–") + '</dd>';
-    rows += '<dt>' + tr("Ütem", "Cadence") + '</dt><dd>' + esc(spec.cadence || "–") + '</dd>';
-    rows += '<dt>' + tr("Ütemező", "Scheduler") + '</dt><dd>' + esc(spec.scheduler || "–") + '</dd>';
-    modal.querySelector(".gm-spec").innerHTML = rows;
     modal.querySelector(".gm-modal__benefit").textContent = EN ? a.benefitEn : a.benefit;
+    var prof = !EN && a.profile;
+    var helpUl = modal.querySelector(".gm-modal__help");
+    if (prof && helpUl) {
+      // Szakember-adatlap: „Miben segít?" + „Milyen tudás van mögötte?" (data.js GM_PROFILE)
+      var li = function (arr) { return arr.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join(""); };
+      helpUl.innerHTML = li(prof.help || []);
+      var basis = prof.experts
+        ? "<strong>" + prof.experts + " szakértő " + esc(prof.sources) + "</strong> táplálkozik, olyan témákban, mint:"
+        : esc(prof.basis) + ", olyan témákban, mint:";
+      modal.querySelector(".gm-modal__basis").innerHTML = basis;
+      modal.querySelector(".gm-modal__topics").innerHTML = li(prof.topics || []);
+    } else {
+      // Tartalék (EN oldal / profil nélküli tag): a korábbi spec-lap, ha a markupban van.
+      var specEl = modal.querySelector(".gm-spec");
+      if (specEl) {
+        var soon = a.status === "soon";
+        var spec = (EN ? a.specEn : a.spec) || {};
+        var rows = "";
+        rows += '<dt>' + tr("Státusz", "Status") + '</dt><dd class="is-accent">' + (soon ? tr("HAMAROSAN", "STANDBY · soon") : tr("AKTÍV", "NOMINAL · active")) + '</dd>';
+        rows += '<dt>' + tr("Aktuális feladat", "Current task") + '</dt><dd>' + esc(EN ? a.currentTaskEn : a.currentTask) + '</dd>';
+        rows += '<dt>' + tr("Folyamat", "Pipeline") + '</dt><dd>' + esc(spec.pipeline || "–") + '</dd>';
+        rows += '<dt>' + tr("Ütem", "Cadence") + '</dt><dd>' + esc(spec.cadence || "–") + '</dd>';
+        rows += '<dt>' + tr("Ütemező", "Scheduler") + '</dt><dd>' + esc(spec.scheduler || "–") + '</dd>';
+        specEl.innerHTML = rows;
+      }
+    }
 
     var proofWrap = modal.querySelector(".gm-modal__proofzone");
-    if (a.proof) {
+    if (prof && !a.proof) {
+      proofWrap.innerHTML = "";
+    } else if (a.proof) {
       proofWrap.innerHTML = '<div class="gm-modal__prooflabel">' + tr("Így néz ki, amit kapsz", "Here's what you get") + '</div><img class="gm-modal__proof" src="' + esc(a.proof) + '" alt="' + esc(a.code + (EN ? " sample output" : " minta-kimenet")) + '" loading="lazy">';
     } else {
       proofWrap.innerHTML = '<div class="gm-modal__prooflabel">' + tr("Mit csinál a gyakorlatban", "What it does in practice") + '</div><div class="gm-modal__placeholder">' + esc(role.charAt(0).toUpperCase() + role.slice(1)) + tr(" – éles mintát a képzésben kapsz.", " – you get a live sample in the course.") + '</div>';
@@ -1164,19 +1183,10 @@
    * végigmenjen, ha a mi rétegünk hibázik.
    */
   function wireManagedForm() {
-    var form = document.getElementById("gm-managed-form");
-    if (!form) return;
-    var err = document.getElementById("gm-managed-err");
-    var started = false;
-
-    form.addEventListener("input", function () {
-      if (started) return;
-      started = true;
-      signal("gm_managed_start", { form: "managed-interest" });
-    });
-
     // A szekció LÁTHATÓSÁGA, nem a DOM-beli léte: a lap alján ülő blokkot a
     // látogatók nagy része sosem éri el, és ezt tudni kell a konverzió mellé.
+    // (2026-10-02: az űrlap helyén konzultáció-foglalás áll, ezért a láthatóság-mérés
+    // az űrlap-ellenőrzés ELŐTT fut — különben űrlap nélkül elveszne.)
     var section = document.getElementById("managed");
     if (section && "IntersectionObserver" in window) {
       var seen = false;
@@ -1190,6 +1200,17 @@
       }, { threshold: 0.35 });
       io2.observe(section);
     }
+
+    var form = document.getElementById("gm-managed-form");
+    if (!form) return;
+    var err = document.getElementById("gm-managed-err");
+    var started = false;
+
+    form.addEventListener("input", function () {
+      if (started) return;
+      started = true;
+      signal("gm_managed_start", { form: "managed-interest" }, {});
+    });
 
     form.addEventListener("submit", function (ev) {
       if (!form.reportValidity()) { ev.preventDefault(); return; }
@@ -1800,6 +1821,25 @@
               });
             }
           });
+        });
+      });
+    });
+    // TOP 3 kártyák (.gm-top3): a gomb a megfelelő fület + lépést nyitja, és a munkaállomáshoz görget.
+    // A meglévő fül/lépés kattintás-kezelőket hívjuk — egy út, nem kettő (a mérés és a mobil cím is ott él).
+    document.querySelectorAll("[data-ws-jump]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var key = btn.getAttribute("data-ws-jump");
+        var stepIdx = btn.getAttribute("data-ws-jump-step") || "0";
+        var tab = host.querySelector('[data-ws-tab="' + key + '"]');
+        var panel = host.querySelector('[data-ws-panel="' + key + '"]');
+        if (!tab || !panel) return;
+        tab.click();
+        var step = panel.querySelector('[data-ws-step="' + stepIdx + '"]');
+        if (step) step.click();
+        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: "gm_top3_click", ws_tab: key, ws_step: stepIdx }); } catch (e) {}
+        requestAnimationFrame(function () {
+          var target = window.innerWidth < 900 ? (panel.querySelector('[data-ws-work="' + stepIdx + '"]') || panel) : host;
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
         });
       });
     });
