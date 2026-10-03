@@ -115,7 +115,7 @@
   <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
   <link rel="preload" href="/assets/fonts/inter-var-latext.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20260919-pricing-tidy">
+  <link rel="stylesheet" href="/css/styles.css?v=20261003-velemenyek">
   <link rel="stylesheet" href="/css/hud.css">
 
   <!-- GA4 — localhoston KI (prod paritás); éles hoston pörög.
@@ -247,13 +247,6 @@
 <body>
 <div class="gm-lp">
 
-  <!-- BOOT -->
-  <div class="gm-boot" id="gm-boot" aria-hidden="true">
-    <div class="gm-boot__logo">GEN<span class="gm-logo__mark">✦</span>MARKETER</div>
-    <div class="gm-boot__bar"><div class="gm-boot__fill"></div></div>
-    <div class="gm-boot__log">rendszer indítása…</div>
-  </div>
-
   <!-- HEADER -->
   <header class="gm-header" id="gm-header">
     <div class="gm-container gm-header__bar">
@@ -330,6 +323,35 @@
     <div class="gm-hero__scroll">görgess</div>
   </section>
 
+  <!-- VÉLEMÉNY-SÁV (a hero alatt, két kiemelt vélemény, a testing.genmarketer.hu/v2 `gm-proof2` mintájára).
+       Wolf Gábor idézete szó szerint a pénztárról jön (checkout/index.html `co-quote`),
+       a teljes vélemények a #velemenyek blokkban. -->
+  <section class="gm-proof2" id="bizonyitek" aria-label="Akik már használják">
+    <div class="gm-container">
+      <div class="gm-proof2__quotes">
+        <figure class="gm-proof2__q">
+          <img src="/assets/img/testimonials/kukoly-david.webp" width="44" height="44" alt="Dávid portréja" loading="lazy" decoding="async">
+          <blockquote>„Már 2–3 hónap alatt 100-szoros megtérülést tapasztaltam az ügynökségemnél az előfizetéshez képest.”</blockquote>
+          <figcaption>Dávid · Fluid Digital, CEO</figcaption>
+        </figure>
+        <figure class="gm-proof2__q">
+          <img src="/assets/img/testimonials/wolf-gabor.webp" width="44" height="44" alt="Wolf Gábor portréja" loading="lazy" decoding="async">
+          <blockquote>„Tibivel már hónapok óta dolgozunk együtt, és az utóbbi időben a legnagyobb versenytársam abban, hogy ki mennyire AI-fanatikus.”</blockquote>
+          <figcaption>Wolf Gábor · Marketing Commando</figcaption>
+        </figure>
+      </div>
+      <!-- Kompatibilitás (a v2 `gm-proof2__compat` sora, bővítve). A „más eszköz" ág a Tudástár
+           Bekötés leckéjét követi (17/#2909, _dev/content/onboarding/22-kosd-be-mas-ai.html):
+           Claude Code + Codex kész útmutatóval, Cursor / Gemini CLI az általános MCP-úton.
+           Ennél többet ne ígérjen: a többi eszközt a lecke szerint nem teszteljük rendszeresen. -->
+      <div class="gm-proof2__compat">
+        <span class="gm-proof2__main"><span class="gm-proof2__clabel">A saját fiókodban működik</span>
+        <span class="gm-proof2__logos"><img src="/assets/img/logo-claude.svg" width="88" height="19" alt="Claude"><img src="/assets/img/logo-chatgpt.svg" width="96" height="22" alt="ChatGPT"></span></span>
+        <span class="gm-proof2__more"><span class="gm-proof2__mlabel">és más MCP-képes eszközökben is:</span><span class="gm-proof2__chips"><span>Claude Code</span><span>Codex</span><span>Cursor</span><span>Gemini CLI</span></span></span>
+      </div>
+    </div>
+  </section>
+
   <!-- PROOFBAR -->
   <section class="gm-proofbar" aria-label="Tények">
     <div class="gm-container">
@@ -340,78 +362,6 @@
         <div class="gm-proofbar__item"><strong>150+</strong><span>szakértő tudása</span></div>
         <div class="gm-proofbar__item"><strong>folyamatos</strong><span>frissítés, amíg előfizetsz</span></div>
       </div>
-    </div>
-  </section>
-
-  <!-- ÚJRAGONDOLÁS -->
-  <section class="gm-section gm-section--light" id="ujragondolas">
-    <div class="gm-container">
-      <div class="gm-section-head gm-text-center gm-narrow" style="margin-inline:auto">
-        <span class="gm-eyebrow gm-reveal">Amikor szakértők dolgoznak</span>
-        <h2 class="gm-h2 gm-reveal">Tényleg megelégszel a sablonos, generikus válaszokkal?</h2>
-        <p class="gm-lead gm-reveal">Már egy egyszerű, odavetett promptra is nagyságrenddel jobb eredményt kapsz. Íme egy <span class="gm-grad-text" style="font-weight:700">valódi példa, változtatás nélkül:</span></p>
-      </div>
-      <div class="gm-demo gm-demo--live gm-reveal">
-        <div class="gm-demo__col gm-demo__col--chat">
-          <div class="gm-demo__head"><span class="gm-demo__num">1</span><div><h3 class="gm-demo__title">A teljes beszélgetés</h3><span class="gm-demo__sub">szó szerint ennyi volt</span></div></div>
-          <div class="gm-demo__chatwin"><iframe src="/assets/demo/genmarketer-soparna-chat.html" title="A sópárna-projekt valódi Claude-beszélgetése" loading="lazy"></iframe></div>
-          <p class="gm-demo__note">Egy odavetett brief és 4 tisztázó kérdés – több nem kellett. Utána ~25 percig önállóan dolgozott a háttérben, a végén kész HTML-t adott át.</p>
-        </div>
-        <div class="gm-demo__col gm-demo__col--result">
-          <div class="gm-demo__head"><span class="gm-demo__num">2</span><div><h3 class="gm-demo__title">Az eredmény</h3><span class="gm-demo__sub">kattints bele</span></div></div>
-          <a class="gm-demo__doc" href="/assets/demo/dudolo-playbook.html" target="_blank" rel="noopener" data-gm-cta="demo-playbook">
-            <span class="gm-demo__doc-title">DÚDOLÓ – teljes go-to-market playbook</span>
-            <span class="gm-demo__doc-meta">22 fejezet: piackutatás, márka, árazás, kampányanyagok, launch-terv</span>
-            <span class="gm-btn gm-btn--primary">Nézd meg a kész anyagot →</span>
-          </a>
-          <p class="gm-demo__note">Egyetlen beszélgetésből – nem vázlat, hanem használható anyag.</p>
-        </div>
-        <div class="gm-demo__hand gm-reveal">
-          <span class="gm-demo__hand-text">A te ChatGPT-d is ilyen választ ad erre a promptra?</span>
-          <svg class="gm-demo__hand-arrow" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M6 58 C 26 56, 56 44, 42 16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M40 29 L 42 16 L 53 22" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MEGOLDÁS / ORCHESTRÁCIÓ (pinned) -->
-  <section class="gm-section gm-section--dark" id="gm-orch">
-    <div class="gm-container">
-      <div class="gm-section-head gm-text-center gm-narrow" style="margin-inline:auto">
-        <span class="gm-eyebrow gm-reveal">A motorháztető alatt</span>
-        <h2 class="gm-h2 gm-reveal">Nem promptok. Rendszer.</h2>
-        <p class="gm-lead gm-reveal">28 skill adja a <strong>szaktudást</strong>, a csapatvezető <strong>osztja ki</strong> a munkát, a connectorok pedig <strong>elvégzik</strong> – a te fiókjaidban.</p>
-      </div>
-      <div class="gm-split">
-        <div class="gm-orch__layers">
-          <div class="gm-orch__layer gm-reveal">
-            <span class="gm-orch__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2V12m0 0-5.5 4.6M12 12l5.5 4.6"/></svg></span>
-            <div>
-              <h3 class="gm-orch__lt">A karmester: a csapatvezető-réteg</h3>
-              <p>Ettől csapat, és nem gyűjtemény. Ha kell, egy folyamaton belül egyszerre több csapattagot hív be és koordinál: a piackutató eredményét átadja a szövegírónak, azét a landoló-szakértőnek – így futnak a feladatok <span class="gm-nb">A-tól Z-ig</span>.</p>
-            </div>
-          </div>
-          <div class="gm-orch__layer gm-reveal">
-            <span class="gm-orch__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
-            <div>
-              <h3 class="gm-orch__lt">A tudás: 28 szakértői skill</h3>
-              <p>Több száz szakértő desztillált tudása, csapattagonként csomagolva. Előfizetéssel nem áll meg: a csapattagok száma és a meglévők tudása is folyamatosan bővül.</p>
-            </div>
-          </div>
-          <div class="gm-orch__layer gm-reveal">
-            <span class="gm-orch__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-            <div>
-              <h3 class="gm-orch__lt">A kéz: bekötött connectorok <span class="gm-orch__pro">PRO</span></h3>
-              <p>A csapat a saját fiókjaidban dolgozik: Meta Ads, Google Ads, GA4, MailerLite. Innentől nem tanácsot kapsz, hanem elvégzett munkát: felépített kampányt, kiküldött levélsorozatot, valós számokból készült riportot.</p>
-            </div>
-          </div>
-        </div>
-        <figure class="gm-reveal gm-orch__fig" style="margin:0"><img src="/assets/img/team-dark.webp" width="1160" height="1193" alt="A csapatvezető egy célból automatikusan több csapattagot hív be, és kész munkát ad vissza" loading="lazy" decoding="async"></figure>
-      </div>
-      <aside class="gm-orch__honest gm-reveal">
-        <h3>Őszintén: nem önjáró robot.</h3>
-        <p>Nem ígérjük, hogy megnyomsz egy gombot, és hátradőlhetsz. Azt viszont igen: bekötött eszközökkel a csapatod végrehajtóként is dolgozik – akár időzített feladatokon. Ezáltal a <span class="gm-nb">ChatGPT-</span> vagy <span class="gm-nb">Claude-fiókod</span> bőven több lesz, mint egy okosabb Google.</p>
-      </aside>
     </div>
   </section>
 
@@ -863,6 +813,78 @@
     </div>
   </section>
 
+  <!-- MEGOLDÁS / ORCHESTRÁCIÓ (pinned) -->
+  <section class="gm-section gm-section--dark" id="gm-orch">
+    <div class="gm-container">
+      <div class="gm-section-head gm-text-center gm-narrow" style="margin-inline:auto">
+        <span class="gm-eyebrow gm-reveal">A motorháztető alatt</span>
+        <h2 class="gm-h2 gm-reveal">Nem promptok. Rendszer.</h2>
+        <p class="gm-lead gm-reveal">28 skill adja a <strong>szaktudást</strong>, a csapatvezető <strong>osztja ki</strong> a munkát, a connectorok pedig <strong>elvégzik</strong> – a te fiókjaidban.</p>
+      </div>
+      <div class="gm-split">
+        <div class="gm-orch__layers">
+          <div class="gm-orch__layer gm-reveal">
+            <span class="gm-orch__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2V12m0 0-5.5 4.6M12 12l5.5 4.6"/></svg></span>
+            <div>
+              <h3 class="gm-orch__lt">A karmester: a csapatvezető-réteg</h3>
+              <p>Ettől csapat, és nem gyűjtemény. Ha kell, egy folyamaton belül egyszerre több csapattagot hív be és koordinál: a piackutató eredményét átadja a szövegírónak, azét a landoló-szakértőnek – így futnak a feladatok <span class="gm-nb">A-tól Z-ig</span>.</p>
+            </div>
+          </div>
+          <div class="gm-orch__layer gm-reveal">
+            <span class="gm-orch__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+            <div>
+              <h3 class="gm-orch__lt">A tudás: 28 szakértői skill</h3>
+              <p>Több száz szakértő desztillált tudása, csapattagonként csomagolva. Előfizetéssel nem áll meg: a csapattagok száma és a meglévők tudása is folyamatosan bővül.</p>
+            </div>
+          </div>
+          <div class="gm-orch__layer gm-reveal">
+            <span class="gm-orch__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+            <div>
+              <h3 class="gm-orch__lt">A kéz: bekötött connectorok <span class="gm-orch__pro">PRO</span></h3>
+              <p>A csapat a saját fiókjaidban dolgozik: Meta Ads, Google Ads, GA4, MailerLite. Innentől nem tanácsot kapsz, hanem elvégzett munkát: felépített kampányt, kiküldött levélsorozatot, valós számokból készült riportot.</p>
+            </div>
+          </div>
+        </div>
+        <figure class="gm-reveal gm-orch__fig" style="margin:0"><img src="/assets/img/team-dark.webp" width="1160" height="1193" alt="A csapatvezető egy célból automatikusan több csapattagot hív be, és kész munkát ad vissza" loading="lazy" decoding="async"></figure>
+      </div>
+      <aside class="gm-orch__honest gm-reveal">
+        <h3>Őszintén: nem önjáró robot.</h3>
+        <p>Nem ígérjük, hogy megnyomsz egy gombot, és hátradőlhetsz. Azt viszont igen: bekötött eszközökkel a csapatod végrehajtóként is dolgozik – akár időzített feladatokon. Ezáltal a <span class="gm-nb">ChatGPT-</span> vagy <span class="gm-nb">Claude-fiókod</span> bőven több lesz, mint egy okosabb Google.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ÚJRAGONDOLÁS -->
+  <section class="gm-section gm-section--light" id="ujragondolas">
+    <div class="gm-container">
+      <div class="gm-section-head gm-text-center gm-narrow" style="margin-inline:auto">
+        <span class="gm-eyebrow gm-reveal">Amikor szakértők dolgoznak</span>
+        <h2 class="gm-h2 gm-reveal">Tényleg megelégszel a sablonos, generikus válaszokkal?</h2>
+        <p class="gm-lead gm-reveal">Már egy egyszerű, odavetett promptra is nagyságrenddel jobb eredményt kapsz. Íme egy <span class="gm-grad-text" style="font-weight:700">valódi példa, változtatás nélkül:</span></p>
+      </div>
+      <div class="gm-demo gm-demo--live gm-reveal">
+        <div class="gm-demo__col gm-demo__col--chat">
+          <div class="gm-demo__head"><span class="gm-demo__num">1</span><div><h3 class="gm-demo__title">A teljes beszélgetés</h3><span class="gm-demo__sub">szó szerint ennyi volt</span></div></div>
+          <div class="gm-demo__chatwin"><iframe src="/assets/demo/genmarketer-soparna-chat.html" title="A sópárna-projekt valódi Claude-beszélgetése" loading="lazy"></iframe></div>
+          <p class="gm-demo__note">Egy odavetett brief és 4 tisztázó kérdés – több nem kellett. Utána ~25 percig önállóan dolgozott a háttérben, a végén kész HTML-t adott át.</p>
+        </div>
+        <div class="gm-demo__col gm-demo__col--result">
+          <div class="gm-demo__head"><span class="gm-demo__num">2</span><div><h3 class="gm-demo__title">Az eredmény</h3><span class="gm-demo__sub">kattints bele</span></div></div>
+          <a class="gm-demo__doc" href="/assets/demo/dudolo-playbook.html" target="_blank" rel="noopener" data-gm-cta="demo-playbook">
+            <span class="gm-demo__doc-title">DÚDOLÓ – teljes go-to-market playbook</span>
+            <span class="gm-demo__doc-meta">22 fejezet: piackutatás, márka, árazás, kampányanyagok, launch-terv</span>
+            <span class="gm-btn gm-btn--primary">Nézd meg a kész anyagot →</span>
+          </a>
+          <p class="gm-demo__note">Egyetlen beszélgetésből – nem vázlat, hanem használható anyag.</p>
+        </div>
+        <div class="gm-demo__hand gm-reveal">
+          <span class="gm-demo__hand-text">A te ChatGPT-d is ilyen választ ad erre a promptra?</span>
+          <svg class="gm-demo__hand-arrow" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M6 58 C 26 56, 56 44, 42 16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M40 29 L 42 16 L 53 22" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- MISSION CONTROL -->
   <section class="gm-section gm-mc" id="csapat">
     <div class="gm-container">
@@ -1037,17 +1059,27 @@
       </div>
       <div class="gm-testi">
         <figure class="gm-testi__row gm-reveal">
-          <img class="gm-testi__photo" src="/assets/img/testimonials/szandi.webp" width="320" height="320" alt="Szandi portréja" loading="lazy" decoding="async">
+          <img class="gm-testi__photo" src="/assets/img/testimonials/wolf-gabor.webp" width="200" height="200" alt="Wolf Gábor portréja" loading="lazy" decoding="async">
           <div class="gm-testi__body">
             <blockquote class="gm-testi__quote">
-              <p class="gm-testi__hl">„Felbecsülhetetlen tudás, megfizethető áron.”</p>
-              <p>Több csapattal próbáltam már együtt dolgozni, de valahogy soha nem voltam elégedett azzal, amit ár-érték arányban nyújtani tudtak. A GENmarketeres „kollégákkal” ezzel szemben nagyon hamar sikerült hatékony együttműködést kialakítanom. Lenyűgöző, hogy mennyire gyorsak, precízek és pontosak, ráadásul állandóan elérhetőek. Arról nem is beszélve, hogy egy hagyományos marketinges csapat költségének a töredékéért dolgoznak nekem.</p>
+              <p class="gm-testi__hl">„Tibivel már hónapok óta dolgozunk együtt, és az utóbbi időben a legnagyobb versenytársam abban, hogy ki mennyire AI-fanatikus.”</p>
             </blockquote>
-            <figcaption class="gm-testi__who"><b>Szandi</b><span class="gm-testi__dot" aria-hidden="true">·</span><span class="gm-testi__site">bagolykaland.hu</span></figcaption>
+            <figcaption class="gm-testi__who"><b>Wolf Gábor</b><span class="gm-testi__dot" aria-hidden="true">·</span><span class="gm-testi__site">Marketing Commando</span></figcaption>
           </div>
         </figure>
         <div class="gm-testi__sep" aria-hidden="true"></div>
         <figure class="gm-testi__row gm-testi__row--flip gm-reveal">
+          <img class="gm-testi__photo" src="/assets/img/testimonials/kukoly-david.webp" width="320" height="320" alt="Dávid portréja" loading="lazy" decoding="async">
+          <div class="gm-testi__body">
+            <blockquote class="gm-testi__quote">
+              <p class="gm-testi__hl">„Már 2–3 hónap alatt 100-szoros megtérülést tapasztaltam az előfizetéshez képest.”</p>
+              <p>Őszintén azt gondolom, hogy elképesztő mennyiségű időmegtakarítást és hatékonyságnövelést tapasztaltam. Több projektnél alkalmaztam a GENmarketer skilleket, és már 2–3 hónapos időtávlatban is 100-szoros megtérülést tapasztaltam az előfizetéshez képest.</p>
+            </blockquote>
+            <figcaption class="gm-testi__who"><b>Dávid</b><span class="gm-testi__dot" aria-hidden="true">·</span><span class="gm-testi__site">Fluid Digital, CEO</span></figcaption>
+          </div>
+        </figure>
+        <div class="gm-testi__sep" aria-hidden="true"></div>
+        <figure class="gm-testi__row gm-reveal">
           <img class="gm-testi__photo" src="/assets/img/testimonials/zsofi.webp" width="320" height="320" alt="Zsófi portréja" loading="lazy" decoding="async">
           <div class="gm-testi__body">
             <blockquote class="gm-testi__quote">
@@ -1055,6 +1087,17 @@
               <p>A GENmarketer olyan dolgokat csinál meg önállóan, amikről korábban azt gondoltam, hogy minimum három ember, rengeteg e-mail és még több idegeskedés kell hozzá. Weboldal, hirdetések, elemzések, technikai feladatok – egyre több mindent tudok rábízni úgy, hogy közben én azzal foglalkozhatok, amihez tényleg én kellek.</p>
             </blockquote>
             <figcaption class="gm-testi__who"><b>Zsófi</b><span class="gm-testi__dot" aria-hidden="true">·</span><span class="gm-testi__site">suryaayurveda.hu</span></figcaption>
+          </div>
+        </figure>
+        <div class="gm-testi__sep" aria-hidden="true"></div>
+        <figure class="gm-testi__row gm-testi__row--flip gm-reveal">
+          <img class="gm-testi__photo" src="/assets/img/testimonials/szandi.webp" width="320" height="320" alt="Szandi portréja" loading="lazy" decoding="async">
+          <div class="gm-testi__body">
+            <blockquote class="gm-testi__quote">
+              <p class="gm-testi__hl">„Felbecsülhetetlen tudás, megfizethető áron.”</p>
+              <p>Több csapattal próbáltam már együtt dolgozni, de valahogy soha nem voltam elégedett azzal, amit ár-érték arányban nyújtani tudtak. A GENmarketeres „kollégákkal” ezzel szemben nagyon hamar sikerült hatékony együttműködést kialakítanom. Lenyűgöző, hogy mennyire gyorsak, precízek és pontosak, ráadásul állandóan elérhetőek. Arról nem is beszélve, hogy egy hagyományos marketinges csapat költségének a töredékéért dolgoznak nekem.</p>
+            </blockquote>
+            <figcaption class="gm-testi__who"><b>Szandi</b><span class="gm-testi__dot" aria-hidden="true">·</span><span class="gm-testi__site">bagolykaland.hu</span></figcaption>
           </div>
         </figure>
       </div>
