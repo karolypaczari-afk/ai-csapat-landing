@@ -21,7 +21,7 @@
     it.canvas.width = Math.round(r.width * dpr); it.canvas.height = Math.round(r.height * dpr);
     it.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
-  function rr(c, x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); c.beginPath();
+  function rr(c, x, y, w, h, r) { if (!(w > 0 && h > 0)) { c.beginPath(); return; } r = Math.max(0, Math.min(r, w / 2, h / 2)); c.beginPath();
     c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
     c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
   function A(c, a) { c.globalAlpha = a; }

@@ -1041,7 +1041,7 @@
     if (prof && !a.proof) {
       proofWrap.innerHTML = "";
     } else if (a.proof) {
-      proofWrap.innerHTML = '<div class="gm-modal__prooflabel">' + tr("Így néz ki, amit kapsz", "Here's what you get") + '</div><img class="gm-modal__proof" src="' + esc(a.proof) + '" alt="' + esc(a.code + (EN ? " sample output" : " minta-kimenet")) + '" loading="lazy">';
+      proofWrap.innerHTML = '<div class="gm-modal__prooflabel">' + tr("Így néz ki, amit kapsz", "Here's what you get") + '</div>' + proofMarkup(a);
     } else {
       proofWrap.innerHTML = '<div class="gm-modal__prooflabel">' + tr("Mit csinál a gyakorlatban", "What it does in practice") + '</div><div class="gm-modal__placeholder">' + esc(role.charAt(0).toUpperCase() + role.slice(1)) + tr(" – éles mintát a képzésben kapsz.", " – you get a live sample in the course.") + '</div>';
     }
@@ -1050,9 +1050,24 @@
     if (gsap && !REDUCE) gsap.fromTo(panel, { y: 30, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" });
     modal.querySelector(".gm-modal__close").focus();
   }
+  // A minta típusa a kiterjesztésből jön: .mp4 → loopoló videó (plakáttal), .html → a
+  // munkaállomás animált demója (önskálázó iframe), minden más → kép (2026-10-05).
+  function proofMarkup(a) {
+    var src = a.proof, alt = esc(a.code + (EN ? " sample output" : " minta-kimenet"));
+    if (/\.mp4$/.test(src)) {
+      var poster = src.replace(/\.mp4$/, "-poster.webp");
+      return '<video class="gm-modal__proof gm-modal__proof--video" src="' + esc(src) + '" poster="' + esc(poster) + '"' + (REDUCE ? " controls" : " autoplay") + ' muted loop playsinline preload="metadata" aria-label="' + alt + '"></video>';
+    }
+    if (/\.html$/.test(src)) {
+      return '<div class="gm-modal__proof gm-modal__proof--demo" style="aspect-ratio:' + esc(a.proofRatio || "1070 / 720") + '"><iframe src="' + esc(src) + '" title="' + alt + '" loading="lazy" scrolling="no"></iframe></div>';
+    }
+    return '<img class="gm-modal__proof" src="' + esc(src) + '" alt="' + alt + '" loading="lazy">';
+  }
   function closeModal() {
     if (!modal) return;
     modal.classList.remove("is-open"); document.body.style.overflow = "";
+    // a videó / demó ne fusson tovább a háttérben
+    var pz = modal.querySelector(".gm-modal__proofzone"); if (pz) pz.innerHTML = "";
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   if (modal) {
@@ -1103,14 +1118,17 @@
   /* ---- Sticky header + mobil CTA ---- */
   function wireScrollState() {
     var header = document.getElementById("gm-header"), sticky = document.getElementById("gm-sticky-cta"),
-        hero = document.getElementById("hero"), pricing = document.getElementById("arazas");
+        hero = document.getElementById("hero"), pricing = document.getElementById("arazas"),
+        finalCta = document.getElementById("csatlakozas");
     function onScroll() {
       var y = window.pageYOffset || 0;
       if (header) header.classList.toggle("is-stuck", y > 24);
       if (sticky && hero) {
         var pastHero = y > hero.offsetTop + hero.offsetHeight - 160;
         var atPricing = pricing && pricing.getBoundingClientRect().top < window.innerHeight * 0.9 && pricing.getBoundingClientRect().bottom > 0;
-        sticky.classList.toggle("is-visible", pastHero && !atPricing);
+        // a záró CTA-blokknál és az alatta lévő láblécnél se duplázzon / takarjon (2026-10-05)
+        var atFinal = finalCta && finalCta.getBoundingClientRect().top < window.innerHeight * 0.9;
+        sticky.classList.toggle("is-visible", pastHero && !atPricing && !atFinal);
       }
     }
     window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
@@ -1121,6 +1139,13 @@
         var id = a.getAttribute("href"); if (id.length < 2) return;
         var t = document.querySelector(id); if (!t) return;
         ev.preventDefault(); t.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth", block: "start" }); history.replaceState(null, "", id);
+        // A görgetés közben betöltődő (lusta) tartalom eltolhatja a célt — a végén egyszer utánaigazítunk.
+        var settle = function () {
+          window.removeEventListener("scrollend", settle);
+          var off = t.getBoundingClientRect().top - (parseFloat(getComputedStyle(t).scrollMarginTop) || 0);
+          if (Math.abs(off) > 4) t.scrollIntoView({ behavior: "auto", block: "start" });
+        };
+        if ("onscrollend" in window) window.addEventListener("scrollend", settle); else setTimeout(settle, 900);
       });
     });
   }

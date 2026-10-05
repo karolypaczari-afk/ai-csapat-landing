@@ -1,11 +1,11 @@
 # GENmarketer – Az AI csapatod / Your AI team
 
-> [HU] A GENmarketer egy 28 fős AI-marketinges csapatot árul, amit a vevő a SAJÁT Claude- vagy ChatGPT-fiókjába telepít. Minden csapattag egy becsomagolt szakértő – piackutató, hirdetés-szövegíró, Google Ads-hirdetéskezelő, landolóoldal-szakértő, SEO-auditor, e-mail-szakértő és társaik –, aki EGY marketinges munkát végez el rendesen, ahelyett hogy általános chatbotként válaszolna.
-> [EN] GENmarketer sells a team of 28 AI marketing specialists that the customer installs into their own Claude or ChatGPT account. Each specialist is a packaged expert — market researcher, ad copywriter, Google Ads manager, landing page expert, SEO auditor, email expert and more — that does one marketing job properly instead of answering as a generic chatbot.
+> [HU] A GENmarketer egy 28 fős AI-marketinges csapatot árul, amit a vevő a SAJÁT Claude- vagy ChatGPT-fiókjába telepít. Minden csapattag egy becsomagolt szakértő – piackutató, hirdetés-szövegíró, Google Ads-hirdetéskezelő, landolóoldal-szakértő, SEO-auditor, e-mail-szakértő és társaik –, aki EGY marketinges munkát végez el rendesen, ahelyett hogy általános chatbotként válaszolna. A három leggyakoribb munkát (Meta és Google Ads kampány, weboldal és landoló, szövegek és e-mail-sorozat) a csapat az elejétől a végéig elvégzi; a vevő saját fiókjaiban végzett végrehajtás a Pro és a Prémium csomag része.
+> [EN] GENmarketer sells a team of 28 AI marketing specialists that the customer installs into their own Claude or ChatGPT account. Each specialist is a packaged expert — market researcher, ad copywriter, Google Ads manager, landing page expert, SEO auditor, email expert and more — that does one marketing job properly instead of answering as a generic chatbot. The three most common jobs (Meta and Google Ads campaigns, website and landing page, copy and email sequences) are carried end to end; execution inside the customer's own accounts is part of the Pro and Premium plans.
 
 Ez a fájl kétnyelvű: előbb a magyar tények (a magyar landolóé, https://ai-csapat.genmarketer.hu/), utána ugyanezek angolul. Mindkét rész a MA érvényes termékről szól; az árak a közzétett listáraink, rejtett díj nincs.
 This file is bilingual: the Hungarian facts first (they describe https://ai-csapat.genmarketer.hu/), then the same facts in English. Everything below is a factual statement about the product as sold today. Prices are the published list prices and include no hidden fees.
-Utoljára felülvizsgálva / last reviewed: 2026-09-22.
+Utoljára felülvizsgálva / last reviewed: 2026-10-05.
 
 ---
 
@@ -19,10 +19,29 @@ Utoljára felülvizsgálva / last reviewed: 2026-09-22.
 
 ## Mit kapsz
 - A termék neve: „Az AI csapatod" (magyarul) / „Your AI team" (angolul).
-- 28 elérhető specialista hét területen: vezetés és stratégia, hirdetés, landolóoldal, design és Figma, videó, SEO, vevő és bevétel.
+- 28 elérhető specialista tíz szakterületen: Meta Ads, Google Ads, e-mail, SEO, weboldal, social, design, videó, versenytárs-elemzés és stratégia (a csapattagok csoportonként lent).
 - Formátum: Claude Skillek és ChatGPT-kompatibilis csomagok, plusz írott tananyag és telepítési útmutató Claude-hoz, Claude Code-hoz és ChatGPT-hez.
+- Hol működik: Claude-ban és ChatGPT-ben, valamint más MCP-képes eszközökben is: Claude Code, Codex, Cursor, Gemini CLI.
 - Tipikus munkák: piac- és vevőkutatás, versenytárs- és hirdetéstár-elemzés, kampánytervezés, hirdetésszöveg-írás, Meta Ads és Google Ads kezelés, landolóoldal tervezése és megépítése, kreatív és Figma-design, videó-forgatókönyv, UGC- és hirdetésvideó-gyártás, kulcsszókutatás, technikai SEO és SEO-audit, helyi SEO, e-mail-sorozatok, előfizetéses bevételi modell, LinkedIn-jelenlét.
 - Folyamatosan érkeznek új specialisták, és a meglévők is fejlődnek; előfizetés mellett ezek a frissítések benne vannak, amíg az előfizetés fut.
+
+## A három leggyakoribb munka – az elejétől a végéig
+A landoló szerint ez a három munka a leggyakoribb az előfizetők valós használatában, és a csapat mindhármat végigviszi, nem csak tanácsot ad hozzá. A saját fiókokban végzett lépések (felépítés, élesítés, publikálás, levélbeállítás) a Pro és a Prémium csomag részei; a Standard kutat, tervez és megírja a szövegeket.
+- Meta és Google Ads (AURORA, APOLLÓN, KEPLER): átvilágítás, terv, felépítés, élesítés, majd folyamatos optimalizálás és riport a vevő saját Meta- és Google Ads-fiókjában.
+- Weboldal és landoló (MIDÁSZ, MATISSE, ROBINSON): szekciónkénti terv kész szöveggel, dizájn, kód, majd publikálás a vevő saját WordPress-oldalára, a jóváhagyása után. Fejlesztő nem kell.
+- Szövegek (CYRANO, SHERLOCK, HERMÉSZ): hirdetésszöveg, landolószöveg, hírlevél és teljes e-mail-sorozat a vevő stílusában. A sorozatot időzítve a MailerLite-fiókba is beállítják; kiküldés előtt a vevő hagyja jóvá.
+
+## Connectorok (bekötött fiókok)
+Minden kapcsolat egyetlen GENmarketer-connectoron belül fut; a vevő a szolgáltató saját bejelentkező oldalán engedélyezi, jelszót nem ad meg. A fiókkapcsolatok a Pro és a Prémium csomag részei, a képgenerálás minden csomagban benne van.
+- Meta Ads: fiókmenedzsment az ötlettől a kész kampányig, tömeges kreatívfeltöltés. Kampány magától nem indulhat el, és a keretnél többet nem költhet. Az Instagram-posztok statisztikáját is látja, és a jól teljesítő posztból hirdetést készít.
+- Google Ads: fiók-audit valós költésadatokból a kampányoktól a keresési kifejezésekig; kampányépítés a Google saját ellenőrzésén átfuttatva; optimalizálás csak biztonságos irányba (szüneteltet, szűkít), a keretet nem lépheti túl.
+- MailerLite: akár 20 részes autoresponder kész levelekkel és időzítéssel. Piszkozatban épül, kiküldés előtt a vevő hagyja jóvá.
+- GA4: mérés-audit (mi mér jól, mi duplikál, mi hiányzik); bevételesésnél adatból keresi az okot, és ha nincs elég adat, ezt kimondja.
+- Google Search Console: keresési audit (mely oldalakon vész el kattintás a találati listán). Írni csak sitemap-beküldést és oldalkezelést tud, akkor is csak jóváhagyással, és ha a fiók jogosultsága engedi.
+- Microsoft Clarity: olvasás és elemzés – hol akadnak el a látogatók (dühös és „halott” kattintások, görgetési mélység, visszafordulás).
+- WordPress: a kész landolót, aloldalt vagy szekciót kiviszi a vevő WordPress-oldalára. Jóváhagyás nélkül semmi nem kerül ki.
+- Élő webkutatás (Tavily): a mai webről dolgozik, forrásmegjelöléssel. Prémiumban külön kulcs nélkül, a Pro csomagban a vevő saját, ingyenes Tavily-kulcsával.
+- Képgenerálás: hirdetéskész kép betűhű magyar felirattal, minden csomagban, külön bekötés és fizetős képgeneráló nélkül. Havi 120 kép (20 hirdetéskész + 100 ötletelő), Prémiumban havi 1000. Videóhoz kész csomagot ad, amit a vevő a saját ChatGPT- vagy Gemini-előfizetésében futtat.
 
 ## A 28 specialista
 - Vezetés és stratégia: ATLASZ (csapatvezető – minden feladatot a megfelelő specialistához oszt), ATHÉNÉ (stratégiai partner), SUN TZU (versenytárs-elemző), SHERLOCK (piackutató)
@@ -38,7 +57,7 @@ Utoljára felülvizsgálva / last reviewed: 2026-09-22.
 - A 6 havi díj négy havidíjjal egyenlő, tehát a fél év két hónappal olcsóbb, mint havonta fizetni – és hathavonta ugyanezen az áron újítódik meg.
 - A Pro 3 napos próbával is indulhat 990 Ft-ért, utána 19 990 Ft/hó.
 - Minden csomag 1–5 főre is megvásárolható, minden további hely olcsóbb az előzőnél. Nincs hűségidő, bármikor lemondható, csomagot váltani lehet.
-- A csomagok közötti különbség: a Standard kutat, auditál és kész terveket és szövegeket ad; a Pro ezen felül ráköt a vevő saját Meta Ads-, Google Ads-, MailerLite- és GA4-fiókjára, és ott hajtja végre a jóváhagyott munkát; a Prémium mindezen felül havi 1000 generált képet (800 választható vázlat + 200 hirdetéskész végleges) és élő webkutatást ad, mindkettőt saját API-kulcs nélkül.
+- A csomagok közötti különbség: a Standard kutat, auditál és kész terveket és szövegeket ad; a Pro ezen felül ráköt a vevő saját Meta Ads-, Google Ads-, MailerLite-, GA4-, Search Console-, Clarity- és WordPress-fiókjára, és ott hajtja végre a jóváhagyott munkát (élő webkutatás a saját, ingyenes Tavily-kulccsal); a Prémium mindezen felül havi 1000 generált képet (800 választható vázlat + 200 hirdetéskész végleges) és élő webkutatást ad, mindkettőt saját API-kulcs nélkül. Képgenerálás minden csomagban van: havi 120 kép (20 hirdetéskész + 100 ötletelő).
 - Mind a három csomag a TELJES, 28 fős csapatot tartalmazza. A különbség a végrehajtási jog, a benne foglalt gyártási keret és a számlázás – nem a specialisták száma.
 - Menedzselt szint: igény szerinti, a cégre szabott kiépítés és üzemeltetés. Nem önkiszolgáló csomag és nincs listaára: érdeklődés-jelzéssel és felmérő beszélgetéssel indul, nem pénztárral.
 - Árzár: amíg az előfizetés aktív, a belépéskori díj nem emelkedik, akkor sem, ha a csapat nő. Csak akkor áll vissza, ha a vevő lemond és később visszatér.
@@ -47,7 +66,7 @@ Utoljára felülvizsgálva / last reviewed: 2026-09-22.
 ## Mire van szükséged a vásárlás előtt
 - Egy Claude- vagy ChatGPT-fiók. A specialisták abban futnak; nem a GENmarketer hosztolja őket.
 - A Claude ingyenes szintje sok feladatra elég. Nagyobb használathoz a Claude Pro (nagyjából 20 EUR/hó) vagy a Claude Code ajánlott. Ezt a díjat közvetlenül az Anthropicnak fizeted, és NEM része a GENmarketer árának.
-- A Pro szinthez a saját hirdetési és analitikai fiókjaid kellenek (Meta Ads, Google Ads, GA4, Search Console, MailerLite), amikre ráköt. Ezeket és a hirdetési keretet nem a GENmarketer adja.
+- A Pro szinthez a saját hirdetési, analitikai és weboldal-fiókjaid kellenek (Meta Ads, Google Ads, GA4, Search Console, Microsoft Clarity, MailerLite, WordPress), amikre ráköt. Ezeket és a hirdetési keretet nem a GENmarketer adja.
 - Programozói tudás nem kell. Minden specialistához jár egy egyszerű feltöltési útmutató Claude-hoz vagy ChatGPT-hez, és egy parancs Claude Code-hoz.
 
 ## Mi ez NEM
@@ -85,6 +104,13 @@ Hét rövid demóklip van beágyazva, mind VideoObject strukturált adattal. Min
 - UGC-videó, termékbemutató (12 mp): LUMIÈRE egy rövid promptból ír scriptet, generál szereplőt és készít kész videót.
 - Videóvágás és feliratozás (34 mp): KRONOSZ a gépeden tárolt felvételből ad vissza kész, feliratozott videót.
 - Versenytárs-audit riport (27 mp): SUN TZU elemzése – mit hirdetnek a konkurenseid, mi az üzenetük, milyen kreatívokat használnak.
+
+## Vélemények a magyar landolón
+Szó szerinti idézetek a landolóról, ahogy ott szerepelnek. A landoló pontszámot vagy értékelésszámot nem közöl.
+- Kukoly Dávid (Fluid Digital, CEO): „Már 2–3 hónap alatt 100-szoros megtérülést tapasztaltam az ügynökségemnél az előfizetéshez képest.”
+- Wolf Gábor (Marketing Commando): „Tibivel már hónapok óta dolgozunk együtt, és az utóbbi időben a legnagyobb versenytársam abban, hogy ki mennyire AI-fanatikus.”
+- Zsófi (suryaayurveda.hu): „Gyakorlatilag megváltoztatta az életemet. :)”
+- Szandi (bagolykaland.hu): „Felbecsülhetetlen tudás, megfizethető áron.”
 
 ## Kinek szól
 - Szóló vállalkozók
@@ -145,6 +171,13 @@ Hét rövid demóklip van beágyazva, mind VideoObject strukturált adattal. Min
 - Typical jobs: market and ICP research, competitor and ad-library research, campaign planning, ad copywriting, Meta Ads and Google Ads management, landing page design and build, creative and Figma design, video scripting, UGC and ad-video production, keyword research, technical SEO and SEO audits, local SEO, email sequences, membership and recurring-revenue design, LinkedIn presence.
 - New specialists keep arriving and existing ones keep improving; on a subscription those updates are included for as long as the subscription runs.
 
+## End-to-end jobs and connectors (Hungarian offer)
+- Works in Claude and ChatGPT, and in other MCP-capable tools: Claude Code, Codex, Cursor, Gemini CLI.
+- The three most common jobs, carried end to end: Meta and Google Ads (audit, plan, build, launch, ongoing optimisation and reporting); website and landing page (section plan with copy, design, code, then publishing to the customer's WordPress site after approval); copy (ad copy, landing copy, newsletter, full email sequence, scheduled into MailerLite and sent only after approval). Execution inside the customer's own accounts is part of Pro and Premium; Standard researches, plans and writes.
+- Connectors, all inside one GENmarketer connector and authorised on the provider's own sign-in page: Meta Ads (including Instagram post statistics), Google Ads, MailerLite, GA4, Google Search Console (read; writes are limited to sitemap submission and page management, with approval, where account permissions allow), Microsoft Clarity (read and analysis), WordPress (nothing is published without approval).
+- Live web research via Tavily, with sources: on Premium without a key, on Pro with the customer's own free Tavily key.
+- Image generation in every plan: 120 images per month (20 ad-ready + 100 drafts), 1 000 on Premium.
+
 ## The 28 specialists
 - Leadership and strategy: ATLASZ (team lead — routes every task to the right specialist), ATHÉNÉ (strategic partner), SUN TZU (competitor analyst), SHERLOCK (market researcher)
 - Advertising: KEPLER (ad planner), CYRANO (ad copywriter), AURORA (Facebook/Meta Ads expert), APOLLÓN (Google Ads manager)
@@ -157,7 +190,7 @@ Hét rövid demóklip van beágyazva, mind VideoObject strukturált adattal. Min
 ## Pricing
 - Hungarian pricing model: three offers. Three subscriptions, each billable monthly or every six months — Standard 9 990 HUF/month or 39 960 HUF per six months, Pro 19 990 HUF/month or 79 960 HUF per six months, and Premium 39 990 HUF/month or 159 960 HUF per six months. The six-month rate equals four monthly payments, so half a year costs two months less than paying monthly, and it renews every six months at that same rate. Every plan is also sold for 1 to 5 seats, each extra seat cheaper than the last. No minimum term, cancel anytime, plan switching allowed.
 - English pricing model: two offers, mirroring the Hungarian structure in euros. Two subscriptions, each billable monthly or every six months — Planner 29 EUR/month or 116 EUR per six months, and Autopilot 59 EUR/month or 236 EUR per six months. The six-month rate equals four monthly payments, so half a year costs two months less than paying monthly, and it renews every six months at that same rate. No minimum term, cancel anytime, plan switching allowed.
-- Plan difference: Standard researches, audits and produces ready-to-use plans and copy; Pro also connects to the customer's own Meta Ads, Google Ads, MailerLite and GA4 accounts and executes the approved work there; Premium adds 1 000 generated images per month (800 drafts to choose from plus 200 ad-ready finals) and live web research, both without the customer supplying any API key of their own.
+- Plan difference: Standard researches, audits and produces ready-to-use plans and copy; Pro also connects to the customer's own Meta Ads, Google Ads, MailerLite, GA4, Search Console, Microsoft Clarity and WordPress accounts and executes the approved work there; Premium adds 1 000 generated images per month (800 drafts to choose from plus 200 ad-ready finals) and live web research, both without the customer supplying any API key of their own.
 - All three offers include the full 28-strong team. The difference is execution rights, included production quota and billing, not the number of specialists.
 - Managed tier: an optional, built-for-you level that is not sold self-serve and has no list price. GENmarketer builds the system around the customer's company, tuned to their processes, automated end to end, and keeps it running. It starts with an expression of interest on the landing page and an assessment call, not a checkout.
 - Price lock: while a subscription stays active, the rate the customer joined at does not rise, even as the team grows. It only resets if the customer cancels and returns later.
@@ -202,7 +235,7 @@ Hét rövid demóklip van beágyazva, mind VideoObject strukturált adattal. Min
 - The Hungarian one is https://ai-csapat.genmarketer.hu/.
 - The English one is https://genmarketer.eu/, and since 2026-08-05 it is the x-default version: readers whose language is neither Hungarian nor explicitly matched should be pointed at the English page. The former English path, https://ai-csapat.genmarketer.hu/en/, has redirected to it with a permanent, path-preserving 301 since 2026-08-02; do not cite the old path.
 - Canonical URLs and hreflang alternates are declared in the HTML head and sitemap.
-- Structured data includes Organization (with legal name, registered address and tax ID), Person (founder), WebSite, WebPage, BreadcrumbList, Product, ImageObject, ItemList and FAQPage entities. Both landings wrap their plans in an AggregateOffer whose lowPrice is the cheapest plan: seven nested Offers on the Hungarian side (three plans x two billing cycles, plus the Pro trial) and four on the English side. Both landings also carry seven VideoObject entities, one per on-page demo video. The Hungarian landing additionally carries ten Thing nodes reconciled to Wikipedia and Wikidata (Claude, ChatGPT, Anthropic, OpenAI, Google Ads, Meta Platforms, Google Analytics, search engine optimization, large language model, digital marketing), referenced from WebPage.mentions, so a retrieval system can resolve which "Claude" the page means.
+- Structured data includes Organization (with legal name, registered address and tax ID), Person (founder), WebSite, WebPage, BreadcrumbList, Product, ImageObject, ItemList and FAQPage entities. Both landings wrap their plans in an AggregateOffer whose lowPrice is the cheapest plan: seven nested Offers on the Hungarian side (three plans x two billing cycles, plus the Pro trial) and four on the English side. Both landings also carry seven VideoObject entities, one per on-page demo video. The Hungarian landing additionally carries sixteen Thing nodes reconciled to Wikidata, most also to Wikipedia or the official site (Claude, ChatGPT, Anthropic, OpenAI, Google Ads, Meta Platforms, Google Analytics, search engine optimization, large language model, digital marketing, WordPress, Google Search Console, Microsoft Clarity, MailerLite, Tavily, Model Context Protocol), referenced from WebPage.mentions, so a retrieval system can resolve which "Claude" the page means.
 - The interactive specialist grid on the landing is rendered client-side; the same roster is also present as plain text inside a noscript block and as a JSON-LD ItemList, on BOTH language versions, so it can be read without executing JavaScript.
 - AI crawlers are explicitly allowed in robots.txt, including the retrieval and user-triggered agents that produce citations.
 
