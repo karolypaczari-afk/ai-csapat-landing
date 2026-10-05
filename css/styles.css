@@ -1792,6 +1792,10 @@ html[lang="en"] #gm-orch .gm-lead strong { color: inherit; font-weight: 700; }
 /* ---- QA-javítások (2026-10-05, reszponzív + asztali átvilágítás) ---- */
 /* Horgony-ugrásnál (#arazas, #csapat…) a szekció eleje ne csússzon a ragadós fejléc alá. */
 main section[id] { scroll-margin-top: 4.75rem; }
+/* A ragadós alsó CTA (#gm-sticky-cta, fixed) ne takarja a nézetbe görgetett elemet — mérve 2026-10-05:
+   1440×900-on a munkaállomás-fül 10 px-re állt a sáv felett, és ha alá görgetődött, a fülre szánt
+   kattintás a CTA-ra esett (a verify.mjs „fülváltás” CI-bukásának forrása). */
+html { scroll-padding-bottom: 5.5rem; }
 /* Munkaállomás-fülek: 901–1080 px között két sorba tört, a „Stratégia” egyedül maradt —
    itt is a mobilos, görgethető egysoros sáv. */
 @media (min-width: 901px) and (max-width: 1080px) {
