@@ -311,42 +311,48 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
 .gm-proofbar__item strong { display: block; font-size: clamp(1.7rem, 3.2vw, 2.6rem); font-weight: 900; font-family: var(--gm-mono); color: var(--gm-cyan); line-height: 1; }
 .gm-proofbar__item span { display: block; margin-top: 0.5rem; font-size: 0.82rem; color: #9B98B8; letter-spacing: 0.02em; }
 
+/* ---- Kompatibilitás-sáv (2026-10-05): külön elválasztó a hero alatt, a vélemények előtt.
+   Korábban kapszulaként a vélemény-sáv alján ült; a hero túl zsúfolt volt tőle. ---- */
+.gm-compat { position: relative; background: linear-gradient(90deg, rgba(124,58,237,0.16), rgba(6,182,212,0.10)), #12112A; color: #C3C1DA; padding-block: clamp(0.8rem, 1.6vw, 1.05rem); }
+.gm-compat::before, .gm-compat::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: var(--gm-grad); opacity: 0.6; }
+.gm-compat::before { top: 0; }
+.gm-compat::after { bottom: 0; }
+.gm-compat__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.55rem 1.4rem; font-size: 0.82rem; color: #9B98B8; }
+.gm-compat__main { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.55rem 1.1rem; }
+.gm-compat__label { font-family: var(--gm-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: #C3C1DA; }
+.gm-compat__logos { display: inline-flex; align-items: center; gap: 1rem; }
+.gm-compat__logos img { height: 19px; width: auto; filter: brightness(0) invert(1); opacity: 0.92; }
+.gm-compat__more { display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 0.45rem 0.6rem; padding-left: 1.4rem; border-left: 1px solid rgba(124,58,237,0.35); }
+.gm-compat__chips { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; }
+.gm-compat__chips span { padding: 0.18rem 0.55rem; border: 1px solid rgba(0,212,255,0.28); border-radius: 999px; background: rgba(0,212,255,0.06); color: #DDF7FF; font-size: 0.76rem; font-weight: 600; white-space: nowrap; }
+@media (max-width: 1100px) {
+  .gm-compat__row { flex-direction: column; gap: 0.6rem; }
+  .gm-compat__more { padding-left: 0; padding-top: 0.6rem; border-left: 0; border-top: 1px solid rgba(124,58,237,0.3); }
+}
+@media (max-width: 640px) {
+  .gm-compat__logos img { height: 17px; }
+  .gm-compat__main { flex-direction: column; gap: 0.5rem; }
+  .gm-compat__more { flex-direction: column; width: 100%; }
+  .gm-compat__chips { display: grid; grid-template-columns: repeat(2, auto); justify-content: center; }
+  .gm-compat__chips span { text-align: center; }
+}
+
 /* ---- Vélemény-sáv a hero alatt (a v2 `gm-proof2` mintája, két kiemelt idézet egymás mellett) ----
    Közvetlenül a proofbar fölött áll, ugyanazon a navy alapon, ezért a közös
    határvonalat a proofbar viszi: itt csak felül van szegély. */
-.gm-proof2 { background: var(--gm-navy-900); color: #EAE9F5; border-top: 1px solid rgba(124,58,237,0.22); padding-block: clamp(1.4rem, 3vw, 2rem) clamp(0.6rem, 1.4vw, 1rem); }
+.gm-proof2 { background: var(--gm-navy-900); color: #EAE9F5; border-top: 1px solid rgba(124,58,237,0.22); padding-block: clamp(1.4rem, 3vw, 2rem); }
 .gm-proof2__quotes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem 2.4rem; max-width: 1040px; margin-inline: auto; }
 .gm-proof2__q { margin: 0; display: grid; grid-template-columns: 44px 1fr; gap: 0.1rem 0.8rem; align-items: center; }
 .gm-proof2__q img { grid-row: 1 / 3; width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
 .gm-proof2__q blockquote { margin: 0; font-weight: 700; font-size: 1.02rem; line-height: 1.35; color: #fff; }
 .gm-proof2__q figcaption { font-size: 0.82rem; color: #9B98B8; }
-/* „A saját fiókodban működik" kapszula: felirat · két fő logó · MCP-eszközök címkéken */
-.gm-proof2__compat { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.55rem 1.1rem; width: fit-content; max-width: 100%; margin: clamp(1rem, 2vw, 1.4rem) auto 0; padding: 0.55rem 1.3rem; border: 1px solid rgba(124,58,237,0.3); border-radius: 999px; background: rgba(255,255,255,0.035); font-size: 0.82rem; color: #9B98B8; }
-.gm-proof2__main { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.55rem 1.1rem; }
-.gm-proof2__clabel { font-family: var(--gm-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: #C3C1DA; }
-.gm-proof2__logos { display: inline-flex; align-items: center; gap: 1rem; }
-.gm-proof2__logos img { height: 19px; width: auto; filter: brightness(0) invert(1); opacity: 0.92; }
-.gm-proof2__more { display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 0.45rem 0.6rem; padding-left: 1.1rem; border-left: 1px solid rgba(124,58,237,0.3); }
-.gm-proof2__chips { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; }
-.gm-proof2__chips span { padding: 0.18rem 0.55rem; border: 1px solid rgba(0,212,255,0.28); border-radius: 999px; background: rgba(0,212,255,0.06); color: #DDF7FF; font-size: 0.76rem; font-weight: 600; white-space: nowrap; }
 @media (max-width: 860px) {
   .gm-proof2__quotes { grid-template-columns: 1fr; max-width: 640px; }
 }
-/* ha a kapszula nem fér ki egy sorban, két sávra bontjuk — vízszintes elválasztóval, nem árva függőlegessel */
-@media (max-width: 1100px) {
-  .gm-proof2__compat { flex-direction: column; gap: 0.55rem; border-radius: 22px; padding: 0.75rem 1.3rem; }
-  .gm-proof2__more { padding-left: 0; padding-top: 0.55rem; border-left: 0; border-top: 1px solid rgba(124,58,237,0.25); }
-}
 @media (max-width: 640px) {
-  .gm-proof2 { padding-block: 1.1rem 0.4rem; }
+  .gm-proof2 { padding-block: 1.2rem; }
   .gm-proof2__quotes { gap: 0.7rem; }
   .gm-proof2__q blockquote { font-size: 0.95rem; }
-  .gm-proof2__compat { flex-direction: column; gap: 0.55rem; width: 100%; padding: 0.8rem 0.9rem; border-radius: 18px; }
-  .gm-proof2__logos img { height: 17px; }
-  .gm-proof2__main { flex-direction: column; gap: 0.5rem; }
-  .gm-proof2__more { flex-direction: column; width: 100%; }
-  .gm-proof2__chips { display: grid; grid-template-columns: repeat(2, auto); justify-content: center; }
-  .gm-proof2__chips span { text-align: center; }
 }
 
 /* ---- Összehasonlító táblázat (Újragondolás) ---- */
@@ -428,6 +434,12 @@ html[lang="en"] .gm-lp h3 { text-wrap: balance; }
    teljes szélességű kártyák alacsony képpel — szándékosan NEM karusszel, mert
    mindhármat el kell olvasni, nem csak az elsőt. */
 .gm-top3 { margin: 0 auto clamp(2.6rem, 5vw, 4rem); }
+/* End-to-end lépéssor a TOP 3 kártyákon (2026-10-05): a folyamat elejétől a végéig, nem csak tanács. */
+.gm-top3__flow { display: flex; flex-wrap: wrap; row-gap: 0.1rem; margin: 0.9rem 0 0; padding: 0.5rem 0.75rem; border-left: 3px solid; border-image: var(--gm-grad) 1; background: rgba(124,58,237,0.05); font-family: var(--gm-mono); font-size: 0.66rem; line-height: 1.75; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: var(--gm-violet); }
+.gm-top3__flow span { white-space: nowrap; }
+.gm-top3__flow span + span::before { content: "→"; margin: 0 0.35rem; color: var(--gm-cyan-600); }
+.gm-top3__pro { margin: 1.1rem auto 0; text-align: center; font-size: 0.88rem; color: var(--gm-grey); }
+
 .gm-top3__head { text-align: center; margin-bottom: 1.4rem; }
 .gm-top3__title { margin: 0; font-size: clamp(1.15rem, 1vw + 0.85rem, 1.45rem); font-weight: 900; letter-spacing: -0.01em; color: var(--gm-ink); }
 .gm-top3__note { margin: 0.35rem 0 0; font-size: 0.92rem; color: var(--gm-grey); }

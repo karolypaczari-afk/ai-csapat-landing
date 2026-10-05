@@ -12,7 +12,10 @@
    ============================================================ */
 (function () {
   "use strict";
-  var AV = "/assets/img/avatars/", BG = "/assets/img/badges/", PF = "/assets/img/proof/";
+  var AV = "/assets/img/avatars/", PF = "/assets/img/proof/", VD = "/assets/video/";
+  /* `proof` = VALÓS minta-kimenet a szakember-adatlap „Így néz ki, amit kapsz” zónájába
+     (2026-10-05, Károly). A név-badge NEM minta: ahol nincs valós kimenet, `null` →
+     a zóna nem jelenik meg. Videós tagnál a demóvideó plakátképe a minta. */
 
   /* ── A landolón HIRDETETT számok (2026-08-03, Károly döntése) ────────────────
      Ez DEKLARÁLT marketing-tény, NEM az alábbi tömbből származtatott szám.
@@ -35,14 +38,14 @@
         benefitEn: "Gets to know your business once, then brings in the right specialist for every task – you only ever talk to one.",
         currentTask: "a megfelelő specialistát hívja be…", currentTaskEn: "Bringing in the right specialist…",
         metrics: [{ label: "specialista", labelEn: "specialist", target: 20 }, { label: "kampányterv", labelEn: "campaign plan", target: 6 }],
-        proof: BG + "ATLASZ.webp", spec: { pipeline: "profil → irányítás → forgatókönyv", cadence: "mindig elöl", scheduler: "készen áll" },
+        proof: null, spec: { pipeline: "profil → irányítás → forgatókönyv", cadence: "mindig elöl", scheduler: "készen áll" },
         specEn: { pipeline: "profile → routing → playbook", cadence: "always first", scheduler: "ready" } },
       { code: "ATHENE", name: "ATHÉNÉ", role: "a stratégiai partner", roleEn: "the strategic partner", slug: "genmarketer-billion-dollar-board", status: "live",
         benefit: "Végiggondolja veled a következő nagy lépésed – mintha lenne egy saját igazgatótanácsod.",
         benefitEn: "Thinks through your next big move with you – like having your own board of directors.",
         currentTask: "a következő nagy lépésed gondolja végig…", currentTaskEn: "Thinking through your next big move…",
         metrics: [{ label: "forgatókönyv", labelEn: "scenario", target: 3 }, { label: "döntés", labelEn: "decision", target: 7 }],
-        proof: BG + "ATHENE.webp", spec: { pipeline: "helyzet → opciók → döntés", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: null, spec: { pipeline: "helyzet → opciók → döntés", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "situation → options → decision", cadence: "on demand", scheduler: "ready" } },
       { code: "SUN-TZU", name: "SUN TZU", role: "a versenytárs-elemző", roleEn: "the competitor analyst", slug: "genmarketer-competitor-intel", status: "live",
         benefit: "Feltérképezi a versenytársaidat, hogy mindig egy lépéssel előttük járj.",
@@ -65,28 +68,28 @@
         benefitEn: "Comes up with the campaign that stops the scrolling thumb in the feed.",
         currentTask: "12 kampányötletet generál…", currentTaskEn: "Generating 12 campaign ideas…",
         metrics: [{ label: "kampányötlet", labelEn: "campaign idea", target: 12 }, { label: "szög", labelEn: "angle", target: 5 }],
-        proof: PF + "uc-kreativ.webp", spec: { pipeline: "felismerés → szög → koncepció", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: null, spec: { pipeline: "felismerés → szög → koncepció", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "insight → angle → concept", cadence: "on demand", scheduler: "ready" } },
       { code: "CYRANO", name: "CYRANO", role: "a hirdetés-szövegíró", roleEn: "the ad copywriter", slug: "genmarketer-ad-copywriter", status: "live",
         benefit: "Megírja a hirdetésszövegeidet, amikre tényleg kattintanak – nem görgetnek tovább.",
         benefitEn: "Writes ad copy people actually click – instead of scrolling past.",
         currentTask: "3 hook-variánst ír a hirdetésedhez…", currentTaskEn: "Writing 3 hook variants for your ad…",
         metrics: [{ label: "főcím", labelEn: "headline", target: 47 }, { label: "CTR", labelEn: "CTR", target: 34, suffix: "%↑" }],
-        proof: null, spec: { pipeline: "horog → törzs → CTA", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: PF + "proof-stilus-guide.webp", spec: { pipeline: "horog → törzs → CTA", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "hook → body → CTA", cadence: "on demand", scheduler: "ready" } },
       { code: "AURORA", name: "AURORA", role: "a Facebook Ads-szakértő", roleEn: "the Facebook Ads expert", slug: "genmarketer-facebook-ad-expert", status: "live",
         benefit: "Úgy kezeli a Meta-kampányaidat, hogy olcsóbb leadeket és több vásárlót hozzanak.",
         benefitEn: "Runs your Meta campaigns to bring cheaper leads and more buyers.",
         currentTask: "Meta-célzást finomhangol…", currentTaskEn: "Fine-tuning Meta targeting…",
         metrics: [{ label: "érdeklődő", labelEn: "lead", target: 212 }, { label: "CPL", labelEn: "CPL", target: 29, suffix: "%↓" }],
-        proof: BG + "AURORA.webp", spec: { pipeline: "célzás → kreatív → skálázás", cadence: "napi", scheduler: "folyamatos" },
+        proof: PF + "fb-ad-1.webp", spec: { pipeline: "célzás → kreatív → skálázás", cadence: "napi", scheduler: "folyamatos" },
         specEn: { pipeline: "targeting → creative → scale", cadence: "daily", scheduler: "continuous" } },
       { code: "APOLLON", name: "APOLLÓN", role: "a Google Ads-hirdetéskezelő", roleEn: "the Google Ads manager", slug: "genmarketer-google-ads-expert", status: "live",
         benefit: "Beállítja és pörgeti a Google-hirdetéseidet, hogy ne égjen el feleslegesen a kereted.",
         benefitEn: "Sets up and runs your Google Ads so your budget doesn't burn for nothing.",
         currentTask: "a Google-kereted újraosztja…", currentTaskEn: "Reallocating your Google budget…",
         metrics: [{ label: "keret védve", labelEn: "budget saved", target: 31, suffix: "%" }, { label: "CPA", labelEn: "CPA", target: 22, suffix: "%↓" }],
-        proof: PF + "proof-kampany-riport.webp", spec: { pipeline: "struktúra → licit → riport", cadence: "napi", scheduler: "folyamatos" },
+        proof: VD + "gads-riport-scroll-poster.webp", spec: { pipeline: "struktúra → licit → riport", cadence: "napi", scheduler: "folyamatos" },
         specEn: { pipeline: "structure → bid → report", cadence: "daily", scheduler: "continuous" } }
     ]},
     { cat: "Landoló oldal", catEn: "Landing page", color: "#06B6D4", members: [
@@ -111,14 +114,14 @@
         benefitEn: "Designs ad creatives that stand out in the endless feed.",
         currentTask: "kreatívokat tervez a hírfolyamba…", currentTaskEn: "Designing creatives for the feed…",
         metrics: [{ label: "kreatív", labelEn: "creative", target: 18 }, { label: "görgetésállító", labelEn: "stop-scroll", target: 27, suffix: "%↑" }],
-        proof: PF + "proof-social.webp", spec: { pipeline: "koncepció → vizuál → variáns", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: PF + "kreativ-mozaik.webp", spec: { pipeline: "koncepció → vizuál → variáns", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "concept → visual → variant", cadence: "on demand", scheduler: "ready" } },
       { code: "MATISSE", name: "MATISSE", role: "a Figma-tervező", roleEn: "the Figma designer", slug: "genmarketer-figma-builder", status: "live",
         benefit: "Profi dizájnt tervez neked Figmában, grafikus felvétele nélkül.",
         benefitEn: "Designs professional visuals in Figma – without hiring a graphic designer.",
         currentTask: "drótvázat tervez Figmában…", currentTaskEn: "Designing a wireframe in Figma…",
         metrics: [{ label: "rajztábla", labelEn: "artboard", target: 12 }, { label: "brand-egységes", labelEn: "on-brand", target: 100, suffix: "%" }],
-        proof: PF + "proof-stilus-guide.webp", spec: { pipeline: "feladatkiírás → dizájn → átadás", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: PF + "figma-wireframe-design.webp", spec: { pipeline: "feladatkiírás → dizájn → átadás", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "brief → design → handoff", cadence: "on demand", scheduler: "ready" } },
       { code: "NEXUS", name: "NEXUS", role: "a Figma–kód híd", roleEn: "the Figma-to-code bridge", slug: "figma-developer-mcp", status: "live",
         benefit: "A dizájnodból működő kódot csinál – fejlesztő nélkül.",
@@ -139,7 +142,7 @@
         benefitEn: "Turns one finished ad into platform-ready 1:1, 4:5, 9:16, 16:9 and 2:3 versions without crude cropping or stretching.",
         currentTask: "a kreatívodat több képarányra tördeli…", currentTaskEn: "Reflowing your creative into multiple aspect ratios…",
         metrics: [{ label: "képarány", labelEn: "aspect ratio", target: 5 }, { label: "szöveg-QA", labelEn: "text QA", target: 100, suffix: "%" }],
-        proof: BG + "VECTOR.webp", spec: { pipeline: "forráskép → újratördelés → betű-QA", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: PF + "meret-adaptacio.webp", spec: { pipeline: "forráskép → újratördelés → betű-QA", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "source image → reflow → text QA", cadence: "on demand", scheduler: "ready" } }
     ]},
     { cat: "Videó", catEn: "Video", color: "#400099", members: [
@@ -155,14 +158,14 @@
         benefitEn: "Writes your video scripts that hold viewers from the first second.",
         currentTask: "az első 3 másodpercet írja…", currentTaskEn: "Writing the first 3 seconds…",
         metrics: [{ label: "horog", labelEn: "hook", target: 15 }, { label: "megtartás", labelEn: "retention", target: 38, suffix: "%↑" }],
-        proof: BG + "SEHEREZADE.webp", spec: { pipeline: "horog → ív → CTA", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: null, spec: { pipeline: "horog → ív → CTA", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "hook → arc → CTA", cadence: "on demand", scheduler: "ready" } },
       { code: "LUMIERE", name: "LUMIÈRE", role: "az UGC videó-producer", roleEn: "the UGC video producer", slug: "genmarketer-ugc-video", status: "live",
         benefit: "Elkészíti a hiteles UGC-videóidat, amik tényleg vásárlót hoznak.",
         benefitEn: "Creates authentic UGC videos that actually bring buyers.",
         currentTask: "UGC-forgatókönyvet vesz fel…", currentTaskEn: "Recording a UGC script…",
         metrics: [{ label: "UGC videó", labelEn: "UGC video", target: 9 }, { label: "hitelesség", labelEn: "authenticity", target: 92, suffix: "%" }],
-        proof: BG + "LUMIERE.webp", spec: { pipeline: "forgatókönyv → felvétel → vágás", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: VD + "ugc-example-2-poster.webp", spec: { pipeline: "forgatókönyv → felvétel → vágás", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "script → shoot → edit", cadence: "on demand", scheduler: "ready" } },
       { code: "KRONOSZ", name: "KRONOSZ", role: "a videóvágó", roleEn: "the video editor", slug: "genmarketer-videovago", status: "live",
         benefit: "Pörgős, figyelemmegtartó videóvá vágja a nyersanyagodat.",
@@ -176,7 +179,7 @@
         benefitEn: "Generates your high-converting ad videos – no camera, crew or shoot.",
         currentTask: "hirdetési videót renderel…", currentTaskEn: "Rendering an ad video…",
         metrics: [{ label: "renderelés", labelEn: "render", target: 6 }, { label: "stáb nélkül", labelEn: "no crew", target: 100, suffix: "%" }],
-        proof: PF + "uc-video.webp", spec: { pipeline: "prompt → jelenet → renderelés", cadence: "igény szerint", scheduler: "készen áll" },
+        proof: VD + "kreativ-motion-poster.webp", spec: { pipeline: "prompt → jelenet → renderelés", cadence: "igény szerint", scheduler: "készen áll" },
         specEn: { pipeline: "prompt → shot → render", cadence: "on demand", scheduler: "ready" } }
     ]},
     { cat: "SEO", catEn: "SEO", color: "#00AACC", members: [
@@ -236,7 +239,7 @@
         benefitEn: "Builds your LinkedIn presence and brings clients – from profile to posts to outreach.",
         currentTask: "a LinkedIn-profilodat írja újra…", currentTaskEn: "Rewriting your LinkedIn profile…",
         metrics: [{ label: "poszt-ötlet", labelEn: "post idea", target: 12 }, { label: "elérés", labelEn: "reach", target: 41, suffix: "%↑" }],
-        proof: BG + "FIGARO.webp", spec: { pipeline: "profil → tartalom → megkeresés", cadence: "heti", scheduler: "folyamatos" },
+        proof: null, spec: { pipeline: "profil → tartalom → megkeresés", cadence: "heti", scheduler: "folyamatos" },
         specEn: { pipeline: "profile → content → outreach", cadence: "weekly", scheduler: "continuous" } }
     ]}
   ];
