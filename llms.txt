@@ -32,7 +32,7 @@ A landoló szerint ez a három munka a leggyakoribb az előfizetők valós haszn
 - Szövegek (CYRANO, SHERLOCK, HERMÉSZ): hirdetésszöveg, landolószöveg, hírlevél és teljes e-mail-sorozat a vevő stílusában. A sorozatot időzítve a MailerLite-fiókba is beállítják; kiküldés előtt a vevő hagyja jóvá.
 
 ## Connectorok (bekötött fiókok)
-Minden kapcsolat egyetlen GENmarketer-connectoron belül fut; a vevő a szolgáltató saját bejelentkező oldalán engedélyezi, jelszót nem ad meg. A fiókkapcsolatok a Pro és a Prémium csomag részei, a képgenerálás minden csomagban benne van.
+Minden kapcsolat egyetlen GENmarketer-connectoron belül fut; a vevő a szolgáltató saját bejelentkező oldalán engedélyezi, jelszót nem ad meg. A fiókkapcsolatok a Pro és a Prémium csomag részei. A képgenerálás alapból a Prémium része; jelenlegi akcióként a Standard és a Pro egyszeri 120 képet kap ajándékba.
 - Meta Ads: fiókmenedzsment az ötlettől a kész kampányig, tömeges kreatívfeltöltés. Kampány magától nem indulhat el, és a keretnél többet nem költhet. Az Instagram-posztok statisztikáját is látja, és a jól teljesítő posztból hirdetést készít.
 - Google Ads: fiók-audit valós költésadatokból a kampányoktól a keresési kifejezésekig; kampányépítés a Google saját ellenőrzésén átfuttatva; optimalizálás csak biztonságos irányba (szüneteltet, szűkít), a keretet nem lépheti túl.
 - MailerLite: akár 20 részes autoresponder kész levelekkel és időzítéssel. Piszkozatban épül, kiküldés előtt a vevő hagyja jóvá.
@@ -41,7 +41,7 @@ Minden kapcsolat egyetlen GENmarketer-connectoron belül fut; a vevő a szolgál
 - Microsoft Clarity: olvasás és elemzés – hol akadnak el a látogatók (dühös és „halott” kattintások, görgetési mélység, visszafordulás).
 - WordPress: a kész landolót, aloldalt vagy szekciót kiviszi a vevő WordPress-oldalára. Jóváhagyás nélkül semmi nem kerül ki.
 - Élő webkutatás (Tavily): a mai webről dolgozik, forrásmegjelöléssel. Prémiumban külön kulcs nélkül, a Pro csomagban a vevő saját, ingyenes Tavily-kulcsával.
-- Képgenerálás: hirdetéskész kép betűhű magyar felirattal, minden csomagban, külön bekötés és fizetős képgeneráló nélkül. Havi 120 kép (20 hirdetéskész + 100 ötletelő), Prémiumban havi 1000. Videóhoz kész csomagot ad, amit a vevő a saját ChatGPT- vagy Gemini-előfizetésében futtat.
+- Képgenerálás: hirdetéskész kép betűhű magyar felirattal, külön bekötés és fizetős képgeneráló nélkül. Alapból a Prémium csomag része, havi 1000 képpel. Jelenlegi akciónk: a Standard és a Pro csomaghoz egyszeri 120 képet (20 hirdetéskész + 100 ötletelő) adunk ajándékba. Videóhoz kész csomagot ad, amit a vevő a saját ChatGPT- vagy Gemini-előfizetésében futtat.
 
 ## A 28 specialista
 - Vezetés és stratégia: ATLASZ (csapatvezető – minden feladatot a megfelelő specialistához oszt), ATHÉNÉ (stratégiai partner), SUN TZU (versenytárs-elemző), SHERLOCK (piackutató)
@@ -57,7 +57,7 @@ Minden kapcsolat egyetlen GENmarketer-connectoron belül fut; a vevő a szolgál
 - A 6 havi díj négy havidíjjal egyenlő, tehát a fél év két hónappal olcsóbb, mint havonta fizetni – és hathavonta ugyanezen az áron újítódik meg.
 - A Pro 3 napos próbával is indulhat 990 Ft-ért, utána 19 990 Ft/hó.
 - Minden csomag 1–5 főre is megvásárolható, minden további hely olcsóbb az előzőnél. Nincs hűségidő, bármikor lemondható, csomagot váltani lehet.
-- A csomagok közötti különbség: a Standard kutat, auditál és kész terveket és szövegeket ad; a Pro ezen felül ráköt a vevő saját Meta Ads-, Google Ads-, MailerLite-, GA4-, Search Console-, Clarity- és WordPress-fiókjára, és ott hajtja végre a jóváhagyott munkát (élő webkutatás a saját, ingyenes Tavily-kulccsal); a Prémium mindezen felül havi 1000 generált képet (800 választható vázlat + 200 hirdetéskész végleges) és élő webkutatást ad, mindkettőt saját API-kulcs nélkül. Képgenerálás minden csomagban van: havi 120 kép (20 hirdetéskész + 100 ötletelő).
+- A csomagok közötti különbség: a Standard kutat, auditál és kész terveket és szövegeket ad; a Pro ezen felül ráköt a vevő saját Meta Ads-, Google Ads-, MailerLite-, GA4-, Search Console-, Clarity- és WordPress-fiókjára, és ott hajtja végre a jóváhagyott munkát (élő webkutatás a saját, ingyenes Tavily-kulccsal); a Prémium mindezen felül havi 1000 generált képet (800 választható vázlat + 200 hirdetéskész végleges) és élő webkutatást ad, mindkettőt saját API-kulcs nélkül. A Standard és a Pro jelenlegi akcióként egyszeri 120 képet kap ajándékba (20 hirdetéskész + 100 ötletelő).
 - Mind a három csomag a TELJES, 28 fős csapatot tartalmazza. A különbség a végrehajtási jog, a benne foglalt gyártási keret és a számlázás – nem a specialisták száma.
 - Menedzselt szint: igény szerinti, a cégre szabott kiépítés és üzemeltetés. Nem önkiszolgáló csomag és nincs listaára: érdeklődés-jelzéssel és felmérő beszélgetéssel indul, nem pénztárral.
 - Árzár: amíg az előfizetés aktív, a belépéskori díj nem emelkedik, akkor sem, ha a csapat nő. Csak akkor áll vissza, ha a vevő lemond és később visszatér.
@@ -176,7 +176,7 @@ Szó szerinti idézetek a landolóról, ahogy ott szerepelnek. A landoló pontsz
 - The three most common jobs, carried end to end: Meta and Google Ads (audit, plan, build, launch, ongoing optimisation and reporting); website and landing page (section plan with copy, design, code, then publishing to the customer's WordPress site after approval); copy (ad copy, landing copy, newsletter, full email sequence, scheduled into MailerLite and sent only after approval). Execution inside the customer's own accounts is part of Pro and Premium; Standard researches, plans and writes.
 - Connectors, all inside one GENmarketer connector and authorised on the provider's own sign-in page: Meta Ads (including Instagram post statistics), Google Ads, MailerLite, GA4, Google Search Console (read; writes are limited to sitemap submission and page management, with approval, where account permissions allow), Microsoft Clarity (read and analysis), WordPress (nothing is published without approval).
 - Live web research via Tavily, with sources: on Premium without a key, on Pro with the customer's own free Tavily key.
-- Image generation in every plan: 120 images per month (20 ad-ready + 100 drafts), 1 000 on Premium.
+- Image generation: included in Premium (1 000 images per month). Current promotion: Standard and Pro get a one-time bonus of 120 images (20 ad-ready + 100 drafts).
 
 ## The 28 specialists
 - Leadership and strategy: ATLASZ (team lead — routes every task to the right specialist), ATHÉNÉ (strategic partner), SUN TZU (competitor analyst), SHERLOCK (market researcher)
