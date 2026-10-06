@@ -121,8 +121,8 @@
   <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
   <link rel="preload" href="/assets/fonts/inter-var-latext.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20261006-hdnavy5">
-  <link rel="stylesheet" href="/css/hud.css?v=20261005-qa">
+  <link rel="stylesheet" href="/css/styles.css?v=20261006-p1fix">
+  <link rel="stylesheet" href="/css/hud.css?v=20261006-p1fix2">
 
   <!-- GA4 — localhoston KI (prod paritás); éles hoston pörög.
        Attribúciós paramok: click-ID-k (URL-ből) + content_group/lang/source → GA4 custom dimenziók. -->
@@ -310,7 +310,7 @@
     <div class="gm-hero__scrim"></div>
     <div class="gm-container gm-hero__inner">
       <div class="gm-hero__copy">
-        <h1 class="gm-hero__h1">Legyen a<br><img class="gm-hero__ic" src="/assets/img/icon-chatgpt.svg" width="64" height="64" alt="">ChatGPT / <img class="gm-hero__ic" src="/assets/img/icon-claude.svg" width="64" height="64" alt="">Claude<br>fiókodból <span class="gm-grad-text">28 fős</span><br><span class="gm-grad-text">marketingcsapat</span></h1>
+        <h1 class="gm-hero__h1">Legyen a<br><span class="gm-nb"><img class="gm-hero__ic" src="/assets/img/icon-chatgpt.svg" width="64" height="64" alt="">ChatGPT</span> / <span class="gm-nb"><img class="gm-hero__ic" src="/assets/img/icon-claude.svg" width="64" height="64" alt="">Claude</span><br>fiókodból <span class="gm-grad-text">28 fős</span><br><span class="gm-grad-text">marketingcsapat</span></h1>
         <p class="gm-hero__sub">5 perc alatt telepíted – és már dolgozik is veled a <span class="gm-nb">PPC-sed</span>, a szövegíród, a videóvágód. Magyarul.</p>
         <div class="gm-hero__ctawrap">
           <div class="gm-hero__cta">
@@ -371,7 +371,7 @@
               <p class="gm-top3__desc">És mindkettőt <strong>folyamatosan frissítjük</strong> – a „Mi változott az Andromedában?” típusú videókat mi nézzük végig helyetted.</p>
               <button type="button" class="gm-top3__go" data-ws-jump="meta" data-ws-jump-step="0">További konkrét példák ▸</button>
             </div>
-            <figure class="gm-top3__media gm-top3__media--demo"><iframe src="/assets/demo/genmarketer-top3-prompts.html?set=ads" title="Rövid promptok a ChatGPT és Claude felületén, GENmarketer connectorral – animáció" loading="lazy" scrolling="no" style="width:100%;height:100%;border:0;display:block"></iframe></figure>
+            <figure class="gm-top3__media gm-top3__media--demo"><iframe src="/assets/demo/genmarketer-top3-prompts.html?set=ads&v=p1" title="Rövid promptok a ChatGPT és Claude felületén, GENmarketer connectorral – animáció" loading="lazy" scrolling="no" style="width:100%;height:100%;border:0;display:block"></iframe></figure>
           </article>
           <article class="gm-top3__row gm-top3__row--rev gm-reveal">
             <div class="gm-top3__content">
@@ -384,7 +384,7 @@
               <p class="gm-top3__desc">És nem tippel: a <strong>connectorainkon át a valós adataidból</strong> indul – GA4 és Clarity mutatja, hol veszíted el a látogatókat.</p>
               <button type="button" class="gm-top3__go" data-ws-jump="web" data-ws-jump-step="0">További konkrét példák ▸</button>
             </div>
-            <figure class="gm-top3__media gm-top3__media--demo"><iframe src="/assets/demo/genmarketer-top3-prompts.html?set=web" title="Weboldal-promptok a ChatGPT és Claude felületén – animáció" loading="lazy" scrolling="no" style="width:100%;height:100%;border:0;display:block"></iframe></figure>
+            <figure class="gm-top3__media gm-top3__media--demo"><iframe src="/assets/demo/genmarketer-top3-prompts.html?set=web&v=p1" title="Weboldal-promptok a ChatGPT és Claude felületén – animáció" loading="lazy" scrolling="no" style="width:100%;height:100%;border:0;display:block"></iframe></figure>
           </article>
           <article class="gm-top3__row gm-reveal">
             <div class="gm-top3__content">
@@ -397,7 +397,7 @@
               <p class="gm-top3__desc">Minden szöveg átmegy a <strong>magyar nyelvi minőségszűrőn</strong> – nem AI-ízű, tükörfordított mondatokat kapsz.</p>
               <button type="button" class="gm-top3__go" data-ws-jump="email" data-ws-jump-step="0">További konkrét példák ▸</button>
             </div>
-            <figure class="gm-top3__media gm-top3__media--demo"><iframe src="/assets/demo/genmarketer-top3-prompts.html?set=szoveg" title="Szövegírás-promptok a ChatGPT és Claude felületén – animáció" loading="lazy" scrolling="no" style="width:100%;height:100%;border:0;display:block"></iframe></figure>
+            <figure class="gm-top3__media gm-top3__media--demo"><iframe src="/assets/demo/genmarketer-top3-prompts.html?set=szoveg&v=p1" title="Szövegírás-promptok a ChatGPT és Claude felületén – animáció" loading="lazy" scrolling="no" style="width:100%;height:100%;border:0;display:block"></iframe></figure>
           </article>
         </div>
 <div class="gm-top3__divider gm-reveal">
@@ -928,10 +928,6 @@
         <span class="gm-eyebrow gm-reveal">A teljes névsor</span>
         <h2 class="gm-h2 gm-reveal">Ismerd meg mind a 28 csapattagot</h2>
         <p class="gm-lead gm-reveal">Tíz terület, egy csapat. <strong>Folyamatosan érkeznek az új csapattagok</strong>, és a meglévők is fejlődnek.</p>
-      </div>
-      <div class="gm-mc__bar gm-reveal">
-        <span><span class="gm-mc__dot"></span> GENMARKETER / CSAPAT – <b>28 csapattag</b> · tíz szakterületen</span>
-        <span>élő szimuláció · illusztratív telemetria</span>
       </div>
       <div class="gm-mc__filters gm-reveal">
         <button class="gm-chip is-active" data-cat="all">Mind</button>

@@ -102,7 +102,12 @@
   var stage = document.getElementById('stage');
   function rescale() {
     /* szelesseg-alapu skala; az ablak magassaga a rendelkezesre allo teljes
-       magassaghoz igazodik, igy az animacio kitolti a kartya media-savjat */
+       magassaghoz igazodik, igy az animacio kitolti a kartya media-savjat.
+       Keskeny (mobil) wrapnel a tervezoszelesseg 640-re valt, kulonben a
+       0,3x-es skala olvashatatlanna kicsinyitene a chatet; a buborekok
+       szazalekos szelessege miatt a tartalom magatol ujratordel. */
+    W = wrap.clientWidth < 640 ? 640 : 1070;
+    stage.style.width = W + 'px';
     var s = Math.min(1, wrap.clientWidth / W);
     var hUnits = Math.max(560, Math.min(1250, Math.round((window.innerHeight || H) / s)));
     stage.style.height = hUnits + 'px';

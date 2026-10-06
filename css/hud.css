@@ -64,6 +64,20 @@
 .gm-chip:hover { border-color: var(--gm-cyan); color: #fff; }
 .gm-chip.is-active { background: var(--gm-grad-soft); color: #fff; border-color: transparent; }
 
+/* HU tab-sor (Tibor 2026-10-06): a csapat-szuro a 49-es munkaallomas fulsoranak
+   INVERZE — ott navy sav vilagos szekcion, itt feher sav a sotet szekcion; az aktiv
+   ful ugyanaz a grad-soft pill. A chip-lanc helyett egyetlen tab-kontener.
+   Az EN oldal valtozatlan (lang-szukites). */
+html[lang="hu"] .gm-mc__filters { gap: 0.3rem; justify-content: space-between; padding: 0.4rem; background: #fff; border: 1px solid #fff; border-radius: 999px; box-shadow: 0 12px 30px rgba(11,11,22,0.35); }
+html[lang="hu"] .gm-chip { font-family: inherit; font-size: 0.95rem; font-weight: 700; letter-spacing: 0; color: var(--gm-grey); background: none; border: 0; padding: 0.5rem 0.95rem; white-space: nowrap; transition: color 0.2s var(--gm-ease), background 0.2s var(--gm-ease); }
+html[lang="hu"] .gm-chip:hover { color: var(--gm-ink); background: rgba(11,11,22,0.07); border-color: transparent; }
+html[lang="hu"] .gm-chip.is-active { background: var(--gm-grad-soft); color: #fff; }
+@media (max-width: 640px) {
+  html[lang="hu"] .gm-mc__filters { justify-content: center; gap: 0.25rem; padding: 0.45rem; border-radius: 18px; }
+  html[lang="hu"] .gm-chip { font-size: 0.85rem; padding: 0.4rem 0.65rem; }
+}
+
+
 /* ---- Ágens-rács ---- */
 .gm-mc__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.2rem; position: relative; z-index: 2; }
 
@@ -101,6 +115,11 @@
 
 .gm-status { font-family: var(--gm-mono); font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.2em 0.55em; border-radius: 5px; border: 1px solid; white-space: nowrap; }
 .gm-status--live { color: #2BE38B; border-color: rgba(43,227,139,0.5); background: rgba(43,227,139,0.08); }
+/* J2 polish (csak HU): az alap-allapot (aktiv) halk statusz-pott, nem badge; a badge
+   a kivetele (HAMAROSAN) marad hangos. 28 egyforma AKTIV plecsni = zaj, nem jelzes.
+   Az EN oldal valtozatlan (kozos stylesheet, ezert lang-szukites). */
+html[lang="hu"] .gm-status--live { color: rgba(184,182,206,0.8); border-color: transparent; background: none; padding-left: 0; }
+html[lang="hu"] .gm-status--live::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #2BE38B; margin-right: 0.4em; vertical-align: 1px; box-shadow: 0 0 6px rgba(43,227,139,0.55); }
 .gm-status--soon { color: var(--gm-gold); border-color: rgba(255,196,0,0.5); background: rgba(255,196,0,0.08); }
 
 /* viz canvas */
