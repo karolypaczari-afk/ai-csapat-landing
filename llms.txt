@@ -5,7 +5,7 @@
 
 Ez a fájl kétnyelvű: előbb a magyar tények (a magyar landolóé, https://ai-csapat.genmarketer.hu/), utána ugyanezek angolul. Mindkét rész a MA érvényes termékről szól; az árak a közzétett listáraink, rejtett díj nincs.
 This file is bilingual: the Hungarian facts first (they describe https://ai-csapat.genmarketer.hu/), then the same facts in English. Everything below is a factual statement about the product as sold today. Prices are the published list prices and include no hidden fees.
-Utoljára felülvizsgálva / last reviewed: 2026-10-05.
+Utoljára felülvizsgálva / last reviewed: 2026-10-06.
 
 ---
 
