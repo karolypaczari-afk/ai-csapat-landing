@@ -105,8 +105,10 @@
        magassaghoz igazodik, igy az animacio kitolti a kartya media-savjat.
        Keskeny (mobil) wrapnel a tervezoszelesseg 640-re valt, kulonben a
        0,3x-es skala olvashatatlanna kicsinyitene a chatet; a buborekok
-       szazalekos szelessege miatt a tartalom magatol ujratordel. */
-    W = wrap.clientWidth < 640 ? 640 : 1070;
+       szazalekos szelessege miatt a tartalom magatol ujratordel.
+       A kuszob 420: a telefonos wrap ~325, a desktop OLDALSO panel ~500,
+       es a desktopnak az eredeti 1070-es nezet jar (640-nel tul nagy lenne). */
+    W = wrap.clientWidth < 420 ? 640 : 1070;
     stage.style.width = W + 'px';
     var s = Math.min(1, wrap.clientWidth / W);
     var hUnits = Math.max(560, Math.min(1250, Math.round((window.innerHeight || H) / s)));
