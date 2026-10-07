@@ -39,7 +39,9 @@
   // landolóról minden hivatkozása eltűnt.
   var CHECKOUT = EN ? {
     planner:   "https://vip.genmarketer.eu/checkout/?add-to-cart=45&variation_id=46&attribute_billing-period=Monthly",
-    autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly"
+    autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly",
+    premium: "https://vip.genmarketer.eu/checkout/?add-to-cart=614&variation_id=615&attribute_billing-period=Monthly&attribute_seats=1",
+    autopilot_trial: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=625&attribute_billing-period=Monthly%2C+3-day+trial&attribute_seats=1"
   } : {
     // 2026-08-03 óta az 1992/1993 `variable-subscription`: EGY termék kezeli a havi
     // ÉS az éves ciklust (Károly döntése; a két külön éves terméket, a 2320/2321-et
@@ -105,7 +107,7 @@
   };
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { planner: 29, autopilot: 59 } : { planner: 9990, autopilot: 19990, autopilot_trial: 990, premium: 39990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59, premium: 119, autopilot_trial: 3 } : { planner: 9990, autopilot: 19990, autopilot_trial: 990, premium: 39990 };
   var CURRENCY = EN ? "EUR" : "HUF";
   /* ── KI A TULAJDONOSA A TÖLCSÉR-ESEMÉNYNEK: a landoló vagy a pénztár? ─────────
    *
@@ -138,7 +140,9 @@
   // tehát egy közös azonosító két különböző terméket olvasztana egy sorba.
   var PKG = EN ? {
     planner:   { label: "Planner subscription",   itemId: "ai-csapatod-en-elofizetes-planner" },
-    autopilot: { label: "Autopilot subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" }
+    autopilot: { label: "Pro subscription", itemId: "ai-csapatod-en-elofizetes-autopilot" },
+    premium: { label: "Premium subscription", itemId: "ai-csapatod-en-elofizetes-premium" },
+    autopilot_trial: { label: "Pro 3-day trial", itemId: "ai-csapatod-en-elofizetes-autopilot-trial" }
   } : {
     planner:   { label: "Standard előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
     autopilot: { label: "Pro előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" },
@@ -255,7 +259,7 @@
   // hetek óta `ai-csapatod-basic`), és egy csere két sorra hasítaná ugyanazt a terméket.
   // A kettő két külön rendszer kulcsa — a Metáé a Woo-ID, a GA4-é a beszédes slug.
   var META_CONTENT_ID = EN
-    ? { planner: "46", autopilot: "49" }
+    ? { planner: "46", autopilot: "49", premium: "615", autopilot_trial: "625" }
     : { planner: "2342", autopilot: "2344", autopilot_trial: "5809" };
   // A GOMBON ÁLLÓ href az igazság, nem a konstans: a ciklusváltó átírja (havi 2342 →
   // éves 2343), és a kosárba is az kerül — ugyanaz az elv, mint a `checkoutTarget`-nél.
@@ -277,7 +281,7 @@
    *
    * Gépi kapu: tests/tracking-value.mjs — a markupban deklarált variáció↔ár párokat
    * veti össze ezzel a térképpel, fail-closed. Ha egy ár változik és ez nem, PIROS. */
-  var VALUE_BY_VARIATION = EN ? { "46": 29, "47": 116, "49": 59, "50": 236, "337": 44, "338": 176, "339": 55, "340": 220, "341": 64, "342": 256, "343": 69, "344": 276, "345": 89, "346": 356, "347": 111, "348": 444, "349": 129, "350": 516, "351": 139, "352": 556 }
+  var VALUE_BY_VARIATION = EN ? { "46": 29, "47": 116, "49": 59, "50": 236, "337": 44, "338": 176, "339": 55, "340": 220, "341": 64, "342": 256, "343": 69, "344": 276, "345": 89, "346": 356, "347": 111, "348": 444, "349": 129, "350": 516, "351": 139, "352": 556, "615": 119, "616": 476, "617": 179, "618": 716, "619": 227, "620": 908, "621": 263, "622": 1052, "623": 287, "624": 1148, "625": 3 }
                               : { "2342": 9990, "2343": 39960, "2344": 19990, "2345": 79960, "3494": 14980, "3495": 59920, "3496": 18970, "3497": 75880, "3498": 21960, "3499": 87840, "3500": 23950, "3501": 95800, "3502": 29980, "3503": 119920, "3504": 37970, "3505": 151880, "3506": 43960, "3507": 175840, "3508": 47950, "3509": 191800, "5809": 990,
                                   /* Prémium (2026-09-18, Woo 6090). A `tracking-value.mjs` kapuja pont ezt a rést
                                      fogta meg a CI-ben: a kártya már hirdette a tíz új variációt, a licit-érték
@@ -1010,7 +1014,7 @@
     modal.querySelector(".gm-modal__title h3").textContent = a.name || a.code;
     modal.querySelector(".gm-modal__title p").textContent = role;
     modal.querySelector(".gm-modal__benefit").textContent = EN ? a.benefitEn : a.benefit;
-    var prof = !EN && a.profile;
+    var prof = EN ? a.profileEn : a.profile;
     var helpUl = modal.querySelector(".gm-modal__help");
     if (prof && helpUl) {
       // Szakember-adatlap: „Miben segít?" + „Milyen tudás van mögötte?" (data.js GM_PROFILE)
@@ -1018,7 +1022,7 @@
       helpUl.innerHTML = li(prof.help || []);
       var basis = prof.experts
         ? "<strong>" + prof.experts + " szakértő " + esc(prof.sources) + "</strong> táplálkozik, olyan témákban, mint:"
-        : esc(prof.basis) + ", olyan témákban, mint:";
+        : esc(prof.basis) + tr(", olyan témákban, mint:", ", covering:");
       modal.querySelector(".gm-modal__basis").innerHTML = basis;
       modal.querySelector(".gm-modal__topics").innerHTML = li(prof.topics || []);
     } else {
