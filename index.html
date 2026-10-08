@@ -201,7 +201,7 @@
       function secureFlag() { return location.protocol === 'https:' ? ';Secure' : ''; }
       function readCookie(name) {
         var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
-        return m ? decodeURIComponent(m[1]) : '';
+        try { return m ? decodeURIComponent(m[1]) : ''; } catch (e) { return ''; }
       }
       function writeCookie(name, value, days) {
         document.cookie = name + '=' + encodeURIComponent(value) + ';path=/;max-age=' + (days * 86400) + ';SameSite=Lax' + cookieDomain() + secureFlag();
@@ -210,12 +210,18 @@
         return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(36).slice(2);
       }
       function fbCookieClickId(value) { var m = /^fb\.\d+\.\d+\.(.+)$/.exec(String(value || '')); return m ? m[1] : ''; }
-      function fbCookieMalformed(value) { var m = /^fb\.\d+\.(\d+)\./.exec(String(value || '')); return !!value && (!m || m[1].length !== 13); }
+      function fbCookieMalformed(value) { var m = /^fb\.\d+\.(\d+)\.(.+)$/.exec(String(value || '')); return !!value && (!m || m[1].length !== 13); }
+      function repairLegacyFbc(value) { var m = /^fb\.(\d+)\.(\d{10})\.(.+)$/.exec(String(value || '')); return m ? 'fb.' + m[1] + '.' + (Number(m[2]) * 1000) + '.' + m[3] : ''; }
       var qs = new URLSearchParams(location.search), now = Date.now();
-      var externalId = readCookie('gm_meta_ext_id');
-      if (!externalId) { externalId = 'gm_' + uid(); writeCookie('gm_meta_ext_id', externalId, 390); }
+      var externalId = readCookie('pbid') || readCookie('gm_meta_ext_id') || ('gm_' + uid());
+      if (readCookie('gm_meta_ext_id') !== externalId) writeCookie('gm_meta_ext_id', externalId, 390);
+      if (!readCookie('pbid')) writeCookie('pbid', externalId, 390);
       var fbclid = qs.get('fbclid'), fbc = readCookie('_fbc');
-      if (fbclid && (!fbc || fbCookieClickId(fbc) !== fbclid || fbCookieMalformed(fbc))) { fbc = 'fb.1.' + now + '.' + fbclid; writeCookie('_fbc', fbc, 90); }
+      if (fbclid && (!fbc || fbCookieClickId(fbc) !== fbclid || fbCookieMalformed(fbc))) { fbc = fbCookieClickId(fbc) === fbclid && repairLegacyFbc(fbc) || 'fb.1.' + now + '.' + fbclid; writeCookie('_fbc', fbc, 90); }
+      else if (fbc && fbCookieMalformed(fbc)) {
+        fbc = repairLegacyFbc(fbc);
+        writeCookie('_fbc', fbc, fbc ? 90 : 0);
+      }
       var fbp = readCookie('_fbp');
       if (!fbp || fbCookieMalformed(fbp)) { fbp = 'fb.1.' + now + '.' + (fbCookieClickId(fbp) || Math.floor(Math.random() * 10000000000)); writeCookie('_fbp', fbp, 390); }
       var pageViewEventId = 'gm-pageview-' + uid();

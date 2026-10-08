@@ -149,7 +149,8 @@
     // KÜLÖN `item_id`: a próba más árú és más ajánlat, mint a teljes árú Pro — egy
     // közös azonosító a 990-et és a 19 990-et egyetlen sorba olvasztaná, és a
     // „próba → fizető" arány, a valódi KPI, mérhetetlenné válna.
-    autopilot_trial: { label: "Pro előfizetés – 3 napos próba", itemId: "ai-csapatod-elofizetes-autopilot-proba" }
+    autopilot_trial: { label: "Pro előfizetés – 3 napos próba", itemId: "ai-csapatod-elofizetes-autopilot-proba" },
+    premium: { label: "Prémium előfizetés", itemId: "ai-csapatod-elofizetes-premium" }
   };
   var PKG_DEFAULT = "planner";
   var ATTR_COOKIE = "gm_ads_attrib";
@@ -179,10 +180,10 @@
   function secureFlag() { return location.protocol === "https:" ? ";Secure" : ""; }
   function readCookie(name) {
     var m = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/[.$?*|{}()[\]\\/+^]/g, "\\$&") + "=([^;]*)"));
-    return m ? decodeURIComponent(m[1]) : "";
+    try { return m ? decodeURIComponent(m[1]) : ""; } catch (e) { return ""; }
   }
   function writeCookie(name, value, days) {
-    var maxAge = Math.max(1, days || 90) * 86400;
+    var maxAge = days === 0 ? 0 : Math.max(1, days || 90) * 86400;
     document.cookie = name + "=" + encodeURIComponent(value) + ";path=/;max-age=" + maxAge + ";SameSite=Lax" + cookieDomain() + secureFlag();
   }
   function uid() {
@@ -209,19 +210,26 @@
   var FB_COOKIE_RE = /^fb\.\d+\.(\d+)\.(.+)$/;
   function fbCookieMalformed(value) {
     var m = FB_COOKIE_RE.exec(String(value || ""));
-    return !m || String(m[1]).length < 13; // < 13 jegy = másodperc-alapú, romlott
+    return !m || String(m[1]).length !== 13;
   }
   function fbCookieClickId(value) {
     var m = FB_COOKIE_RE.exec(String(value || ""));
     return m ? m[2] : "";
   }
+  function repairLegacyFbc(value) {
+    var m = /^fb\.(\d+)\.(\d{10})\.(.+)$/.exec(String(value || ""));
+    return m ? "fb." + m[1] + "." + (Number(m[2]) * 1000) + "." + m[3] : "";
+  }
   function ensureMetaCookies() {
     var now = Date.now(), qs = new URLSearchParams(location.search); // MILLISZEKUNDUM
-    var externalId = readCookie(META_EXT_COOKIE);
+    // A HU pénztár PixelYourSite vendégazonosítójával közös identitás.
+    // A meglévő pbid az elsődleges; az EN pénztár külön release-felület.
+    var externalId = (!EN && readCookie("pbid")) || readCookie(META_EXT_COOKIE);
     if (!externalId) {
       externalId = "gm_" + uid();
-      writeCookie(META_EXT_COOKIE, externalId, 390);
     }
+    if (readCookie(META_EXT_COOKIE) !== externalId) writeCookie(META_EXT_COOKIE, externalId, 390);
+    if (!EN && !readCookie("pbid")) writeCookie("pbid", externalId, 390);
     var fbp = readCookie("_fbp");
     if (!fbp) {
       fbp = "fb.1." + now + "." + Math.floor(Math.random() * 10000000000);
@@ -236,11 +244,11 @@
     // Doksi: csak akkor írjuk, ha nincs süti, VAGY az URL fbclid-je eltér a tároltól.
     // Plusz: a romlott (másodperc-alapú) bélyeget akkor is javítjuk, ha nincs új fbclid.
     if (fbclid && (!fbc || fbCookieClickId(fbc) !== fbclid || fbCookieMalformed(fbc))) {
-      fbc = "fb.1." + now + "." + fbclid;
+      fbc = fbCookieClickId(fbc) === fbclid && repairLegacyFbc(fbc) || "fb.1." + now + "." + fbclid;
       writeCookie("_fbc", fbc, 90);
     } else if (fbc && fbCookieMalformed(fbc)) {
-      fbc = "fb.1." + now + "." + fbCookieClickId(fbc);
-      writeCookie("_fbc", fbc, 90);
+      fbc = repairLegacyFbc(fbc);
+      writeCookie("_fbc", fbc, fbc ? 90 : 0);
     }
     return { fbp: fbp, fbc: fbc, externalId: externalId };
   }
@@ -260,7 +268,7 @@
   // A kettő két külön rendszer kulcsa — a Metáé a Woo-ID, a GA4-é a beszédes slug.
   var META_CONTENT_ID = EN
     ? { planner: "46", autopilot: "49", premium: "615", autopilot_trial: "625" }
-    : { planner: "2342", autopilot: "2344", autopilot_trial: "5809" };
+    : { planner: "2342", autopilot: "2344", autopilot_trial: "5809", premium: "6091" };
   // A GOMBON ÁLLÓ href az igazság, nem a konstans: a ciklusváltó átírja (havi 2342 →
   // éves 2343), és a kosárba is az kerül — ugyanaz az elv, mint a `checkoutTarget`-nél.
   // A konstans csak ott kell, ahol nincs pénztár-href (anchor-CTA, `ViewContent`);
@@ -348,16 +356,24 @@
       fbc: metaCookies.fbc || undefined
     };
   }
+  function cleanStoredAttribution(value) {
+    var out = {};
+    if (!value || typeof value !== "object" || Array.isArray(value)) return out;
+    ATTR_KEYS.concat(["first_seen", "last_seen", "landing_page", "referrer", "gm_source_original", "gm_attrib_normalized"]).forEach(function (key) {
+      if (typeof value[key] === "string") out[key] = cleanAttributionValue(value[key]);
+    });
+    return out;
+  }
   function readStoredAttribution() {
     var raw = readCookie(ATTR_COOKIE);
     if (!raw && window.localStorage) {
       try { raw = localStorage.getItem(ATTR_COOKIE) || ""; } catch (e) {}
     }
     if (!raw) return {};
-    try { return JSON.parse(raw) || {}; } catch (e) { return {}; }
+    try { return cleanStoredAttribution(JSON.parse(raw)); } catch (e) { return {}; }
   }
   function writeStoredAttribution(value) {
-    var json = JSON.stringify(value || {});
+    var json = JSON.stringify(cleanStoredAttribution(value));
     writeCookie(ATTR_COOKIE, json, 90);
     if (window.localStorage) {
       try { localStorage.setItem(ATTR_COOKIE, json); } catch (e) {}
@@ -1742,7 +1758,8 @@
       });
       var value = PRICE[PKG_DEFAULT] || 0;
       var items = Object.keys(PKG).map(function (k) {
-        return { item_id: PKG[k].itemId, item_name: "Az AI csapatod - " + PKG[k].label, item_brand: "GENmarketer", item_category: "AI marketing training", price: PRICE[k] || 0, quantity: 1 };
+        var cta = document.querySelector('[data-gm-cta="pricing-' + k.replace(/_/g, "-") + '"]');
+        return { item_id: PKG[k].itemId, item_name: "Az AI csapatod - " + PKG[k].label, item_brand: "GENmarketer", item_category: "AI marketing training", price: offerValue(k, cta), quantity: 1 };
       });
       var eid = eventId("view_content", PKG_DEFAULT);
       // 2026-08-07: a landoló EGYETLEN Meta tölcsér-eseménye a `ViewContent` lett
@@ -1751,7 +1768,7 @@
       // `contents` tömb per csomag (a Dynamic Ads ezt kéri, nem csak a `content_ids`-t),
       // `num_items`, és a teljes első-fél azonosító-hármas (external_id/fbp/fbc).
       var contents = Object.keys(PKG).map(function (k, i) {
-        return { id: ids[i], quantity: 1, item_price: PRICE[k] || 0 };
+        return { id: ids[i], quantity: 1, item_price: items[i].price };
       });
       if (typeof window.fbq === "function") {
         window.fbq("track", "ViewContent", {
