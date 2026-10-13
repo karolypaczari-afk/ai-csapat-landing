@@ -3,6 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Böngészőhiba-jelző (17/#3133). SZÁNDÉKOSAN az első futó script: csak az a hiba
+       kapható el, ami a figyelő felállása UTÁN keletkezik. Inline, mert egy külön fájl
+       egy render-blokkoló kéréssel többet jelentene a kritikus úton. Saját végpontra
+       küld (api/hu-client-error.php), harmadik félnek nem; sütit nem ír, URL-paramétert
+       (click-ID, UTM) nem küld. Csak a SAJÁT originről származó hibát jelenti — a
+       GA/Meta/Clarity/OptiMonk és a böngésző-bővítmények hibái zaj. -->
+  <!-- gm:client-errors:start -->
+  <script>
+    (function () {
+      var h = location.hostname;
+      if (h === 'localhost' || h === '127.0.0.1') return;
+      var ENDPOINT = '/api/hu-client-error.php', MAX = 5, sent = 0, seen = {};
+      var ORIGIN = location.protocol + '//' + location.host;
+      function own(u) { return typeof u === 'string' && u.indexOf(ORIGIN + '/') === 0; }
+      function path(u) { return String(u || '').split(/[?#]/)[0].slice(ORIGIN.length); }
+      function clip(s, n) { s = String(s == null ? '' : s); return s.length > n ? s.slice(0, n) : s; }
+      function stack(e) { return clip(String((e && e.stack) || '').replace(/[?#][^\s)]*/g, ''), 1500); }
+      function send(r) {
+        var key = r.kind + '|' + r.message + '|' + r.source + '|' + r.line;
+        if (sent >= MAX || seen[key]) return;
+        seen[key] = 1; sent++;
+        r.page = location.pathname;
+        var body = JSON.stringify(r);
+        // A jelző saját hibáját nincs hová jelenteni, és a látogató oldalát nem
+        // törheti el — ezért, és csak ezért, nyeli le.
+        try {
+          if (navigator.sendBeacon && navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'text/plain' }))) return;
+          if (window.fetch) fetch(ENDPOINT, { method: 'POST', body: body, keepalive: true, credentials: 'omit', headers: { 'Content-Type': 'text/plain' } })['catch'](function () {});
+        } catch (e) {}
+      }
+      window.addEventListener('error', function (ev) {
+        var t = ev.target;
+        if (t && t !== window && t.tagName) {
+          var src = t.currentSrc || t.src || t.href || '';
+          if (own(src)) send({ kind: 'resource', message: t.tagName.toLowerCase() + ' nem töltődött be', source: path(src), line: 0, col: 0, stack: '' });
+          return;
+        }
+        if (!own(ev.filename)) return;
+        send({ kind: 'error', message: clip(ev.message, 300), source: path(ev.filename), line: ev.lineno | 0, col: ev.colno | 0, stack: stack(ev.error) });
+      }, true);
+      // Verem nélküli rejection (csupasz szöveg, üres Safari-verem) SZÁNDÉKOSAN kimarad:
+      // nem dönthető el, kié, és a harmadik fél tagjei ilyet bőven termelnek.
+      window.addEventListener('unhandledrejection', function (ev) {
+        var s = stack(ev.reason);
+        if (s.indexOf(ORIGIN + '/') === -1) return;
+        send({ kind: 'rejection', message: clip((ev.reason && ev.reason.message) || ev.reason, 300), source: '', line: 0, col: 0, stack: s });
+      });
+      // Az app.js szándékosan elkapott, de jelentendő hibáihoz (pl. a 3D-hero).
+      window.gmReportError = function (err, tag) {
+        send({ kind: 'caught', message: clip(tag + ': ' + ((err && err.message) || err), 300), source: '', line: 0, col: 0, stack: stack(err) });
+      };
+    })();
+  </script>
+  <!-- gm:client-errors:end -->
   <title>Az AI csapatod – 28 AI-marketinges Claude-ba és ChatGPT-be</title>
   <meta name="description" content="28 AI-marketinges magyarul a Claude-odban vagy ChatGPT-dben: Meta és Google Ads, landoló, e-mail-sorozat a tervtől az élesítésig. 3 napig 990 Ft-ért.">
   <!-- A három `max-*` direktíva nem kozmetika: alapértelmezésben a Google a snippet
@@ -254,7 +308,7 @@
        az első paint után (`loadGsap`), üresjáratban; ha nem érkezik meg, az oldal ép. -->
   <script defer src="/js/data.js?v=20261005-qa"></script>
   <script defer src="/js/dashboards.js?v=20261005-qa"></script>
-  <script defer src="/js/app.js?v=20261005-qa"></script>
+  <script defer src="/js/app.js?v=20261013-ce"></script>
 </head>
 <body>
 <div class="gm-lp">

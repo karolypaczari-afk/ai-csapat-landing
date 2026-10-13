@@ -1666,6 +1666,13 @@
   var dynImport = null;
   try { dynImport = new Function("u", "return import(u);"); } catch (e) { dynImport = null; }
 
+  // A 3D-hero hibája nem töri az oldalt (a statikus háttér marad), ezért elkapjuk —
+  // de a látogató böngészőjében hal meg, tehát a jelzőn át jelentjük is (17/#3133).
+  function heroFailed(e) {
+    console.warn("hero3d nem indult:", e);
+    if (typeof window.gmReportError === "function") window.gmReportError(e, "hero3d");
+  }
+
   function maybeHero() {
     if (!dynImport) return;
     var wide = window.matchMedia("(min-width: 1024px)").matches;
@@ -1680,8 +1687,8 @@
       // relatív `./hero3d.js` a DOKUMENTUMHOZ képest oldódna fel (→ `/hero3d.js`, 404).
       dynImport("/js/hero3d.js").then(function (mod) {
         window.__gmHero = mod.initHero({ canvas: canvas, agents: AGENTS, avBase: AV, en: EN });
-      })["catch"](function (e) { console.warn("hero3d nem indult:", e); });
-    } catch (e) { console.warn("hero3d nem indult:", e); }
+      })["catch"](function (e) { heroFailed(e); });
+    } catch (e) { heroFailed(e); }
   }
 
   /* ---- Boot ----
