@@ -175,7 +175,7 @@
   <link rel="preload" href="/assets/fonts/inter-var-lat.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
   <link rel="preload" href="/assets/fonts/inter-var-latext.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20261019-seats10">
+  <link rel="stylesheet" href="/css/styles.css?v=20261019-team-karoly">
   <link rel="stylesheet" href="/css/hud.css?v=20261006-p1fix2">
 
   <!-- GA4 — localhoston KI (prod paritás); éles hoston pörög.
@@ -1379,6 +1379,14 @@
   
 
   <section class="gm-section gm-section--light" id="tibor">
+    <div class="gm-container gm-team-intro">
+      <div class="gm-section-head gm-text-center gm-team-ext__head gm-reveal">
+        <span class="gm-eyebrow">Az emberek az AI mögött</span>
+        <h2 class="gm-h2">A stratéga, aki <span class="gm-grad-text">megtervezi</span></h2>
+        <p class="gm-lead">A csapat mögött 18 év marketingtapasztalat áll: Tibor segít eldönteni, merre menj, mire költs és mit mérj – hogy minden lépés bevételt hozzon, ne csak jól hangozzon.</p>
+      </div>
+    </div>
+
     <div class="gm-container gm-author">
       <figure class="gm-author__photo gm-reveal">
         <img src="/assets/img/tibor.webp" alt="Szántai Tibor, a GENmarketer alapítója" width="900" height="900" loading="lazy" decoding="async">
@@ -1396,8 +1404,56 @@
           <li><strong>3 körös</strong> HRTech-startup exitig</li>
           <li><strong>Magyarország</strong> legnagyobb e-kereskedelmi rendezvénye</li>
         </ul>
+        <div class="gm-help gm-reveal">
+          <p class="gm-help__title">Mit jelent ez neked?</p>
+          <p class="gm-help__text">Az előfizetéssel Tibor 18 év alatt csiszolt marketingszemlélete dolgozik neked: a csapattagok minden feladatnál azt nézik, mi hoz bevételt, nem azt, mi hangzik jól. Ha pedig a csapat mellé stratégia is kell – merre menj, mire költs, mit mérj –, személyesen is segít eldönteni.</p>
+        </div>
       </div>
     </div>
+
+    <!-- CSAPAT: technológiai vezető (Paczári Károly) -->
+    <div class="gm-container gm-team-ext">
+      <div class="gm-section-head gm-text-center gm-team-ext__head gm-reveal">
+        <h2 class="gm-h2">…és a technológiai vezető, aki <span class="gm-grad-text">megvalósítja</span></h2>
+        <p class="gm-lead">A stratégia mellé technológiai szakértelem is jár: Károly gondoskodik róla, hogy a csapat a te vállalkozásodban is működjön – és ha egyedi megoldás kell, személyesen is segít.</p>
+      </div>
+
+      <div class="gm-author gm-author--team gm-author--flip" id="karoly">
+        <figure class="gm-author__photo gm-reveal">
+          <img src="/assets/img/karoly.webp" alt="Paczári Károly portréja" width="800" height="800" loading="lazy" decoding="async">
+        </figure>
+        <div class="gm-author__body">
+          <h3 class="gm-h2 gm-author__name gm-reveal">Paczári Károly</h3>
+          <p class="gm-author__role gm-reveal">Komplex AI-fejlesztések · az ötlettől az átadásig</p>
+          <p class="gm-reveal">Saját SaaS termékeket építettem a nulláról a sikeres eladásig. Ebből tanultam meg: egy fejlesztés akkor ér valamit, ha a felhasználó valódi problémáját oldja meg.</p>
+          <div class="gm-help gm-reveal">
+            <p class="gm-help__title">Mit jelent ez neked?</p>
+            <p class="gm-help__text">A csapat azokon a kapcsolatokon keresztül dolgozik a fiókjaidban (Meta Ads, Google Ads, GA4, MailerLite, WordPress), amelyeket Károly épít – a jóváhagyással és a minden módosítás utáni visszaellenőrzéssel együtt, így biztonságosan. Ha pedig egyedi AI-megoldás kell – saját AI-ügynök, automatizáció, integráció –, az ötlettől az átadásig egy kézben viszi végig.</p>
+          </div>
+          <button class="gm-team-toggle" type="button" aria-expanded="false" aria-controls="karoly-more">Tapasztalat és eredmények</button>
+          <div class="gm-team-more" id="karoly-more">
+            <p class="gm-author__lead-in">Technológiai vezetőként, nemzetközi karrierem során:</p>
+            <ul class="gm-author__facts">
+              <li><strong>Számos AI-projekt</strong> sikeresen leszállítva technológiai vezetőként – AI-ügynököktől és automatizációktól az online oktatási platformig</li>
+              <li><strong>Amerikai szoftvercég</strong> termékfejlesztési igazgatójaként komplex fejlesztéseket vezettem</li>
+              <li><strong>2 cég</strong> felépítve és értékesítve, köztük egy nemzetközi SaaS platform</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="gm-team-contact gm-reveal"><strong>Egyedi AI-fejlesztés kell?</strong> Írj nekünk az <a href="mailto:info@genmarketer.hu?subject=Egyedi%20AI-megold%C3%A1s">info@genmarketer.hu</a> címre – megmondjuk, mi visz a legrövidebb úton célba.</p>
+    </div>
+    <script>
+      /* mobilon a tapasztalat-blokk lenyitható; desktopon a gomb rejtett, a tartalom mindig látszik */
+      document.querySelectorAll('.gm-team-toggle').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var open = b.getAttribute('aria-expanded') !== 'true';
+          b.setAttribute('aria-expanded', String(open));
+          document.getElementById(b.getAttribute('aria-controls')).classList.toggle('is-open', open);
+        });
+      });
+    </script>
   </section>
 
   <!-- GARANCIA -->
