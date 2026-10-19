@@ -295,7 +295,9 @@
                                      fogta meg a CI-ben: a kártya már hirdette a tíz új variációt, a licit-érték
                                      viszont hiányzott — a Meta és a Google NULLA értéken licitált volna a
                                      legdrágább csomagunkra. */
-                                  "6091": 39990, "6092": 159960, "6093": 59980, "6094": 239920, "6095": 75970, "6096": 303880, "6097": 87960, "6098": 351840, "6099": 95950, "6100": 383800 };
+                                  "6091": 39990, "6092": 159960, "6093": 59980, "6094": 239920, "6095": 75970, "6096": 303880, "6097": 87960, "6098": 351840, "6099": 95950, "6100": 383800,
+                                  /* 6–10 fő (2026-10-19, 17/#3307, `p16-landing-letszam-10.mjs`). */
+                                  "7600": 28740, "7605": 114960, "7601": 33530, "7606": 134120, "7602": 38320, "7607": 153280, "7603": 43110, "7608": 172440, "7604": 47900, "7609": 191600, "7610": 57540, "7615": 230160, "7611": 67130, "7616": 268520, "7612": 76720, "7617": 306880, "7613": 86310, "7618": 345240, "7614": 95900, "7619": 383600, "7620": 115140, "7625": 460560, "7621": 134330, "7626": 537320, "7622": 153520, "7627": 614080, "7623": 172710, "7628": 690840, "7624": 191900, "7629": 767600 };
   function offerValue(pkg, el) {
     try {
       var href = el && el.getAttribute && el.getAttribute("href");
@@ -677,16 +679,32 @@
      * deklaráció bármelyik CTA-n vagy áron, a választót ELTÁVOLÍTJUK. Egy
      * vezérlő, ami néha rossz kosarat nyit, rosszabb, mint a hiánya. */
     var seatBox = document.querySelector("[data-gm-seats]");
+    /* 6–10 fő (17/#3307): a második sor a választó ALATT, saját kapcsolóval. A
+     * teljesség-próba a két sor gombjait EGYÜTT méri: ha a 6–10 bármelyikéhez
+     * hiányzik a deklaráció, mindkettő eltűnik — fél választó nem marad. */
+    var extraBox = seatBox ? document.querySelector("[data-gm-seats-extra]") : null;
+    var extraSeg = extraBox ? extraBox.querySelector(".gm-cycle__seg") : null;
+    var extraToggle = extraBox ? extraBox.querySelector(".gm-seats-extra__toggle") : null;
+    if (extraBox && (!extraSeg || !extraToggle)) { extraBox.parentNode.removeChild(extraBox); extraBox = extraSeg = extraToggle = null; }
     var seats = "1";
+    function seatButtons() {
+      var out = [];
+      [seatBox, extraBox].forEach(function (root) {
+        if (root) root.querySelectorAll("button[data-seats]").forEach(function (b) { out.push(b); });
+      });
+      return out;
+    }
     if (seatBox) {
-      var offered = [];
-      seatBox.querySelectorAll("button[data-seats]").forEach(function (b) { offered.push(b.dataset.seats); });
+      var offered = seatButtons().map(function (b) { return b.dataset.seats; });
       var complete = offered.length > 1 && offered.every(function (n) {
         if (n === "1") return true;
         return links.every(function (a) { return !!seatEntry(a, "seatOffer", n); })
             && amounts.every(function (x) { return !!seatEntry(x, "seatPrice", n); });
       });
-      if (!complete) { if (seatBox.parentNode) seatBox.parentNode.removeChild(seatBox); seatBox = null; }
+      if (!complete) {
+        [seatBox, extraBox].forEach(function (el) { if (el && el.parentNode) el.parentNode.removeChild(el); });
+        seatBox = extraBox = extraSeg = extraToggle = null;
+      }
     }
 
     function apply(cycle) {
@@ -733,21 +751,38 @@
       signal("gm_cycle_switch", { billing_cycle: b.dataset.cycle }, { clarityKey: "billing_cycle", clarityValue: b.dataset.cycle });
     });
 
-    if (seatBox) {
-      seatBox.addEventListener("click", function (ev) {
-        var b = ev.target.closest("button[data-seats]");
-        if (!b) return;
-        seats = b.dataset.seats;
-        seatBox.querySelectorAll("button[data-seats]").forEach(function (x) {
-          var on = x.dataset.seats === seats;
-          x.classList.toggle("is-on", on);
-          x.setAttribute("aria-pressed", on ? "true" : "false");
-        });
-        seatBox.setAttribute("data-gm-seats", seats);
-        apply(box.getAttribute("data-gm-cycle") || "monthly");
-        // MIÉRT MÉRJÜK: a férőhely a legnagyobb kosárérték-emelő, és eddig
-        // semmi nem mondta meg, hányan gondolkodnak egynél több licencben.
-        signal("gm_seats_switch", { seats: seats }, { clarityKey: "seats", clarityValue: seats });
+    function pickSeats(n) {
+      seats = n;
+      seatButtons().forEach(function (x) {
+        var on = x.dataset.seats === seats;
+        x.classList.toggle("is-on", on);
+        x.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      seatBox.setAttribute("data-gm-seats", seats);
+      if (extraToggle) extraToggle.classList.toggle("is-on", Number(seats) > 5);
+      apply(box.getAttribute("data-gm-cycle") || "monthly");
+    }
+    function onSeatClick(ev) {
+      var b = ev.target.closest("button[data-seats]");
+      if (!b) return;
+      pickSeats(b.dataset.seats);
+      // MIÉRT MÉRJÜK: a férőhely a legnagyobb kosárérték-emelő, és eddig
+      // semmi nem mondta meg, hányan gondolkodnak egynél több licencben.
+      signal("gm_seats_switch", { seats: seats }, { clarityKey: "seats", clarityValue: seats });
+    }
+    if (seatBox) seatBox.addEventListener("click", onSeatClick);
+    if (extraBox) {
+      extraSeg.addEventListener("click", onSeatClick);
+      extraToggle.addEventListener("click", function () {
+        var open = extraSeg.hasAttribute("hidden");
+        if (open) extraSeg.removeAttribute("hidden"); else extraSeg.setAttribute("hidden", "");
+        extraToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        // Becsukáskor a 6–10-es választás nem maradhat láthatatlanul érvényben:
+        // a kártya ára és a kosár a rejtett gombot követné. Vissza az alapra (1 fő).
+        if (!open && Number(seats) > 5) {
+          pickSeats("1");
+          signal("gm_seats_switch", { seats: seats }, { clarityKey: "seats", clarityValue: seats });
+        }
       });
     }
   }

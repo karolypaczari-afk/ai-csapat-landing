@@ -1350,6 +1350,21 @@ figure.gm-video.gm-ws__media { position: relative; }
   .gm-arazas--tidy .gm-cycle-row .gm-cycle { grid-template-columns: minmax(0, 1fr); row-gap: 5px; width: min(100%, 14rem); }
 }
 
+/* 6–10 fő (17/#3307, 2026-10-19): a második létszámsor. A kapcsoló a választó ALATT áll,
+   nem a kapszulában — telefonon ott a hatodik gomb nem fér el. A sor `hidden`-nel indul;
+   a `.gm-cycle__seg` saját `display`-e felülírná a `hidden`-t, ezért kell a kimondott szabály. */
+.gm-seats-extra { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: -14px 0 22px; }
+.gm-seats-extra__toggle { background: none; border: 0; padding: 4px 6px; font: inherit; font-size: .85rem; font-weight: 600; color: #CFC9F5; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.gm-seats-extra__toggle:hover, .gm-seats-extra__toggle.is-on { color: #fff; }
+.gm-seats-extra__toggle::after { content: "▾"; display: inline-block; margin-left: 4px; text-decoration: none; }
+.gm-seats-extra__toggle[aria-expanded="true"]::after { content: "▴"; }
+[data-gm-seats-extra] .gm-cycle__seg[hidden] { display: none !important; }
+.gm-arazas--tidy [data-gm-seats-extra] .gm-cycle__seg { width: auto; }
+.gm-arazas--tidy [data-gm-seats-extra] .gm-cycle__seg button {
+  width: 2.4rem; height: 2.4rem; min-width: 0; padding: 0; flex: 0 0 auto;
+  display: inline-grid; place-items: center; line-height: 1;
+}
+
 /* ---- GYIK ---- */
 .gm-faq { max-width: 780px; margin-inline: auto; display: grid; gap: 0.8rem; }
 
