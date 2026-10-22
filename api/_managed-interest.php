@@ -112,7 +112,9 @@ $lead['ip_hash'] = substr(hash('sha256', $ip . '|gm-managed'), 0, 16); // raw IP
 $lead['ua']      = mb_substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 300);
 $lead['ref']     = mb_substr((string) ($_SERVER['HTTP_REFERER'] ?? ''), 0, 300);
 
-/* From here EVERY step is fail-open: our failure must not block the customer. */
+/* From here EVERY step is fail-open: our failure must not block the customer.
+   17/#3135 - but never SILENT: every swallowed failure leaves one `error_log` line
+   (no personal data), so a lost lead leaves a trace. */
 
 /* 4) JSONL log, denied to the web (it holds customer e-mail addresses). */
 try {
@@ -121,12 +123,17 @@ try {
         @mkdir($logDir, 0700, true);
     }
     @file_put_contents($logDir . '/.htaccess', "Require all denied\n");
-    @file_put_contents(
+    $written = @file_put_contents(
         $logDir . '/managed-' . gmdate('Y-m') . '.jsonl',
         json_encode($lead, JSON_UNESCAPED_UNICODE) . "\n",
         FILE_APPEND | LOCK_EX
     );
-} catch (\Throwable $e) { /* silent: does not touch the customer path */ }
+    if (false === $written) {
+        error_log('[gm-managed] lead_sink_failed sink=lead_log ts=' . $lead['ts']);
+    }
+} catch (\Throwable $e) {
+    error_log('[gm-managed] lead_sink_failed sink=lead_log ts=' . $lead['ts'] . ' error=' . get_class($e));
+}
 
 /* 5) Operator notification - the FULL submission, so nothing must be looked up. */
 try {
@@ -137,12 +144,17 @@ try {
           . $T['f_email'] . ': ' . $lead['email'] . "\n\n"
           . $T['f_goal'] . ":\n" . $lead['goal'] . "\n\n"
           . $T['received'] . ': ' . $lead['ts'] . " (UTC)\n";
-    @mail($to, $T['subject'] . $lead['company'], $body, implode("\r\n", [
+    $sent = @mail($to, $T['subject'] . $lead['company'], $body, implode("\r\n", [
         'From: GENmarketer <no-reply@genmarketer.hu>',
         'Reply-To: ' . $lead['email'],
         'Content-Type: text/plain; charset=UTF-8',
     ]));
-} catch (\Throwable $e) { /* silent */ }
+    if (true !== $sent) {
+        error_log('[gm-managed] lead_sink_failed sink=notify_mail ts=' . $lead['ts']);
+    }
+} catch (\Throwable $e) {
+    error_log('[gm-managed] lead_sink_failed sink=notify_mail ts=' . $lead['ts'] . ' error=' . get_class($e));
+}
 
 /* 6) MailerLite - only when the key is actually present. No key is NOT an error. */
 try {
@@ -174,10 +186,17 @@ try {
             ],
             CURLOPT_POSTFIELDS     => json_encode($payload, JSON_UNESCAPED_UNICODE),
         ]);
-        curl_exec($ch);
+        $resp  = curl_exec($ch);
+        $http  = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        $errno = curl_errno($ch);
         curl_close($ch);
+        if (false === $resp || $http < 200 || $http >= 300) {
+            error_log('[gm-managed] lead_sink_failed sink=mailerlite ts=' . $lead['ts'] . ' http=' . $http . ' curl_errno=' . $errno);
+        }
     }
-} catch (\Throwable $e) { /* silent */ }
+} catch (\Throwable $e) {
+    error_log('[gm-managed] lead_sink_failed sink=mailerlite ts=' . $lead['ts'] . ' error=' . get_class($e));
+}
 
 /* 7) Done. The JS renders the confirmation; the 302 serves the no-JS path. */
 $wantsJson = str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')

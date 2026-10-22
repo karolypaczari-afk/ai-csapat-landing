@@ -417,13 +417,19 @@ function gm_en_alert_admin(string $subject, string $body, bool $force = false): 
     if (!$force && is_file($lock) && (time() - (int) file_get_contents($lock)) < 900) {
         return;
     }
-    @mail(
+    $sent = @mail(
         $config['admin_email'],
         '[GENmarketer EN] ' . $subject,
         $body,
         "From: noreply@genmarketer.hu\r\nContent-Type: text/plain; charset=UTF-8\r\n"
     );
-    @file_put_contents($lock, (string) time());
+    // 17/#3135 — the throttle lock only after a sent alert: a failed mail() must not
+    // silence the next 15 minutes of alerts, and the failure itself leaves a trace.
+    if (true === $sent) {
+        @file_put_contents($lock, (string) time());
+    } else {
+        error_log('[gm-en] alert_mail_failed subject_hash=' . substr(md5($subject), 0, 12));
+    }
 }
 
 // ── Pricing ─────────────────────────────────────────────────────────────────
