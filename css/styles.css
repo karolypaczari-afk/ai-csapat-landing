@@ -1946,7 +1946,9 @@ html { scroll-padding-bottom: 5.5rem; }
 
 .gm-a2__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-top: 14px; }
 .gm-a2-card { position: relative; display: flex; flex-direction: column; background: #fff; color: var(--gm-ink); border: 1px solid var(--gm-line); border-radius: 18px; padding: 24px 22px 22px; transition: border-color .2s, box-shadow .2s; }
-.gm-a2-card.is-match { border: 2px solid var(--gm-violet); box-shadow: 0 14px 36px rgba(64, 0, 153, .28); }
+/* A kiemelés kerete gyűrű (box-shadow), nem vastagabb border: így a kiemelt kártya tartalma sem csúszik el,
+   és a CTA-k soronként egy vonalban maradnak (17/#3644: az Ingyenes is lehet kiemelt). */
+.gm-a2-card.is-match { border-color: var(--gm-violet); box-shadow: 0 0 0 1px var(--gm-violet), 0 14px 36px rgba(64, 0, 153, .28); }
 .gm-a2-card.is-out { background: #FBFAFE; }
 .gm-a2-card__badge { position: absolute; top: -12px; left: 20px; font-size: .75rem; font-weight: 700; color: #fff; background: var(--a2-acc); padding: 3px 10px; border-radius: 999px; visibility: hidden; }
 .gm-a2-card.is-match .gm-a2-card__badge { visibility: visible; }
@@ -1978,9 +1980,27 @@ html { scroll-padding-bottom: 5.5rem; }
     .gm-a2__cards { grid-template-rows: repeat(9, auto); row-gap: 0; }
     .gm-a2-card { display: grid; grid-row: span 9; grid-template-rows: subgrid; row-gap: 0; }
     .gm-a2-card__cta { margin-top: 0; align-self: start; }
+    /* Az Ingyenes gomb-sora is a sáv tetejére: alulra igazítva a keretes gombok 2 px-ével lejjebb csúszna (17/#3644). */
+    .gm-a2-card .gm-a2-card__ctas { margin-top: 0; align-self: start; }
     .gm-a2-card__inc { align-self: start; }
   }
 }
+/* Ingyenes csomag (17/#3644 I6): csak a `gm-a2__cards--free` módosítóval él, nélküle a három kártya változatlan.
+   Négy oszlop 1240 px fölött; 1001–1239 px között 2 × 2 (két 9 soros sáv); 1000 px alatt a meglévő egyoszlopos nézet. */
+@media (min-width: 1240px) { .gm-a2__cards--free { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1001px) and (max-width: 1239px) {
+  .gm-a2__cards--free { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @supports (grid-template-rows: subgrid) {
+    .gm-a2__cards--free { grid-template-rows: repeat(18, auto); }
+    .gm-a2__cards--free > .gm-a2-card:nth-child(n+3) { margin-top: 26px; }
+  }
+}
+.gm-a2-card__ctas { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+.gm-a2-card__ctas .gm-a2-card__cta { margin-top: 0; }
+.gm-a2-card__note { margin: 10px 0 0; font-size: .76rem; color: var(--a2-mute); }
+.gm-a2__resfree { color: var(--a2-acc); font-weight: 700; font-size: .88rem; text-align: center; text-underline-offset: 3px; }
+.gm-a2__resfree[hidden], .gm-a2__rescta[hidden] { display: none; }
+.gm-a2-cmp td[data-a2-free-col], .gm-a2-cmp thead th[data-a2-free-col] { text-align: center; }
 .gm-a2-btn--out { background: #fff; color: var(--a2-acc); border: 1.5px solid #D9D0F2; box-shadow: none; }
 .gm-a2-btn--out:hover { background: var(--a2-tint); }
 .gm-a2-card__inc { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gm-line); font-size: .88rem; }

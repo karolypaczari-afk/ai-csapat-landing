@@ -845,6 +845,20 @@
     });
   }
 
+  /* Ingyenes csomag (17/#3644 I6): az „Ingyen kezdem” link 0 Ft-os rendelésre visz, ezért SZÁNDÉKOSAN nem
+   * `data-gm-cta`/`data-gm-checkout`: se `begin_checkout`, se `add_to_cart`, se Meta `InitiateCheckout`, se
+   * Ads-konverzió, és semmi `value`. Csak egy saját, érték nélküli jel megy (`gm_free_start`, a helyével), a
+   * regisztrációt a pénztár köszönőoldala méri (docs/69 F19). Az UTM/gclid a linkre kerül, mint a pénztár-CTA-kra. */
+  function wireFreeCtas() {
+    document.querySelectorAll("a[data-gm-free]").forEach(function (a) {
+      var href = a.getAttribute("href");
+      if (href) a.setAttribute("href", withAttribution(href));
+      a.addEventListener("click", function () {
+        signal("gm_free_start", { free_cta: a.getAttribute("data-gm-free") }, { clarityKey: "free_start", clarityValue: a.getAttribute("data-gm-free") });
+      });
+    });
+  }
+
   /* ── A2 csomagkereső és kártyák (17/#3611 S8) ──────────────────────────────
    * A statikus markup (generált, 1 fő · 1 cég · havi) JS nélkül is teljes ajánlat; ez a
    * függvény csak az állapotot követi. Döntés: a legolcsóbb megfelelő csomag, de ha egy
@@ -854,13 +868,17 @@
     var A = a2Data(), root = document.querySelector("[data-gm-a2]");
     if (!A || !root) return;
     var NB = "\u00a0";
-    var st = { fo: 1, ceg: 1, kreativ: 0, csapatfunk: 0, cycle: "havi" };
+    // `act` (17/#3644, Károly 2026-10-31): „Elemezzen, javasoljon” → az Ingyenes is szóba jön; alapból ez áll.
+    var st = { fo: 1, ceg: 1, act: A.free ? "elemez" : "vegrehajt", kreativ: 0, csapatfunk: 0, cycle: "havi" };
     var six = A.cycles["6havi"];
     var MAIL = "mailto:info@genmarketer.hu?subject=Egyedi%20aj%C3%A1nlat%20-%20AI-csapat";
     var CTA_NAME = { pro: "Pro előfizetés", premium: "Prémium előfizetés", team: "Team előfizetés" };
     function ft(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, NB) + NB + "Ft"; }
     function lvl(k) { return A.order.indexOf(k) + 1; }
     function custom() { return st.fo > A.maxSeats || st.ceg > A.maxCompanies; }
+    // Ingyenes ajánlás: 1 fő, 1 cég, csak elemzés, kép/videó és riport nélkül (a generátor `freeRecommended`-je).
+    function freeFit() { return !!(A.free && A.free.seats > 0 && A.free.companies > 0) && st.fo <= A.free.seats && st.ceg <= A.free.companies; }
+    function freeRec() { return !custom() && freeFit() && st.act === "elemez" && !st.kreativ && !st.csapatfunk; }
     function gaps(k) {
       var out = [];
       if (lvl(k) < 2 && st.kreativ) out.push("Nincs benne hirdetéskép, videó és beépített webkutatás");
@@ -900,7 +918,7 @@
       return box ? (box.getAttribute("data-a2-tier") || box.getAttribute("data-a2-col")) : null;
     }
     function render() {
-      var cu = custom(), m = match();
+      var cu = custom(), m = match(), fr = freeRec();
       root.querySelectorAll("[data-a2-input]").forEach(function (inp) {
         var k = inp.getAttribute("data-a2-input");
         if (document.activeElement !== inp) inp.value = String(st[k]);
@@ -909,7 +927,7 @@
         var card = root.querySelector('[data-a2-tier="' + k + '"]');
         if (!card) return;
         var r = q(k), g = gaps(k);
-        card.classList.toggle("is-match", k === m);
+        card.classList.toggle("is-match", k === m && !fr);
         card.classList.toggle("is-out", g.length > 0);
         var why = card.querySelector("[data-a2-why]");
         if (why) {
@@ -938,12 +956,33 @@
         if (!k) return;
         setCta(a, k);
         if (a.closest("[data-a2-tier]")) {
-          var on = k === m;
+          var on = k === m && !fr;
           a.classList.toggle("gm-btn--primary", on);
           a.classList.toggle("gm-a2-btn--out", !on);
         }
       });
-      root.querySelectorAll("[data-a2-col]").forEach(function (c) { c.classList.toggle("is-match", c.getAttribute("data-a2-col") === m); });
+      root.querySelectorAll("[data-a2-col]").forEach(function (c) { c.classList.toggle("is-match", c.getAttribute("data-a2-col") === m && !fr); });
+      root.querySelectorAll("[data-a2-free-col]").forEach(function (c) { c.classList.toggle("is-match", fr); });
+      // Ingyenes (17/#3644): ajánlott, ha 1 fő, 1 cég, csak elemzés, kép/videó és riport nélkül (Károly, 2026-10-31,
+      // terv: A2-kereso-felul_2026-10-29_5); különben a kártya megmondja, mi hiányzik belőle.
+      if (A.free && A.free.seats > 0 && A.free.companies > 0 && A.free.whyOk && A.free.whyNo) {
+        var fg = [];
+        if (!freeFit()) fg.push(A.free.whyNo);
+        if (st.act !== "elemez" && A.free.gapAct) fg.push(A.free.gapAct);
+        if (st.kreativ) fg.push("Nincs benne hirdetéskép, videó és beépített webkutatás");
+        if (st.csapatfunk) fg.push("Nincs benne ütemezett riport és konzultáció");
+        var fcard = root.querySelector("[data-a2-free]");
+        if (fcard) { fcard.classList.toggle("is-out", fg.length > 0); fcard.classList.toggle("is-match", fr); }
+        var fwhy = root.querySelector("[data-a2-free-why]");
+        if (fwhy) {
+          fwhy.classList.toggle("is-no", fg.length > 0);
+          fwhy.innerHTML = !fg.length
+            ? '<span class="gm-a2-ic gm-a2-ic--ok" aria-hidden="true">✓</span><span><b>' + esc(A.free.whyOk) + "</b></span>"
+            : '<span class="gm-a2-ic gm-a2-ic--no" aria-hidden="true">✕</span><span><b>Ehhez nem elég</b><span class="gm-a2-card__gaps">' + fg.map(function (x) { return esc(x); }).join("<br>") + "</span></span>";
+        }
+        var falt = root.querySelector("[data-a2-free-alt]");
+        if (falt) falt.hidden = !freeFit() || cu || fr;
+      }
       var r = q(m), T = A.tiers[m];
       var set = function (sel, html) { var x = root.querySelector(sel); if (x) x.innerHTML = html; };
       set("[data-a2-rname]", cu ? "Egyedi ajánlat" : esc(T.label));
@@ -952,12 +991,23 @@
       set("[data-a2-rbilled]", cu ? "e-mailben küldünk ajánlatot" : st.cycle === "6havi" ? "6 havonta " + ft(r.total) + " egyben" : "havi számlázás");
       set("[data-a2-radd]", cu ? A.maxSeats + " főnél vagy " + A.maxCompanies + " cégnél több" : esc(extraText(m, r)));
       var save = cu ? 0 : r.monthly * (six.months - six.multiplier);
-      set("[data-a2-save]", !save ? "6 havi fizetéssel minden csomag 33%-kal olcsóbb."
+      set("[data-a2-save]", !save ? "6 havi fizetéssel minden fizetős csomag 33%-kal olcsóbb."
         : st.cycle === "6havi" ? "A " + esc(T.label) + " csomagon 6 havonta <b>" + ft(save) + "-ot</b> spórolsz."
         : "6 havi fizetéssel a " + esc(T.label) + " csomagon <b>" + ft(save) + "-ot</b> spórolsz.");
       var rc = root.querySelector("a[data-a2-rcta]");
-      if (rc) setCta(rc, m, rc.querySelector("[data-a2-rcta-t]"));
-      root.setAttribute("data-a2-state", [st.fo, st.ceg, st.kreativ, st.csapatfunk, st.cycle, m, cu ? "custom" : "list"].join("|"));
+      if (rc) { setCta(rc, m, rc.querySelector("[data-a2-rcta-t]")); rc.hidden = fr; }
+      var rcf = root.querySelector("a[data-a2-rcta-free]"), rtr = root.querySelector("a[data-a2-rtrial]");
+      if (rcf) rcf.hidden = !fr;
+      if (rtr) rtr.hidden = !fr;
+      if (fr) {
+        set("[data-a2-rname]", esc(A.free.label || "Ingyenes"));
+        set("[data-a2-rtotal]", ft(A.free.price || 0));
+        set("[data-a2-rper]", "/hó");
+        set("[data-a2-rbilled]", esc(A.free.billed || ""));
+        set("[data-a2-radd]", "");
+        set("[data-a2-save]", "6 havi fizetéssel minden fizetős csomag 33%-kal olcsóbb.");
+      }
+      root.setAttribute("data-a2-state", [st.fo, st.ceg, st.act, st.kreativ, st.csapatfunk, st.cycle, fr ? "free" : m, cu ? "custom" : "list"].join("|"));
     }
     function setNum(k, v, why) {
       var max = k === "fo" ? A.maxSeats + 1 : A.maxCompanies + 1;
@@ -986,7 +1036,7 @@
       if (!chip) return;
       var g = chip.closest("[data-a2-q]"), qk = g.getAttribute("data-a2-q"), v = chip.getAttribute("data-v");
       g.querySelectorAll("button[data-v]").forEach(function (b) { b.setAttribute("aria-pressed", b === chip ? "true" : "false"); });
-      var val = qk === "cycle" ? v : Number(v);
+      var val = qk === "cycle" || qk === "act" ? v : Number(v);
       if (st[qk] === val) return;
       st[qk] = val;
       render();
@@ -2153,6 +2203,7 @@
     wireWorkstation();
     wireFilters();
     wireCtas();
+    wireFreeCtas();
     wireA2Pricing();
     wireBillingCycle();
     wireManagedForm();
