@@ -42,72 +42,94 @@
     autopilot: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=49&attribute_billing-period=Monthly",
     premium: "https://vip.genmarketer.eu/checkout/?add-to-cart=614&variation_id=615&attribute_billing-period=Monthly&attribute_seats=1",
     autopilot_trial: "https://vip.genmarketer.eu/checkout/?add-to-cart=48&variation_id=625&attribute_billing-period=Monthly%2C+3-day+trial&attribute_seats=1"
-  } : {
-    // 2026-08-03 óta az 1992/1993 `variable-subscription`: EGY termék kezeli a havi
-    // ÉS az éves ciklust (Károly döntése; a két külön éves terméket, a 2320/2321-et
-    // ő maga vezette ki). A ciklus VARIÁCIÓ, ezért a link nem lehet csupasz: a
-    // `?add-to-cart=1992` variáció NÉLKÜL semmit nem tesz a kosárba (élőben mérve) —
-    // a Woo a terméklapra irányít. A markup a HAVI variációt viseli, az évest a
-    // ciklusváltó írja rá (`data-yearly-href`).
-    //   1992 → 2342 Havi 9 990 Ft/hó · 2343 Éves 99 900 Ft/év
-    //   1993 → 2344 Havi 19 990 Ft/hó · 2345 Éves 199 900 Ft/év
-    // Az attribútum-SLUG ékezet nélküli (a WP `sanitize_title()`-je transzliterál),
-    // az ÉRTÉK viszont ékezetes, ezért URL-kódolva megy. Rossz slug nem 404-et adna,
-    // hanem némán a HAVI (alapértelmezett) variációt tenné a kosárba.
-    //
-    // ☠️ 2026-08-08 — A RÉGI `?add-to-cart=<szülő>&variation_id=<v>` FORMA ELDOBTA A
-    //    KAMPÁNY-PARAMÉTEREKET. Nem a variációs termék hibája, és nem a WooCommerce-é
-    //    (`woocommerce_cart_redirect_after_add = no`): az 1992/1993 terméken rajta van a
-    //    `cartflows_redirect_flow_id` meta, ezért a CartFlows a
-    //    `woocommerce_add_to_cart_redirect` szűrőn (prio 99) `get_permalink()`-ből ÚJ
-    //    URL-t épít — és egyetlen eredeti query paramétert sem visz át. Mérve:
-    //    `?add-to-cart=1992&variation_id=2342` → 302 → `/penztar/` query NÉLKÜL, míg
-    //    a CartFlows-meta NÉLKÜLI termék `?add-to-cart=` → 200. Vagyis TERMÉK-BEÁLLÍTÁS, nem
-    //    terméktípus-viselkedés.
-    //
-    //    Következmény: a WooCommerce rendelés-attribúciója (sourcebuster, URL-ből
-    //    dolgozik) a hirdetésből érkező vevőt is `referral`-nak látta — 7 rendelésből
-    //    5-öt. (A Meta `fbc`-jét ez NEM érintette: az a `.genmarketer.hu`-scope-os
-    //    sütiben él, és élő szondával igazoltan átér a pénztár-aldomainre.)
-    //
-    //    A CartFlows NATÍV formája (`?wcf-add-to-cart=<VARIÁCIÓ-ID>`) meg sem hívja a Woo
-    //    add-to-cart handlerét → nincs redirect, a paraméterek megmaradnak. A variáció
-    //    SAJÁT ID-jét kell megadni, nem a szülőét. Mind a négy variáció élesben igazolva:
-    //    200 + a HELYES ár a kosárban (2342→9 990/hó · 2343→39 960/6 hó · 2344→19 990/hó · 2345→79 960/6 hó).
-    //
-    planner:   "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2342&wcf-qty=1",
-    autopilot: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=2344&wcf-qty=1",
-    // 3 napos, 990 Ft-os próba (2026-09-10). SAJÁT variáció (5809), nem a 2344:
-    // a Pro kártyán a próba-gomb MELLETT ott marad a teljes árú „Előfizetek" gomb,
-    // tehát a két ajánlatnak két külön kosár-cél kell. A variáció: 990 Ft egyszeri
-    // díj + 3 nap próba → 72 óra múlva 19 990 Ft/hó, 1 fő. A ciklus-/létszámváltó
-    // SZÁNDÉKOSAN nem nyúl hozzá: a szelektora `data-yearly-href`-et is megkövetel,
-    // és a próba-gombon az nincs — így a 990-et kosárba tevő mindig az 1 fiókos
-    // havi Pro-ra fut ki, bármit is állított be előtte a kártyán.
-    autopilot_trial: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=5809&wcf-qty=1",
-    /*
-     * ☠️ A PRÉMIUM BEJEGYZÉS NEM KOZMETIKA — NÉLKÜLE ELVÉSZ A KAMPÁNY-ATTRIBÚCIÓ
-     * (mérve 2026-09-18, Woo 6090).
-     *
-     * A `wireCtas()` CSAK akkor írja rá a hrefre a `withAttribution()`-t (és csak
-     * akkor fogja el a kattintást), ha a `data-gm-checkout` kulcsa ITT szerepel.
-     * Kulcs nélkül a gomb működik — a böngésző követi a markupban álló hrefet —,
-     * de UTM, `gclid`, `fbp` és `external_id` NÉLKÜL. Élő mérés a hiányzó
-     * bejegyzéssel, `?utm_source=teszt&utm_medium=cpc&gclid=ABC123`-mal betöltve:
-     *
-     *   pricing-planner   → …wcf-add-to-cart=2342…&gclid=ABC123&utm_source=teszt&fbp=…
-     *   pricing-premium   → …wcf-add-to-cart=6091&wcf-qty=1          ← CSUPASZ
-     *
-     * Vagyis pontosan a 2026-08-08-i incidens osztálya (7 rendelésből 5 `referral`),
-     * csak más okból. ⚠ A rés a LEGGYAKORIBB állapotot érinti: a ciklus-/létszámváltó
-     * `apply()`-ja utólag rárakja az attribúciót, tehát aki hozzányúl a kapcsolóhoz,
-     * annál helyreáll — aki alapállapotban kattint, annál nem.
-     */
-    premium: "https://tudastar.genmarketer.hu/penztar/?wcf-add-to-cart=6091&wcf-qty=1"
-  };
+  } : a2Checkout();
+  /* ── A2 árazás (17/#3611 S8, docs/67 §3.1, §4.5, §4.10) ─────────────────────
+   *
+   * A magyar ág MINDEN ára, plafonja és termék-ID-je a generált `js/a2-pricing.js`-ből
+   * (`window.GM_A2`) jön, ami a `_dev/pricing/ai-csapat-a2.json` SSOT-ból készül
+   * (`node _dev/build-landing-a2.mjs --write`, kapu: `--check`). Itt kézzel írt ár nincs.
+   *
+   * A pénztár-cél a WooCommerce SAJÁT megosztható linkje:
+   *   https://<host>/checkout-link/?products=<csomag fő-szám szerinti variációja>:1,<Extra cég>:<n>
+   * A CartFlows `wcf-add-to-cart` formája (2026-08-08, az UTM-vesztés javítása) EGY terméket
+   * tud; az A2-kosár két sor. Az UTM / click-id / fbp megmaradását a stagingen az M1 méri
+   * (docs/67 §10) — addig ez NEM bizonyított, csak a `withAttribution` írja rá a linkre.
+   *
+   * Az ár-képlet UGYANAZ, mint a `_dev/validate-a2-pricing.mjs` `price()`-é és a generátor
+   * `quote()`-ja: alapdíj + max(0, fő − benne) × fő-ár + max(0, cég − benne) × cég-ár; 6 havi = 4×.
+   * A `tests/a2-calculator.mjs` minden állásra a generátorral veti össze. */
+  function a2Data() { return !EN && window.GM_A2 && window.GM_A2.tiers ? window.GM_A2 : null; }
+  function a2Quote(k, fo, ceg, cycle) {
+    var A = a2Data(), t = A.tiers[k];
+    var s = Math.max(fo, t.minSeats), c = Math.max(ceg, t.includedCompanies);
+    var xs = Math.max(0, s - t.includedSeats), xc = Math.max(0, c - t.includedCompanies);
+    var monthly = t.base + xs * A.seatPrice + xc * A.companyPrice;
+    return { key: k, seats: s, companies: c, xSeats: xs, xCompanies: xc, monthly: monthly, total: monthly * A.cycles[cycle].multiplier };
+  }
+  function a2Link(k, fo, ceg, cycle) {
+    var A = a2Data(), q = a2Quote(k, fo, ceg, cycle);
+    var parts = [A.tiers[k].variations[cycle][q.seats] + ":1"];
+    if (q.xCompanies > 0) parts.push(A.extra.variations[cycle] + ":" + q.xCompanies);
+    return "https://" + A.host + A.checkoutPath + "?products=" + parts.join(",");
+  }
+  function a2TrialLink() { var A = a2Data(); return "https://" + A.host + A.checkoutPath + "?products=" + A.trial.id + ":1"; }
+  function a2TrialOk(fo, ceg, cycle) { var tr = a2Data().trial; return fo <= tr.seats && ceg <= tr.companies && cycle === tr.cycle; }
+  function a2Each(fn) { var A = a2Data(); if (A) A.order.forEach(function (k) { fn(k, A.tiers[k], A); }); return A; }
+  function a2Checkout() {
+    var out = {};
+    var A = a2Each(function (k, t) { out[k] = a2Link(k, t.minSeats, t.includedCompanies, "havi"); });
+    if (A) out[A.trial.tier + "_trial"] = a2TrialLink();
+    return out;
+  }
+  function a2Prices() {
+    var out = {};
+    var A = a2Each(function (k, t) { out[k] = t.base; });
+    if (A) out[A.trial.tier + "_trial"] = A.trial.fee;
+    return out;
+  }
+  function a2ContentIds() {
+    var out = {};
+    var A = a2Each(function (k, t) { out[k] = String(t.variations.havi[t.minSeats]); });
+    if (A) out[A.trial.tier + "_trial"] = String(A.trial.id);
+    return out;
+  }
+  function a2Values() {
+    var out = {};
+    var A = a2Each(function (k, t) {
+      Object.keys(t.variations).forEach(function (c) {
+        Object.keys(t.variations[c]).forEach(function (s) { out[t.variations[c][s]] = t.prices[c][s]; });
+      });
+    });
+    if (A) {
+      Object.keys(A.extra.variations).forEach(function (c) { out[A.extra.variations[c]] = A.extra.prices[c]; });
+      // A próba értéke az ELSŐ terhelés (990), nem a 3 nap utáni havidíj: a licit a mai pénzt kapja.
+      out[A.trial.id] = A.trial.fee;
+    }
+    return out;
+  }
+  function a2IsExtra(id) {
+    var A = a2Data();
+    if (!A) return false;
+    return Object.keys(A.extra.variations).some(function (c) { return String(A.extra.variations[c]) === String(id); });
+  }
+  /* A `/checkout-link/` `products` paraméterének sorai: [{ id, qty }]. Nincs ilyen param → null
+   * (az EN ág és minden régi link útja így bájtra a régi marad). */
+  function a2Lines(el) {
+    try {
+      var href = el && el.getAttribute && el.getAttribute("href");
+      if (!href) return null;
+      var p = new URL(href, location.href).searchParams.get("products");
+      if (!p) return null;
+      var lines = p.split(",").map(function (pair) {
+        var x = pair.split(":");
+        return { id: String(x[0] || "").trim(), qty: parseInt(x[1] == null ? "1" : x[1], 10) || 0 };
+      }).filter(function (l) { return l.id && l.qty > 0; });
+      return lines.length ? lines : null;
+    } catch (e) { return null; }
+  }
   var GA4_ID = "G-1EV18K1256";
   var ADS_ADD_TO_CART_SEND_TO = "AW-18242534961/ygdLCJ_J6sccELH82_pD";
-  var PRICE = EN ? { planner: 29, autopilot: 59, premium: 119, autopilot_trial: 3 } : { planner: 9990, autopilot: 19990, autopilot_trial: 990, premium: 39990 };
+  var PRICE = EN ? { planner: 29, autopilot: 59, premium: 119, autopilot_trial: 3 } : a2Prices();
   var CURRENCY = EN ? "EUR" : "HUF";
   /* ── KI A TULAJDONOSA A TÖLCSÉR-ESEMÉNYNEK: a landoló vagy a pénztár? ─────────
    *
@@ -144,15 +166,19 @@
     premium: { label: "Premium subscription", itemId: "ai-csapatod-en-elofizetes-premium" },
     autopilot_trial: { label: "Pro 3-day trial", itemId: "ai-csapatod-en-elofizetes-autopilot-trial" }
   } : {
-    planner:   { label: "Standard előfizetés",   itemId: "ai-csapatod-elofizetes-planner" },
-    autopilot: { label: "Pro előfizetés", itemId: "ai-csapatod-elofizetes-autopilot" },
+    // A2 (17/#3611 S8, docs/67 §4.10): új `item_id`-k, hogy az A2 sorai ne olvadjanak a régi
+    // Standard/Pro/Prémium sorokba. A fő-szám a variáció (a Meta `content_ids`-ben látszik),
+    // az Extra cég külön tétel (`A2_EXTRA_ITEM`), valós darabszámmal.
+    pro: { label: "Pro előfizetés", itemId: "ai-csapatod-a2-pro" },
+    premium: { label: "Prémium előfizetés", itemId: "ai-csapatod-a2-premium" },
+    team: { label: "Team előfizetés", itemId: "ai-csapatod-a2-team" },
     // KÜLÖN `item_id`: a próba más árú és más ajánlat, mint a teljes árú Pro — egy
     // közös azonosító a 990-et és a 19 990-et egyetlen sorba olvasztaná, és a
     // „próba → fizető" arány, a valódi KPI, mérhetetlenné válna.
-    autopilot_trial: { label: "Pro előfizetés – 3 napos próba", itemId: "ai-csapatod-elofizetes-autopilot-proba" },
-    premium: { label: "Prémium előfizetés", itemId: "ai-csapatod-elofizetes-premium" }
+    pro_trial: { label: "Pro előfizetés – 3 napos próba", itemId: "ai-csapatod-a2-pro-proba" }
   };
-  var PKG_DEFAULT = "planner";
+  var PKG_DEFAULT = EN ? "planner" : "pro";
+  var A2_EXTRA_ITEM = { label: "Extra cég", itemId: "ai-csapatod-a2-extra-ceg" };
   var ATTR_COOKIE = "gm_ads_attrib";
   var META_EXT_COOKIE = "gm_meta_ext_id";
   var ATTR_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
@@ -268,7 +294,7 @@
   // A kettő két külön rendszer kulcsa — a Metáé a Woo-ID, a GA4-é a beszédes slug.
   var META_CONTENT_ID = EN
     ? { planner: "46", autopilot: "49", premium: "615", autopilot_trial: "625" }
-    : { planner: "2342", autopilot: "2344", autopilot_trial: "5809", premium: "6091" };
+    : a2ContentIds();
   // A GOMBON ÁLLÓ href az igazság, nem a konstans: a ciklusváltó átírja (havi 2342 →
   // éves 2343), és a kosárba is az kerül — ugyanaz az elv, mint a `checkoutTarget`-nél.
   // A konstans csak ott kell, ahol nincs pénztár-href (anchor-CTA, `ViewContent`);
@@ -290,15 +316,19 @@
    * Gépi kapu: tests/tracking-value.mjs — a markupban deklarált variáció↔ár párokat
    * veti össze ezzel a térképpel, fail-closed. Ha egy ár változik és ez nem, PIROS. */
   var VALUE_BY_VARIATION = EN ? { "46": 29, "47": 116, "49": 59, "50": 236, "337": 44, "338": 176, "339": 55, "340": 220, "341": 64, "342": 256, "343": 69, "344": 276, "345": 89, "346": 356, "347": 111, "348": 444, "349": 129, "350": 516, "351": 139, "352": 556, "615": 119, "616": 476, "617": 179, "618": 716, "619": 227, "620": 908, "621": 263, "622": 1052, "623": 287, "624": 1148, "625": 3 }
-                              : { "2342": 9990, "2343": 39960, "2344": 19990, "2345": 79960, "3494": 18480, "3495": 73920, "3496": 25700, "3497": 102800, "3498": 31840, "3499": 127360, "3500": 37050, "3501": 148200, "3502": 36980, "3503": 147920, "3504": 51420, "3505": 205680, "3506": 63700, "3507": 254800, "3508": 74130, "3509": 296520, "5809": 990,
-                                  /* Prémium (2026-09-18, Woo 6090). A `tracking-value.mjs` kapuja pont ezt a rést
-                                     fogta meg a CI-ben: a kártya már hirdette a tíz új variációt, a licit-érték
-                                     viszont hiányzott — a Meta és a Google NULLA értéken licitált volna a
-                                     legdrágább csomagunkra. */
-                                  "6091": 39990, "6092": 159960, "6093": 73980, "6094": 295920, "6095": 102870, "6096": 411480, "6097": 127430, "6098": 509720, "6099": 148310, "6100": 593240,
-                                  /* 6–10 fő (2026-10-19, 17/#3307); minden 2–10 fős érték 2026-10-27 óta az „A” árlétrán (17/#3527, `p18-landing-arletra-a.mjs`). */
-                                  "7600": 41480, "7605": 165920, "7601": 45250, "7606": 181000, "7602": 48450, "7607": 193800, "7603": 51170, "7608": 204680, "7604": 53480, "7609": 213920, "7610": 83000, "7615": 332000, "7611": 90540, "7616": 362160, "7612": 96950, "7617": 387800, "7613": 102400, "7618": 409600, "7614": 107030, "7619": 428120, "7620": 166050, "7625": 664200, "7621": 181130, "7626": 724520, "7622": 193950, "7627": 775800, "7623": 204850, "7628": 819400, "7624": 214110, "7629": 856440 };
+                              /* A2 (17/#3611 S8): a magyar ág minden variáció-ára a generált `js/a2-pricing.js`-ből jön
+                                 (`window.GM_A2`, forrás: `_dev/pricing/ai-csapat-a2.json`). A régi 2342…7629 térkép az
+                                 A2 előtti CartFlows-variációké volt; a git-történetben visszakereshető. */
+                              : a2Values();
   function offerValue(pkg, el) {
+    // A2: a `/checkout-link/` minden sora darabszámmal (docs/67 §4.10 1.). Ha akár egy
+    // sor ára ismeretlen, NEM adunk részösszeget: a tartalék a csomag alapdíja.
+    var lines = a2Lines(el);
+    if (lines) {
+      var sum = 0, known = true;
+      lines.forEach(function (l) { var v = VALUE_BY_VARIATION[l.id]; if (v == null) known = false; else sum += v * l.qty; });
+      if (known && sum > 0) return sum;
+    }
     try {
       var href = el && el.getAttribute && el.getAttribute("href");
       if (href) {
@@ -329,6 +359,8 @@
    *
    * A paraméter-sorrend ugyanaz, mint az `offerValue`-ban — egy forrás, egy kulcs. */
   function metaContentId(pkg, el) {
+    var lines = a2Lines(el);
+    if (lines) return String(lines[0].id);
     try {
       var href = el && el.getAttribute && el.getAttribute("href");
       if (href) {
@@ -339,15 +371,18 @@
     } catch (e) {}
     return META_CONTENT_ID[pkg] || META_CONTENT_ID[PKG_DEFAULT];
   }
-  function metaPayload(item, value, metaCookies, contentId) {
+  function metaPayload(item, value, metaCookies, contentId, lines) {
     var cid = contentId || item.item_id;
+    var contents = lines
+      ? lines.map(function (l) { return { id: l.id, quantity: l.qty, item_price: VALUE_BY_VARIATION[l.id] }; })
+      : [{ id: cid, quantity: 1, item_price: value }];
     return {
       content_name: item.item_name,
       content_category: item.item_category,
-      content_ids: [cid],
+      content_ids: lines ? lines.map(function (l) { return l.id; }) : [cid],
       content_type: "product",
-      contents: [{ id: cid, quantity: 1, item_price: value }],
-      num_items: 1,
+      contents: contents,
+      num_items: lines ? lines.reduce(function (n, l) { return n + l.qty; }, 0) : 1,
       value: value,
       currency: CURRENCY,
       action_source: "website",
@@ -509,10 +544,19 @@
     //    A prefix ezért nem stílus-kérdés: ez a védelem maga.
     adAttrib = Object.assign({ gm_source: adAttrib.utm_source || "ai-csapat-landing" }, adAttrib);
     var item = { item_id: itemId, item_name: "Az AI csapatod - " + label, item_brand: "GENmarketer", item_category: "AI marketing training", price: value, quantity: 1 };
+    // A2: a `products` minden sora külön tétel, valós darabszámmal (az Extra cég saját
+    // `item_id`-val). Régi/EN linkre `lines` null, és minden a régi egytételes alak marad.
+    var lines = a2Lines(el);
+    if (lines && lines.some(function (l) { return VALUE_BY_VARIATION[l.id] == null; })) lines = null;
+    var items = lines ? lines.map(function (l) {
+      if (a2IsExtra(l.id)) return { item_id: A2_EXTRA_ITEM.itemId, item_name: "Az AI csapatod - " + A2_EXTRA_ITEM.label, item_brand: "GENmarketer", item_category: "AI marketing training", item_variant: l.id, price: VALUE_BY_VARIATION[l.id], quantity: l.qty };
+      return Object.assign({}, item, { item_variant: l.id, price: VALUE_BY_VARIATION[l.id], quantity: l.qty });
+    }) : [item];
+    var lineItems = lines ? { items: items } : {};
     if (isCheckout) {
-      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
+      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_add_to_cart", event_id: cartEid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, lineItems, adAttrib)); } catch (e) {}
       if (!DOWNSTREAM_OWNS.ga4) {
-        try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: [item] }, adAttrib)); } catch (e) {}
+        try { if (typeof window.gtag === "function") window.gtag("event", "add_to_cart", Object.assign({ send_to: GA4_ID, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout", items: items }, adAttrib)); } catch (e) {}
       }
       // A Google Ads konverzió KÜLÖN ágon dől el: a tudástár PYS-ében nincs Ads
       // conversion ID, tehát a magyar ágon ez az EGYETLEN forrás. Ha ezt a
@@ -521,10 +565,10 @@
         try { if (typeof window.gtag === "function") window.gtag("event", "conversion", Object.assign({ send_to: ADS_ADD_TO_CART_SEND_TO, event_id: cartEid, currency: CURRENCY, value: value, cta_type: ctaId || "checkout" }, adAttrib)); } catch (e) {}
       }
       if (!DOWNSTREAM_OWNS.meta) {
-        try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies, contentId), { eventID: cartEid }); } catch (e) {}
+        try { if (typeof window.fbq === "function") window.fbq("track", "AddToCart", metaPayload(item, value, metaCookies, contentId, lines), { eventID: cartEid }); } catch (e) {}
       }
     }
-    try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_cta_click", event_id: eid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, adAttrib)); } catch (e) {}
+    try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: "gm_cta_click", event_id: eid, cta_id: ctaId || null, package: pkg, item_id: itemId, item_name: item.item_name, value: value, currency: CURRENCY }, lineItems, adAttrib)); } catch (e) {}
     // ☠️ 2026-08-07, élesben mérve: a 18 CTA-ból 12 CSAK a `#arazas`-ra görget
     // (`hero`, `header`, `sticky`, `modal`, 8× `usecase-*`) — és mindegyik
     // `InitiateCheckout`-ot + `begin_checkout`-ot tüzelt. „Görgess az árakhoz" ≠
@@ -546,12 +590,12 @@
     // pénztár az igazság-forrás, és a landoló MINDEN CTA-ra a `gm_cta_click`-et
     // küldi — a CRO-mérés így teljes marad, tölcsér-torzítás nélkül.
     if (isCheckout && !DOWNSTREAM_OWNS.ga4) {
-      try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: [item] }, adAttrib)); } catch (e) {}
+      try { if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", items: items }, adAttrib)); } catch (e) {}
     } else {
       try { if (typeof window.gtag === "function") window.gtag("event", "gm_cta_click", Object.assign({ send_to: GA4_ID, event_id: eid, currency: CURRENCY, value: value, cta_type: ctaId || "cta", package: pkg }, adAttrib)); } catch (e) {}
     }
     if (isCheckout && !DOWNSTREAM_OWNS.meta) {
-      try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies, contentId), { eventID: eid }); } catch (e) {}
+      try { if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", metaPayload(item, value, metaCookies, contentId, lines), { eventID: eid }); } catch (e) {}
     }
   }
   // A landoló URL marketing-paramjait átvisszük a tudástár-checkoutra, hogy a
@@ -791,10 +835,172 @@
       var key = el.getAttribute("data-gm-checkout");
       if (key && CHECKOUT[key]) el.setAttribute("href", withAttribution(CHECKOUT[key]));
       el.addEventListener("click", function (ev) {
-        track(el.getAttribute("data-gm-package") || PKG_DEFAULT, el.getAttribute("data-gm-cta"), !!(key && CHECKOUT[key]), el);
-        if (key && CHECKOUT[key]) { ev.preventDefault(); navigateToCheckout(checkoutTarget(el, key)); }
+        // A kulcsot KATTINTÁSKOR olvassuk: az A2-kalkulátor (`wireA2Pricing`) menet közben
+        // vált `pro` ↔ `pro_trial` között, egyedi ajánlatnál pedig leveszi (mailto).
+        var key = el.getAttribute("data-gm-checkout");
+        var isCheckout = !!(key && CHECKOUT[key]);
+        track(el.getAttribute("data-gm-package") || PKG_DEFAULT, el.getAttribute("data-gm-cta"), isCheckout, el);
+        if (isCheckout) { ev.preventDefault(); navigateToCheckout(checkoutTarget(el, key)); }
       });
     });
+  }
+
+  /* ── A2 csomagkereső és kártyák (17/#3611 S8) ──────────────────────────────
+   * A statikus markup (generált, 1 fő · 1 cég · havi) JS nélkül is teljes ajánlat; ez a
+   * függvény csak az állapotot követi. Döntés: a legolcsóbb megfelelő csomag, de ha egy
+   * nagyobb legfeljebb `tie` (2000 Ft) forinttal drágább, az nyer (docs/67 §3.1).
+   * Próba-CTA csak 1 fő, ≤ 3 cég, havi állásnál; plafon fölött e-mailes ajánlatkérés. */
+  function wireA2Pricing() {
+    var A = a2Data(), root = document.querySelector("[data-gm-a2]");
+    if (!A || !root) return;
+    var NB = "\u00a0";
+    var st = { fo: 1, ceg: 1, kreativ: 0, csapatfunk: 0, cycle: "havi" };
+    var six = A.cycles["6havi"];
+    var MAIL = "mailto:info@genmarketer.hu?subject=Egyedi%20aj%C3%A1nlat%20-%20AI-csapat";
+    var CTA_NAME = { pro: "Pro előfizetés", premium: "Prémium előfizetés", team: "Team előfizetés" };
+    function ft(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, NB) + NB + "Ft"; }
+    function lvl(k) { return A.order.indexOf(k) + 1; }
+    function custom() { return st.fo > A.maxSeats || st.ceg > A.maxCompanies; }
+    function gaps(k) {
+      var out = [];
+      if (lvl(k) < 2 && st.kreativ) out.push("Nincs benne hirdetéskép, videó és beépített webkutatás");
+      if (lvl(k) < 3 && st.csapatfunk) out.push("Nincs benne ütemezett riport és konzultáció");
+      return out;
+    }
+    function q(k) { return a2Quote(k, Math.min(st.fo, A.maxSeats), Math.min(st.ceg, A.maxCompanies), st.cycle); }
+    function match() {
+      if (custom()) return A.order[A.order.length - 1];
+      var cand = A.order.filter(function (k) { return !gaps(k).length; }).map(q);
+      var rec = cand.reduce(function (m, r) { return r.monthly < m.monthly ? r : m; }, cand[0]);
+      cand.forEach(function (r) {
+        var d = r.monthly - rec.monthly;
+        if (lvl(r.key) > lvl(rec.key) && d > 0 && d <= A.tie) rec = r;
+      });
+      return rec.key;
+    }
+    function per(monthly) { return st.cycle === "6havi" ? monthly * six.multiplier / six.months : monthly; }
+    function extraText(k, r) {
+      var ext = [];
+      if (r.xSeats) ext.push(r.xSeats + NB + "fő");
+      if (r.xCompanies) ext.push(r.xCompanies + NB + "cég");
+      return ext.length ? ft(per(A.tiers[k].base)) + " alapdíj + " + ext.join(" + ") : "";
+    }
+    function setCta(a, k, labelEl) {
+      var href, label, key;
+      if (custom()) { href = MAIL; label = "Ajánlatot kérek"; key = null; }
+      else if (k === A.trial.tier && a2TrialOk(st.fo, st.ceg, st.cycle)) { href = a2TrialLink(); label = "3 nap próba: " + ft(A.trial.fee); key = k + "_trial"; }
+      else { href = a2Link(k, st.fo, st.ceg, st.cycle); label = CTA_NAME[k] || k; key = k; }
+      if (key) { a.setAttribute("data-gm-checkout", key); a.setAttribute("href", withAttribution(href)); }
+      else { a.removeAttribute("data-gm-checkout"); a.setAttribute("href", href); }
+      a.setAttribute("data-gm-package", key || k);
+      (labelEl || a).textContent = label;
+    }
+    function tierOf(a) {
+      var box = a.closest("[data-a2-tier]") || a.closest("[data-a2-col]");
+      return box ? (box.getAttribute("data-a2-tier") || box.getAttribute("data-a2-col")) : null;
+    }
+    function render() {
+      var cu = custom(), m = match();
+      root.querySelectorAll("[data-a2-input]").forEach(function (inp) {
+        var k = inp.getAttribute("data-a2-input");
+        if (document.activeElement !== inp) inp.value = String(st[k]);
+      });
+      A.order.forEach(function (k) {
+        var card = root.querySelector('[data-a2-tier="' + k + '"]');
+        if (!card) return;
+        var r = q(k), g = gaps(k);
+        card.classList.toggle("is-match", k === m);
+        card.classList.toggle("is-out", g.length > 0);
+        var why = card.querySelector("[data-a2-why]");
+        if (why) {
+          why.classList.toggle("is-no", g.length > 0);
+          why.innerHTML = g.length
+            ? '<span class="gm-a2-ic gm-a2-ic--no" aria-hidden="true">✕</span><span><b>Ehhez nem elég</b><span class="gm-a2-card__gaps">' + g.map(function (x) { return esc(x); }).join("<br>") + "</span></span>"
+            : '<span class="gm-a2-ic gm-a2-ic--ok" aria-hidden="true">✓</span><span><b>Megfelel a beállításaidnak</b></span>';
+        }
+        var price = card.querySelector("[data-a2-price]");
+        if (price) price.innerHTML = cu ? "<b>Egyedi ár</b>" : "<b>" + ft(per(r.monthly)) + "</b><small>/hó</small>" + (st.cycle === "6havi" ? "<s>" + ft(r.monthly) + "</s>" : "");
+        var billed = card.querySelector("[data-a2-billed]");
+        if (billed) billed.innerHTML = cu ? "e-mailben küldünk ajánlatot"
+          : st.cycle === "6havi" ? "6 havonta " + ft(r.total) + " egyben"
+          : 'havi számlázás<span class="gm-a2-card__tip">6 havival ' + ft(r.monthly * six.multiplier / six.months) + "/hó</span>";
+        var ex = card.querySelector("[data-a2-extra]");
+        if (ex) ex.textContent = cu ? "" : extraText(k, r);
+        var fo = card.querySelector("[data-a2-fo]");
+        if (fo) fo.innerHTML = cu && st.fo > A.maxSeats ? A.maxSeats + "+" + NB + "fő" : r.seats + NB + "fő" + (r.xSeats ? "<small>(+" + r.xSeats + ")</small>" : "");
+        var cg = card.querySelector("[data-a2-ceg]");
+        if (cg) cg.innerHTML = cu && st.ceg > A.maxCompanies ? A.maxCompanies + "+" + NB + "cég" : r.companies + NB + "cég" + (r.xCompanies ? "<small>(+" + r.xCompanies + ")</small>" : "");
+        var td = root.querySelector('[data-a2-tprice="' + k + '"]');
+        if (td) td.textContent = cu ? "Egyedi ár" : ft(per(r.monthly));
+      });
+      root.querySelectorAll("a[data-a2-cta]").forEach(function (a) {
+        var k = tierOf(a);
+        if (!k) return;
+        setCta(a, k);
+        if (a.closest("[data-a2-tier]")) {
+          var on = k === m;
+          a.classList.toggle("gm-btn--primary", on);
+          a.classList.toggle("gm-a2-btn--out", !on);
+        }
+      });
+      root.querySelectorAll("[data-a2-col]").forEach(function (c) { c.classList.toggle("is-match", c.getAttribute("data-a2-col") === m); });
+      var r = q(m), T = A.tiers[m];
+      var set = function (sel, html) { var x = root.querySelector(sel); if (x) x.innerHTML = html; };
+      set("[data-a2-rname]", cu ? "Egyedi ajánlat" : esc(T.label));
+      set("[data-a2-rtotal]", cu ? "Egyedi ár" : ft(per(r.monthly)));
+      set("[data-a2-rper]", cu ? "" : "/hó");
+      set("[data-a2-rbilled]", cu ? "e-mailben küldünk ajánlatot" : st.cycle === "6havi" ? "6 havonta " + ft(r.total) + " egyben" : "havi számlázás");
+      set("[data-a2-radd]", cu ? A.maxSeats + " főnél vagy " + A.maxCompanies + " cégnél több" : esc(extraText(m, r)));
+      var save = cu ? 0 : r.monthly * (six.months - six.multiplier);
+      set("[data-a2-save]", !save ? "6 havi fizetéssel minden csomag 33%-kal olcsóbb."
+        : st.cycle === "6havi" ? "A " + esc(T.label) + " csomagon 6 havonta <b>" + ft(save) + "-ot</b> spórolsz."
+        : "6 havi fizetéssel a " + esc(T.label) + " csomagon <b>" + ft(save) + "-ot</b> spórolsz.");
+      var rc = root.querySelector("a[data-a2-rcta]");
+      if (rc) setCta(rc, m, rc.querySelector("[data-a2-rcta-t]"));
+      root.setAttribute("data-a2-state", [st.fo, st.ceg, st.kreativ, st.csapatfunk, st.cycle, m, cu ? "custom" : "list"].join("|"));
+    }
+    function setNum(k, v, why) {
+      var max = k === "fo" ? A.maxSeats + 1 : A.maxCompanies + 1;
+      var n = Math.min(why === "type" ? 999 : max, Math.max(1, parseInt(v, 10) || 1));
+      if (n === st[k]) return false;
+      st[k] = n;
+      return true;
+    }
+    // Jel csak VALÓDI változásra: a mezőbe a régi értéket visszaírva és kilépve nem megy új esemény
+    // (Haiku-review U2-R4). Az `input` esemény menet közben frissít, a jel a `change`-kor (véglegesítés) megy.
+    var lastSig = { fo: st.fo, ceg: st.ceg };
+    function signalNum(k) {
+      if (st[k] === lastSig[k]) return;
+      lastSig[k] = st[k];
+      if (k === "fo") signal("gm_seats_switch", { seats: String(st.fo) }, { clarityKey: "seats", clarityValue: st.fo });
+      else signal("gm_companies_switch", { companies: String(st.ceg) }, { clarityKey: "companies", clarityValue: st.ceg });
+    }
+    root.addEventListener("click", function (ev) {
+      var step = ev.target.closest("button[data-a2-step]");
+      if (step) {
+        var k = step.getAttribute("data-a2-step");
+        if (setNum(k, st[k] + Number(step.getAttribute("data-d")), "step")) { render(); signalNum(k); }
+        return;
+      }
+      var chip = ev.target.closest("[data-a2-q] button[data-v]");
+      if (!chip) return;
+      var g = chip.closest("[data-a2-q]"), qk = g.getAttribute("data-a2-q"), v = chip.getAttribute("data-v");
+      g.querySelectorAll("button[data-v]").forEach(function (b) { b.setAttribute("aria-pressed", b === chip ? "true" : "false"); });
+      var val = qk === "cycle" ? v : Number(v);
+      if (st[qk] === val) return;
+      st[qk] = val;
+      render();
+      // A ciklus-dimenzió értékei a régi HU-sorokkal folytonosak maradnak (havi = "monthly", 6 havi = "yearly").
+      if (qk === "cycle") signal("gm_cycle_switch", { billing_cycle: v === "6havi" ? "yearly" : "monthly" }, { clarityKey: "billing_cycle", clarityValue: v });
+      // Egyetlen paraméter (pl. "kreativ_1"): a GA4-ben a `value` a pénzérték foglalt neve, nem használható.
+      else signal("gm_a2_need", { need: qk + "_" + val }, { clarityKey: "a2_" + qk, clarityValue: val });
+    });
+    root.querySelectorAll("[data-a2-input]").forEach(function (inp) {
+      var k = inp.getAttribute("data-a2-input");
+      inp.addEventListener("input", function () { if (/^\d+$/.test(inp.value) && setNum(k, inp.value, "type")) render(); });
+      inp.addEventListener("change", function () { setNum(k, inp.value, "type"); inp.value = String(st[k]); render(); signalNum(k); });
+    });
+    render();
   }
 
   // Per-ágens SZEREP-SPECIFIKUS animáció + sebesség — minden szakember a saját
@@ -803,6 +1009,7 @@
   //    különben a kártya a semleges fallbackra esik — a gépi kapu: tests/viz-coverage.mjs (test:all).
   /* A kulcs a data.js `code` mezője (ASCII). A drawer-nevek a dashboards.js DRAW mapjéből. */
   var VIZ = {
+    TIKTOK: ["reticle", 1.0], KOLTSEGOR: ["gauge", 1.0],
     SHERLOCK: ["scan", 1.0],   "SUN-TZU": ["versus", 1.0], ATHENE: ["tree", 0.9],  PERPETUUM: ["loop", 1.0],
     MIDASZ: ["wireframe", 1.0], ROBINSON: ["build", 1.0],
     KEPLER: ["funnel", 1.0], CYRANO: ["typead", 1.1], LEONARDO: ["swatch", 1.0], VECTOR: ["reflow", 1.0], APOLLON: ["gauge", 0.95], AURORA: ["reticle", 1.0],
@@ -825,7 +1032,7 @@
     { time: "07:26", agent: "AURORA", hu: "Leállított 3 hirdetést, amely 94 000 Ft-ot költött vásárlás nélkül.", en: "Paused 3 ads that spent 94,000 Ft without producing a purchase.", chipHu: "Éles ✓", chipEn: "Applied ✓" },
     { time: "07:41", agent: "CYRANO", hu: "9 hirdetésszöveg elkészült három különböző megközelítéssel.", en: "9 ad-copy variants are ready across three different approaches.", chipHu: "Átnézésre vár", chipEn: "Ready to review", wait: true },
     { time: "07:55", agent: "HERMESZ", hu: "A háromrészes kosárelhagyó levélsorozat időzítésre kész.", en: "The three-part abandoned-cart email sequence is ready to schedule.", chipHu: "Jóváhagyásra vár", chipEn: "Awaiting approval", wait: true },
-    { time: "08:08", agent: "GULLIVER", hu: "A heti riport megmutatja, melyik csatorna hozta a bevétel 71%-át.", en: "The weekly report shows which channel produced 71% of revenue.", chipHu: "Kész ✓", chipEn: "Done ✓" }
+    { time: "08:08", agent: EN ? "GULLIVER" : "ATLASZ", hu: "A heti riport megmutatja, melyik csatorna hozta a bevétel 71%-át.", en: "The weekly report shows which channel produced 71% of revenue.", chipHu: "Kész ✓", chipEn: "Done ✓" }
   ];
 
   function feedAgentName(code) {
@@ -956,7 +1163,7 @@
       var label = a.name || a.code;   // megjelenítendő (ékezetes) név; a.code marad az ASCII fájl-/adatkulcs
       html += '<button type="button" class="gm-agent' + (soon ? " is-soon" : "") + '" data-code="' + esc(a.code) + '" data-cat="' + esc((a.cats || [a.cat]).join("|")) + '" style="--c:' + esc(a.color) + '">';
       html += '<span class="gm-agent__top">';
-      html += '<span class="gm-agent__av"><img src="' + AV + esc(a.code) + '.webp" alt="' + esc(label + " – " + role) + '" loading="lazy" width="60" height="60"></span>';
+      html += '<span class="gm-agent__av"><img src="' + esc(a.avatar || AV + a.code + '.webp') + '" alt="' + esc(label + " – " + role) + '" loading="lazy" width="60" height="60"></span>';
       html += '<span class="gm-agent__meta"><span class="gm-agent__code">' + esc(label) + ' <span class="gm-status gm-status--' + statusCls + '">' + statusTxt + '</span></span>';
       html += '<span class="gm-agent__role">' + esc(role) + '</span></span>';
       html += '</span>';
@@ -1060,7 +1267,7 @@
     });
     var panel = modal.querySelector(".gm-modal__panel");
     panel.style.setProperty("--c", a.color);
-    modal.querySelector(".gm-modal__av img").src = AV + a.code + ".webp";
+    modal.querySelector(".gm-modal__av img").src = a.avatar || AV + a.code + ".webp";
     var role = EN ? a.roleEn : a.role;
     modal.querySelector(".gm-modal__title h3").textContent = a.name || a.code;
     modal.querySelector(".gm-modal__title p").textContent = role;
@@ -1795,13 +2002,17 @@
       // `null`-t adott, és a `metaContentId` fallbackjára bízta a variáció-ID-t.
       // Ma az véletlenül a helyes 5809-et adja, de a következő ajánlat már nem lesz
       // ilyen szerencsés; a ciklusváltó élő hrefjét meg eleve nem látná.
+      // A2 (17/#3611 S8): a magyar ágon a csomagok ALAP-ajánlata (legkisebb fő-szám, havi),
+      // a generált `GM_A2`-ből — a kártya-CTA alapállásban a próbát viseli, ami nem a csomag.
+      var a2Base = !!a2Data();
       var ids = Object.keys(PKG).map(function (k) {
+        if (a2Base) return META_CONTENT_ID[k];
         return metaContentId(k, document.querySelector('[data-gm-cta="pricing-' + k.replace(/_/g, "-") + '"]'));
       });
       var value = PRICE[PKG_DEFAULT] || 0;
       var items = Object.keys(PKG).map(function (k) {
         var cta = document.querySelector('[data-gm-cta="pricing-' + k.replace(/_/g, "-") + '"]');
-        return { item_id: PKG[k].itemId, item_name: "Az AI csapatod - " + PKG[k].label, item_brand: "GENmarketer", item_category: "AI marketing training", price: offerValue(k, cta), quantity: 1 };
+        return { item_id: PKG[k].itemId, item_name: "Az AI csapatod - " + PKG[k].label, item_brand: "GENmarketer", item_category: "AI marketing training", price: a2Base ? PRICE[k] : offerValue(k, cta), quantity: 1 };
       });
       var eid = eventId("view_content", PKG_DEFAULT);
       // 2026-08-07: a landoló EGYETLEN Meta tölcsér-eseménye a `ViewContent` lett
@@ -1942,6 +2153,7 @@
     wireWorkstation();
     wireFilters();
     wireCtas();
+    wireA2Pricing();
     wireBillingCycle();
     wireManagedForm();
     trackViewContent();

@@ -71,7 +71,7 @@ export function initHero(opts) {
     root.add(sp); sprites.push(sp);
     var im = new Image();
     im.onload = function () { mat.map = cardTexture(im, a.code, EN ? (a.roleEn || a.role) : a.role, a.color || "#00D4FF"); mat.needsUpdate = true; };
-    im.src = avBase + a.code + ".webp";
+    im.src = a.avatar || avBase + a.code + ".webp";
   });
 
   /* ---------- interakció ---------- */

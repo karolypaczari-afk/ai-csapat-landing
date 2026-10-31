@@ -1899,3 +1899,152 @@ html { scroll-padding-bottom: 5.5rem; }
   .gm-team-more.is-open { display: block; }
   .gm-team-contact { text-align: left; }
 }
+
+/* ═══ A2 árazás (17/#3611 S8) — csomagkereső, három kártya, összehasonlító táblázat ══════════
+   A markup generált (`_dev/build-landing-a2.mjs`), a viselkedés a `js/app.js` `wireA2Pricing`.
+   A docs/61 szerint: a site tokenjei, a CTA a `.gm-btn--primary` (gradiens), a kártyákon NINCS
+   gradiens keret, a címkéken nincs mono betű, a „−33%” jelvény tömör lila (nem gradiens, a dizájn
+   `.off` jelvénye helyett — ütközésnél Tibor dönt), egy kártyán egyszerre egy jelvény. */
+.gm-a2 { --a2-acc: #5B21B6; --a2-tint: #F7F5FD; --a2-soft: #5E5B7A; --a2-mute: #6B6785; }
+.gm-a2 .gm-section-head { margin-bottom: 1.6rem; }
+.gm-a2__finder {
+  display: grid; grid-template-columns: minmax(0, 1fr) 290px; overflow: hidden;
+  background: #fff; color: var(--gm-ink); border: 1px solid var(--gm-line); border-radius: 20px; margin-bottom: 1.4rem;
+}
+.gm-a2__qs { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 24px; }
+.gm-a2__q { grid-column: span 3; min-width: 0; }
+.gm-a2__q:nth-child(n+3) { grid-column: span 6; }
+.gm-a2__ql { display: block; font-weight: 700; font-size: .95rem; margin-bottom: 2px; }
+.gm-a2__qh { font-size: .8rem; color: var(--a2-mute); margin: 0 0 8px; }
+.gm-a2__q:nth-child(n+3) .gm-a2__ql { margin-bottom: 8px; }
+.gm-a2-step { display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; border: 1px solid var(--gm-line); border-radius: 12px; padding: 4px; }
+.gm-a2-step button { width: 34px; height: 34px; margin: 0 auto; border: 0; border-radius: 8px; background: var(--a2-tint); color: var(--a2-acc); font: inherit; font-size: 1.15rem; font-weight: 700; cursor: pointer; }
+.gm-a2-step input { width: 100%; min-width: 0; border: 0; background: transparent; text-align: center; font: inherit; font-weight: 800; font-size: 1.05rem; color: var(--gm-ink); font-variant-numeric: tabular-nums; padding: 4px 0; }
+.gm-a2-step input:focus { outline: none; }
+.gm-a2-step:focus-within { border-color: var(--gm-violet); }
+.gm-a2-chips, .gm-a2-cyc { display: flex; gap: 6px; }
+.gm-a2-chip { flex: 1; border: 1px solid var(--gm-line); background: #fff; font: inherit; font-size: .88rem; color: var(--a2-soft); padding: 9px 10px; border-radius: 10px; cursor: pointer; white-space: nowrap; }
+.gm-a2-chip[aria-pressed="true"] { border: 1.5px solid var(--gm-violet); background: var(--a2-tint); color: var(--a2-acc); font-weight: 600; }
+.gm-a2 button:focus-visible, .gm-a2 a:focus-visible, .gm-a2-cmp__wrap:focus-visible { outline: 2px solid var(--gm-cyan); outline-offset: 2px; }
+.gm-a2__note { grid-column: 1; display: flex; justify-content: space-between; gap: 6px 18px; flex-wrap: wrap; padding: 12px 24px; border-top: 1px solid var(--gm-line); font-size: .88rem; color: var(--a2-soft); }
+.gm-a2__note b { color: var(--gm-ink); font-weight: 700; white-space: nowrap; }
+.gm-a2__res { grid-column: 2; grid-row: 1 / span 2; background: var(--a2-tint); border-left: 1px solid var(--gm-line); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+.gm-a2__lbl { display: block; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--a2-acc); }
+.gm-a2__resname b { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; }
+.gm-a2__restot { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; }
+.gm-a2__restot b { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.gm-a2__restot span { color: var(--a2-soft); font-size: .9rem; }
+.gm-a2__restot small { width: 100%; font-size: .78rem; color: var(--a2-mute); }
+.gm-a2__resadd { font-size: .82rem; color: var(--a2-soft); min-height: 1.1em; }
+.gm-a2-cyc { align-self: flex-start; padding: 3px; border: 1px solid var(--gm-line); border-radius: 999px; background: #fff; gap: 2px; }
+.gm-a2-cyc .gm-a2-chip { border: 0; border-radius: 999px; padding: 6px 14px; font-size: .84rem; }
+.gm-a2-cyc .gm-a2-chip[aria-pressed="true"] { background: var(--a2-acc); color: #fff; border: 0; }
+.gm-a2-off { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 999px; background: var(--gm-violet); color: #fff; font-size: .72rem; font-weight: 700; }
+.gm-a2-cyc .gm-a2-chip[aria-pressed="true"] .gm-a2-off { background: #fff; color: var(--a2-acc); }
+.gm-a2__rescta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+.gm-a2__rescta svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.gm-a2__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-top: 14px; }
+.gm-a2-card { position: relative; display: flex; flex-direction: column; background: #fff; color: var(--gm-ink); border: 1px solid var(--gm-line); border-radius: 18px; padding: 24px 22px 22px; transition: border-color .2s, box-shadow .2s; }
+.gm-a2-card.is-match { border: 2px solid var(--gm-violet); box-shadow: 0 14px 36px rgba(64, 0, 153, .28); }
+.gm-a2-card.is-out { background: #FBFAFE; }
+.gm-a2-card__badge { position: absolute; top: -12px; left: 20px; font-size: .75rem; font-weight: 700; color: #fff; background: var(--a2-acc); padding: 3px 10px; border-radius: 999px; visibility: hidden; }
+.gm-a2-card.is-match .gm-a2-card__badge { visibility: visible; }
+.gm-a2-card__name { font-size: 1.4rem; font-weight: 800; letter-spacing: -.02em; margin: 0 0 4px; color: var(--gm-ink); }
+.gm-a2-card__desc { font-size: .92rem; color: var(--a2-soft); margin: 0; min-height: 2.8em; }
+.gm-a2-card__price { margin: 14px 0 0; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.gm-a2-card__price b { font-size: 2.3rem; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; line-height: 1.05; }
+.gm-a2-card__price small { color: var(--a2-mute); font-size: .85rem; }
+.gm-a2-card__price s { color: var(--a2-mute); font-size: .9rem; }
+.gm-a2-card__billed { font-size: .8rem; color: var(--a2-mute); min-height: 1.2em; }
+.gm-a2-card__tip { display: block; color: var(--a2-acc); }
+.gm-a2-card__extra { font-size: .8rem; color: var(--a2-soft); min-height: 1.2em; margin-top: 2px; }
+.gm-a2-card__kv { list-style: none; margin: 12px 0 12px; padding: 12px 0 0; border-top: 1px solid var(--gm-line); display: grid; gap: 6px; font-size: .88rem; }
+.gm-a2-card__kv li { display: flex; justify-content: space-between; gap: 10px; }
+.gm-a2-card__kv span { color: var(--a2-soft); }
+.gm-a2-card__kv b { font-weight: 700; text-align: right; white-space: nowrap; }
+.gm-a2-card__kv small { color: var(--a2-mute); font-weight: 500; margin-left: 3px; }
+.gm-a2-card__why { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; align-items: start; margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; background: var(--a2-tint); font-size: .86rem; color: var(--gm-ink); min-height: 3.2em; }
+.gm-a2-card__why.is-no { background: #FFF6F5; }
+.gm-a2-card__why b { font-weight: 700; display: block; }
+.gm-a2-card__gaps { display: block; color: var(--a2-soft); }
+.gm-a2-ic { width: 16px; height: 16px; margin-top: 2px; fill: none; stroke: var(--gm-violet); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; font-weight: 800; color: var(--gm-violet); line-height: 1; }
+.gm-a2-ic--no { color: #B42318; }
+.gm-a2-card__cta { width: 100%; margin-top: auto; }
+/* A három csomag sorai közösek (subgrid): a gombok egy vonalban állnak, akármilyen hosszú a „Mit kapsz” lista (Károly, 2026-10-30).
+   A kártya 9 sora: név, leírás, ár, számlázás, extra, kulcsadatok, illeszkedés, gomb, tartalom. Egyoszlopos nézetben marad a flex. */
+@media (min-width: 1001px) {
+  @supports (grid-template-rows: subgrid) {
+    .gm-a2__cards { grid-template-rows: repeat(9, auto); row-gap: 0; }
+    .gm-a2-card { display: grid; grid-row: span 9; grid-template-rows: subgrid; row-gap: 0; }
+    .gm-a2-card__cta { margin-top: 0; align-self: start; }
+    .gm-a2-card__inc { align-self: start; }
+  }
+}
+.gm-a2-btn--out { background: #fff; color: var(--a2-acc); border: 1.5px solid #D9D0F2; box-shadow: none; }
+.gm-a2-btn--out:hover { background: var(--a2-tint); }
+.gm-a2-card__inc { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gm-line); font-size: .88rem; }
+.gm-a2-card__inc h4 { margin: 0 0 8px; font-size: .84rem; font-weight: 700; color: var(--gm-ink); }
+.gm-a2-card__inc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.gm-a2-card__inc li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; align-items: start; }
+.gm-a2-card__inc svg { width: 16px; height: 16px; margin-top: 2px; fill: none; stroke: var(--gm-violet); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.gm-a2__cmplink { text-align: center; margin: 22px 0 0; }
+.gm-a2__cmplink a { color: #CFC8F5; font-weight: 600; text-underline-offset: 3px; }
+.gm-a2-cmp { margin-top: 2.4rem; }
+.gm-a2-cmp__h { font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 800; letter-spacing: -.02em; margin: 0 0 4px; color: #fff; text-align: center; }
+.gm-a2-cmp__lead { text-align: center; color: #B8B6CE; margin: 0 0 16px; }
+.gm-a2-cmp__wrap { overflow-x: auto; border-radius: 18px; border: 1px solid var(--gm-line); background: #fff; -webkit-overflow-scrolling: touch; }
+.gm-a2-cmp table { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 720px; color: var(--gm-ink); }
+.gm-a2-cmp th, .gm-a2-cmp td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #F0EDF7; vertical-align: top; }
+.gm-a2-cmp td[data-a2-col], .gm-a2-cmp thead th[data-a2-col] { text-align: center; }
+.gm-a2-cmp thead th { background: var(--gm-navy); color: #fff; font-size: .95rem; font-weight: 800; padding: 16px; }
+.gm-a2-cmp thead th.is-match { background: var(--a2-acc); }
+.gm-a2-cmp tbody th { font-weight: 500; }
+.gm-a2-cmp tbody th small, .gm-a2-cmp td small { display: block; color: var(--a2-mute); font-size: .76rem; font-weight: 400; }
+.gm-a2-cmp__grp th { background: var(--a2-tint); color: var(--a2-acc); font-weight: 700; padding: 10px 16px; }
+.gm-a2-cmp td.is-match { background: #FAF8FF; }
+.gm-a2-y { color: var(--gm-violet); font-weight: 800; }
+.gm-a2-n { color: var(--a2-mute); }
+.gm-a2-cmp__start th, .gm-a2-cmp__start td { padding: 18px 12px; border-bottom: 0; }
+.gm-a2-btn--sm { padding: 10px 14px; font-size: .84rem; white-space: nowrap; }
+.gm-a2__foot { display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; margin: 1.6rem 0 0; font-size: .88rem; color: #B8B6CE; }
+.gm-a2__foot b, .gm-a2__foot strong { color: #EAE9F5; }
+.gm-a2__foot a { color: #fff; font-weight: 700; }
+
+@media (max-width: 1100px) {
+  .gm-a2__finder { grid-template-columns: 1fr; }
+  .gm-a2__note { grid-column: 1; }
+  .gm-a2__res { grid-column: 1; grid-row: auto; border-left: 0; border-top: 1px solid var(--gm-line); flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .gm-a2__rescta { width: auto; }
+}
+@media (max-width: 1000px) {
+  .gm-a2__qs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gm-a2__q, .gm-a2__q:nth-child(n+3) { grid-column: span 1; }
+  .gm-a2__cards { grid-template-columns: 1fr; max-width: 560px; margin-inline: auto; }
+}
+@media (max-width: 600px) {
+  .gm-a2__qs { grid-template-columns: 1fr; padding: 16px; }
+  .gm-a2__q, .gm-a2__q:nth-child(n+3) { grid-column: auto; }
+  .gm-a2-chips { flex-wrap: wrap; }
+  .gm-a2__note { padding: 12px 16px; }
+  .gm-a2__res { flex-direction: column; align-items: stretch; padding: 16px; }
+  .gm-a2__rescta { width: 100%; }
+  /* A táblázat első oszlopa mobilon a helyén marad (a dizájn „sticky” első oszlopa). */
+  .gm-a2-cmp tbody th, .gm-a2-cmp thead th:first-child { position: sticky; left: 0; z-index: 1; background: #fff; min-width: 132px; max-width: 150px; box-shadow: 6px 0 8px -6px rgba(12, 13, 14, .18); }
+  /* Mobilon keskenyebb táblázat: a rögzített első oszlop mellett egy teljes csomag-oszlop látszik, a többi
+     oldalra húzható; a jobb élen futó árnyék jelzi, hogy a tartalom görgethető. */
+  .gm-a2-cmp table { min-width: 560px; font-size: .82rem; }
+  .gm-a2-cmp th, .gm-a2-cmp td { padding: 10px 10px; }
+  .gm-a2-cmp thead th:first-child { background: var(--gm-navy); }
+  .gm-a2-cmp__grp th { position: static; }
+}
+@media (prefers-reduced-motion: reduce) { .gm-a2-card { transition: none; } }
+.gm-more-specialists{margin:2rem auto 0;max-width:64rem;border:1px solid #cdc3de;border-radius:1rem;padding:1rem 1.25rem;background:#fff;color:#251b36}
+.gm-more-specialists summary{cursor:pointer;font-weight:700;font-size:1.15rem;padding:.3rem}
+.gm-more-specialists summary:focus-visible{outline:3px solid #6030b8;outline-offset:4px;border-radius:.2rem}
+.gm-more-specialists ul{columns:2;column-gap:2rem;padding-left:1.3rem}
+.gm-more-specialists li{break-inside:avoid;padding:.3rem 0}
+@media(max-width:600px){.gm-more-specialists ul{columns:1}}
+/* A keskeny HU kártyán a mért számok és címkéik külön sorba törhetnek. */
+html[lang="hu"] .gm-agent__metrics { flex-wrap: wrap; row-gap: 0.3rem; }

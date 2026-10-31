@@ -32,7 +32,7 @@
      szám továbbra sem élhet egy oldalon (ez volt az eredeti baj: 25 / 27 / 28).
      ⚠️ Egyetlen hely: aki átírja, itt írja át — a HTML-prózát is vele együtt,
      különben a kapu megbukik. */
-  window.GM_LANDING_FACTS = { team: 28, areas: 10 };
+  window.GM_LANDING_FACTS = { team: 51, areas: 10 };
 
   window.GM_TEAM = [
     { cat: "Vezetés és stratégia", catEn: "Leadership & strategy", color: "#F5A623", members: [
@@ -247,6 +247,20 @@
     ]}
   ];
 
+  // A2 HU preview: 28 featured, all backed by the current customer-ready roster.
+  // The previous two unbound codenames remain in the EN model; no new Gutenberg skill is claimed.
+  if (typeof document === "undefined" || document.documentElement.lang !== "en") {
+    window.GM_TEAM.forEach(function (g) { g.members = g.members.filter(function (m) { return m.code !== "GULLIVER" && m.code !== "GUTENBERG"; }); });
+    var newFeatured = [
+      { code: "TIKTOK", name: "TikTok Ads szakértő", skill: "genmarketer-tiktok-ads-expert", slug: "genmarketer-tiktok-ads-expert", role: "a TikTok-kampányok tervezője", roleEn: "the TikTok campaign planner", status: "live", avatar: "/assets/img/avatars/TIKTOK.svg",
+        benefit: "Kampánytervet, kreatívteszt-tervet és optimalizálási döntési naplót készít. Az élő fiókmunkát a bekötésed és az elérhető műveletek határozzák meg.", benefitEn: "Prepares campaign and creative test plans, with capability-checked account work.", currentTask: "kreatívteszt-tervet állít össze…", currentTaskEn: "Preparing a creative test plan…", metrics: [{ label: "terv", labelEn: "plan", target: 1 }], proof: null,
+        spec: { pipeline: "cél → kreatívteszt → döntés", cadence: "igény szerint", scheduler: "igény szerint" }, profile: { basis: "A TikTok Ads szakértő saját tudásanyagára és a bekötött fiók ellenőrzött képességeire épül", help: ["TikTok-kampánybriefet készít", "Kreatívteszt-tervet állít össze", "Optimalizálási döntéseket dokumentál"], topics: ["kampánystratégia", "Spark Ads", "kreatívteszt", "optimalizálás"] } },
+      { code: "KOLTSEGOR", name: "AI Költségőr", skill: "genmarketer-ai-koltsegor", slug: "genmarketer-ai-koltsegor", role: "az ismétlődő AI-munkák költségőre", roleEn: "the AI workflow cost analyst", status: "live", avatar: "/assets/img/avatars/KOLTSEGOR.svg",
+        benefit: "Megméri, hol veszik el idő és pénz az ismétlődő AI-munkában, majd minőségi kapukkal ellenőrzi a javításokat. Megtakarítást mérés után állít.", benefitEn: "Measures workflow waste and verifies improvements with quality checks.", currentTask: "a kiinduló költséget méri…", currentTaskEn: "Measuring the baseline cost…", metrics: [{ label: "mérési alap", labelEn: "baseline", target: 1 }], proof: null,
+        spec: { pipeline: "mérés → kísérlet → ellenőrzés", cadence: "igény szerint", scheduler: "igény szerint" }, profile: { basis: "A saját használati és számlázási adataidból, mért kiinduló állapottal dolgozik", help: ["Idő- és költségpazarlást keres", "Egyváltozós javítási kísérletet tervez", "Az elfogadott eredmény minőségét is méri"], topics: ["AI-költség", "tokenhasználat", "ismétlődő munkák", "minőségi kapuk"] } }
+    ];
+    newFeatured.forEach(function (m, i) { window.GM_TEAM.find(function (g) { return g.cat === (i ? "Vezetés és stratégia" : "Hirdetés"); }).members.push(m); });
+  }
   window.GM_AGENTS = window.GM_TEAM.reduce(function (acc, g) {
     g.members.forEach(function (m) { acc.push(Object.assign({ cat: g.cat, catEn: g.catEn, color: g.color }, m)); });
     return acc;
@@ -258,6 +272,7 @@
   var GM_AREA_COLORS = { "Meta Ads": "#00D4FF", "Google Ads": "#FFC400", "Email": "#0A66C2", "SEO": "#00AACC", "Weboldal": "#06B6D4", "Social": "#E1306C", "Design": "#9B6DFF", "Videó": "#400099", "Versenytárs": "#7C3AED", "Stratégia": "#F5A623" };
   var GM_AREA_EN = { "Meta Ads": "Meta Ads", "Google Ads": "Google Ads", "Email": "Email", "SEO": "SEO", "Weboldal": "Website", "Social": "Social", "Design": "Design", "Videó": "Video", "Versenytárs": "Competitors", "Stratégia": "Strategy" };
   var GM_AREAS10 = {
+    "TIKTOK": ["Social"], "KOLTSEGOR": ["Stratégia"],
     "ATLASZ": ["Stratégia"], "ATHENE": ["Stratégia"], "PERPETUUM": ["Stratégia"],
     "SHERLOCK": ["Stratégia", "Versenytárs"], "SUN-TZU": ["Versenytárs"],
     "AURORA": ["Meta Ads"], "KEPLER": ["Meta Ads"], "CYRANO": ["Meta Ads", "Google Ads"],
