@@ -111,7 +111,9 @@
     W = wrap.clientWidth < 420 ? 640 : 1070;
     stage.style.width = W + 'px';
     var s = Math.min(1, wrap.clientWidth / W);
-    var hUnits = Math.max(560, Math.min(1250, Math.round((window.innerHeight || H) / s)));
+    /* 2026-11-02: a plafon 1250-rol 1400-ra, mert a landolo kompakt TOP 3 szinpadja a bal hasab
+       magassagat veszi fel, es 1100 px koruli ablaknal 1250 egyseggel also csik maradt. */
+    var hUnits = Math.max(560, Math.min(1400, Math.round((window.innerHeight || H) / s)));
     stage.style.height = hUnits + 'px';
     stage.style.transform = 'scale(' + s + ')';
     wrap.style.height = (hUnits * s) + 'px';

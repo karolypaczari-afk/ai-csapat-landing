@@ -1,6 +1,6 @@
 # GENmarketer – Az AI csapatod / Your AI team
 
-> [HU] A GENmarketer egy 51 fős AI-marketinges csapatot árul, amit a vevő a SAJÁT Claude- vagy ChatGPT-fiókjába telepít. Minden csapattag egy becsomagolt szakértő – piackutató, hirdetés-szövegíró, Google Ads-hirdetéskezelő, landolóoldal-szakértő, SEO-auditor, e-mail-szakértő és társaik –, aki EGY marketinges munkát végez el rendesen, ahelyett hogy általános chatbotként válaszolna. A három leggyakoribb munkát (Meta és Google Ads kampány, weboldal és landoló, szövegek és e-mail-sorozat) a csapat az elejétől a végéig elvégzi; a vevő saját fiókjaiban végzett végrehajtás mindhárom csomag (Pro, Prémium, Team) része.
+> [HU] A GENmarketer egy 38 fős AI-marketinges csapatot árul, amit a vevő a SAJÁT Claude- vagy ChatGPT-fiókjába telepít. Minden csapattag egy becsomagolt szakértő – piackutató, hirdetés-szövegíró, Google Ads-hirdetéskezelő, landolóoldal-szakértő, SEO-auditor, e-mail-szakértő és társaik –, aki EGY marketinges munkát végez el rendesen, ahelyett hogy általános chatbotként válaszolna. A három leggyakoribb munkát (Meta és Google Ads kampány, weboldal és landoló, szövegek és e-mail-sorozat) a csapat az elejétől a végéig elvégzi; a vevő saját fiókjaiban végzett végrehajtás mindhárom csomag (Pro, Prémium, Team) része.
 > [EN] GENmarketer sells a team of 28 AI marketing specialists that the customer installs into their own Claude or ChatGPT account. Each specialist is a packaged expert — market researcher, ad copywriter, Google Ads manager, landing page expert, SEO auditor, email expert and more — that does one marketing job properly instead of answering as a generic chatbot. The three most common jobs (Meta and Google Ads campaigns, website and landing page, copy and email sequences) are carried end to end; execution inside the customer's own accounts is part of the Pro and Premium plans.
 
 Ez a fájl kétnyelvű: előbb a magyar tények (a magyar landolóé, https://ai-csapat.genmarketer.hu/), utána ugyanezek angolul. Mindkét rész a MA érvényes termékről szól; az árak a közzétett listáraink, rejtett díj nincs.
@@ -19,7 +19,7 @@ Utoljára felülvizsgálva / last reviewed: 2026-10-29.
 
 ## Mit kapsz
 - A termék neve: „Az AI csapatod" (magyarul) / „Your AI team" (angolul).
-- 51 AI-szakértő tíz szakterületen: Meta Ads, Google Ads, e-mail, SEO, weboldal, social, design, videó, versenytárs-elemzés és stratégia (a bemutatott csapattagok csoportonként lent).
+- 38 AI-szakértő tíz szakterületen: Meta Ads, Google Ads, e-mail, SEO, weboldal, social, design, videó, versenytárs-elemzés és stratégia (a bemutatott csapattagok csoportonként lent).
 - Formátum: Claude Skillek és ChatGPT-kompatibilis csomagok, plusz írott tananyag és telepítési útmutató Claude-hoz, Claude Code-hoz és ChatGPT-hez.
 - Hol működik: Claude-ban és ChatGPT-ben, valamint más MCP-képes eszközökben is: Claude Code, Codex, Cursor, Gemini CLI.
 - Tipikus munkák: piac- és vevőkutatás, versenytárs- és hirdetéstár-elemzés, kampánytervezés, hirdetésszöveg-írás, Meta Ads és Google Ads kezelés, landolóoldal tervezése és megépítése, kreatív és Figma-design, videó-forgatókönyv, UGC- és hirdetésvideó-gyártás, kulcsszókutatás, technikai SEO és SEO-audit, helyi SEO, e-mail-sorozatok, előfizetéses bevételi modell, LinkedIn-jelenlét.
@@ -41,16 +41,25 @@ Minden kapcsolat egyetlen GENmarketer-connectoron belül fut; a vevő a szolgál
 - Microsoft Clarity: olvasás és elemzés – hol akadnak el a látogatók (dühös és „halott” kattintások, görgetési mélység, visszafordulás).
 - WordPress: a kész landolót, aloldalt vagy szekciót kiviszi a vevő WordPress-oldalára. Jóváhagyás nélkül semmi nem kerül ki.
 - Élő webkutatás (Tavily): a mai webről dolgozik, forrásmegjelöléssel. A Pro csomagban a vevő saját, ingyenes Tavily-kulcsával; a Prémiumban külön kulcs nélkül havi 200, a Teamben havi 500 keresés.
+- WooCommerce: a saját webáruház rendeléseit, termékeit és vevőit olvassa; rendelési riport magyarul, termék-rangsor és készlet, kosárelhagyó-sorozat terve.
+- UNAS: mérési audit az UNAS-webshopra, termékfeed-ellenőrzés, katalóguskreatív-optimalizálás.
+- TikTok Ads: a TikTok-hirdetési fiók auditja optimalizálási sorrenddel, heti teljesítményriport, kreatív-ellenőrzés keretemelés előtt; olvasva dolgozik.
+- ChatGPT Ads: a ChatGPT-ben futó hirdetések költése és eredménye kampányonként, heti riport, összevetés a Google Ads-szel; csak olvas.
+- Threads: a Threads-fiók statisztikái és legjobb posztjai, heti posztterv, poszt közzététele kizárólag a vevő jóváhagyásával.
+- Facebook-oldal és Instagram (a Meta-connectoron): organikus poszt közzététele – kép, carousel, reel, story – kizárólag a vevő jóváhagyásával; oldal- és poszt-statisztikák, kommentek és üzenetek olvasása.
+- SalesAutopilot (partner-connector): a SalesAutopilot saját connectora az e-mail-szakértővel: lista- és kampányaudit, stílustanulás a régi levelekből, kész piszkozat a fiókban.
 - Hirdetéskép és -videó: hirdetéskész kép betűhű magyar felirattal, külön bekötés és fizetős képgeneráló nélkül; a Prémium csomagban havi 100 kép és 2 hirdetésvideó magyar hanggal, a Teamben havi 500 kép és 10 videó a csapat közös keretéből.
 
 ## A bemutatott csapattagok
-- Vezetés és stratégia: ATLASZ (csapatvezető – minden feladatot a megfelelő specialistához oszt), ATHÉNÉ (stratégiai partner), SUN TZU (versenytárs-elemző), SHERLOCK (piackutató)
-- Hirdetés: KEPLER (hirdetéstervező), CYRANO (hirdetés-szövegíró), AURORA (Facebook/Meta Ads-szakértő), APOLLÓN (Google Ads-hirdetéskezelő)
-- Landolóoldal: MIDÁSZ (landolóoldal-szakértő), ROBINSON (landolóoldal-építő)
+- Vezetés és stratégia: ATLASZ (csapatvezető – minden feladatot a megfelelő specialistához oszt), ATHÉNÉ (stratégiai partner), SUN TZU (versenytárs-elemző), SHERLOCK (piackutató), IDENTITAS (márkastratéga), VALOR (ajánlat-építő), INCRESCO (növekedési elemző), PARCITAS (AI-költségőr)
+- Hirdetés: KEPLER (hirdetéstervező), CYRANO (hirdetés-szövegíró), AURORA (Facebook/Meta Ads-szakértő), APOLLÓN (Google Ads-hirdetéskezelő), BREVIA (TikTok-szakértő)
+- Landoló és web: MIDÁSZ (landolóoldal-szakértő), ARGUSZ (webdesign-igazgató), ROBINSON (landolóoldal-építő)
 - Design és Figma: LEONARDO (kreatív designer), MATISSE (Figma-tervező), NEXUS (Figma–kód híd), SENTRY (Figma QA-ellenőr), VECTOR (képátméretező: 1:1, 4:5, 9:16, 16:9 és 2:3)
-- Videó: GULLIVER (videós adatgyűjtő), SEHEREZÁDÉ (videós forgatókönyvíró), LUMIÈRE (UGC videó-producer), KRONOSZ (videóvágó), GUTENBERG (videó-renderelő)
+- Videó: SEHEREZÁDÉ (videós forgatókönyvíró), LUMIÈRE (UGC videó-producer), KRONOSZ (videóvágó), GUTENBERG (AI-videókészítő)
 - SEO: KOLUMBUSZ (kulcsszó-kutató), PARETO (tartalom-optimalizáló), MERIDIAN (technikai SEO-szakértő), VERITAS (SEO-auditor), ARTEMISZ (helyi SEO-szakértő)
-- Vevő és bevétel: HERMÉSZ (e-mail-szakértő), PERPETUUM (előfizetés-szakértő), FIGARO (LinkedIn-specialista)
+- Social media: FIGARO (LinkedIn-specialista), FAMA (social-tervező), OVIDIUS (tartalom-újrahasznosító)
+- Ügyfélkapcsolat és bevétel: HERMÉSZ (e-mail-szakértő), PERPETUUM (előfizetés-szakértő), ACCESSUS (leadgyűjtő specialista)
+- Mérés és minőség: ETALON (mérési rendszerőr), PURITAS (magyar szövegellenőr)
 
 ## Árazás (magyar ág)
 <!-- gm:a2-llms-hu:start -->
@@ -58,11 +67,11 @@ Minden kapcsolat egyetlen GENmarketer-connectoron belül fut; a vevő a szolgál
 - Benne foglalt keret: Pro 1 fő és 3 cég, Prémium 1 fő és 5 cég, Team 5 fő és 50 cég. Ezen felül minden fizetős csomagban +9 990 Ft/fő és +6 990 Ft/cég havonta (6 havi számlázásnál négyszeres). Egy cég bármennyi csatornán és fiókkal egynek számít. 10 fő vagy 100 cég fölött egyedi ajánlatot adunk.
 - A 6 havi díj négy havidíjjal egyenlő (33% kedvezmény), és hathavonta ugyanezen az áron újítódik meg.
 - A Pro 3 napos próbával is indulhat 990 Ft-ért (1 fő, legfeljebb 3 cég, havi ciklus), utána 19 990 Ft/hó.
-- Mindhárom fizetős csomagban: 51 AI-szakértő folyamatos frissítéssel, 13 connector (hirdetés, analitika, e-mail, webshop, közösségi média), végrehajtás a vevő saját fiókjaiban az elérhető műveletekkel, a connector beállított végrehajtási módja szerint. A Pro élő webkutatása a vevő saját Tavily-kulcsával megy.
+- Mindhárom fizetős csomagban: 38 AI-szakértő folyamatos frissítéssel, 13 connector (hirdetés, analitika, e-mail, webshop, közösségi média), végrehajtás a vevő saját fiókjaiban az elérhető műveletekkel, a connector beállított végrehajtási módja szerint. A Pro élő webkutatása a vevő saját Tavily-kulcsával megy.
 - A Prémium ezen felül: élő webkutatás saját kulcs nélkül (havi 200 keresés), havi 100 hirdetéskép, havi 2 hirdetésvideó magyar hanggal, és a „Hirdetések készítése AI-al” kurzus.
 - A Team ezen felül: ütemezett riportok és auditok minden cégre, havi 500 hirdetéskép, 10 hirdetésvideó és 500 webes keresés a csapat közös keretéből, valamint 3 óra konzultáció ajándékba (94 990 Ft értékben).
 - Nincs hűségidő, bármikor lemondható, csomagot váltani lehet.
-- Ingyenes csomag is van, bankkártya nélkül: 1 fő, 1 cég, havi 20 feladat (1 feladat = egy AI-szakértő vagy egy bekötött fiók egy napja; ugyanaz legfeljebb havi 4 napon). Mind a 51 szakértő elérhető, a connectorok olvasnak, javasolnak és előkészítenek; élesíteni a fizetős csomag tud. A következő lépés a 3 napos, 990 Ft-os Pro-próba.
+- Ingyenes csomag is van, bankkártya nélkül: 1 fő, 1 cég, havi 20 feladat (1 feladat = egy AI-szakértő vagy egy bekötött fiók egy napja; ugyanaz legfeljebb havi 4 napon). Mind a 38 szakértő elérhető, a connectorok olvasnak, javasolnak és előkészítenek; élesíteni a fizetős csomag tud. A következő lépés a 3 napos, 990 Ft-os Pro-próba.
 <!-- gm:a2-llms-hu:end -->
 - Árzár: amíg az előfizetés aktív, a belépéskori díj nem emelkedik, akkor sem, ha a csapat nő. Csak akkor áll vissza, ha a vevő lemond és később visszatér.
 - Vásárlási út: a magyar landoló a tudástár pénztárába küld (WooCommerce, forintban), már kosárba tett csomaggal és számlázási ciklussal. Az angol landoló a külön angol boltba (vip.genmarketer.eu, euróban) – a kettő sosem keveredik.
@@ -199,8 +208,8 @@ Szó szerinti idézetek a landolóról, ahogy ott szerepelnek. A landoló pontsz
 ## Pricing
 <!-- gm:a2-llms-en:start -->
 - Hungarian pricing model: three paid subscriptions, each billable monthly or every six months — Pro 19 990 HUF/month or 79 960 HUF per six months, Premium (Prémium) 39 990 HUF/month or 159 960 HUF per six months, and Team 79 990 HUF/month or 319 960 HUF per six months. The six-month rate equals four monthly payments and renews every six months at that same rate. Included: Pro 1 seat and 3 companies, Premium 1 seat and 5 companies, Team 5 seats and 50 companies; beyond that every paid plan adds 9 990 HUF per seat and 6 990 HUF per company per month (four times that on six-month billing). One company counts once, whatever number of channels and accounts it has. Above 10 seats or 100 companies the price is quoted individually. Pro can start with a 3-day trial for 990 HUF (1 seat, up to 3 companies, monthly), then 19 990 HUF/month. No minimum term, cancel anytime, plan switching allowed.
-- Plan difference (Hungarian offer): all three paid plans include all 51 AI specialists and all 13 connectors, with supported execution in the customer's own accounts according to the connector's configured execution mode; Pro does live web research with the customer's own Tavily key. Premium adds keyless live web research (200 searches a month), 100 ad images and 2 ad videos with Hungarian voice-over a month, and the „Hirdetések készítése AI-al” course. Team adds scheduled reports and audits for every company, 500 images, 10 videos and 500 searches a month from a shared team quota, and 3 hours of consultation as a gift (worth 94 990 HUF).
-- There is also a free plan (Ingyenes), no card required: 1 seat, 1 company and 20 tasks a month (one task = one AI specialist or one connected account for one day; the same one on at most 4 days a month). All 51 specialists are available; connectors read, recommend and prepare changes, while applying them live needs a paid plan.
+- Plan difference (Hungarian offer): all three paid plans include all 38 AI specialists and all 13 connectors, with supported execution in the customer's own accounts according to the connector's configured execution mode; Pro does live web research with the customer's own Tavily key. Premium adds keyless live web research (200 searches a month), 100 ad images and 2 ad videos with Hungarian voice-over a month, and the „Hirdetések készítése AI-al” course. Team adds scheduled reports and audits for every company, 500 images, 10 videos and 500 searches a month from a shared team quota, and 3 hours of consultation as a gift (worth 94 990 HUF).
+- There is also a free plan (Ingyenes), no card required: 1 seat, 1 company and 20 tasks a month (one task = one AI specialist or one connected account for one day; the same one on at most 4 days a month). All 38 specialists are available; connectors read, recommend and prepare changes, while applying them live needs a paid plan.
 <!-- gm:a2-llms-en:end -->
 - English pricing model: two offers, mirroring the Hungarian structure in euros. Two subscriptions, each billable monthly or every six months — Planner 29 EUR/month or 116 EUR per six months, and Autopilot 59 EUR/month or 236 EUR per six months. The six-month rate equals four monthly payments, so half a year costs two months less than paying monthly, and it renews every six months at that same rate. No minimum term, cancel anytime, plan switching allowed.
 - Managed tier: an optional, built-for-you level that is not sold self-serve and has no list price. GENmarketer builds the system around the customer's company, tuned to their processes, automated end to end, and keeps it running. It starts with an expression of interest on the landing page and an assessment call, not a checkout.

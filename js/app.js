@@ -859,26 +859,27 @@
     });
   }
 
-  /* ── A2 csomagkereső és kártyák (17/#3611 S8) ──────────────────────────────
-   * A statikus markup (generált, 1 fő · 1 cég · havi) JS nélkül is teljes ajánlat; ez a
-   * függvény csak az állapotot követi. Döntés: a legolcsóbb megfelelő csomag, de ha egy
-   * nagyobb legfeljebb `tie` (2000 Ft) forinttal drágább, az nyer (docs/67 §3.1).
-   * Próba-CTA csak 1 fő, ≤ 3 cég, havi állásnál; plafon fölött e-mailes ajánlatkérés. */
+  /* ── A2 csomagválasztó, kártyák és táblázat (17/#3611 S8; V10 elrendezés: Tibor Figma 1186:2 / 1243:2, 2026-11-02) ──
+   * A statikus markup (generált, 1 fő · 1 cég · havi) JS nélkül is teljes ajánlat; ez a függvény csak az állapotot
+   * követi. Választó: ciklus + létszám + cégek. Ajánlás: a legolcsóbb fizetős csomag, de ha egy nagyobb legfeljebb
+   * `tie` (2000 Ft) forinttal drágább, az nyer (docs/67 §3.1). Az Ingyenes kártya nem kap kiemelést; 1 fő / 1 cég
+   * fölött halványul (is-out). Próba-CTA csak 1 fő, ≤ 3 cég, havi állásnál; plafon fölött e-mailes ajánlatkérés.
+   * Mobilon a táblázat egy csomag oszlopát mutatja: a fülek (`[data-a2-tabs]`) a `data-a2-view` attribútumot állítják. */
   function wireA2Pricing() {
     var A = a2Data(), root = document.querySelector("[data-gm-a2]");
     if (!A || !root) return;
     var NB = "\u00a0";
-    // `act` (17/#3644, Károly 2026-10-31): „Elemezzen, javasoljon” → az Ingyenes is szóba jön; alapból ez áll.
-    var st = { fo: 1, ceg: 1, act: A.free ? "elemez" : "vegrehajt", kreativ: 0, csapatfunk: 0, cycle: "havi" };
+    // A képlet mezői (act, kreativ, csapatfunk) a kereső kérdéseivel együtt kikerültek a lapról (V10); fix értéken maradnak,
+    // így az ajánló ugyanazzal a képlettel dönt, mint a generátor (`recommend`), és az Ingyenes sosem az ajánlott.
+    var st = { fo: 1, ceg: 1, act: "vegrehajt", kreativ: 0, csapatfunk: 0, cycle: "havi" };
     var six = A.cycles["6havi"];
     var MAIL = "mailto:info@genmarketer.hu?subject=Egyedi%20aj%C3%A1nlat%20-%20AI-csapat";
     var CTA_NAME = { pro: "Pro előfizetés", premium: "Prémium előfizetés", team: "Team előfizetés" };
+    var cmp = root.querySelector(".gm-a2-cmp"), viewPick = null;
     function ft(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, NB) + NB + "Ft"; }
     function lvl(k) { return A.order.indexOf(k) + 1; }
     function custom() { return st.fo > A.maxSeats || st.ceg > A.maxCompanies; }
-    // Ingyenes ajánlás: 1 fő, 1 cég, csak elemzés, kép/videó és riport nélkül (a generátor `freeRecommended`-je).
     function freeFit() { return !!(A.free && A.free.seats > 0 && A.free.companies > 0) && st.fo <= A.free.seats && st.ceg <= A.free.companies; }
-    function freeRec() { return !custom() && freeFit() && st.act === "elemez" && !st.kreativ && !st.csapatfunk; }
     function gaps(k) {
       var out = [];
       if (lvl(k) < 2 && st.kreativ) out.push("Nincs benne hirdetéskép, videó és beépített webkutatás");
@@ -897,13 +898,14 @@
       return rec.key;
     }
     function per(monthly) { return st.cycle === "6havi" ? monthly * six.multiplier / six.months : monthly; }
+    function per6(monthly) { return monthly * six.multiplier / six.months; }
     function extraText(k, r) {
       var ext = [];
       if (r.xSeats) ext.push(r.xSeats + NB + "fő");
       if (r.xCompanies) ext.push(r.xCompanies + NB + "cég");
       return ext.length ? ft(per(A.tiers[k].base)) + " alapdíj + " + ext.join(" + ") : "";
     }
-    function setCta(a, k, labelEl) {
+    function setCta(a, k) {
       var href, label, key;
       if (custom()) { href = MAIL; label = "Ajánlatot kérek"; key = null; }
       else if (k === A.trial.tier && a2TrialOk(st.fo, st.ceg, st.cycle)) { href = a2TrialLink(); label = "3 nap próba: " + ft(A.trial.fee); key = k + "_trial"; }
@@ -911,14 +913,14 @@
       if (key) { a.setAttribute("data-gm-checkout", key); a.setAttribute("href", withAttribution(href)); }
       else { a.removeAttribute("data-gm-checkout"); a.setAttribute("href", href); }
       a.setAttribute("data-gm-package", key || k);
-      (labelEl || a).textContent = label;
+      a.textContent = label;
     }
     function tierOf(a) {
       var box = a.closest("[data-a2-tier]") || a.closest("[data-a2-col]");
       return box ? (box.getAttribute("data-a2-tier") || box.getAttribute("data-a2-col")) : null;
     }
     function render() {
-      var cu = custom(), m = match(), fr = freeRec();
+      var cu = custom(), m = match();
       root.querySelectorAll("[data-a2-input]").forEach(function (inp) {
         var k = inp.getAttribute("data-a2-input");
         if (document.activeElement !== inp) inp.value = String(st[k]);
@@ -926,88 +928,44 @@
       A.order.forEach(function (k) {
         var card = root.querySelector('[data-a2-tier="' + k + '"]');
         if (!card) return;
-        var r = q(k), g = gaps(k);
-        card.classList.toggle("is-match", k === m && !fr);
-        card.classList.toggle("is-out", g.length > 0);
-        var why = card.querySelector("[data-a2-why]");
-        if (why) {
-          why.classList.toggle("is-no", g.length > 0);
-          why.innerHTML = g.length
-            ? '<span class="gm-a2-ic gm-a2-ic--no" aria-hidden="true">✕</span><span><b>Ehhez nem elég</b><span class="gm-a2-card__gaps">' + g.map(function (x) { return esc(x); }).join("<br>") + "</span></span>"
-            : '<span class="gm-a2-ic gm-a2-ic--ok" aria-hidden="true">✓</span><span><b>Megfelel a beállításaidnak</b></span>';
-        }
+        var r = q(k);
+        card.classList.toggle("is-match", k === m);
+        card.classList.toggle("is-out", gaps(k).length > 0);
         var price = card.querySelector("[data-a2-price]");
         if (price) price.innerHTML = cu ? "<b>Egyedi ár</b>" : "<b>" + ft(per(r.monthly)) + "</b><small>/hó</small>" + (st.cycle === "6havi" ? "<s>" + ft(r.monthly) + "</s>" : "");
         var billed = card.querySelector("[data-a2-billed]");
         if (billed) billed.innerHTML = cu ? "e-mailben küldünk ajánlatot"
-          : st.cycle === "6havi" ? "6 havonta " + ft(r.total) + " egyben"
-          : 'havi számlázás<span class="gm-a2-card__tip">6 havival ' + ft(r.monthly * six.multiplier / six.months) + "/hó</span>";
+          : st.cycle === "6havi" ? "Bruttó ár · 6 havonta " + ft(r.total) + " egyben"
+          : 'Bruttó ár · <span class="gm-a2-card__tip">6 havival ' + ft(per6(r.monthly)) + "/hó</span>";
         var ex = card.querySelector("[data-a2-extra]");
         if (ex) ex.textContent = cu ? "" : extraText(k, r);
         var fo = card.querySelector("[data-a2-fo]");
         if (fo) fo.innerHTML = cu && st.fo > A.maxSeats ? A.maxSeats + "+" + NB + "fő" : r.seats + NB + "fő" + (r.xSeats ? "<small>(+" + r.xSeats + ")</small>" : "");
         var cg = card.querySelector("[data-a2-ceg]");
         if (cg) cg.innerHTML = cu && st.ceg > A.maxCompanies ? A.maxCompanies + "+" + NB + "cég" : r.companies + NB + "cég" + (r.xCompanies ? "<small>(+" + r.xCompanies + ")</small>" : "");
+        // A táblázat két ársora rögzített ciklusú (havi, 6 havi), csak a létszám és a cégszám mozgatja.
         var td = root.querySelector('[data-a2-tprice="' + k + '"]');
-        if (td) td.textContent = cu ? "Egyedi ár" : ft(per(r.monthly));
+        if (td) td.textContent = cu ? "Egyedi ár" : ft(r.monthly) + "/hó";
+        var td6 = root.querySelector('[data-a2-tprice6="' + k + '"]');
+        if (td6) td6.textContent = cu ? "Egyedi ár" : ft(per6(r.monthly)) + "/hó";
       });
       root.querySelectorAll("a[data-a2-cta]").forEach(function (a) {
         var k = tierOf(a);
         if (!k) return;
         setCta(a, k);
-        if (a.closest("[data-a2-tier]")) {
-          var on = k === m && !fr;
-          a.classList.toggle("gm-btn--primary", on);
-          a.classList.toggle("gm-a2-btn--out", !on);
-        }
+        a.classList.toggle("gm-btn--primary", k === m);
+        a.classList.toggle("gm-a2-btn--out", k !== m);
       });
-      root.querySelectorAll("[data-a2-col]").forEach(function (c) { c.classList.toggle("is-match", c.getAttribute("data-a2-col") === m && !fr); });
-      root.querySelectorAll("[data-a2-free-col]").forEach(function (c) { c.classList.toggle("is-match", fr); });
-      // Ingyenes (17/#3644): ajánlott, ha 1 fő, 1 cég, csak elemzés, kép/videó és riport nélkül (Károly, 2026-10-31,
-      // terv: A2-kereso-felul_2026-10-29_5); különben a kártya megmondja, mi hiányzik belőle.
-      if (A.free && A.free.seats > 0 && A.free.companies > 0 && A.free.whyOk && A.free.whyNo) {
-        var fg = [];
-        if (!freeFit()) fg.push(A.free.whyNo);
-        if (st.act !== "elemez" && A.free.gapAct) fg.push(A.free.gapAct);
-        if (st.kreativ) fg.push("Nincs benne hirdetéskép, videó és beépített webkutatás");
-        if (st.csapatfunk) fg.push("Nincs benne ütemezett riport és konzultáció");
-        var fcard = root.querySelector("[data-a2-free]");
-        if (fcard) { fcard.classList.toggle("is-out", fg.length > 0); fcard.classList.toggle("is-match", fr); }
-        var fwhy = root.querySelector("[data-a2-free-why]");
-        if (fwhy) {
-          fwhy.classList.toggle("is-no", fg.length > 0);
-          fwhy.innerHTML = !fg.length
-            ? '<span class="gm-a2-ic gm-a2-ic--ok" aria-hidden="true">✓</span><span><b>' + esc(A.free.whyOk) + "</b></span>"
-            : '<span class="gm-a2-ic gm-a2-ic--no" aria-hidden="true">✕</span><span><b>Ehhez nem elég</b><span class="gm-a2-card__gaps">' + fg.map(function (x) { return esc(x); }).join("<br>") + "</span></span>";
-        }
-        var falt = root.querySelector("[data-a2-free-alt]");
-        if (falt) falt.hidden = !freeFit() || cu || fr;
+      root.querySelectorAll("[data-a2-col]").forEach(function (c) { c.classList.toggle("is-match", c.getAttribute("data-a2-col") === m); });
+      var fcard = root.querySelector("[data-a2-free]");
+      if (fcard) fcard.classList.toggle("is-out", !freeFit());
+      // Mobil táblázat-fülek: amíg a látogató nem választ, az ajánlott csomag oszlopa látszik.
+      if (cmp) {
+        var view = viewPick || m;
+        cmp.setAttribute("data-a2-view", view);
+        root.querySelectorAll("[data-a2-tabs] button[data-v]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-v") === view ? "true" : "false"); });
       }
-      var r = q(m), T = A.tiers[m];
-      var set = function (sel, html) { var x = root.querySelector(sel); if (x) x.innerHTML = html; };
-      set("[data-a2-rname]", cu ? "Egyedi ajánlat" : esc(T.label));
-      set("[data-a2-rtotal]", cu ? "Egyedi ár" : ft(per(r.monthly)));
-      set("[data-a2-rper]", cu ? "" : "/hó");
-      set("[data-a2-rbilled]", cu ? "e-mailben küldünk ajánlatot" : st.cycle === "6havi" ? "6 havonta " + ft(r.total) + " egyben" : "havi számlázás");
-      set("[data-a2-radd]", cu ? A.maxSeats + " főnél vagy " + A.maxCompanies + " cégnél több" : esc(extraText(m, r)));
-      var save = cu ? 0 : r.monthly * (six.months - six.multiplier);
-      set("[data-a2-save]", !save ? "6 havi fizetéssel minden fizetős csomag 33%-kal olcsóbb."
-        : st.cycle === "6havi" ? "A " + esc(T.label) + " csomagon 6 havonta <b>" + ft(save) + "-ot</b> spórolsz."
-        : "6 havi fizetéssel a " + esc(T.label) + " csomagon <b>" + ft(save) + "-ot</b> spórolsz.");
-      var rc = root.querySelector("a[data-a2-rcta]");
-      if (rc) { setCta(rc, m, rc.querySelector("[data-a2-rcta-t]")); rc.hidden = fr; }
-      var rcf = root.querySelector("a[data-a2-rcta-free]"), rtr = root.querySelector("a[data-a2-rtrial]");
-      if (rcf) rcf.hidden = !fr;
-      if (rtr) rtr.hidden = !fr;
-      if (fr) {
-        set("[data-a2-rname]", esc(A.free.label || "Ingyenes"));
-        set("[data-a2-rtotal]", ft(A.free.price || 0));
-        set("[data-a2-rper]", "/hó");
-        set("[data-a2-rbilled]", esc(A.free.billed || ""));
-        set("[data-a2-radd]", "");
-        set("[data-a2-save]", "6 havi fizetéssel minden fizetős csomag 33%-kal olcsóbb.");
-      }
-      root.setAttribute("data-a2-state", [st.fo, st.ceg, st.act, st.kreativ, st.csapatfunk, st.cycle, fr ? "free" : m, cu ? "custom" : "list"].join("|"));
+      root.setAttribute("data-a2-state", [st.fo, st.ceg, st.act, st.kreativ, st.csapatfunk, st.cycle, m, cu ? "custom" : "list"].join("|"));
     }
     function setNum(k, v, why) {
       var max = k === "fo" ? A.maxSeats + 1 : A.maxCompanies + 1;
@@ -1032,18 +990,17 @@
         if (setNum(k, st[k] + Number(step.getAttribute("data-d")), "step")) { render(); signalNum(k); }
         return;
       }
+      var tab = ev.target.closest("[data-a2-tabs] button[data-v]");
+      if (tab) { viewPick = tab.getAttribute("data-v"); render(); return; }
       var chip = ev.target.closest("[data-a2-q] button[data-v]");
       if (!chip) return;
       var g = chip.closest("[data-a2-q]"), qk = g.getAttribute("data-a2-q"), v = chip.getAttribute("data-v");
       g.querySelectorAll("button[data-v]").forEach(function (b) { b.setAttribute("aria-pressed", b === chip ? "true" : "false"); });
-      var val = qk === "cycle" || qk === "act" ? v : Number(v);
-      if (st[qk] === val) return;
-      st[qk] = val;
+      if (st[qk] === v) return;
+      st[qk] = v;
       render();
       // A ciklus-dimenzió értékei a régi HU-sorokkal folytonosak maradnak (havi = "monthly", 6 havi = "yearly").
       if (qk === "cycle") signal("gm_cycle_switch", { billing_cycle: v === "6havi" ? "yearly" : "monthly" }, { clarityKey: "billing_cycle", clarityValue: v });
-      // Egyetlen paraméter (pl. "kreativ_1"): a GA4-ben a `value` a pénzérték foglalt neve, nem használható.
-      else signal("gm_a2_need", { need: qk + "_" + val }, { clarityKey: "a2_" + qk, clarityValue: val });
     });
     root.querySelectorAll("[data-a2-input]").forEach(function (inp) {
       var k = inp.getAttribute("data-a2-input");
@@ -1053,13 +1010,53 @@
     render();
   }
 
+  /* ── Connector-szekció fülei (Tibor Figma C-terv 1260:8, 2026-11-02) ─────────────────────────────────────────
+   * JS nélkül mind a hét terület panelje egymás alatt látszik (crawler, LLM-bot); JS-sel a kártya egy panelt mutat,
+   * a fülek váltanak (kattintás, nyilak, Home/End). A statikus „n / 7” lapozó panelenként a markupban áll. */
+  function wireConnTabs() {
+    var root = document.querySelector("[data-gm-cx]");
+    if (!root) return;
+    var tabs = Array.prototype.slice.call(root.querySelectorAll("[role=tab][data-cx]"));
+    var panels = Array.prototype.slice.call(root.querySelectorAll("[data-cx-panel]"));
+    if (!tabs.length || tabs.length !== panels.length) return;
+    function show(key, focus) {
+      tabs.forEach(function (t) {
+        var on = t.getAttribute("data-cx") === key;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      });
+      panels.forEach(function (p) { p.hidden = p.getAttribute("data-cx-panel") !== key; });
+    }
+    root.setAttribute("data-cx-ready", "");
+    show(tabs[0].getAttribute("data-cx"));
+    root.addEventListener("click", function (ev) {
+      var t = ev.target.closest("[role=tab][data-cx]");
+      if (t) show(t.getAttribute("data-cx"));
+    });
+    root.addEventListener("keydown", function (ev) {
+      var t = ev.target.closest("[role=tab][data-cx]");
+      if (!t) return;
+      var i = tabs.indexOf(t), n = tabs.length, j = null;
+      if (ev.key === "ArrowDown" || ev.key === "ArrowRight") j = (i + 1) % n;
+      else if (ev.key === "ArrowUp" || ev.key === "ArrowLeft") j = (i - 1 + n) % n;
+      else if (ev.key === "Home") j = 0;
+      else if (ev.key === "End") j = n - 1;
+      if (j === null) return;
+      ev.preventDefault();
+      show(tabs[j].getAttribute("data-cx"), true);
+    });
+  }
+
   // Per-ágens SZEREP-SPECIFIKUS animáció + sebesség — minden szakember a saját
   // munkáját idéző vizuált kapja (mind egyedi). A drawerek: js/dashboards.js.
   // ⚠️ ÚJ specialista felvételekor IDE is kell egy [drawer, sebesség] sor (relevánssal),
   //    különben a kártya a semleges fallbackra esik — a gépi kapu: tests/viz-coverage.mjs (test:all).
   /* A kulcs a data.js `code` mezője (ASCII). A drawer-nevek a dashboards.js DRAW mapjéből. */
   var VIZ = {
-    TIKTOK: ["reticle", 1.0], KOLTSEGOR: ["gauge", 1.0],
+    // 2026-11-01 (Tibor, Tudástár 2.0 névsor): PARCITAS (volt KOLTSEGOR), BREVIA (volt TIKTOK) + 9 új tag.
+    PARCITAS: ["gauge", 1.0], BREVIA: ["reticle", 1.0], IDENTITAS: ["swatch", 0.9], VALOR: ["score", 0.95], INCRESCO: ["diagnostics", 1.0],
+    ARGUSZ: ["inspect", 1.0], FAMA: ["timeline", 0.95], OVIDIUS: ["ingest", 1.0], ACCESSUS: ["funnel", 0.95], ETALON: ["audit", 1.0], PURITAS: ["typead", 1.0],
     SHERLOCK: ["scan", 1.0],   "SUN-TZU": ["versus", 1.0], ATHENE: ["tree", 0.9],  PERPETUUM: ["loop", 1.0],
     MIDASZ: ["wireframe", 1.0], ROBINSON: ["build", 1.0],
     KEPLER: ["funnel", 1.0], CYRANO: ["typead", 1.1], LEONARDO: ["swatch", 1.0], VECTOR: ["reflow", 1.0], APOLLON: ["gauge", 0.95], AURORA: ["reticle", 1.0],
@@ -1067,7 +1064,7 @@
     FIGARO: ["network", 1.0],
     ATLASZ: ["orchestrate", 0.9],
     MATISSE: ["artboards", 1.0], NEXUS: ["code", 1.1], SENTRY: ["inspect", 1.0],
-    GULLIVER: ["ingest", 1.0], LUMIERE: ["filmstrip", 1.1], SEHEREZADE: ["script", 1.0], GUTENBERG: ["render", 1.0], KRONOSZ: ["timeline", 1.0],
+    LUMIERE: ["filmstrip", 1.1], SEHEREZADE: ["script", 1.0], GUTENBERG: ["render", 1.0], KRONOSZ: ["timeline", 1.0],
     VERITAS: ["audit", 0.9], KOLUMBUSZ: ["keywords", 1.0], PARETO: ["score", 0.95], MERIDIAN: ["diagnostics", 1.0], ARTEMISZ: ["mappin", 1.0]
   };
   function vizOf(code, fb) { return (VIZ[code] && VIZ[code][0]) || fb; }
@@ -1082,7 +1079,7 @@
     { time: "07:26", agent: "AURORA", hu: "Leállított 3 hirdetést, amely 94 000 Ft-ot költött vásárlás nélkül.", en: "Paused 3 ads that spent 94,000 Ft without producing a purchase.", chipHu: "Éles ✓", chipEn: "Applied ✓" },
     { time: "07:41", agent: "CYRANO", hu: "9 hirdetésszöveg elkészült három különböző megközelítéssel.", en: "9 ad-copy variants are ready across three different approaches.", chipHu: "Átnézésre vár", chipEn: "Ready to review", wait: true },
     { time: "07:55", agent: "HERMESZ", hu: "A háromrészes kosárelhagyó levélsorozat időzítésre kész.", en: "The three-part abandoned-cart email sequence is ready to schedule.", chipHu: "Jóváhagyásra vár", chipEn: "Awaiting approval", wait: true },
-    { time: "08:08", agent: EN ? "GULLIVER" : "ATLASZ", hu: "A heti riport megmutatja, melyik csatorna hozta a bevétel 71%-át.", en: "The weekly report shows which channel produced 71% of revenue.", chipHu: "Kész ✓", chipEn: "Done ✓" }
+    { time: "08:08", agent: "INCRESCO", hu: "A heti riport megmutatja, melyik csatorna hozta a bevétel 71%-át.", en: "The weekly report shows which channel produced 71% of revenue.", chipHu: "Kész ✓", chipEn: "Done ✓" }
   ];
 
   function feedAgentName(code) {
@@ -2194,13 +2191,55 @@
     });
   }
 
+  /* ---- TOP 3 kompakt (2026-11-01, Tibor): harmonika-kártyák bal oldalt, EGY színpad jobb oldalt.
+     A kártya fejléce fület vált: a saját szövege nyílik, a színpadon a saját animációja látszik.
+     2026-11-02: a „További konkrét példák” (data-ws-jump) gombok kikerültek a kártyákból (Tibor). */
+  function wireTop3Compact() {
+    var root = document.querySelector("[data-gm-top3]"); if (!root) return;
+    var cards = Array.prototype.slice.call(root.querySelectorAll(".gm-top3__card"));
+    var panels = Array.prototype.slice.call(root.querySelectorAll("[data-top3-panel]"));
+    function activate(key) {
+      cards.forEach(function (c) {
+        var on = c.getAttribute("data-top3") === key;
+        c.classList.toggle("is-active", on);
+        var b = c.querySelector(".gm-top3__pick");
+        if (b) { b.setAttribute("aria-selected", on ? "true" : "false"); b.setAttribute("aria-expanded", on ? "true" : "false"); }
+      });
+      panels.forEach(function (p) { p.hidden = p.getAttribute("data-top3-panel") !== key; });
+    }
+    cards.forEach(function (c) {
+      var b = c.querySelector(".gm-top3__pick"); if (!b) return;
+      b.addEventListener("click", function () { activate(c.getAttribute("data-top3")); });
+    });
+  }
+
+  /* ---- Csapatrács (2026-11-01, Tibor): a 38 kártyából alapból 12 látszik, a gomb a többit nyitja.
+     Bármelyik szűrő-chip is kinyitja, hogy a szűrt találat sose legyen csonka. Csak a magyar oldalon. */
+  function wireRosterMore() {
+    var grid = document.getElementById("gm-mc-grid"), btn = document.querySelector("[data-gm-mc-more]");
+    if (!grid || !btn || EN) return;
+    var cards = grid.querySelectorAll(".gm-agent");
+    if (cards.length <= 12) return;
+    grid.classList.add("is-collapsed");
+    btn.hidden = false;
+    function expand() { grid.classList.remove("is-collapsed"); btn.hidden = true; }
+    btn.addEventListener("click", function () {
+      expand();
+      if (cards[12]) cards[12].focus({ preventScroll: true });
+    });
+    document.querySelectorAll(".gm-chip").forEach(function (chip) { chip.addEventListener("click", expand); });
+  }
+
   function init() {
     // 1) Minden, ami a tartalom HASZNÁLHATÓSÁGÁHOZ kell — azonnal, vendor-függés nélkül.
     boot();
     applyRevealState();
     renderAgents();
+    wireRosterMore();
     wireRoleReliefPeople();
     wireWorkstation();
+    wireTop3Compact();
+    wireConnTabs();
     wireFilters();
     wireCtas();
     wireFreeCtas();
