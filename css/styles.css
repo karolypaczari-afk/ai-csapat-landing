@@ -2178,3 +2178,59 @@ html { scroll-padding-bottom: 5.5rem; }
 @media(max-width:600px){.gm-more-specialists ul{columns:1}}
 /* A keskeny HU kártyán a mért számok és címkéik külön sorba törhetnek. */
 html[lang="hu"] .gm-agent__metrics { flex-wrap: wrap; row-gap: 0.3rem; }
+/* ---- Reszponzív + asztali audit (2026-11-02, 17/#3611) — csak HU, az EN oldal változatlan ----
+   Mérés: Playwright, 320–1440 px, élő és helyi szerver (scratchpad probe.mjs); a szövegek tartalma változatlan. */
+/* Fejléc-CTA: 320–414 px-en a „Próbáld ki ingyen” 2–3 sorba tört egy kerek pirulában (66 px magas).
+   Egysoros, kompakt gomb; 400 px alatt nem fér el a logó mellett, ott a hero-CTA és a ragadós alsó CTA viszi. */
+@media (max-width: 600px) {
+  html[lang="hu"] .gm-header .gm-btn[data-gm-free="header"] { white-space: nowrap; padding: 0.55em 0.95em; font-size: 0.84rem; }
+  html[lang="hu"] .gm-header__actions { gap: 0.6rem; }
+}
+@media (max-width: 399px) {
+  html[lang="hu"] .gm-header .gm-btn[data-gm-free="header"] { display: none; }
+}
+/* Státuszjel: mobilon 8,3 px, asztalon 9,9 px volt — olvashatatlan. */
+html[lang="hu"] .gm-status { font-size: 0.7rem; }
+@media (max-width: 640px) { html[lang="hu"] .gm-status { font-size: 0.66rem; } }
+/* Csapat-kártyák: 320–360 px-en a fejléc 2–12 px-rel kilógott a kártyából (1fr = auto minimum). */
+@media (max-width: 640px) {
+  html[lang="hu"] .gm-mc__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html[lang="hu"] .gm-agent { min-width: 0; }
+  html[lang="hu"] .gm-agent__code { overflow-wrap: anywhere; }
+}
+/* 340 px alatt a kétoszlopos kártyában a szerepnév (pl. „a hirdetéstervező”) 2–14 px-rel kilóg — egy oszlop. */
+@media (max-width: 340px) { html[lang="hu"] .gm-mc__grid { grid-template-columns: minmax(0, 1fr); } }
+/* Kétoszlopos kártyán az avatar melletti ~70 px-es sávban a szerepnév szavanként tört („a / csapatvezető”):
+   420 px alatt az avatar a név fölé kerül, a név, a státusz és a szerep a kártya teljes szélességét kapja. */
+@media (max-width: 420px) {
+  html[lang="hu"] .gm-agent__top { flex-direction: column; align-items: flex-start; gap: 0.45rem; }
+  html[lang="hu"] .gm-agent__meta { width: 100%; }
+  html[lang="hu"] .gm-agent__av { width: 40px; height: 40px; flex-basis: auto; }
+}
+@media (max-width: 380px) { html[lang="hu"] .gm-agent { padding-inline: 0.7rem; } }
+/* A kártya <button>: a böngésző függőlegesen középre teszi a tartalmát, így egy sorban a rövidebb kártya
+   tartalma lejjebb csúszott, mint a szomszédjáé — felülre igazítva. */
+html[lang="hu"] .gm-agent { display: flex; flex-direction: column; justify-content: flex-start; }
+/* Csapatszűrő: ahol két sorba tör (≤ 1180 px), a 999 px-es pirula-sarok torz — lekerekített doboz. */
+@media (max-width: 1180px) { html[lang="hu"] .gm-mc__filters { justify-content: center; border-radius: 22px; } }
+/* Connector-fülek mobilon: rejtett görgetősáv mellett nem látszott, hogy a sáv görgethető — jobb oldali kifutás. */
+@media (max-width: 900px) {
+  html[lang="hu"] .gm-cx__tabs { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent); padding-right: 32px; }
+}
+/* Nyilas gombok: keskeny kijelzőn a „→” / „▸” egyedül maradt a második sorban — kiegyensúlyozott tördelés. */
+html[lang="hu"] .gm-btn { text-wrap-style: balance; } /* csak a stílus: a `text-wrap` rövidítés a nowrap-et is felülírná */
+/* Kalkulátor-léptető: a szám-mező 15–27 × 24 px-es érintési célpont volt. */
+html[lang="hu"] .gm-a2-step__v { align-items: center; }
+html[lang="hu"] .gm-a2-step input { height: 40px; min-width: 2.5ch; }
+@media (max-width: 600px) {
+  /* A mobilon kétsoros léptető fix 50 px-es magasságból 12 px-rel kilógott (élőben is mérve). */
+  html[lang="hu"] .gm-a2-step { height: auto; min-height: 50px; }
+  html[lang="hu"] .gm-a2-step button { width: 36px; height: 36px; }
+  html[lang="hu"] .gm-a2-step input { height: 36px; }
+}
+/* Lábléc jogi linkjei: 16 px magas érintési célpont — a sorköz nem változik, csak a kattintható terület nő. */
+html[lang="hu"] .gm-footer__legal a { padding-block: 6px; }
+/* Garancia-apróbetű: mobilon 13–17 soros középre zárt bekezdés — balra zárva olvasható. */
+@media (max-width: 640px) { html[lang="hu"] .gm-guarantee .gm-lead, html[lang="hu"] .gm-guarantee__terms { text-align: left; } }
+/* Ragadós alsó CTA asztalon: 1376 px széles gombsáv helyett középre zárt, kezelhető gomb. */
+@media (min-width: 901px) { html[lang="hu"] .gm-sticky-cta { display: flex; justify-content: center; } html[lang="hu"] .gm-sticky-cta .gm-btn { width: min(100%, 440px); } }
