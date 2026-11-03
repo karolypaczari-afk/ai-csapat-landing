@@ -874,3 +874,65 @@ html[lang="hu"] .gm-chip.is-active { background: var(--gm-grad-soft); color: #ff
   .gm-cx__chips { gap: 6px; }
   .gm-cx__chip { padding: 8px; gap: 8px; }
 }
+
+/* ==== Reszponzív audit (Károly, 2026-11-03): tablet- és szélső mobilnézet, szövegváltozás nélkül ====
+   Mérve: 320–1600 px-es szélesség-söprés (16 px lépés) + 18 eszköznézet; a javítás előtt a lenti hibák látszottak. */
+
+/* Tény-doboz, mobil: a középre húzott cellák nem töltötték ki a rácsot, ezért a 2. sor felső és bal
+   elválasztója elcsúszott (390 px: a vonal 30 px-ről indult); 320 px-en a „folyamatos” kilógott a cellából. */
+@media (max-width: 640px) {
+  .gm-proofbar__row { justify-items: stretch; row-gap: 0; }
+}
+@media (max-width: 359px) {
+  .gm-proofbar__item strong { font-size: 22px; line-height: 28px; }
+}
+/* Tény-doboz, 641–860 px: a régi flex-tördelés 3 + 2 cellát adott, a 2. sor középre csúszott, bal oldalán
+   üres hellyel és lógó elválasztóval. Itt is a mobil 6 hasábos rácsa: felül 3, alul 2 egyforma cella. */
+@media (min-width: 641px) and (max-width: 860px) {
+  .gm-proofbar__row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; justify-items: stretch; }
+  .gm-proofbar__item { flex: none; grid-column: span 2; }
+  .gm-proofbar__item:nth-child(n+4) { grid-column: span 3; border-top: 1px solid var(--v5-line); }
+  .gm-proofbar__item:nth-child(4) { border-left: 0; }
+}
+
+/* Munkaállomás-fülek, 641–1080 px: az egysoros, görgethető sáv a jobb szélen levágta a füleket
+   (768 px: „Vid|”, a Versenytárs és a Stratégia nem látszott), görgetési jel nélkül. Két sor, 5 + 5 fül. */
+@media (min-width: 641px) and (max-width: 1080px) {
+  .gm-ws__tabs { display: grid; grid-template-columns: repeat(5, auto); justify-content: center; overflow: visible; }
+}
+
+/* Csapat-szűrő, 641–1180 px: a hud.css `space-between`-je felülírta a középre zárást, a 2. sor chipjei
+   szétszóródtak a teljes szélességben. */
+@media (min-width: 641px) and (max-width: 1180px) {
+  html[lang="hu"] .gm-mc__filters { justify-content: center; }
+}
+
+/* Alapítói névjegyek, 641–1023 px: két hasábban a tény-csempék szövege kilógott (768 px: „marketingbe|”,
+   „szoftvercégn|”). Itt egymás alatt, olvasható szélességben. */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .gm-people { grid-template-columns: 1fr; max-width: 720px; margin-inline: auto; }
+}
+/* A kapcsolati sor egy sorban tartása csak ott, ahol elfér (656–704 px-en levágódott). */
+@media (min-width: 641px) and (max-width: 760px) {
+  #tibor .gm-team-contact__a { white-space: normal; }
+}
+
+/* Csomag-táblázat, 761–999 px: a 720 px-es minimális szélesség miatt a Team oszlop jelzés nélkül kilógott
+   a görgethető dobozból (768 px: 897 / 705 px). Négy oszlopban itt a gombok sem férnek el egy sorban, ezért a
+   mobilon jóváhagyott nézet jön: egy csomag oszlopa, felette a csomagfülek (app.js `data-a2-view`). 1000 px-től
+   a teljes táblázat görgetés nélkül elfér. */
+@media (min-width: 761px) and (max-width: 999px) {
+  .gm-a2-cmp[data-a2-view] .gm-a2-tabs { display: flex; }
+  .gm-a2-cmp[data-a2-view] table { min-width: 0; }
+  .gm-a2-cmp[data-a2-view] tbody th { width: 54%; }
+  .gm-a2-cmp[data-a2-view] [data-a2-col], .gm-a2-cmp[data-a2-view] [data-a2-free-col] { display: none; }
+  .gm-a2-cmp[data-a2-view="free"] [data-a2-free-col], .gm-a2-cmp[data-a2-view="pro"] [data-a2-col="pro"],
+  .gm-a2-cmp[data-a2-view="premium"] [data-a2-col="premium"], .gm-a2-cmp[data-a2-view="team"] [data-a2-col="team"] { display: table-cell; }
+}
+
+/* Fejléc-CTA, 400–459 px: a V5 „MENÜ” feliratú gombja mellett a logó + menü + CTA 457 px-et kér, ezért a gomb
+   jobb széle 400 px-en 33 px-re kilógott a képernyőről (mérve: a gomb 295–433 px, a sáv 0–400 px).
+   Ahol nem fér el, rejtve marad, mint 400 px alatt: a hero-CTA és a ragadós alsó CTA viszi. */
+@media (max-width: 459px) {
+  html[lang="hu"] .gm-header .gm-btn[data-gm-free="header"] { display: none; }
+}

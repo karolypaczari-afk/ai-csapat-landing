@@ -2246,7 +2246,7 @@
         var on = c.getAttribute("data-top3") === key;
         c.classList.toggle("is-active", on);
         var b = c.querySelector(".gm-top3__pick");
-        if (b) { b.setAttribute("aria-selected", on ? "true" : "false"); b.setAttribute("aria-expanded", on ? "true" : "false"); }
+        if (b) b.setAttribute("aria-expanded", on ? "true" : "false");
       });
       panels.forEach(function (p) { p.hidden = p.getAttribute("data-top3-panel") !== key; });
     }
