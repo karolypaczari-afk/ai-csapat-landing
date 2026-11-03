@@ -7,16 +7,16 @@
 <title>GENmarketer — mérés-audit animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; --red:#dc2626; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
-  .list { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:12px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); }
+  .list { background:var(--card); border:1.5px solid #D9E6EC; border-radius:14px; padding:12px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); }
   .ev { display:flex; align-items:center; gap:16px; padding:11px 0; border-bottom:1px solid var(--line); font-size:22px; opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
   .ev:last-child { border-bottom:none; }
   .ev.in { opacity:1; transform:none; }
@@ -24,13 +24,13 @@
   .ev small { color:var(--muted); font-size:18px; }
   .st { margin-left:auto; font-size:17px; font-weight:800; border-radius:999px; padding:5px 16px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; }
   .st.in { opacity:1; transform:none; }
-  .st.ok { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+  .st.ok { color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
   .st.bad { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
-  .st.mid { color:#1A1A2E; background:#FFC400; }
+  .st.mid { color:#00748A; background:#E0F7FC; box-shadow:inset 0 0 0 1.5px rgba(6,182,212,.45); }
 
   .det { background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:34px 22px 14px; box-shadow:0 5px 14px rgba(0,0,0,0.05); flex:1; position:relative; display:flex; gap:20px; align-items:center; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; min-height:0; }
   .det.in { opacity:1; transform:none; }
-  .det .tag { position:absolute; top:-14px; left:16px; font-size:14.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:3px 13px; background:#1A1A2E; }
+  .det .tag { position:absolute; top:-14px; left:16px; font-size:14.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:3px 13px; background:#14162A; }
   .chart { flex:1.1; height:120px; }
   .chart path.lineA { stroke:url(#lg); stroke-width:4; fill:none; stroke-dasharray:600; stroke-dashoffset:600; transition:stroke-dashoffset 1.6s ease; }
   .chart path.lineA.in { stroke-dashoffset:0; }
@@ -42,10 +42,10 @@
   .vd.no { color:#9AA0A8; text-decoration:line-through; text-decoration-color:rgba(220,38,38,0.6); text-decoration-thickness:2px; }
   .vd.yes { font-weight:800; }
   .vd .ic { width:26px; height:26px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; }
-  .vd.no .ic { border:2px solid #C9CDD6; color:#9AA0A8; text-decoration:none; }
-  .vd.yes .ic { background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; }
+  .vd.no .ic { border:2px solid #D9E6EC; color:#9AA0A8; text-decoration:none; }
+  .vd.yes .ic { background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); color:#fff; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>
@@ -65,7 +65,7 @@
     <div class="det" id="det">
       <span class="tag">És ha beszakad a bevétel?</span>
       <svg class="chart" viewBox="0 0 420 120" preserveAspectRatio="none">
-        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0891B2"/><stop offset="1" stop-color="#00D4FF"/></linearGradient></defs>
         <path class="lineA" id="line" d="M8 38 C 60 30, 110 44, 160 36 C 200 30, 230 34, 258 40 L 286 96 C 320 100, 370 98, 412 94"/>
         <g class="dropmark" id="dm"><circle cx="286" cy="96" r="7" fill="#dc2626"/><text x="286" y="118" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626" font-family="Inter, sans-serif">kedd 14:20</text></g>
       </svg>

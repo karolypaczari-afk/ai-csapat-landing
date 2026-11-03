@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
   /* A színpad 1070×720, de ~534px szélesen renderelődik → minden méret ~2×-es. */
-  :root { --bg:#faf9f5; --tx:#1f1e1d; --muted:#7a776f; --line:#e8e5dd; --user:#eef3fb; --violet:#7C3AED; --green:#31a24c; }
+  :root { --bg:#FFFFFF; --tx:#14162A; --muted:#5C6470; --line:#E4EAF1; --user:#EAF9FD; --violet:#00748A; --green:#00748A; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
@@ -16,11 +16,11 @@
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
   #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; }
 
-  .window { width:100%; height:100%; background:var(--bg); border-radius:16px; border:1px solid #ded9cf; overflow:hidden; display:flex; flex-direction:column; }
+  .window { width:100%; height:100%; background:var(--bg); border-radius:16px; border:1px solid #D9E6EC; overflow:hidden; display:flex; flex-direction:column; }
   .topbar { display:flex; align-items:center; gap:16px; padding:20px 28px; border-bottom:1px solid var(--line); background:#fff; }
-  .mark { width:40px; height:40px; border-radius:12px; background:#D97757; color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; }
-  .topbar b { font-size:26px; }
-  .ctx { margin-left:auto; display:flex; align-items:center; gap:10px; font-size:20px; font-weight:700; color:var(--violet); background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.25); padding:8px 18px; border-radius:999px; }
+  .mark { width:40px; height:40px; border-radius:50%; background:#14162A url(/assets/img/icon-claude.svg) center / 64% no-repeat; font-size:0; color:transparent; flex:none; }
+  .topbar b { font-size:26px; font-weight:700; color:var(--tx); }
+  .ctx { margin-left:auto; display:flex; align-items:center; gap:10px; font-size:20px; font-weight:700; color:var(--violet); background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.25); padding:8px 18px; border-radius:999px; }
   .ctx i { width:12px; height:12px; border-radius:50%; background:var(--violet); font-style:normal; animation:pulse 1.6s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
@@ -28,14 +28,14 @@
 
   .msg { max-width:88%; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
   .msg.in { opacity:1; transform:none; }
-  .u { align-self:flex-end; background:var(--user); border:1px solid #d8e2f3; border-radius:18px 18px 4px 18px; padding:16px 22px; font-size:27px; line-height:1.45; }
+  .u { align-self:flex-end; background:var(--user); border:1px solid #BFEFF9; border-radius:18px 18px 4px 18px; padding:16px 22px; font-size:27px; line-height:1.45; }
   .a { align-self:flex-start; font-size:27px; line-height:1.5; display:flex; gap:14px; }
-  .a .dot { width:34px; height:34px; border-radius:50%; background:#D97757; flex:none; margin-top:4px; }
+  .a .dot { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#00D4FF); flex:none; margin-top:4px; }
   .a p b { font-weight:700; }
 
   .typing { align-self:flex-start; display:none; gap:7px; padding:14px 20px; }
   .typing.on { display:flex; }
-  .typing s { width:11px; height:11px; border-radius:50%; background:#c9c5ba; animation:tp 1s infinite; text-decoration:none; }
+  .typing s { width:11px; height:11px; border-radius:50%; background:#A9C7D3; animation:tp 1s infinite; text-decoration:none; }
   .typing s:nth-child(2){ animation-delay:.18s } .typing s:nth-child(3){ animation-delay:.36s }
   @keyframes tp { 0%,100%{opacity:.3; transform:translateY(0)} 50%{opacity:1; transform:translateY(-4px)} }
 
@@ -46,7 +46,7 @@
   .step.in { opacity:1; }
   .step small { color:var(--muted); font-size:20px; margin-left:auto; white-space:nowrap; }
   .ind { width:28px; height:28px; flex:none; position:relative; }
-  .ind .spin { position:absolute; inset:0; border:3.5px solid #e5e1d8; border-top-color:var(--violet); border-radius:50%; animation:rot .8s linear infinite; }
+  .ind .spin { position:absolute; inset:0; border:3.5px solid #E4EAF1; border-top-color:#06B6D4; border-radius:50%; animation:rot .8s linear infinite; }
   @keyframes rot { to { transform:rotate(360deg); } }
   .ind .ok { position:absolute; inset:0; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; opacity:0; transform:scale(.6); transition:opacity .25s, transform .25s; }
   .step.done .spin { display:none; }

@@ -7,35 +7,35 @@
 <title>GENmarketer — wireframe→design animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
   .grid { flex:1; display:grid; grid-template-columns:1fr 150px 1fr; gap:0; align-items:stretch; min-height:0; }
 
-  .pagew { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:34px 14px 14px; box-shadow:0 6px 16px rgba(0,0,0,0.07); display:flex; flex-direction:column; gap:9px; position:relative; }
+  .pagew { background:var(--card); border:1.5px solid #D9E6EC; border-radius:16px; padding:34px 14px 14px; box-shadow:0 6px 16px rgba(0,0,0,0.07); display:flex; flex-direction:column; gap:9px; position:relative; }
   .pagew .tag { position:absolute; top:-14px; left:14px; font-size:14px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:3px 13px; }
   #wf .tag { background:#54595F; color:#fff; }
-  #hf .tag { background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; }
+  #hf .tag { background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); color:#fff; }
 
-  .wsec { border-radius:8px; background:#EFEDF6; border:1.5px dashed #C9CDD6; display:flex; align-items:center; justify-content:center; color:#9AA0A8; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14px; letter-spacing:.06em; text-transform:uppercase; }
+  .wsec { border-radius:8px; background:#E6F4F8; border:1.5px dashed #D9E6EC; display:flex; align-items:center; justify-content:center; color:#9AA0A8; font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:14px; letter-spacing:.06em; text-transform:uppercase; font-weight:700; }
   .wsec.h { flex:2.2; } .wsec.m { flex:1.3; } .wsec.s { flex:1; }
 
   .dsec { border-radius:8px; opacity:0; transform:translateY(8px); transition:opacity .45s, transform .45s; padding:10px 12px; }
   .dsec.in { opacity:1; transform:none; }
-  .dsec.h { flex:2.2; background:linear-gradient(135deg,#150033,#3A049A); color:#fff; display:flex; flex-direction:column; justify-content:center; gap:8px; }
+  .dsec.h { flex:2.2; background:linear-gradient(135deg,#14162A,#00748A); color:#fff; display:flex; flex-direction:column; justify-content:center; gap:8px; }
   .dsec.h b { font-size:20px; line-height:1.3; }
-  .dsec.h .cta { align-self:flex-start; font-size:13.5px; font-weight:800; color:#fff; background:linear-gradient(90deg,#7C3AED,#06B6D4); border-radius:999px; padding:5px 14px; }
+  .dsec.h .cta { align-self:flex-start; font-size:13.5px; font-weight:800; color:#fff; background:linear-gradient(90deg,#7C3AED,#4D6CE3 55%,#00D4FF); border-radius:999px; padding:5px 14px; }
   .dsec.m { flex:1.3; background:#fff; border:1.5px solid var(--line); display:flex; align-items:center; gap:8px; }
-  .dsec.m i { width:44px; height:16px; border-radius:4px; background:#EFEDF6; }
+  .dsec.m i { width:44px; height:16px; border-radius:4px; background:#E6F4F8; }
   .dsec.m b { font-size:12.5px; color:var(--violet); white-space:nowrap; }
   .dsec.s { flex:1; background:#fff; border:1.5px solid var(--line); display:flex; flex-direction:column; justify-content:center; gap:5px; }
-  .dsec.s i { display:block; height:8px; border-radius:999px; background:#E7E5F0; }
+  .dsec.s i { display:block; height:8px; border-radius:999px; background:#E4EAF1; }
   .dsec.s i + i { width:65%; }
 
   .mid { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:0 8px; }
@@ -43,16 +43,16 @@
   .arrow.in { opacity:1; }
   .tok { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14px; font-weight:700; border-radius:999px; padding:5px 12px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; }
   .tok.in { opacity:1; transform:none; }
-  .tok.t1 { color:#fff; background:var(--violet); }
+  .tok.t1 { color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
   .tok.t2 { color:#fff; background:var(--cyan); }
-  .tok.t3 { color:#1A1A2E; background:#FFC400; }
-  .tok.t4 { color:var(--muted); background:#f0eee8; border:1.5px solid #e0dcd2; }
+  .tok.t3 { background:#4D6CE3; color:#fff; }
+  .tok.t4 { color:var(--muted); background:#F2F7FA; border:1.5px solid #D9E6EC; }
 
   .qa { align-self:center; display:flex; align-items:center; gap:9px; font-size:17px; font-weight:800; color:var(--violet); opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s; }
   .qa.in { opacity:1; transform:none; }
-  .qa i { width:27px; height:27px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; font-style:normal; }
+  .qa i { width:27px; height:27px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); color:#fff; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; font-style:normal; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

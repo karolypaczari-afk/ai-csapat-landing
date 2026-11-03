@@ -7,23 +7,23 @@
 <title>GENmarketer — vélemény-bányászat animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
   .reviews { flex:none; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-  .rev { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 18px; box-shadow:0 5px 14px rgba(0,0,0,0.06); opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .rev { background:var(--card); border:1.5px solid #D9E6EC; border-radius:14px; padding:14px 18px; box-shadow:0 5px 14px rgba(0,0,0,0.06); opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
   .rev.in { opacity:1; transform:none; }
   .stars { font-size:19px; letter-spacing:2px; margin-bottom:8px; }
-  .stars .on { color:#FFC400; }
-  .stars .off { color:#D8D5E2; }
-  .rev small { display:block; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14px; color:var(--muted); margin-bottom:8px; }
-  .rev i { display:block; height:9px; border-radius:999px; background:#E7E5F0; margin-top:6px; }
+  .stars .on { color:#06B6D4; }
+  .stars .off { color:#D9E6EC; }
+  .rev small { display:block; font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:14px; color:var(--muted); margin-bottom:8px; font-weight:700; }
+  .rev i { display:block; height:9px; border-radius:999px; background:#E4EAF1; margin-top:6px; }
   .rev i.s { width:62%; }
 
   .clusters { background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); flex:1; }
@@ -31,17 +31,17 @@
   .cl { display:flex; align-items:center; gap:14px; padding:11px 0; border-bottom:1px solid var(--line); font-size:22px; opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
   .cl:last-child { border-bottom:none; }
   .cl.in { opacity:1; transform:none; }
-  .cl .cnt { margin-left:auto; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:19px; font-weight:800; color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); border-radius:999px; padding:4px 15px; white-space:nowrap; }
-  .cl .track { width:160px; height:12px; border-radius:999px; background:#EFEDF6; overflow:hidden; flex:none; }
-  .cl .fill { display:block; height:100%; border-radius:999px; width:0; transition:width .8s ease; background:linear-gradient(90deg,#7C3AED,#06B6D4); }
+  .cl .cnt { margin-left:auto; font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:19px; font-weight:800; color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); border-radius:999px; padding:4px 15px; white-space:nowrap; }
+  .cl .track { width:160px; height:12px; border-radius:999px; background:#E6F4F8; overflow:hidden; flex:none; }
+  .cl .fill { display:block; height:100%; border-radius:999px; width:0; transition:width .8s ease; background:linear-gradient(90deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
 
   .gap2 { flex:none; display:flex; align-items:center; gap:14px; }
-  .res { font-size:20px; font-weight:800; color:#1A1A2E; background:#FFC400; border-radius:999px; padding:9px 22px; opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s; box-shadow:0 4px 12px rgba(0,0,0,0.14); }
+  .res { font-size:20px; font-weight:800; color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); border-radius:999px; padding:9px 22px; opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s; box-shadow:0 4px 12px rgba(0,0,0,0.14); }
   .res.in { opacity:1; transform:none; }
   .resx { font-size:20px; color:var(--muted); opacity:0; transition:opacity .4s; }
   .resx.in { opacity:1; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

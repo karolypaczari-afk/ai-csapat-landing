@@ -7,22 +7,22 @@
 <title>GENmarketer — LinkedIn-műhely animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; --red:#dc2626; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
   .grid { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:16px; min-height:0; }
-  .panel { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:40px 22px 16px; position:relative; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:12px; }
+  .panel { background:var(--card); border:1.5px solid #D9E6EC; border-radius:16px; padding:40px 22px 16px; position:relative; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:12px; }
   .panel .tag { position:absolute; top:-15px; left:18px; font-size:15px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 14px; }
   #profil .tag { background:var(--violet); }
-  #poszt .tag { background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+  #poszt .tag { background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
 
-  .lbl { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14.5px; letter-spacing:.07em; color:var(--muted); text-transform:uppercase; }
+  .lbl { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:14.5px; letter-spacing:.07em; color:var(--muted); text-transform:uppercase; font-weight:700; }
   .old { font-size:21px; color:var(--tx); position:relative; display:inline-block; transition:color .4s; }
   .old::after { content:''; position:absolute; left:0; top:55%; height:2.5px; width:0; background:var(--red); transition:width .45s ease; }
   .old.struck { color:#9AA0A8; }
@@ -31,25 +31,25 @@
   .caret { display:inline-block; width:2px; height:22px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
   @keyframes blink { 50% { opacity:0; } }
   .pchips { display:flex; flex-wrap:wrap; gap:9px; margin-top:auto; }
-  .pchip { font-size:16.5px; font-weight:700; color:var(--violet); background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:999px; padding:5px 14px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .pchip { font-size:16.5px; font-weight:700; color:var(--violet); background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:999px; padding:5px 14px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
   .pchip.in { opacity:1; transform:none; }
 
   .hook { font-size:23px; font-weight:800; line-height:1.35; min-height:64px; }
-  .bars i { display:block; height:11px; border-radius:999px; background:#E7E5F0; }
+  .bars i { display:block; height:11px; border-radius:999px; background:#E4EAF1; }
   .bars i + i { margin-top:6px; width:68%; }
   .stats { display:flex; gap:10px; margin-top:auto; }
-  .stat { font-size:17px; font-weight:800; border-radius:999px; padding:6px 15px; color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
+  .stat { font-size:17px; font-weight:800; border-radius:999px; padding:6px 15px; color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
   .stat.in { opacity:1; transform:none; }
 
   .flow { flex:none; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:12px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
   .flow.in { opacity:1; transform:none; }
-  .flow small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:14.5px; letter-spacing:.07em; color:var(--muted); text-transform:uppercase; flex:none; }
-  .fstep { font-size:17.5px; font-weight:700; border-radius:999px; padding:6px 15px; background:#f0eee8; color:#1A1A2E; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; }
+  .flow small { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:14.5px; letter-spacing:.07em; color:var(--muted); text-transform:uppercase; flex:none; font-weight:700; }
+  .fstep { font-size:17.5px; font-weight:700; border-radius:999px; padding:6px 15px; background:#F2F7FA; color:#14162A; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; }
   .fstep.in { opacity:1; transform:none; }
   .farrow { color:var(--muted); font-size:18px; opacity:0; transition:opacity .3s; }
   .farrow.in { opacity:1; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

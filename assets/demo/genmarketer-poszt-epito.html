@@ -7,42 +7,42 @@
 <title>GENmarketer — poszt-variációk animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:14px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:14px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
-  .theme { flex:none; background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; align-items:center; gap:16px; }
-  .theme small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; }
+  .theme { flex:none; background:var(--card); border:1.5px solid rgba(6,182,212,0.45); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; align-items:center; gap:16px; }
+  .theme small { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; font-weight:700; }
   .theme .t { font-size:26px; font-weight:700; min-height:34px; }
   .caret { display:inline-block; width:2px; height:22px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
   @keyframes blink { 50% { opacity:0; } }
 
   .cols { flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-  .post { background:var(--card); border:1.5px solid #C9CDD6; border-radius:16px; padding:16px 20px; box-shadow:0 6px 16px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:12px; opacity:0; transform:translateY(14px); transition:opacity .45s, transform .45s; }
+  .post { background:var(--card); border:1.5px solid #D9E6EC; border-radius:16px; padding:16px 20px; box-shadow:0 6px 16px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:12px; opacity:0; transform:translateY(14px); transition:opacity .45s, transform .45s; }
   .post.in { opacity:1; transform:none; }
   .prow { display:flex; align-items:center; justify-content:space-between; gap:10px; }
   .pill { font-size:15px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:#fff; border-radius:999px; padding:4px 13px; white-space:nowrap; }
   #p1 .pill { background:var(--violet); }
   #p2 .pill { background:var(--cyan); }
-  #p3 .pill { background:#FFC400; color:#1A1A2E; }
-  .fmt { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; color:var(--muted); white-space:nowrap; }
+  #p3 .pill { background:#4D6CE3; color:#fff; }
+  .fmt { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; color:var(--muted); white-space:nowrap; font-weight:700; }
 
   .hook { font-size:23.5px; font-weight:800; line-height:1.35; min-height:130px; }
   .bars { opacity:0; transition:opacity .4s; }
   .bars.in { opacity:1; }
-  .bars i { display:block; height:11px; border-radius:999px; background:#E7E5F0; }
+  .bars i { display:block; height:11px; border-radius:999px; background:#E4EAF1; }
   .bars i + i { margin-top:7px; width:70%; }
 
   .voice { margin-top:auto; display:flex; align-items:center; gap:9px; font-size:17px; font-weight:700; opacity:0; transform:scale(.75); transition:opacity .3s, transform .3s; }
   .voice.in { opacity:1; transform:none; }
-  .voice .ok { width:25px; height:25px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
+  .voice .ok { width:25px; height:25px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); color:#fff; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

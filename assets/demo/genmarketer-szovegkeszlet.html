@@ -7,18 +7,18 @@
 <title>GENmarketer — szövegkészlet animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --line:#E7E5F0; --violet:#7C3AED; --bar:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --line:#E4EAF1; --violet:#00748A; --bar:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; display:flex; flex-direction:column; gap:16px; padding:20px 22px; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; display:flex; flex-direction:column; gap:16px; padding:20px 22px; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
   #list { flex:1; overflow:hidden; display:flex; flex-direction:column; gap:16px; }
 
-  .card { background:#fff; border:1.5px solid #C9CDD6; border-radius:16px; padding:20px 26px; box-shadow:0 6px 18px rgba(0,0,0,0.06); opacity:0; transform:translateY(16px); transition:opacity .45s, transform .45s; flex:none; }
+  .card { background:#fff; border:1.5px solid #D9E6EC; border-radius:16px; padding:20px 26px; box-shadow:0 6px 18px rgba(0,0,0,0.06); opacity:0; transform:translateY(16px); transition:opacity .45s, transform .45s; flex:none; }
   .card.in { opacity:1; transform:none; }
   .meta { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
   .num { width:38px; height:38px; border-radius:50%; background:var(--violet); color:#fff; font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }

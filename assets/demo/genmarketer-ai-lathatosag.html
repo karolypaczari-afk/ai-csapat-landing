@@ -7,42 +7,42 @@
 <title>GENmarketer — AI-láthatóság animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; --red:#dc2626; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; --red:#dc2626; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
-  .query { flex:none; background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); }
-  .query small { display:block; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin-bottom:6px; }
+  .query { flex:none; background:var(--card); border:1.5px solid rgba(6,182,212,0.45); border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); }
+  .query small { display:block; font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin-bottom:6px; font-weight:700; }
   .query .q { font-size:26px; font-weight:700; min-height:34px; }
   .caret { display:inline-block; width:2px; height:24px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
   @keyframes blink { 50% { opacity:0; } }
 
-  .plat { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .plat { background:var(--card); border:1.5px solid #D9E6EC; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
   .plat.in { opacity:1; transform:none; }
   .plat b { width:190px; flex:none; font-size:25px; }
   .plat .ans { flex:1; font-size:21px; color:var(--muted); }
-  .plat .ans .brand { font-weight:800; color:var(--violet); background:rgba(124,58,237,0.1); border-radius:5px; padding:0 6px; }
+  .plat .ans .brand { font-weight:800; color:var(--violet); background:rgba(6,182,212,0.1); border-radius:5px; padding:0 6px; }
   .verdict { width:170px; flex:none; text-align:center; font-size:18px; font-weight:700; border-radius:999px; padding:7px 0; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
   .verdict.in { opacity:1; transform:none; }
   .verdict.no { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
-  .verdict.yes { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
-  .verdict.part { color:#1A1A2E; background:#FFC400; }
+  .verdict.yes { color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
+  .verdict.part { color:#00748A; background:#E0F7FC; box-shadow:inset 0 0 0 1.5px rgba(6,182,212,.45); }
 
   .fix { flex:none; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:13px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
   .fix.in { opacity:1; transform:none; }
-  .fix small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; }
-  .pill { font-size:18px; font-weight:800; border-radius:999px; padding:7px 18px; color:#fff; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; font-family:"JetBrains Mono", ui-monospace, monospace; }
+  .fix small { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; font-weight:700; }
+  .pill { font-size:18px; font-weight:800; border-radius:999px; padding:7px 18px; color:#fff; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; white-space:nowrap; font-family:"Inter", -apple-system, "Segoe UI", sans-serif; }
   .pill.in { opacity:1; transform:none; }
   .pill.p1 { background:var(--violet); }
   .pill.p2 { background:var(--cyan); }
-  .pill.p3 { background:#FFC400; color:#1A1A2E; }
+  .pill.p3 { background:#4D6CE3; color:#fff; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

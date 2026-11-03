@@ -7,24 +7,24 @@
 <title>GENmarketer — előfizetés-szakértő animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
   .kpis { display:flex; gap:14px; flex:none; }
-  .kpi { flex:1; background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 20px; box-shadow:0 4px 12px rgba(0,0,0,0.05); opacity:0; transform:translateY(10px); transition:opacity .4s, transform .4s; }
+  .kpi { flex:1; background:var(--card); border:1.5px solid #D9E6EC; border-radius:14px; padding:14px 20px; box-shadow:0 4px 12px rgba(0,0,0,0.05); opacity:0; transform:translateY(10px); transition:opacity .4s, transform .4s; }
   .kpi.in { opacity:1; transform:none; }
-  .kpi small { display:block; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:5px; }
+  .kpi small { display:block; font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:5px; font-weight:700; }
   .kpi b { font-size:32px; font-variant-numeric:tabular-nums; }
   .kpi .warn { display:inline-block; margin-left:9px; font-size:15px; font-weight:800; color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); border-radius:999px; padding:2px 11px; vertical-align:5px; }
 
-  .q { flex:none; background:var(--card); border:1.5px solid rgba(124,58,237,0.45); border-radius:14px; padding:13px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; align-items:center; gap:16px; }
-  .q small { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; }
+  .q { flex:none; background:var(--card); border:1.5px solid rgba(6,182,212,0.45); border-radius:14px; padding:13px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; align-items:center; gap:16px; }
+  .q small { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; flex:none; font-weight:700; }
   .q .txt { font-size:24px; font-weight:700; min-height:32px; }
   .caret { display:inline-block; width:2px; height:22px; background:var(--tx); vertical-align:-3px; animation:blink .7s steps(1) infinite; }
   @keyframes blink { 50% { opacity:0; } }
@@ -34,13 +34,13 @@
   .row { display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--line); opacity:0; transform:translateX(-10px); transition:opacity .35s, transform .35s; }
   .row:last-child { border-bottom:none; }
   .row.in { opacity:1; transform:none; }
-  .row .ok { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#fff; font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
+  .row .ok { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); color:#fff; font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
   .row .abars { flex:1; }
-  .row .abars i { display:block; height:11px; border-radius:999px; background:#E7E5F0; }
+  .row .abars i { display:block; height:11px; border-radius:999px; background:#E4EAF1; }
   .row .abars i + i { margin-top:6px; width:58%; }
   .row.short .abars i + i { display:none; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

@@ -7,19 +7,19 @@
 <title>GENmarketer — Google RSA-készlet animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1f1e1d; --muted:#7a776f; --violet:#7C3AED; --green:#1d8f4e; --red:#dc2626; --card:#ffffff; --line:#e8e5dd; --bar:#e3e0d8; }
+  :root { --tx:#14162A; --muted:#5C6470; --violet:#00748A; --green:#00748A; --red:#dc2626; --card:#ffffff; --line:#E4EAF1; --bar:#E6EEF4; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; display:flex; flex-direction:column; gap:16px; padding:20px 22px; background:#faf9f5; border-radius:16px; border:1px solid #ded9cf; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; display:flex; flex-direction:column; gap:16px; padding:20px 22px; background:#FFFFFF; border-radius:16px; border:1px solid #D9E6EC; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
   .cols { display:flex; gap:16px; flex:1; min-height:0; }
   .panel { background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
   .panel h3 { font-size:22px; font-weight:800; margin-bottom:4px; }
-  .panel .sub { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:17px; color:var(--muted); margin-bottom:14px; }
+  .panel .sub { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:17px; color:var(--muted); margin-bottom:14px; font-weight:700; }
   .panel .sub b { color:var(--violet); }
   #pH { flex:1.35; }
   #pD { flex:1; }
@@ -28,7 +28,7 @@
   .slot { display:flex; align-items:center; gap:10px; opacity:0; transform:translateY(8px); transition:opacity .3s, transform .3s; }
   .slot.in { opacity:1; transform:none; }
   .slot .bar { height:13px; border-radius:999px; background:var(--bar); flex:none; transition:width .4s; }
-  .slot .cc { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:15px; color:var(--green); white-space:nowrap; margin-left:auto; }
+  .slot .cc { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; color:var(--green); white-space:nowrap; margin-left:auto; font-weight:700; }
   .slot .cc.over { color:var(--red); font-weight:700; }
 
   .dgrid { display:flex; flex-direction:column; gap:14px; }
@@ -36,9 +36,9 @@
   .dslot.in { opacity:1; transform:none; }
   .dslot .bar { height:13px; border-radius:999px; background:var(--bar); margin-bottom:7px; }
   .dslot .bar.b2 { width:62%; }
-  .dslot .cc { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:15px; color:var(--green); }
+  .dslot .cc { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:15px; color:var(--green); font-weight:700; }
 
-  .finale { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:15px 22px; font-size:24px; line-height:1.4; opacity:0; transform:translateY(10px); transition:opacity .5s, transform .5s; }
+  .finale { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:15px 22px; font-size:24px; line-height:1.4; opacity:0; transform:translateY(10px); transition:opacity .5s, transform .5s; }
   .finale.in { opacity:1; transform:none; }
   .finale b { color:var(--violet); }
   .finale span { color:var(--muted); }

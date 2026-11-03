@@ -7,19 +7,19 @@
 <title>GENmarketer — kreatív koncepciók animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; }
 
-  .ph { position:absolute; border:1.5px dashed #D8D5E2; border-radius:16px; width:300px; height:300px; }
+  .ph { position:absolute; border:1.5px dashed #D9E6EC; border-radius:16px; width:300px; height:300px; }
   #p2 { left:542px; top:42px; }
   #p3 { left:228px; top:356px; }
   #p4 { left:542px; top:356px; }
 
-  .shot { position:absolute; background:#fff; border:1.5px solid #C9CDD6; border-radius:16px; box-shadow:0 8px 22px rgba(0,0,0,0.09); }
+  .shot { position:absolute; background:#fff; border:1.5px solid #D9E6EC; border-radius:16px; box-shadow:0 8px 22px rgba(0,0,0,0.09); }
   .shot img { width:100%; height:100%; object-fit:cover; border-radius:14px; display:block; }
 
   #base { left:315px; top:110px; width:440px; height:440px; transition:left .8s cubic-bezier(.22,.9,.3,1), top .8s cubic-bezier(.22,.9,.3,1), width .8s cubic-bezier(.22,.9,.3,1), height .8s cubic-bezier(.22,.9,.3,1); opacity:0; }
@@ -39,10 +39,10 @@
   .lbl.left.in, .lbl.right.in { transform:translateX(0) scale(1); }
   #l1 { top:176px; color:#54595F; }
   #l2 { top:176px; color:var(--violet); }
-  #l3 { top:490px; color:var(--cyan); }
-  #l4 { top:490px; color:#b8860b; }
+  #l3 { top:490px; color:#0891B2; }
+  #l4 { top:490px; color:#4D6CE3; }
 
-  .cap { position:absolute; left:140px; right:140px; bottom:14px; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:10px 20px; font-size:22px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { position:absolute; left:140px; right:140px; bottom:14px; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:10px 20px; font-size:22px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

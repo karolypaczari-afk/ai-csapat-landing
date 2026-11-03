@@ -7,32 +7,32 @@
 <title>GENmarketer — csatorna-audit animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; }
 
   .page { position:absolute; inset:0; padding:18px 22px; display:flex; flex-direction:column; gap:13px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; transition:opacity .3s; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; transition:opacity .3s; font-weight:700; }
 
-  .row { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .45s, transform .45s; position:relative; }
+  .row { background:var(--card); border:1.5px solid #D9E6EC; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .45s, transform .45s; position:relative; }
   .row.in { opacity:1; transform:none; }
   .row b { width:150px; flex:none; font-size:24px; }
-  .track { flex:1; height:18px; border-radius:999px; background:#EFEDF6; overflow:hidden; }
-  .fill { display:block; height:100%; border-radius:999px; width:0; transition:width .9s ease; background:linear-gradient(90deg,#7C3AED,#06B6D4); }
+  .track { flex:1; height:18px; border-radius:999px; background:#E6F4F8; overflow:hidden; }
+  .fill { display:block; height:100%; border-radius:999px; width:0; transition:width .9s ease; background:linear-gradient(90deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
   .reach { width:150px; text-align:right; font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
   .reach small { display:block; font-size:14.5px; font-weight:600; color:var(--muted); }
   .chip { width:200px; text-align:center; font-size:18px; font-weight:700; border-radius:999px; padding:7px 0; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
   .chip.in { opacity:1; transform:none; }
-  .chip.ok { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
-  .chip.gold { color:#1A1A2E; background:#FFC400; }
-  .chip.weak { color:#54595F; background:#f0eee8; border:1.5px solid #e0dcd2; }
+  .chip.ok { color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
+  .chip.gold { color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
+  .chip.weak { color:#54595F; background:#F2F7FA; border:1.5px solid #D9E6EC; }
   .chip.miss { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); width:auto; }
 
@@ -43,14 +43,14 @@
   #deep { position:absolute; left:22px; right:22px; top:216px; bottom:18px; display:flex; flex-direction:column; gap:13px; opacity:0; transition:opacity .5s; pointer-events:none; }
   #deep.show { opacity:1; }
   .cards { flex:1; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,1fr); gap:14px; }
-  .crit { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:16px 20px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:5px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
+  .crit { background:var(--card); border:1.5px solid #D9E6EC; border-radius:14px; padding:16px 20px; box-shadow:0 5px 14px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:5px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; }
   .crit.in { opacity:1; transform:none; }
   .crit b { font-size:21px; line-height:1.25; }
   .crit small { font-size:16.5px; color:var(--muted); line-height:1.3; }
   .score { margin-top:auto; align-self:flex-start; font-size:17.5px; font-weight:800; border-radius:999px; padding:5px 16px; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; font-variant-numeric:tabular-nums; }
   .score.in { opacity:1; transform:none; }
-  .score.hi { color:#fff; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
-  .score.mid { color:#1A1A2E; background:#FFC400; }
+  .score.hi { color:#fff; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
+  .score.mid { color:#00748A; background:#E0F7FC; box-shadow:inset 0 0 0 1.5px rgba(6,182,212,.45); }
   .score.lo { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
 </style>
 </head>
@@ -123,7 +123,7 @@
     r3.style.zIndex = '5';
     r3.style.transition = 'transform .85s cubic-bezier(.22,.9,.3,1), box-shadow .85s';
     r3.style.transform = 'translateY(' + (-delta / scale) + 'px) scale(1.05)';
-    r3.style.boxShadow = '0 16px 40px rgba(64,0,153,0.18)';
+    r3.style.boxShadow = '0 16px 40px rgba(0,116,138,0.18)';
   }
   function unzoomR3() {
     var r3 = $('r3');

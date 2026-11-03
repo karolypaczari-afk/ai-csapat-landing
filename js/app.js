@@ -24,6 +24,11 @@
   // Nyelv: a <html lang> dönti el (HU a gyökéren, EN a /en/-en).
   var EN = (document.documentElement.getAttribute("lang") || "hu").slice(0, 2).toLowerCase() === "en";
   function tr(hu, en) { return EN ? en : hu; }
+  /* 2026-11-03, V5 (Figma 1448:470): a magyar oldalon minden portré a B irány (halványkék alap,
+     színes arc, saját színű ruha); a csapatrács portrékártyát kap, a hero egy keretszínt. Az angol
+     oldal a régi készlettel és kártyával fut tovább. */
+  var V5 = !EN;
+  if (V5) AV = "/assets/img/avatars-b/";
 
   /* ---- Tracking (portolva a prod script.js-ből) ---- */
   // Mindkét nyelv árul előfizetést (2026-07-31 óta), de KÜLÖN pénztáron — és ez a
@@ -1030,6 +1035,15 @@
     }
     root.setAttribute("data-cx-ready", "");
     show(tabs[0].getAttribute("data-cx"));
+    // V5 mobil: a kerek nyílgomb a vízszintesen görgethető fülsort lapozza; a sor végén elrejtjük
+    var more = root.querySelector("[data-cx-more]"), bar = root.querySelector(".gm-cx__tabs");
+    if (more && bar) {
+      var sync = function () { more.classList.toggle("is-end", bar.scrollLeft + bar.clientWidth >= bar.scrollWidth - 4); };
+      more.addEventListener("click", function () { bar.scrollBy({ left: Math.round(bar.clientWidth * 0.7), behavior: "smooth" }); });
+      bar.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", sync);
+      sync();
+    }
     root.addEventListener("click", function (ev) {
       var t = ev.target.closest("[role=tab][data-cx]");
       if (t) show(t.getAttribute("data-cx"));
@@ -1185,16 +1199,35 @@
     requestAnimationFrame(step);
   }
   function wireProofbar() {
-    document.querySelectorAll(".gm-proofbar__item strong").forEach(function (el) {
+    /* 2026-11-03 (Tibor): a tény-doboz számai „pörögjenek fel”, amikor a doboz látszik. Egy figyelő a sorra
+       (60 % látszik), a számok egymás után indulnak (120 ms), 1,6 s alatt, lassuló végével. A HTML-ben a végső
+       érték áll (crawler, JS nélkül), az animáció csak a megjelenéskor nulláz; ezres tagolás nélkül, ahogy a
+       végső szöveg („4400+”), így a szélesség nem ugrik. */
+    var row = document.querySelector(".gm-proofbar__row") || document.querySelector(".gm-proofbar");
+    if (!row) return;
+    var items = [];
+    row.querySelectorAll(".gm-proofbar__item strong").forEach(function (el) {
       var raw = el.textContent, m = raw.match(/^(\D*)(\d[\d\s]*)(.*)$/); if (!m) return;
-      var target = parseInt(m[2].replace(/\s/g, ""), 10), pre = m[1], suf = m[3];
-      var done = false;
-      function go() { if (done) return; done = true; if (REDUCE) return;
-        var s = null; function st(ts){ if(s===null)s=ts; var p=Math.min((ts-s)/1100,1),e=1-Math.pow(1-p,3); el.textContent=pre+fmtNum(Math.round(target*e))+suf; if(p<1)requestAnimationFrame(st); else el.textContent=raw; } requestAnimationFrame(st); }
-      if (!("IntersectionObserver" in window)) return;
-      var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { go(); io.disconnect(); } }); }, { threshold: 0.6 });
-      io.observe(el);
+      items.push({ el: el, raw: raw, pre: m[1], suf: m[3], target: parseInt(m[2].replace(/\s/g, ""), 10) });
     });
+    if (!items.length || REDUCE || !("IntersectionObserver" in window)) return;
+    function run() {
+      items.forEach(function (it, i) {
+        var t0 = null, dur = 1600, delay = i * 120;
+        it.el.textContent = it.pre + "0" + it.suf;
+        function st(ts) {
+          if (t0 === null) t0 = ts + delay;
+          var p = Math.max(0, Math.min((ts - t0) / dur, 1)), e = 1 - Math.pow(1 - p, 4);
+          it.el.textContent = p < 1 ? it.pre + Math.round(it.target * e) + it.suf : it.raw;
+          if (p < 1) requestAnimationFrame(st);
+        }
+        requestAnimationFrame(st);
+      });
+    }
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (en) { return en.isIntersecting; })) { run(); io.disconnect(); }
+    }, { threshold: 0.6 });
+    io.observe(row);
   }
 
   /* ---- Mission Control kártyák ---- */
@@ -1208,6 +1241,16 @@
       var statusCls = soon ? "soon" : "live", statusTxt = soon ? tr("HAMAROSAN", "STANDBY") : tr("AKTÍV", "NOMINAL");
       var role = EN ? a.roleEn : a.role, task = EN ? a.currentTaskEn : a.currentTask;
       var label = a.name || a.code;   // megjelenítendő (ékezetes) név; a.code marad az ASCII fájl-/adatkulcs
+      if (V5) {
+        // V5 portrékártya (Figma 1387:1563): 208 px-es kép halványkék alapon, alatta név és szerep;
+        // számsor, diagram és státusz nélkül, a kiemelés hoverre jön (v5.css).
+        html += '<button type="button" class="gm-agent gm-agent--v5' + (soon ? " is-soon" : "") + '" data-code="' + esc(a.code) + '" data-cat="' + esc((a.cats || [a.cat]).join("|")) + '">';
+        html += '<span class="gm-agent__av"><img src="' + esc(AV + "lg/" + a.code + ".webp") + '" alt="' + esc(label + " – " + role) + '" loading="lazy" decoding="async" width="416" height="416"></span>';
+        html += '<span class="gm-agent__code">' + esc(label) + '</span>';
+        html += '<span class="gm-agent__role">' + esc(role) + '</span>';
+        html += '</button>';
+        return;
+      }
       html += '<button type="button" class="gm-agent' + (soon ? " is-soon" : "") + '" data-code="' + esc(a.code) + '" data-cat="' + esc((a.cats || [a.cat]).join("|")) + '" style="--c:' + esc(a.color) + '">';
       html += '<span class="gm-agent__top">';
       html += '<span class="gm-agent__av"><img src="' + esc(a.avatar || AV + a.code + '.webp') + '" alt="' + esc(label + " – " + role) + '" loading="lazy" width="60" height="60"></span>';
@@ -1975,7 +2018,7 @@
       // ABSZOLÚT útvonal kell: a `new Function` törzse globális kontextusban fut, ott a
       // relatív `./hero3d.js` a DOKUMENTUMHOZ képest oldódna fel (→ `/hero3d.js`, 404).
       dynImport("/js/hero3d.js").then(function (mod) {
-        window.__gmHero = mod.initHero({ canvas: canvas, agents: AGENTS, avBase: AV, en: EN });
+        window.__gmHero = mod.initHero({ canvas: canvas, agents: AGENTS, avBase: AV, en: EN, v5: V5 });
       })["catch"](function (e) { heroFailed(e); });
     } catch (e) { heroFailed(e); }
   }
@@ -2219,13 +2262,15 @@
     var grid = document.getElementById("gm-mc-grid"), btn = document.querySelector("[data-gm-mc-more]");
     if (!grid || !btn || EN) return;
     var cards = grid.querySelectorAll(".gm-agent");
-    if (cards.length <= 12) return;
+    // V5: öt kártya soronként, három sor látszik (15); a régi rácson 12
+    var FIRST = V5 ? 15 : 12;
+    if (cards.length <= FIRST) return;
     grid.classList.add("is-collapsed");
     btn.hidden = false;
     function expand() { grid.classList.remove("is-collapsed"); btn.hidden = true; }
     btn.addEventListener("click", function () {
       expand();
-      if (cards[12]) cards[12].focus({ preventScroll: true });
+      if (cards[FIRST]) cards[FIRST].focus({ preventScroll: true });
     });
     document.querySelectorAll(".gm-chip").forEach(function (chip) { chip.addEventListener("click", expand); });
   }

@@ -12,9 +12,13 @@ var TAU = Math.PI * 2;
 
 export function initHero(opts) {
   var canvas = opts.canvas, agents = opts.agents || [], avBase = opts.avBase || "/assets/img/avatars/", EN = !!opts.en;
+  // V5 (2026-11-03, magyar oldal): egy keretszín minden kártyán, a B irányú színes portrék (app.js adja az avBase-t)
+  var V5 = !!opts.v5;
 
   var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  // V5: enélkül a sRGB-kimenet a kártyákat szürkés-lilára fakítja (Figma-próba, 2026-11-03)
+  if (V5 && THREE.LinearSRGBColorSpace) renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(52, 1, 0.1, 100);
@@ -70,7 +74,7 @@ export function initHero(opts) {
     sp.renderOrder = 2; sp.userData = { base: base.clone(), phase: i * 0.5 };
     root.add(sp); sprites.push(sp);
     var im = new Image();
-    im.onload = function () { mat.map = cardTexture(im, a.code, EN ? (a.roleEn || a.role) : a.role, a.color || "#00D4FF"); mat.needsUpdate = true; };
+    im.onload = function () { mat.map = cardTexture(im, a.code, EN ? (a.roleEn || a.role) : a.role, V5 ? "#00D4FF" : (a.color || "#00D4FF")); mat.needsUpdate = true; };
     im.src = a.avatar || avBase + a.code + ".webp";
   });
 

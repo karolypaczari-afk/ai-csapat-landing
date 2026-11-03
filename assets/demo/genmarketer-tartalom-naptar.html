@@ -7,39 +7,39 @@
 <title>GENmarketer — tartalomnaptár animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --gold:#b8860b; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --gold:#4D6CE3; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:12px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
   .legend { display:flex; gap:12px; flex:none; }
   .lg { font-size:17px; font-weight:800; border-radius:999px; padding:6px 17px; color:#fff; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
   .lg.in { opacity:1; transform:none; }
   .lg.p1 { background:var(--violet); }
   .lg.p2 { background:var(--cyan); }
-  .lg.p3 { background:#FFC400; color:#1A1A2E; }
+  .lg.p3 { background:#4D6CE3; color:#fff; }
   .lg.p4 { background:#54595F; }
 
   .days { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; flex:none; }
-  .day { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:16px; font-weight:700; color:var(--muted); text-align:center; letter-spacing:.08em; }
+  .day { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:16px; font-weight:700; color:var(--muted); text-align:center; letter-spacing:.08em; }
 
   .grid { flex:1; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(4,1fr); gap:10px; }
-  .slot { border:1.5px dashed #D8D5E2; border-radius:12px; }
-  .slot.filled { border:1.5px solid #C9CDD6; background:var(--card); box-shadow:0 4px 10px rgba(0,0,0,0.05); padding:10px 12px; opacity:0; transform:scale(.85); transition:opacity .35s, transform .35s; }
+  .slot { border:1.5px dashed #D9E6EC; border-radius:12px; }
+  .slot.filled { border:1.5px solid #D9E6EC; background:var(--card); box-shadow:0 4px 10px rgba(0,0,0,0.05); padding:10px 12px; opacity:0; transform:scale(.85); transition:opacity .35s, transform .35s; }
   .slot.filled.in { opacity:1; transform:none; }
   .slot .pil { display:inline-block; font-size:13.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#fff; border-radius:999px; padding:2px 10px; margin-bottom:6px; }
   .slot.c1 .pil { background:var(--violet); }
   .slot.c2 .pil { background:var(--cyan); }
-  .slot.c3 .pil { background:#FFC400; color:#1A1A2E; }
+  .slot.c3 .pil { background:#4D6CE3; color:#fff; }
   .slot.c4 .pil { background:#54595F; }
   .slot .fmt { display:block; font-size:17.5px; font-weight:700; }
   .slot .hk { display:block; font-size:14.5px; color:var(--muted); margin-top:2px; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:12px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); }
 </style>

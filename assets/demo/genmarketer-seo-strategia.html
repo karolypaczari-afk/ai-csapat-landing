@@ -7,32 +7,32 @@
 <title>GENmarketer — SEO stratégia animáció</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <style>
-  :root { --tx:#1A1A2E; --muted:#54595F; --violet:#7C3AED; --cyan:#06B6D4; --card:#ffffff; --line:#E7E5F0; }
+  :root { --tx:#14162A; --muted:#54595F; --violet:#00748A; --cyan:#06B6D4; --card:#ffffff; --line:#E4EAF1; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: transparent; }
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--tx); -webkit-font-smoothing:antialiased; display:flex; justify-content:center; }
   #anim-wrap { width:100%; max-width:1070px; position:relative; overflow:hidden; }
-  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E7E5F0; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
+  #stage { width:1070px; height:720px; position:absolute; top:0; left:0; transform-origin: top left; background:#FAFAFB; border-radius:16px; border:1px solid #E4EAF1; display:flex; flex-direction:column; gap:13px; padding:18px 22px; }
 
-  .head { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; }
+  .head { font-family:"Inter", -apple-system, "Segoe UI", sans-serif; font-size:21px; color:var(--muted); letter-spacing:.05em; flex:none; font-weight:700; }
 
-  .row { background:var(--card); border:1.5px solid #C9CDD6; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; position:relative; }
+  .row { background:var(--card); border:1.5px solid #D9E6EC; border-radius:14px; padding:14px 22px; box-shadow:0 5px 14px rgba(0,0,0,0.06); flex:1; display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(12px); transition:opacity .4s, transform .4s; position:relative; }
   .row.in { opacity:1; transform:none; }
   .row b { width:245px; flex:none; font-size:24px; }
-  .track { flex:1; height:18px; border-radius:999px; background:#EFEDF6; overflow:hidden; }
-  .fill { display:block; height:100%; border-radius:999px; width:0; transition:width .9s ease; background:linear-gradient(90deg,#7C3AED,#06B6D4); }
+  .track { flex:1; height:18px; border-radius:999px; background:#E6F4F8; overflow:hidden; }
+  .fill { display:block; height:100%; border-radius:999px; width:0; transition:width .9s ease; background:linear-gradient(90deg,#7C3AED,#4D6CE3 55%,#00D4FF); }
   .pct { width:72px; text-align:right; font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; }
   .chip { width:130px; text-align:center; font-size:18px; font-weight:700; border-radius:999px; padding:6px 0; opacity:0; transform:scale(.7); transition:opacity .3s, transform .3s; }
   .chip.in { opacity:1; transform:none; }
-  .chip.ok { color:var(--violet); background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); }
-  .chip.weak { color:#54595F; background:#f0eee8; border:1.5px solid #e0dcd2; }
+  .chip.ok { color:var(--violet); background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); }
+  .chip.weak { color:#54595F; background:#F2F7FA; border:1.5px solid #D9E6EC; }
   .chip.miss { color:#b91c1c; background:#faf1f1; border:1.5px solid rgba(220,38,38,0.3); }
 
-  .ord { position:absolute; top:50%; left:-9px; transform:translate(-50%,-50%) scale(.5); width:42px; height:42px; border-radius:50%; background:#FFC400; color:#1A1A2E; font-size:22px; font-weight:800; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s, transform .3s; box-shadow:0 3px 8px rgba(0,0,0,0.18); }
+  .ord { position:absolute; top:50%; left:-9px; transform:translate(-50%,-50%) scale(.5); width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#4D6CE3 55%,#00D4FF); color:#fff; font-size:22px; font-weight:800; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s, transform .3s; box-shadow:0 3px 8px rgba(0,0,0,0.18); }
   .ord.in { opacity:1; transform:translate(-50%,-50%) scale(1); }
   .row { margin-left:14px; }
 
-  .cap { flex:none; background:rgba(124,58,237,0.08); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
+  .cap { flex:none; background:rgba(6,182,212,0.08); border:1.5px solid rgba(6,182,212,0.3); border-radius:14px; padding:13px 20px; font-size:23px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .45s, transform .45s; }
   .cap.in { opacity:1; transform:none; }
   .cap b { color:var(--violet); width:auto; }
 </style>
