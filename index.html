@@ -360,7 +360,7 @@
             <a class="gm-menu__link gm-menu__link--home" href="https://genmarketer.hu/" target="_blank" rel="noopener">genmarketer.hu – főoldal<span class="gm-sr"> (új lapon nyílik)</span></a>
           </nav>
         </details>
-        <a class="gm-btn gm-btn--primary" href="https://tudastar.genmarketer.hu/step/ai-csapat-ingyenes/" data-gm-free="header">Próbáld ki ingyen</a>
+        <a class="gm-btn gm-btn--primary" href="#arazas" data-gm-cta="header">Próbáld ki ingyen</a>
       </div>
     </div>
   </header>
@@ -382,9 +382,10 @@
         <p class="gm-hero__sub">Semmi új felület, semmi tanfolyam: 5 perc telepítés, és a megszokott chatablakban dolgozik a <span class="gm-nb">PPC-sed</span>, a szövegíród, a videóvágód. Magyarul.</p>
         <div class="gm-hero__ctawrap">
           <div class="gm-hero__cta">
-            <!-- 2026-11-02 (Tibor): a másodlagos „Pro 3 napig 990 Ft-ért” gomb (data-gm-cta="hero") kikerült, egy gomb maradt.
-                 A görgető-CTA tesztminta (funnel-ownership, meta-pixel, verify) a magyar oldalon a demo-playbook link. -->
-            <a class="gm-btn gm-btn--primary gm-btn--lg" href="https://tudastar.genmarketer.hu/step/ai-csapat-ingyenes/" data-gm-free="hero">Próbáld ki ingyen</a>
+            <!-- 2026-11-02 (Tibor): a másodlagos „Pro 3 napig 990 Ft-ért” gomb kikerült, egy gomb maradt.
+                 2026-11-05 (Tibor, 17/#3715): ez a gomb az árazásra görget (data-gm-cta="hero"), nem az Ingyenes-lépésre;
+                 a görgető-CTA tesztminta (funnel-ownership, meta-pixel, verify) ezért a magyar oldalon is ezt a gombot éri el elsőként. -->
+            <a class="gm-btn gm-btn--primary gm-btn--lg" href="#arazas" data-gm-cta="hero">Próbáld ki ingyen</a>
           </div>
           <!-- 2026-11-02 (Tibor): a „Megnézem, mire használhatom” link helyén a kompatibilitás-ikonsor (a JSON-LD
                „Kompatibilitás” tétele szerinti hat eszköz; a Codex, Claude Code, Cursor, Gemini jel a Simple Icons / LobeHub csomagból);
