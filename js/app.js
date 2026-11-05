@@ -853,13 +853,15 @@
   /* Ingyenes csomag (17/#3644 I6): az „Ingyen kezdem” link 0 Ft-os rendelésre visz, ezért SZÁNDÉKOSAN nem
    * `data-gm-cta`/`data-gm-checkout`: se `begin_checkout`, se `add_to_cart`, se Meta `InitiateCheckout`, se
    * Ads-konverzió, és semmi `value`. Csak egy saját, érték nélküli jel megy (`gm_free_start`, a helyével), a
-   * regisztrációt a pénztár köszönőoldala méri (docs/69 F19). Az UTM/gclid a linkre kerül, mint a pénztár-CTA-kra. */
+   * regisztrációt a pénztár köszönőoldala méri (docs/69 F19). Az UTM/gclid a linkre kerül, mint a pénztár-CTA-kra.
+   * 17/#3731: a Meta is kap egy érték nélküli egyedi `FreeStart` jelet, mert a kampány CTA-kattintásait eddig csak a
+   * GA4 látta; nem standard esemény, a `CompleteRegistration` optimalizálásába nem szól bele. */
   function wireFreeCtas() {
     document.querySelectorAll("a[data-gm-free]").forEach(function (a) {
       var href = a.getAttribute("href");
       if (href) a.setAttribute("href", withAttribution(href));
       a.addEventListener("click", function () {
-        signal("gm_free_start", { free_cta: a.getAttribute("data-gm-free") }, { clarityKey: "free_start", clarityValue: a.getAttribute("data-gm-free") });
+        signal("gm_free_start", { free_cta: a.getAttribute("data-gm-free") }, { meta: "FreeStart", clarityKey: "free_start", clarityValue: a.getAttribute("data-gm-free") });
       });
     });
   }
