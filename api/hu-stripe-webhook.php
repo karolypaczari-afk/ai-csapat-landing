@@ -118,7 +118,7 @@ if ('' === $email) {
     // only bury the one alert that matters. That alert skips the throttle —
     // it fires once per payment and must reach the operator.
     gm_hu_log('error', 'Paid intent has no email — cannot create order', ['pi' => $piId, 'event_id' => $eventId]);
-    gm_en_alert_admin(
+    gm_hu_alert_admin(
         'Fizetett PaymentIntent e-mail nélkül (HU)',
         "PaymentIntent: $piId\nÖsszeg: $amount $currency\n\nA fizetés sikerült, de nincs rajta e-mail cím, így nem jött létre rendelés. Keresd meg a Stripe-fiókban, és hozd létre kézzel.",
         true
@@ -162,7 +162,7 @@ if (!$result['success']) {
         'error'    => $result['error'],
         'body'     => $result['body'],
     ]);
-    gm_en_alert_admin(
+    gm_hu_alert_admin(
         'HU pénztár — bridge hiba',
         "PaymentIntent: $piId\nE-mail: $email\nÖsszeg: $amount $currency\nBridge státusz: {$result['status']}\nHiba: {$result['error']}\n\n"
         . "A Stripe automatikusan újrapróbálja. Ha tartósan hibázik, játszd vissza kézzel:\n"

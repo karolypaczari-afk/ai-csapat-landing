@@ -406,8 +406,11 @@ function gm_en_call_bridge(array $payload): array
  * $force skips the throttle. Use it only where the caller guarantees the alert
  * fires once per event (no Stripe retry behind it), otherwise the throttle is
  * the only thing standing between a stuck webhook and a flooded inbox.
+ *
+ * $channel picks the subject prefix: the Hungarian funnel shares this helper, and
+ * until 2026-11-14 its alerts arrived as "[GENmarketer EN]" too (17/#3133).
  */
-function gm_en_alert_admin(string $subject, string $body, bool $force = false): void
+function gm_en_alert_admin(string $subject, string $body, bool $force = false, string $channel = 'EN'): void
 {
     $config = gm_en_config();
     if (empty($config['admin_email'])) {
@@ -419,7 +422,7 @@ function gm_en_alert_admin(string $subject, string $body, bool $force = false): 
     }
     $sent = @mail(
         $config['admin_email'],
-        '[GENmarketer EN] ' . $subject,
+        '[GENmarketer ' . ('HU' === $channel ? 'HU' : 'EN') . '] ' . $subject,
         $body,
         "From: noreply@genmarketer.hu\r\nContent-Type: text/plain; charset=UTF-8\r\n"
     );

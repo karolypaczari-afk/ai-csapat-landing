@@ -22,6 +22,12 @@ require_once __DIR__ . '/_lib.php';
 
 const GM_HU_ALLOWED_ORIGIN = 'https://ai-csapat.genmarketer.hu';
 
+/** Operator alert with the Hungarian subject prefix ("[GENmarketer HU] …"). */
+function gm_hu_alert_admin(string $subject, string $body, bool $force = false): void
+{
+    gm_en_alert_admin($subject, $body, $force, 'HU');
+}
+
 /**
  * Prices in fillér (HUF × 100).
  *
