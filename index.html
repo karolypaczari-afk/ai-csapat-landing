@@ -19,7 +19,20 @@
       function own(u) { return typeof u === 'string' && u.indexOf(ORIGIN + '/') === 0; }
       function path(u) { return String(u || '').split(/[?#]/)[0].slice(ORIGIN.length); }
       function clip(s, n) { s = String(s == null ? '' : s); return s.length > n ? s.slice(0, n) : s; }
-      function stack(e) { return clip(String((e && e.stack) || '').replace(/[?#][^\s)]*/g, ''), 1500); }
+      // Az üzenet idézhet URL-t (`Failed to fetch https://…?gclid=…`): a query abból is kimarad.
+      function msg(s) { return clip(String(s == null ? '' : s).replace(/((?:https?:)?\/\/[^\s?#"'()]*)[?#][^\s"'()]*/g, '$1'), 300); }
+      // A query (click-ID, UTM) kimarad, a sor:oszlop megmarad: abból dől el, kié a keret.
+      function stack(e) { return clip(String((e && e.stack) || '').replace(/[?#][^\s)]*?(?=(?::\d+){1,2}\)?(?:\s|$))|[?#][^\s)]*/g, ''), 1500); }
+      // A dokumentum 1. sora a doctype, ott saját kód nem állhat: ami onnan jelent, az
+      // beinjektált idegen script (Facebook-böngésző, tárcabővítmény, OptiMonk-visszahívás).
+      function ours(s) {
+        var parts = String(s).split(ORIGIN + '/'), i, m;
+        for (i = 1; i < parts.length; i++) {
+          m = /^([^\s):]*)(?::(\d+))?/.exec(parts[i]);
+          if ('/' + m[1] !== location.pathname || +m[2] > 1) return true;
+        }
+        return false;
+      }
       function send(r) {
         var key = r.kind + '|' + r.message + '|' + r.source + '|' + r.line;
         if (sent >= MAX || seen[key]) return;
@@ -41,18 +54,19 @@
           return;
         }
         if (!own(ev.filename)) return;
-        send({ kind: 'error', message: clip(ev.message, 300), source: path(ev.filename), line: ev.lineno | 0, col: ev.colno | 0, stack: stack(ev.error) });
+        if (path(ev.filename) === location.pathname && (ev.lineno | 0) === 1) return;
+        send({ kind: 'error', message: msg(ev.message), source: path(ev.filename), line: ev.lineno | 0, col: ev.colno | 0, stack: stack(ev.error) });
       }, true);
       // Verem nélküli rejection (csupasz szöveg, üres Safari-verem) SZÁNDÉKOSAN kimarad:
       // nem dönthető el, kié, és a harmadik fél tagjei ilyet bőven termelnek.
       window.addEventListener('unhandledrejection', function (ev) {
         var s = stack(ev.reason);
-        if (s.indexOf(ORIGIN + '/') === -1) return;
-        send({ kind: 'rejection', message: clip((ev.reason && ev.reason.message) || ev.reason, 300), source: '', line: 0, col: 0, stack: s });
+        if (!ours(s)) return;
+        send({ kind: 'rejection', message: msg((ev.reason && ev.reason.message) || ev.reason), source: '', line: 0, col: 0, stack: s });
       });
       // Az app.js szándékosan elkapott, de jelentendő hibáihoz (pl. a 3D-hero).
       window.gmReportError = function (err, tag) {
-        send({ kind: 'caught', message: clip(tag + ': ' + ((err && err.message) || err), 300), source: '', line: 0, col: 0, stack: stack(err) });
+        send({ kind: 'caught', message: msg(tag + ': ' + ((err && err.message) || err)), source: '', line: 0, col: 0, stack: stack(err) });
       };
     })();
   </script>
@@ -311,7 +325,7 @@
   <script defer src="/js/data.js?v=20261029-a2"></script>
   <script defer src="/js/dashboards.js?v=20261005-qa"></script>
   <script defer src="/js/a2-pricing.js?v=20261029-a2"></script>
-  <script defer src="/js/app.js?v=20261105-a"></script>
+  <script defer src="/js/app.js?v=20261114-ce"></script>
 </head>
 <body>
 <div class="gm-lp">
@@ -1605,7 +1619,7 @@
   <!-- LIGHTBOX (proof nagyítás) -->
   <div class="gm-lightbox" id="gm-lightbox" role="dialog" aria-modal="true" aria-label="Nagyított nézet">
     <button class="gm-lightbox__close" type="button" aria-label="Bezárás">✕</button>
-    <img src="" alt="Nagyított munka a csapattól">
+    <img alt="Nagyított munka a csapattól">
     <p class="gm-lightbox__cap"></p>
   </div>
 
@@ -1614,7 +1628,7 @@
     <div class="gm-modal__backdrop"></div>
     <div class="gm-modal__panel">
       <div class="gm-modal__head">
-        <span class="gm-modal__av"><img src="" alt="Szakember portré"></span>
+        <span class="gm-modal__av"><img alt="Szakember portré"></span>
         <div class="gm-modal__title"><h3></h3><p></p></div>
         <button class="gm-modal__close" type="button" aria-label="Bezárás">✕</button>
       </div>

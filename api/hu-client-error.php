@@ -38,6 +38,12 @@ const GM_CE_DAILY_ALERTS     = 10;
 const GM_CE_SEEN_CAP         = 5000;
 const GM_CE_RETENTION_DAYS   = 30;
 const GM_CE_KINDS            = ['error', 'resource', 'rejection', 'caught'];
+// Riasztási zajszűrő (mérve 2026-11-14, 32 nap naplója): a 49 levélből 45 olyan fájlról
+// szólt, ami megvan és 200-at ad — megszakadt letöltés, előnézet-robot. Ezek naplóba és
+// számlálóba kerülnek, levél csak akkor megy, ha a fájl HIÁNYZIK, vagy ha egy meglévő
+// fájl egy nap alatt ennyiszer nem töltődik be (az már nem egy-egy megszakadt letöltés).
+const GM_CE_TRANSIENT_ALERT_AT = 10;
+const GM_CE_BOT_UA             = '/bot|crawl|spider|externalhit|externalads|headless|lighthouse|pagespeed/i';
 
 function gm_ce_done(int $status): void
 {
@@ -125,6 +131,17 @@ function gm_ce_prune(string $dir): void
     }
 }
 
+/** A jelentett saját erőforrás megvan-e a webgyökérben (az `api/` szülője). */
+function gm_ce_resource_exists(string $source): bool
+{
+    $root = realpath(dirname(__DIR__));
+    if (false === $root || '' === $source) {
+        return false;
+    }
+    $file = realpath($root . '/' . ltrim($source, '/'));
+    return false !== $file && 0 === strpos($file, $root . DIRECTORY_SEPARATOR) && is_file($file);
+}
+
 // ── Kérés-kapuk ─────────────────────────────────────────────────────────────
 
 if ('POST' !== ($_SERVER['REQUEST_METHOD'] ?? '')) {
@@ -173,18 +190,18 @@ if (0 === random_int(0, 49)) {
 
 // ── Napi kvóta + ujjlenyomatonkénti számláló ────────────────────────────────
 
-$verdict = gm_ce_locked_update($dir . "/client-errors-$day.json", static function (array $s) use ($fp): array {
+[$verdict, $fpToday] = gm_ce_locked_update($dir . "/client-errors-$day.json", static function (array $s) use ($fp): array {
     $s['total']   = (int) ($s['total'] ?? 0);
     $s['dropped'] = (int) ($s['dropped'] ?? 0);
     $s['fp']      = is_array($s['fp'] ?? null) ? $s['fp'] : [];
     if ($s['total'] >= GM_CE_DAILY_EVENTS) {
         $s['dropped']++;
-        return [$s, 'drop'];
+        return [$s, ['drop', 0]];
     }
     $s['total']++;
     $s['fp'][$fp] = (int) ($s['fp'][$fp] ?? 0) + 1;
-    return [$s, $s['fp'][$fp] <= GM_CE_PER_FP_LOG_LINES ? 'log' : 'count'];
-});
+    return [$s, [$s['fp'][$fp] <= GM_CE_PER_FP_LOG_LINES ? 'log' : 'count', $s['fp'][$fp]]];
+}) ?? [null, 0];
 
 if ('log' === $verdict) {
     $line = json_encode(['ts' => gmdate('c'), 'fp' => $fp] + $event, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -200,7 +217,13 @@ if ('log' === $verdict) {
 // különben a config pótlása után sem jönne róla levél.
 $canAlert = is_readable(__DIR__ . '/_secrets.php');
 
-if ('drop' !== $verdict && $canAlert) {
+// Aki itt kimarad, azt NEM jelöljük látottnak: ha a fájl később tényleg eltűnik, vagy
+// a hiba valódi látogatónál is megjelenik, arról még jár levél.
+$isBot     = 1 === preg_match(GM_CE_BOT_UA, $event['ua']);
+$transient = 'resource' === $event['kind'] && gm_ce_resource_exists($event['source']);
+$alertable = !$isBot && (!$transient || $fpToday >= GM_CE_TRANSIENT_ALERT_AT);
+
+if ('drop' !== $verdict && $canAlert && $alertable) {
     $isNew = gm_ce_locked_update($dir . '/client-errors-seen.json', static function (array $s) use ($fp, $day): array {
         $s['fp']     = is_array($s['fp'] ?? null) ? $s['fp'] : [];
         $s['alerts'] = is_array($s['alerts'] ?? null) ? $s['alerts'] : [];
@@ -223,7 +246,9 @@ if ('drop' !== $verdict && $canAlert) {
     if (true === $isNew) {
         gm_en_alert_admin(
             'HU landoló: új böngészőhiba (' . $fp . ')',
-            "Új hibafajta a landolón, első előfordulás.\n\n"
+            ($transient
+                ? "A fájl megvan a szerveren, de ma már {$fpToday} alkalommal nem töltődött be.\n\n"
+                : "Új hibafajta a landolón, első előfordulás.\n\n")
             . "Típus:   {$event['kind']}\n"
             . "Üzenet:  {$event['message']}\n"
             . "Forrás:  {$event['source']}:{$event['line']}:{$event['col']}\n"

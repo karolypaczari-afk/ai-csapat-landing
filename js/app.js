@@ -1979,7 +1979,7 @@
     var img = lb.querySelector("img"), cap = lb.querySelector(".gm-lightbox__cap"), lbLast = null;
     function open(src, alt, caption) { lbLast = document.activeElement; img.src = src; img.alt = alt || ""; cap.textContent = caption || "";
       lb.classList.add("is-open"); document.body.style.overflow = "hidden"; lb.querySelector(".gm-lightbox__close").focus(); }
-    function close() { lb.classList.remove("is-open"); document.body.style.overflow = ""; img.src = ""; if (lbLast && lbLast.focus) lbLast.focus(); }
+    function close() { lb.classList.remove("is-open"); document.body.style.overflow = ""; img.removeAttribute("src"); if (lbLast && lbLast.focus) lbLast.focus(); }
     document.querySelectorAll("[data-gm-zoom]").forEach(function (im) {
       function trigger() { var fig = im.closest(".gm-slide"); var c = fig ? fig.querySelector(".gm-slide__cap") : null; open(im.src, im.alt, c ? c.textContent : ""); }
       im.addEventListener("click", trigger);
