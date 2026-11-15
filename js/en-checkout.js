@@ -501,7 +501,7 @@
         state.starting = false;
         showError(
           err.message ||
-          'We could not start the checkout. Please reload the page, or email info@genmarketer.hu and we will set your order up manually.'
+          'We could not start the checkout. Please reload the page, or email info@genmarketer.eu and we will set your order up manually.'
         );
         throw err;
       });

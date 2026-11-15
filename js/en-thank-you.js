@@ -98,7 +98,7 @@
       .then(function (res) { return res.json(); })
       .then(function (data) {
         if (data.error) {
-          showError('We could not look up that payment. If you were charged, email info@genmarketer.hu with your reference and we will sort it out straight away.');
+          showError('We could not look up that payment. If you were charged, email info@genmarketer.eu with your reference and we will sort it out straight away.');
           return;
         }
 

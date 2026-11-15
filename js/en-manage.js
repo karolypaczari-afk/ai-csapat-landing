@@ -74,7 +74,7 @@
         })
         .catch(function () {
           busy(button, label, false, 'Email me the link');
-          showError('We could not send that just now. Please try again in a minute, or email info@genmarketer.hu.');
+          showError('We could not send that just now. Please try again in a minute, or email info@genmarketer.eu.');
         });
     }
 
