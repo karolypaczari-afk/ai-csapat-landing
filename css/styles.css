@@ -2180,14 +2180,14 @@ html { scroll-padding-bottom: 5.5rem; }
 html[lang="hu"] .gm-agent__metrics { flex-wrap: wrap; row-gap: 0.3rem; }
 /* ---- Reszponzív + asztali audit (2026-11-02, 17/#3611) — csak HU, az EN oldal változatlan ----
    Mérés: Playwright, 320–1440 px, élő és helyi szerver (scratchpad probe.mjs); a szövegek tartalma változatlan. */
-/* Fejléc-CTA: 320–414 px-en a „Próbáld ki ingyen” 2–3 sorba tört egy kerek pirulában (66 px magas).
+/* Fejléc-CTA: 320–414 px-en a fejléc-gomb szövege 2–3 sorba tört egy kerek pirulában (66 px magas).
    Egysoros, kompakt gomb; 400 px alatt nem fér el a logó mellett, ott a hero-CTA és a ragadós alsó CTA viszi. */
 @media (max-width: 600px) {
-  html[lang="hu"] .gm-header .gm-btn[data-gm-free="header"] { white-space: nowrap; padding: 0.55em 0.95em; font-size: 0.84rem; }
+  html[lang="hu"] .gm-header .gm-btn[data-gm-cta="header"] { white-space: nowrap; padding: 0.55em 0.95em; font-size: 0.84rem; }
   html[lang="hu"] .gm-header__actions { gap: 0.6rem; }
 }
 @media (max-width: 399px) {
-  html[lang="hu"] .gm-header .gm-btn[data-gm-free="header"] { display: none; }
+  html[lang="hu"] .gm-header .gm-btn[data-gm-cta="header"] { display: none; }
 }
 /* Státuszjel: mobilon 8,3 px, asztalon 9,9 px volt — olvashatatlan. */
 html[lang="hu"] .gm-status { font-size: 0.7rem; }
